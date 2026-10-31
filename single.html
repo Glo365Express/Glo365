@@ -6,19 +6,13 @@
 <meta name="viewport" content="width=device-width,initial-scale=1">
 <meta name="theme-color" content="#2196e8">
 <title>GLO 365 - Single</title>
-
 <style>
 *{box-sizing:border-box;margin:0;padding:0}
-:root{
- --blue:#2196e8;--blue-dark:#087acb;--blue-light:#eaf5fd;
- --border:#d8e9f5;--text:#18344b;--muted:#71869a;
- --bg:#f1f7fc;--white:#fff;
-}
+:root{--blue:#2196e8;--blue-dark:#087acb;--blue-light:#eaf5fd;--border:#d8e9f5;--text:#18344b;--muted:#71869a;--bg:#f1f7fc}
 body{font-family:Arial,sans-serif;background:var(--bg);color:var(--text)}
 .app{max-width:520px;min-height:100vh;margin:auto;background:white;padding-bottom:25px}
 .header{background:linear-gradient(120deg,#2196e8,#087acb);padding:17px 15px;display:flex;justify-content:space-between;align-items:center;color:white}
-.logo{font-size:27px;font-weight:900}
-.logo span{color:#eaf5fd}
+.logo{font-size:27px;font-weight:900}.logo span{color:#eaf5fd}
 .balance{background:white;color:var(--blue-dark);padding:10px 14px;border-radius:30px;font-size:14px;font-weight:bold}
 .page-title{background:var(--blue);text-align:center;padding:15px 10px;font-size:19px;font-weight:900;color:white}
 .subtitle{text-align:center;padding:12px 5px;background:var(--blue-light);color:var(--blue-dark);font-size:14px;font-weight:bold}
@@ -39,24 +33,17 @@ body{font-family:Arial,sans-serif;background:var(--bg);color:var(--text)}
 .summary-box strong{font-weight:800;color:var(--blue-dark)}
 .discount-line{display:flex;align-items:center;justify-content:center;flex-wrap:wrap;gap:7px}
 .discount-value{background:white;border:1px solid var(--border);border-radius:7px;min-width:55px;padding:7px 9px;font-weight:bold;color:var(--blue-dark)}
-.discount-percent{color:var(--muted);font-weight:bold}
-.discount-amount{font-weight:bold;color:var(--blue-dark)}
+.discount-percent{color:var(--muted);font-weight:bold}.discount-amount{font-weight:bold;color:var(--blue-dark)}
 .place-btn{width:calc(100% - 22px);margin:17px 11px;padding:16px 8px;background:linear-gradient(90deg,#2196e8,#087acb);border:0;border-radius:10px;color:white;font-size:18px;font-weight:900;box-shadow:0 4px 10px #087acb30;cursor:pointer}
 .place-btn:disabled{opacity:.6;cursor:not-allowed}
 .back-btn{display:block;margin:0 auto;border:0;background:transparent;color:var(--blue-dark);padding:10px;font-size:13px;cursor:pointer}
 .notice{margin:10px 11px;padding:12px;background:var(--blue-light);border:1px solid var(--border);border-radius:9px;text-align:center;color:#426b88;font-size:11px;line-height:1.6}
-.status{display:none;margin:10px 11px;padding:12px;border-radius:9px;font-size:13px;line-height:1.5;white-space:pre-line}
+.status{display:none;margin:10px 11px;padding:12px;border-radius:9px;font-size:13px;line-height:1.6;white-space:pre-line}
 .status.error{display:block;background:#fff0f0;color:#a52b36;border:1px solid #f4c6ca}
 .status.success{display:block;background:#effaf2;color:#176b35;border:1px solid #c7ebd0}
-@media(max-width:380px){
- .logo{font-size:24px}.balance{font-size:12px;padding:9px}
- .bet-row input{height:45px;font-size:12px}
- .column-heading{font-size:9px;gap:3px}.bet-row{gap:3px}
- .serial{font-size:12px}.summary-box{font-size:13px}
-}
+@media(max-width:380px){.logo{font-size:24px}.balance{font-size:12px;padding:9px}.bet-row input{height:45px;font-size:12px}.column-heading{font-size:9px;gap:3px}.bet-row{gap:3px}.serial{font-size:12px}.summary-box{font-size:13px}}
 </style>
 </head>
-
 <body>
 <div class="app">
 <header class="header">
@@ -73,7 +60,7 @@ body{font-family:Arial,sans-serif;background:var(--bg);color:var(--text)}
  </div>
  <div id="betRows"></div>
  <div class="add-area">
-  <button class="add-btn" id="addRow" type="button" title="Add more rows">+</button>
+  <button class="add-btn" id="addRow" type="button">+</button>
  </div>
 </section>
 
@@ -106,18 +93,26 @@ body{font-family:Arial,sans-serif;background:var(--bg);color:var(--text)}
 <script>
 "use strict";
 
-/*
- * IMPORTANT:
- * Replace this with your actual Render backend URL.
- * Example: https://your-service.onrender.com/api
- */
-const API_BASE = "https://YOUR-GLO365-BACKEND.onrender.com/api";
+/* GLO 365 SERVER */
+const API_BASE = "https://glo365.onrender.com/api";
 
+/*
+ * Authentication:
+ * This page uses the existing Bearer token from the logged-in session.
+ * Never store wallet balance or bet history in localStorage.
+ */
+const TOKEN_KEYS = [
+ "glo365_access_token",
+ "glo365_token",
+ "access_token"
+];
+
+const SESSION_KEY = "glo365_session";
 const MIN_ROWS = 10;
 const MAX_ROWS = 50;
 
-let currentBalance = 0;
 let discount = 0;
+let currentBalance = 0;
 let isSaving = false;
 let authenticated = false;
 
@@ -131,181 +126,195 @@ const balanceElement = document.getElementById("balance");
 const placeButton = document.getElementById("placeBet");
 const statusElement = document.getElementById("statusMessage");
 
-function showMessage(message, type = "error") {
- statusElement.textContent = message;
- statusElement.className = "status " + type;
+function showMessage(message,type="error"){
+ statusElement.textContent=message;
+ statusElement.className="status "+type;
 }
 
-function clearMessage() {
- statusElement.textContent = "";
- statusElement.className = "status";
+function clearMessage(){
+ statusElement.textContent="";
+ statusElement.className="status";
 }
 
-function apiUrl(path) {
- return API_BASE.replace(/\/+$/, "") + path;
-}
-
-/*
- * Authentication uses the server's HttpOnly cookie.
- * Credentials are included for cross-origin Render requests.
- */
-async function apiRequest(path, options = {}) {
- const response = await fetch(apiUrl(path), {
-  method: options.method || "GET",
-  credentials: "include",
-  headers: {
-   "Content-Type": "application/json",
-   ...(options.headers || {})
-  },
-  body: options.body ? JSON.stringify(options.body) : undefined
- });
-
- let data = {};
- try {
-  data = await response.json();
- } catch (_) {}
-
- if (response.status === 401 || response.status === 403) {
-  throw new Error(data.message || "Your session has expired. Please login again.");
+function getToken(){
+ for(const key of TOKEN_KEYS){
+  const value=localStorage.getItem(key);
+  if(value && value.trim()) return value.trim();
  }
 
- if (!response.ok || data.success === false) {
-  throw new Error(data.message || "Server request failed.");
+ try{
+  const session=JSON.parse(localStorage.getItem(SESSION_KEY)||"null");
+  if(session){
+   if(typeof session.token==="string")return session.token;
+   if(typeof session.accessToken==="string")return session.accessToken;
+   if(typeof session.access_token==="string")return session.access_token;
+  }
+ }catch(_){}
+
+ return "";
+}
+
+async function apiRequest(path,options={}){
+ const token=getToken();
+
+ if(!token){
+  throw new Error("Login session token was not found. Please login again.");
+ }
+
+ const headers={
+  "Authorization":"Bearer "+token,
+  ...(options.headers||{})
+ };
+
+ if(options.body && !(options.body instanceof FormData)){
+  headers["Content-Type"]="application/json";
+ }
+
+ let response;
+ try{
+  response=await fetch(API_BASE+path,{
+   method:options.method||"GET",
+   headers,
+   body:options.body,
+   cache:"no-store"
+  });
+ }catch(_){
+  throw new Error("Cannot connect to GLO 365 server. Check your internet connection.");
+ }
+
+ const data=await response.json().catch(()=>({}));
+
+ if(response.status===401){
+  throw new Error("Your login session has expired. Please login again.");
+ }
+
+ if(!response.ok){
+  throw new Error(data.error||data.message||"Server request failed ("+response.status+").");
  }
 
  return data;
 }
 
-function redirectToLogin() {
- alert("Please login first.");
- location.href = "login.html";
+function goLogin(){
+ location.href="login.html";
 }
 
-async function checkLogin() {
- try {
-  const data = await apiRequest("/auth/me");
-  if (!data.user) {
-   redirectToLogin();
-   return false;
-  }
+async function checkLogin(){
+ const token=getToken();
 
-  if (data.user.status && data.user.status !== "active") {
-   alert("Your account is inactive. Please contact support.");
-   location.href = "login.html";
-   return false;
-  }
+ if(!token){
+  goLogin();
+  return false;
+ }
 
-  authenticated = true;
+ try{
+  await apiRequest("/auth/me");
+  authenticated=true;
   return true;
- } catch (error) {
-  redirectToLogin();
+ }catch(error){
+  showMessage(error.message);
+  if(error.message.toLowerCase().includes("login") ||
+     error.message.toLowerCase().includes("session") ||
+     error.message.toLowerCase().includes("token")){
+   setTimeout(goLogin,1500);
+  }
   return false;
  }
 }
 
-async function loadWallet() {
- const data = await apiRequest("/wallet");
- const balance = Number(data.balance);
+/* SERVER WALLET */
+async function loadWallet(){
+ const data=await apiRequest("/demo/wallet");
 
- if (!Number.isFinite(balance) || balance < 0) {
-  throw new Error("Invalid wallet balance received from server.");
+ const wallet=data.wallet||data;
+ const rawBalance=
+  wallet.balance ??
+  wallet.points ??
+  wallet.demo_points ??
+  wallet.demo_balance;
+
+ const value=Number(rawBalance);
+
+ if(!Number.isFinite(value)||value<0){
+  throw new Error("Server wallet response did not contain a valid balance.");
  }
 
- currentBalance = balance;
- balanceElement.textContent = balance.toFixed(2);
- return balance;
+ currentBalance=value;
+ balanceElement.textContent=value.toFixed(2);
+ return value;
 }
 
 /*
- * The current server version does not provide a Single discount API.
- * Do not read discount from browser storage or trust client-side settings.
+ * Discount is intentionally zero until a server-side
+ * Single discount setting endpoint is available.
  */
-function loadDiscount() {
- discount = 0;
- discountPercentElement.textContent = "0";
+function loadDiscount(){
+ discount=0;
+ discountPercentElement.textContent="0";
  calculate();
 }
 
-function updateSerials() {
- const rows = rowsContainer.querySelectorAll(".bet-row");
- rows.forEach((row, index) => {
-  row.querySelector(".serial").textContent = (index + 1) + ".";
- });
- updateAddButton();
-}
+/* CREATE INPUT ROW */
+function addRow(){
+ const count=rowsContainer.querySelectorAll(".bet-row").length;
+ if(count>=MAX_ROWS)return;
 
-function updateAddButton() {
- const count = rowsContainer.querySelectorAll(".bet-row").length;
- addButton.disabled = count >= MAX_ROWS;
- addButton.title = count >= MAX_ROWS
-  ? "Maximum 50 rows reached"
-  : "Add row (" + count + "/" + MAX_ROWS + ")";
-}
+ const row=document.createElement("div");
+ row.className="bet-row";
 
-function addRow() {
- const currentCount = rowsContainer.querySelectorAll(".bet-row").length;
- if (currentCount >= MAX_ROWS) return;
+ const serial=document.createElement("span");
+ serial.className="serial";
 
- const row = document.createElement("div");
- row.className = "bet-row";
+ const number=document.createElement("input");
+ number.type="text";
+ number.inputMode="numeric";
+ number.maxLength=1;
+ number.placeholder="Number";
+ number.dataset.field="number";
 
- const serial = document.createElement("span");
- serial.className = "serial";
+ const straight=document.createElement("input");
+ straight.type="number";
+ straight.inputMode="decimal";
+ straight.min="0";
+ straight.step="0.01";
+ straight.placeholder="D";
+ straight.dataset.field="straight";
 
- const number = document.createElement("input");
- number.type = "text";
- number.inputMode = "numeric";
- number.maxLength = 1;
- number.placeholder = "Number";
- number.dataset.field = "number";
- number.setAttribute("aria-label", "Single digit number");
+ const rumble=document.createElement("input");
+ rumble.type="number";
+ rumble.inputMode="decimal";
+ rumble.min="0";
+ rumble.step="0.01";
+ rumble.placeholder="R";
+ rumble.dataset.field="rumble";
 
- const straight = document.createElement("input");
- straight.type = "number";
- straight.inputMode = "decimal";
- straight.min = "0";
- straight.step = "0.01";
- straight.placeholder = "D";
- straight.dataset.field = "straight";
- straight.setAttribute("aria-label", "Straight points");
+ const remove=document.createElement("button");
+ remove.type="button";
+ remove.className="remove-btn";
+ remove.textContent="×";
+ remove.title="Clear or remove row";
 
- const rumble = document.createElement("input");
- rumble.type = "number";
- rumble.inputMode = "decimal";
- rumble.min = "0";
- rumble.step = "0.01";
- rumble.placeholder = "R";
- rumble.dataset.field = "rumble";
- rumble.setAttribute("aria-label", "Rumble points");
-
- const remove = document.createElement("button");
- remove.type = "button";
- remove.className = "remove-btn";
- remove.textContent = "×";
- remove.title = "Clear or remove row";
- remove.setAttribute("aria-label", "Remove row");
-
- row.append(serial, number, straight, rumble, remove);
+ row.append(serial,number,straight,rumble,remove);
  rowsContainer.appendChild(row);
 
- [number, straight, rumble].forEach(input => {
-  input.addEventListener("input", () => {
-   if (input === number) {
-    input.value = input.value.replace(/\D/g, "").slice(0, 1);
+ [number,straight,rumble].forEach(input=>{
+  input.addEventListener("input",()=>{
+   if(input===number){
+    input.value=input.value.replace(/\D/g,"").slice(0,1);
    }
    calculate();
   });
  });
 
- remove.addEventListener("click", () => {
-  const count = rowsContainer.querySelectorAll(".bet-row").length;
+ remove.addEventListener("click",()=>{
+  const totalRows=rowsContainer.querySelectorAll(".bet-row").length;
 
-  if (count > MIN_ROWS) {
+  if(totalRows>MIN_ROWS){
    row.remove();
-  } else {
-   number.value = "";
-   straight.value = "";
-   rumble.value = "";
+  }else{
+   number.value="";
+   straight.value="";
+   rumble.value="";
   }
 
   updateSerials();
@@ -316,91 +325,98 @@ function addRow() {
  calculate();
 }
 
-function getRows() {
- const data = [];
+function updateSerials(){
+ rowsContainer.querySelectorAll(".bet-row").forEach((row,index)=>{
+  row.querySelector(".serial").textContent=(index+1)+".";
+ });
+ updateAddButton();
+}
 
- rowsContainer.querySelectorAll(".bet-row").forEach(row => {
-  const number = row.querySelector('[data-field="number"]').value.trim();
-  const dValue = row.querySelector('[data-field="straight"]').value;
-  const rValue = row.querySelector('[data-field="rumble"]').value;
+function updateAddButton(){
+ const count=rowsContainer.querySelectorAll(".bet-row").length;
+ addButton.disabled=count>=MAX_ROWS;
+ addButton.title=count>=MAX_ROWS?"Maximum 50 rows reached":"Add row ("+count+"/"+MAX_ROWS+")";
+}
 
-  if (number === "" || (dValue === "" && rValue === "")) return;
+function getRows(){
+ const rows=[];
 
-  data.push({
+ rowsContainer.querySelectorAll(".bet-row").forEach(row=>{
+  const number=row.querySelector('[data-field="number"]').value.trim();
+  const dValue=row.querySelector('[data-field="straight"]').value;
+  const rValue=row.querySelector('[data-field="rumble"]').value;
+
+  if(number==="" || (dValue==="" && rValue===""))return;
+
+  rows.push({
    number,
-   straight: dValue === "" ? 0 : Number(dValue),
-   rumble: rValue === "" ? 0 : Number(rValue)
+   straight:dValue===""?0:Number(dValue),
+   rumble:rValue===""?0:Number(rValue)
   });
  });
 
- return data;
+ return rows;
 }
 
-function calculate() {
- let total = 0;
+function calculate(){
+ let total=0;
 
- rowsContainer.querySelectorAll(".bet-row").forEach(row => {
-  const number = row.querySelector('[data-field="number"]').value.trim();
-  if (number === "") return;
+ rowsContainer.querySelectorAll(".bet-row").forEach(row=>{
+  const number=row.querySelector('[data-field="number"]').value.trim();
+  if(number==="")return;
 
-  const dValue = row.querySelector('[data-field="straight"]').value;
-  const rValue = row.querySelector('[data-field="rumble"]').value;
+  const dValue=row.querySelector('[data-field="straight"]').value;
+  const rValue=row.querySelector('[data-field="rumble"]').value;
 
-  const d = dValue === "" ? 0 : Number(dValue);
-  const r = rValue === "" ? 0 : Number(rValue);
+  const d=dValue===""?0:Number(dValue);
+  const r=rValue===""?0:Number(rValue);
 
-  if (Number.isFinite(d) && d > 0) total += d;
-  if (Number.isFinite(r) && r > 0) total += r;
+  if(Number.isFinite(d)&&d>0)total+=d;
+  if(Number.isFinite(r)&&r>0)total+=r;
  });
 
- total = Math.round((total + Number.EPSILON) * 100) / 100;
+ total=Math.round((total+Number.EPSILON)*100)/100;
 
- const discountAmount = Math.round(
-  (total * discount / 100 + Number.EPSILON) * 100
- ) / 100;
+ const discountAmount=Math.round(
+  (total*discount/100+Number.EPSILON)*100
+ )/100;
 
- const finalAmount = Math.round(
-  (total - discountAmount + Number.EPSILON) * 100
- ) / 100;
+ const finalAmount=Math.round(
+  (total-discountAmount+Number.EPSILON)*100
+ )/100;
 
- totalElement.textContent = total.toFixed(2);
- discountElement.textContent = discountAmount.toFixed(2);
- betAmountElement.textContent = finalAmount.toFixed(2);
+ totalElement.textContent=total.toFixed(2);
+ discountElement.textContent=discountAmount.toFixed(2);
+ betAmountElement.textContent=finalAmount.toFixed(2);
 
- return { total, discount, discountAmount, finalAmount };
+ return {total,discount,discountAmount,finalAmount};
 }
 
-function validateRows(rows) {
- if (rows.length === 0) {
+function validateRows(rows){
+ if(!rows.length){
   showMessage("Enter at least one number and D or R points.");
   return false;
  }
 
- for (const row of rows) {
-  if (!/^\d$/.test(row.number)) {
+ for(const row of rows){
+  if(!/^\d$/.test(row.number)){
    showMessage("Single Number must contain exactly one digit (0-9).");
    return false;
   }
 
-  if (
-   !Number.isFinite(row.straight) ||
-   !Number.isFinite(row.rumble) ||
-   row.straight < 0 ||
-   row.rumble < 0
-  ) {
+  if(!Number.isFinite(row.straight)||!Number.isFinite(row.rumble)||
+     row.straight<0||row.rumble<0){
    showMessage("Please enter valid non-negative amounts.");
    return false;
   }
 
-  if (row.straight === 0 && row.rumble === 0) {
+  if(row.straight===0&&row.rumble===0){
    showMessage("Enter points in either D or R.");
    return false;
   }
 
-  if (
-   !Number.isSafeInteger(Math.round(row.straight * 100)) ||
-   !Number.isSafeInteger(Math.round(row.rumble * 100))
-  ) {
+  if(!Number.isSafeInteger(Math.round(row.straight*100))||
+     !Number.isSafeInteger(Math.round(row.rumble*100))){
    showMessage("Amount is too large.");
    return false;
   }
@@ -410,144 +426,131 @@ function validateRows(rows) {
 }
 
 /*
- * Current backend contract:
- * POST /api/demo/bets
- * {
- *   game_name: "single",
- *   selection: "Number 7 | D:10 | R:5",
- *   amount: 15
- * }
- *
- * The backend validates balance and deducts points transactionally.
+ * This request shape must match the deployed server's
+ * POST /api/demo/bets contract.
  */
-async function submitSingleRow(row) {
- const amount = Math.round(
-  (row.straight + row.rumble + Number.EPSILON) * 100
- ) / 100;
+async function submitBet(row){
+ const amount=Math.round(
+  (row.straight+row.rumble+Number.EPSILON)*100
+ )/100;
 
- const selection =
-  "Number " + row.number +
-  " | D:" + row.straight.toFixed(2) +
-  " | R:" + row.rumble.toFixed(2);
+ const selection=
+  "Number "+row.number+
+  " | D:"+row.straight.toFixed(2)+
+  " | R:"+row.rumble.toFixed(2);
 
- return apiRequest("/demo/bets", {
-  method: "POST",
-  body: {
-   game_name: "single",
+ return apiRequest("/demo/bets",{
+  method:"POST",
+  body:JSON.stringify({
+   game:"single",
    selection,
    amount
-  }
+  })
  });
 }
 
-async function placeBet() {
- if (isSaving) return;
+async function placeBet(){
+ if(isSaving)return;
  clearMessage();
 
- if (!authenticated) {
-  redirectToLogin();
+ if(!authenticated){
+  showMessage("Please login first.");
   return;
  }
 
- const rows = getRows();
- const result = calculate();
+ const rows=getRows();
+ const result=calculate();
 
- if (!validateRows(rows)) return;
+ if(!validateRows(rows))return;
 
- if (result.finalAmount <= 0) {
+ if(result.finalAmount<=0){
   showMessage("Please enter a valid amount.");
   return;
  }
 
- if (result.finalAmount > currentBalance) {
+ if(result.finalAmount>currentBalance){
   showMessage("Insufficient demo points.");
   return;
  }
 
- /*
-  * The existing backend accepts one selection per bet.
-  * Rows are therefore submitted sequentially.
-  * If a later row fails, earlier accepted rows remain saved.
-  */
- isSaving = true;
- placeButton.disabled = true;
- placeButton.textContent = "SUBMITTING...";
+ isSaving=true;
+ placeButton.disabled=true;
+ placeButton.textContent="SUBMITTING...";
 
- let savedCount = 0;
- let failed = false;
+ let savedCount=0;
 
- try {
-  for (const row of rows) {
-   await submitSingleRow(row);
+ try{
+  /*
+   * Existing endpoint accepts one bet per request.
+   * Do not retry automatically after a partial failure:
+   * some rows may already have been accepted by server.
+   */
+  for(const row of rows){
+   await submitBet(row);
    savedCount++;
   }
 
   await loadWallet();
 
   showMessage(
-   "All " + savedCount + " Single entries saved successfully.\n" +
-   "Total submitted: " + result.finalAmount.toFixed(2) + " Points\n" +
-   "Remaining balance: " + currentBalance.toFixed(2) + " Points",
+   "All "+savedCount+" Single entries saved successfully.\n"+
+   "Submitted amount: "+result.finalAmount.toFixed(2)+" Points\n"+
+   "Remaining balance: "+currentBalance.toFixed(2)+" Points",
    "success"
   );
 
   resetRows();
 
- } catch (error) {
-  failed = true;
+ }catch(error){
+  try{await loadWallet()}catch(_){}
 
-  try {
-   await loadWallet();
-  } catch (_) {}
-
-  if (savedCount > 0) {
+  if(savedCount>0){
    showMessage(
-    savedCount + " row(s) were saved before an error occurred.\n" +
-    "Please check your bet history before trying again.\n" +
-    "Server message: " + error.message
+    savedCount+" row(s) were saved before an error occurred.\n"+
+    "Check your bet history before submitting again.\n"+
+    "Server: "+error.message
    );
-  } else {
-   showMessage(error.message || "Could not submit your bet.");
+  }else{
+   showMessage(error.message||"Could not save bet.");
   }
- } finally {
-  isSaving = false;
-  placeButton.disabled = false;
-  placeButton.textContent = "PLACE DEMO BET";
+ }finally{
+  isSaving=false;
+  placeButton.disabled=false;
+  placeButton.textContent="PLACE DEMO BET";
  }
 }
 
-function resetRows() {
- rowsContainer.innerHTML = "";
- for (let i = 0; i < MIN_ROWS; i++) addRow();
+function resetRows(){
+ rowsContainer.innerHTML="";
+ for(let i=0;i<MIN_ROWS;i++)addRow();
  calculate();
 }
 
-addButton.addEventListener("click", addRow);
-placeButton.addEventListener("click", placeBet);
+addButton.addEventListener("click",addRow);
+placeButton.addEventListener("click",placeBet);
 
-document.getElementById("backButton").addEventListener("click", () => {
- location.href = "home.html";
+document.getElementById("backButton").addEventListener("click",()=>{
+ location.href="home.html";
 });
 
-async function initialize() {
- placeButton.disabled = true;
+/* Always show rows immediately, even if server is offline. */
+resetRows();
 
- if (API_BASE.includes("YOUR-GLO365-BACKEND")) {
-  showMessage("Set your actual Render backend URL in API_BASE before using this page.");
-  return;
- }
+async function initialize(){
+ placeButton.disabled=true;
 
- try {
-  const loggedIn = await checkLogin();
-  if (!loggedIn) return;
+ try{
+  const ok=await checkLogin();
+  if(!ok)return;
 
   await loadWallet();
   loadDiscount();
-  resetRows();
 
-  placeButton.disabled = false;
- } catch (error) {
-  showMessage(error.message || "Could not connect to the server.");
+  placeButton.disabled=false;
+  clearMessage();
+
+ }catch(error){
+  showMessage(error.message||"Server connection failed.");
  }
 }
 
