@@ -11,6 +11,8 @@ const app = express();
 const PORT = process.env.PORT || 10000;
 const JWT_SECRET = process.env.JWT_SECRET;
 const DATABASE_URL = process.env.DATABASE_URL;
+const AUTH_COOKIE = "glo365_token";
+const COOKIE_MAX_AGE = 7 * 24 * 60 * 60 * 1000;
 
 if (!JWT_SECRET || JWT_SECRET.length < 32) {
   console.error("ERROR: JWT_SECRET must be at least 32 characters.");
@@ -31,6 +33,7 @@ const allowedOrigins = process.env.FRONTEND_URL
 
 app.use(cors({
   origin: allowedOrigins,
+  credentials: true,
   methods: ["GET", "POST", "PUT", "PATCH", "DELETE", "OPTIONS"],
   allowedHeaders: ["Content-Type", "Authorization"]
 }));
@@ -55,10 +58,7 @@ pool.on("error", error => {
 // ==========================================
 
 function sendError(res, status, message) {
-  return res.status(status).json({
-    success: false,
-    message
-  });
+  return res.status(status).json({ success: false, message });
 }
 
 function asyncRoute(handler) {
@@ -86,13 +86,46 @@ function publicUser(user) {
 
 function createToken(user) {
   return jwt.sign(
-    {
-      id: user.id,
-      username: user.username
-    },
+    { id: user.id, username: user.username },
     JWT_SECRET,
     { expiresIn: "7d", issuer: "glo365" }
   );
+}
+
+function setAuthCookie(res, token) {
+  res.cookie(AUTH_COOKIE, token, {
+    httpOnly: true,
+    secure: true,
+    sameSite: "none",
+    path: "/",
+    maxAge: COOKIE_MAX_AGE
+  });
+}
+
+function clearAuthCookie(res) {
+  res.clearCookie(AUTH_COOKIE, {
+    httpOnly: true,
+    secure: true,
+    sameSite: "none",
+    path: "/"
+  });
+}
+
+function getCookie(req, name) {
+  const header = req.headers.cookie || "";
+  const parts = header.split(";");
+
+  for (const part of parts) {
+    const index = part.indexOf("=");
+    if (index < 0) continue;
+
+    const key = part.slice(0, index).trim();
+    if (key === name) {
+      return decodeURIComponent(part.slice(index + 1).trim());
+    }
+  }
+
+  return null;
 }
 
 function validUsername(username) {
@@ -103,9 +136,48 @@ function validEmail(email) {
   return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
 }
 
+function validExternalEventUrl(value, platform) {
+  try {
+    const url = new URL(value);
+
+    if (url.protocol !== "https:") return false;
+
+    const host = url.hostname.toLowerCase();
+
+    const youtubeHosts = [
+      "youtube.com",
+      "www.youtube.com",
+      "m.youtube.com",
+      "youtu.be",
+      "www.youtube-nocookie.com"
+    ];
+
+    const facebookHosts = [
+      "facebook.com",
+      "www.facebook.com",
+      "m.facebook.com",
+      "fb.watch",
+      "www.fb.watch"
+    ];
+
+    if (platform === "youtube") {
+      return youtubeHosts.includes(host);
+    }
+
+    if (platform === "facebook") {
+      return facebookHosts.includes(host);
+    }
+
+    return false;
+  } catch {
+    return false;
+  }
+}
+
 
 // ==========================================
 // DATABASE INITIALIZATION
+// Existing database records are preserved.
 // ==========================================
 
 async function initializeDatabase() {
@@ -196,15 +268,35 @@ async function initializeDatabase() {
       created_at TIMESTAMPTZ DEFAULT NOW()
     );
 
+    CREATE TABLE IF NOT EXISTS admin_messages (
+      id BIGSERIAL PRIMARY KEY,
+      text VARCHAR(300) NOT NULL,
+      active BOOLEAN NOT NULL DEFAULT TRUE,
+      updated_by BIGINT REFERENCES users(id) ON DELETE SET NULL,
+      updated_at TIMESTAMPTZ DEFAULT NOW()
+    );
+
+    CREATE TABLE IF NOT EXISTS admin_live_events (
+      id BIGSERIAL PRIMARY KEY,
+      title VARCHAR(80) NOT NULL,
+      url TEXT NOT NULL,
+      platform VARCHAR(20) NOT NULL
+        CHECK (platform IN ('youtube', 'facebook')),
+      active BOOLEAN NOT NULL DEFAULT TRUE,
+      updated_by BIGINT REFERENCES users(id) ON DELETE SET NULL,
+      updated_at TIMESTAMPTZ DEFAULT NOW()
+    );
+
     CREATE INDEX IF NOT EXISTS idx_users_username ON users(username);
     CREATE INDEX IF NOT EXISTS idx_users_email ON users(email);
     CREATE INDEX IF NOT EXISTS idx_demo_bets_user ON demo_bets(user_id);
     CREATE INDEX IF NOT EXISTS idx_audit_logs_created ON audit_logs(created_at DESC);
     CREATE INDEX IF NOT EXISTS idx_wallet_user ON wallet_transactions(user_id);
     CREATE INDEX IF NOT EXISTS idx_affiliate_user ON affiliate_commissions(affiliate_id);
+    CREATE INDEX IF NOT EXISTS idx_admin_messages_active ON admin_messages(active);
+    CREATE INDEX IF NOT EXISTS idx_admin_live_events_active ON admin_live_events(active);
   `);
 
-  // Generate referral codes for existing users.
   await pool.query(`
     UPDATE users
     SET referral_code = 'GLO' || id
@@ -235,17 +327,27 @@ async function audit(actorId, action, targetUserId = null, details = {}) {
 
 // ==========================================
 // AUTHENTICATION
+// Supports HttpOnly Cookie and Bearer Token.
 // ==========================================
 
 async function authenticateToken(req, res, next) {
-  const authHeader = req.headers.authorization;
+  const authHeader = req.headers.authorization || "";
 
-  if (!authHeader || !authHeader.startsWith("Bearer ")) {
+  let token = null;
+
+  if (authHeader.startsWith("Bearer ")) {
+    token = authHeader.substring(7).trim();
+  }
+
+  if (!token) {
+    token = getCookie(req, AUTH_COOKIE);
+  }
+
+  if (!token) {
     return sendError(res, 401, "Authentication required.");
   }
 
   try {
-    const token = authHeader.substring(7);
     const decoded = jwt.verify(token, JWT_SECRET, {
       issuer: "glo365"
     });
@@ -312,10 +414,6 @@ function requirePermission(permission) {
 
 // ==========================================
 // BOOTSTRAP FIRST ADMIN
-// Set environment variables:
-// BOOTSTRAP_ADMIN_USERNAME
-// BOOTSTRAP_ADMIN_EMAIL
-// BOOTSTRAP_ADMIN_PASSWORD
 // ==========================================
 
 async function bootstrapAdmin() {
@@ -349,7 +447,6 @@ async function bootstrapAdmin() {
   }
 
   const passwordHash = await bcrypt.hash(password, 12);
-
   const client = await pool.connect();
 
   try {
@@ -391,7 +488,7 @@ app.get("/", (req, res) => {
   res.json({
     success: true,
     message: "GLO 365 Backend API is running.",
-    version: "2.0.0"
+    version: "2.1.0"
   });
 });
 
@@ -437,7 +534,10 @@ app.post("/api/auth/register", asyncRoute(async (req, res) => {
 
   if (referralCode) {
     const ref = await pool.query(
-      "SELECT id FROM users WHERE referral_code = $1 AND role = 'affiliate' AND status = 'active'",
+      `SELECT id FROM users
+       WHERE referral_code = $1
+       AND role = 'affiliate'
+       AND status = 'active'`,
       [referralCode]
     );
 
@@ -481,6 +581,8 @@ app.post("/api/auth/register", asyncRoute(async (req, res) => {
     user.referral_code = referralCodeForUser;
 
     const token = createToken(user);
+
+    setAuthCookie(res, token);
 
     res.status(201).json({
       success: true,
@@ -552,6 +654,8 @@ app.post("/api/auth/login", asyncRoute(async (req, res) => {
 
   const token = createToken(user);
 
+  setAuthCookie(res, token);
+
   res.json({
     success: true,
     message: "Login successful.",
@@ -559,6 +663,21 @@ app.post("/api/auth/login", asyncRoute(async (req, res) => {
     user: publicUser(user)
   });
 }));
+
+
+// ==========================================
+// LOGOUT
+// POST /api/auth/logout
+// ==========================================
+
+app.post("/api/auth/logout", (req, res) => {
+  clearAuthCookie(res);
+
+  res.json({
+    success: true,
+    message: "Logged out successfully."
+  });
+});
 
 
 // ==========================================
@@ -581,16 +700,12 @@ app.get("/api/auth/me", authenticateToken, asyncRoute(async (req, res) => {
     return sendError(res, 404, "User not found.");
   }
 
-  res.json({
-    success: true,
-    user: result.rows[0]
-  });
+  res.json({ success: true, user: result.rows[0] });
 }));
 
 
 // ==========================================
 // PROFILE
-// GET /api/profile
 // ==========================================
 
 app.get("/api/profile", authenticateToken, asyncRoute(async (req, res) => {
@@ -609,12 +724,6 @@ app.get("/api/profile", authenticateToken, asyncRoute(async (req, res) => {
   });
 }));
 
-
-// ==========================================
-// PUBLIC USER PROFILE
-// GET /api/profile/:username
-// ==========================================
-
 app.get("/api/profile/:username", asyncRoute(async (req, res) => {
   const username = cleanText(req.params.username, 30).toLowerCase();
 
@@ -631,17 +740,8 @@ app.get("/api/profile/:username", asyncRoute(async (req, res) => {
     return sendError(res, 404, "Profile not found.");
   }
 
-  res.json({
-    success: true,
-    profile: result.rows[0]
-  });
+  res.json({ success: true, profile: result.rows[0] });
 }));
-
-
-// ==========================================
-// UPDATE PROFILE
-// PUT /api/profile
-// ==========================================
 
 app.put("/api/profile", authenticateToken, asyncRoute(async (req, res) => {
   const fullName = req.body.full_name;
@@ -687,7 +787,6 @@ app.put("/api/profile", authenticateToken, asyncRoute(async (req, res) => {
 
 // ==========================================
 // ADMIN: DASHBOARD
-// GET /api/admin/dashboard
 // ==========================================
 
 app.get("/api/admin/dashboard", authenticateToken, requireAdmin,
@@ -712,13 +811,13 @@ asyncRoute(async (req, res) => {
 
 
 // ==========================================
-// ADMIN: LIST USERS
-// GET /api/admin/users
+// ADMIN: USERS
 // ==========================================
 
 app.get("/api/admin/users", authenticateToken, requireAdmin,
 asyncRoute(async (req, res) => {
   const search = cleanText(req.query.search, 100);
+
   const result = await pool.query(
     `SELECT id, username, email, role, status, balance,
             referral_code, created_at
@@ -730,17 +829,8 @@ asyncRoute(async (req, res) => {
     [search]
   );
 
-  res.json({
-    success: true,
-    users: result.rows
-  });
+  res.json({ success: true, users: result.rows });
 }));
-
-
-// ==========================================
-// ADMIN: CHANGE ACCOUNT STATUS
-// PATCH /api/admin/users/:id/status
-// ==========================================
 
 app.patch("/api/admin/users/:id/status", authenticateToken, requireAdmin,
 asyncRoute(async (req, res) => {
@@ -776,12 +866,6 @@ asyncRoute(async (req, res) => {
   });
 }));
 
-
-// ==========================================
-// ADMIN: CHANGE ROLE
-// PATCH /api/admin/users/:id/role
-// ==========================================
-
 app.patch("/api/admin/users/:id/role", authenticateToken, requireAdmin,
 asyncRoute(async (req, res) => {
   const targetId = Number(req.params.id);
@@ -793,8 +877,7 @@ asyncRoute(async (req, res) => {
   }
 
   const result = await pool.query(
-    `UPDATE users
-     SET role = $1, updated_at = NOW()
+    `UPDATE users SET role = $1, updated_at = NOW()
      WHERE id = $2 AND role <> 'admin'
      RETURNING id, username, email, role, status`,
     [role, targetId]
@@ -824,8 +907,7 @@ asyncRoute(async (req, res) => {
 
 
 // ==========================================
-// ADMIN: MODERATOR LIST
-// GET /api/admin/moderators
+// ADMIN: MODERATORS
 // ==========================================
 
 app.get("/api/admin/moderators", authenticateToken, requireAdmin,
@@ -839,17 +921,8 @@ asyncRoute(async (req, res) => {
      ORDER BY u.created_at DESC`
   );
 
-  res.json({
-    success: true,
-    moderators: result.rows
-  });
+  res.json({ success: true, moderators: result.rows });
 }));
-
-
-// ==========================================
-// ADMIN: ADD MODERATOR BY USERNAME
-// POST /api/admin/moderators
-// ==========================================
 
 app.post("/api/admin/moderators", authenticateToken, requireAdmin,
 asyncRoute(async (req, res) => {
@@ -885,12 +958,6 @@ asyncRoute(async (req, res) => {
     moderator: result.rows[0]
   });
 }));
-
-
-// ==========================================
-// ADMIN: SET MODERATOR PERMISSIONS
-// PUT /api/admin/moderators/:id/permissions
-// ==========================================
 
 app.put("/api/admin/moderators/:id/permissions",
 authenticateToken, requireAdmin,
@@ -945,12 +1012,6 @@ asyncRoute(async (req, res) => {
   });
 }));
 
-
-// ==========================================
-// ADMIN: REMOVE MODERATOR
-// DELETE /api/admin/moderators/:id
-// ==========================================
-
 app.delete("/api/admin/moderators/:id", authenticateToken, requireAdmin,
 asyncRoute(async (req, res) => {
   const targetId = Number(req.params.id);
@@ -982,8 +1043,7 @@ asyncRoute(async (req, res) => {
 
 
 // ==========================================
-// MODERATOR: PERMISSION CHECK EXAMPLE
-// GET /api/moderator/users
+// MODERATOR
 // ==========================================
 
 app.get("/api/moderator/users", authenticateToken,
@@ -996,16 +1056,54 @@ asyncRoute(async (req, res) => {
      LIMIT 200`
   );
 
-  res.json({
-    success: true,
-    users: result.rows
-  });
+  res.json({ success: true, users: result.rows });
+}));
+
+app.patch("/api/moderator/profiles/:id",
+authenticateToken, requirePermission("manage_profiles"),
+asyncRoute(async (req, res) => {
+  const targetId = Number(req.params.id);
+
+  if (!Number.isSafeInteger(targetId)) {
+    return sendError(res, 400, "Invalid user ID.");
+  }
+
+  const fullName = req.body.full_name;
+  const bio = req.body.bio;
+
+  if (
+    (fullName !== undefined &&
+      (typeof fullName !== "string" || fullName.length > 100)) ||
+    (bio !== undefined &&
+      (typeof bio !== "string" || bio.length > 300))
+  ) {
+    return sendError(res, 400, "Invalid profile information.");
+  }
+
+  const result = await pool.query(
+    `INSERT INTO profiles (user_id, full_name, bio)
+     VALUES ($1, COALESCE($2, ''), COALESCE($3, ''))
+     ON CONFLICT (user_id)
+     DO UPDATE SET
+       full_name = COALESCE($2, profiles.full_name),
+       bio = COALESCE($3, profiles.bio),
+       updated_at = NOW()
+     RETURNING *`,
+    [
+      targetId,
+      fullName === undefined ? null : fullName.trim(),
+      bio === undefined ? null : bio.trim()
+    ]
+  );
+
+  await audit(req.user.id, "moderator_profile_updated", targetId);
+
+  res.json({ success: true, profile: result.rows[0] });
 }));
 
 
 // ==========================================
-// AFFILIATE: MY REFERRAL INFORMATION
-// GET /api/affiliate/me
+// AFFILIATE
 // ==========================================
 
 app.get("/api/affiliate/me", authenticateToken,
@@ -1015,13 +1113,12 @@ asyncRoute(async (req, res) => {
   }
 
   const info = await pool.query(
-    `SELECT referral_code FROM users WHERE id = $1`,
+    "SELECT referral_code FROM users WHERE id = $1",
     [req.user.id]
   );
 
   const referrals = await pool.query(
-    `SELECT COUNT(*)::int AS total
-     FROM users WHERE referred_by = $1`,
+    "SELECT COUNT(*)::int AS total FROM users WHERE referred_by = $1",
     [req.user.id]
   );
 
@@ -1041,12 +1138,6 @@ asyncRoute(async (req, res) => {
   });
 }));
 
-
-// ==========================================
-// ADMIN: AFFILIATE LIST
-// GET /api/admin/affiliates
-// ==========================================
-
 app.get("/api/admin/affiliates", authenticateToken, requireAdmin,
 asyncRoute(async (req, res) => {
   const result = await pool.query(
@@ -1059,18 +1150,8 @@ asyncRoute(async (req, res) => {
      ORDER BY u.created_at DESC`
   );
 
-  res.json({
-    success: true,
-    affiliates: result.rows
-  });
+  res.json({ success: true, affiliates: result.rows });
 }));
-
-
-// ==========================================
-// ADMIN: CREATE AFFILIATE COMMISSION RECORD
-// POST /api/admin/affiliates/:id/commissions
-// This is a record only, not a cash payout.
-// ==========================================
 
 app.post("/api/admin/affiliates/:id/commissions",
 authenticateToken, requireAdmin,
@@ -1093,17 +1174,23 @@ asyncRoute(async (req, res) => {
     return sendError(res, 404, "Affiliate not found.");
   }
 
+  const referredUserId = req.body.referred_user_id || affiliateId;
+
+  const referredUser = await pool.query(
+    "SELECT id FROM users WHERE id = $1",
+    [referredUserId]
+  );
+
+  if (!referredUser.rows.length) {
+    return sendError(res, 400, "Referred user not found.");
+  }
+
   const result = await pool.query(
     `INSERT INTO affiliate_commissions
      (affiliate_id, referred_user_id, amount, description, status)
      VALUES ($1, $2, $3, $4, 'pending')
      RETURNING *`,
-    [
-      affiliateId,
-      req.body.referred_user_id || affiliateId,
-      amount,
-      description
-    ]
+    [affiliateId, referredUserId, amount, description]
   );
 
   await audit(req.user.id, "affiliate_commission_recorded", affiliateId);
@@ -1116,9 +1203,208 @@ asyncRoute(async (req, res) => {
 
 
 // ==========================================
+// ADMIN MESSAGE MANAGEMENT
+// GET/POST /api/admin/messages
+// ==========================================
+
+app.get("/api/admin/messages", authenticateToken, requireAdmin,
+asyncRoute(async (req, res) => {
+  const result = await pool.query(
+    `SELECT id, text, active, updated_by, updated_at
+     FROM admin_messages
+     ORDER BY updated_at DESC
+     LIMIT 50`
+  );
+
+  res.json({
+    success: true,
+    messages: result.rows
+  });
+}));
+
+app.post("/api/admin/messages", authenticateToken, requireAdmin,
+asyncRoute(async (req, res) => {
+  const message = cleanText(req.body.text, 300);
+
+  if (!message) {
+    return sendError(res, 400, "Message is required.");
+  }
+
+  const client = await pool.connect();
+
+  try {
+    await client.query("BEGIN");
+
+    await client.query(
+      "UPDATE admin_messages SET active = FALSE WHERE active = TRUE"
+    );
+
+    const result = await client.query(
+      `INSERT INTO admin_messages (text, active, updated_by)
+       VALUES ($1, TRUE, $2)
+       RETURNING id, text, active, updated_at`,
+      [message, req.user.id]
+    );
+
+    await client.query("COMMIT");
+
+    await audit(req.user.id, "admin_message_published", null, {
+      message_id: result.rows[0].id
+    });
+
+    res.status(201).json({
+      success: true,
+      message: "Admin message published.",
+      data: result.rows[0]
+    });
+
+  } catch (error) {
+    await client.query("ROLLBACK");
+    throw error;
+  } finally {
+    client.release();
+  }
+}));
+
+app.post("/api/admin/messages/disable", authenticateToken, requireAdmin,
+asyncRoute(async (req, res) => {
+  await pool.query(
+    "UPDATE admin_messages SET active = FALSE WHERE active = TRUE"
+  );
+
+  await audit(req.user.id, "admin_message_disabled");
+
+  res.json({
+    success: true,
+    message: "Admin message disabled."
+  });
+}));
+
+app.get("/api/public/admin-message", asyncRoute(async (req, res) => {
+  const result = await pool.query(
+    `SELECT id, text, active, updated_at
+     FROM admin_messages
+     WHERE active = TRUE
+     ORDER BY updated_at DESC
+     LIMIT 1`
+  );
+
+  res.json({
+    success: true,
+    message: result.rows[0] || null
+  });
+}));
+
+
+// ==========================================
+// LIVE EVENT MANAGEMENT
+// ==========================================
+
+app.get("/api/admin/live-event", authenticateToken, requireAdmin,
+asyncRoute(async (req, res) => {
+  const result = await pool.query(
+    `SELECT id, title, url, platform, active, updated_at
+     FROM admin_live_events
+     ORDER BY updated_at DESC
+     LIMIT 1`
+  );
+
+  res.json({
+    success: true,
+    event: result.rows[0] || null
+  });
+}));
+
+app.post("/api/admin/live-event", authenticateToken, requireAdmin,
+asyncRoute(async (req, res) => {
+  const title = cleanText(req.body.title, 80);
+  const url = cleanText(req.body.url, 1000);
+  const platform = cleanText(req.body.platform, 20).toLowerCase();
+
+  if (!title || !url) {
+    return sendError(res, 400, "Event title and URL are required.");
+  }
+
+  if (!["youtube", "facebook"].includes(platform)) {
+    return sendError(res, 400, "Platform must be YouTube or Facebook.");
+  }
+
+  if (!validExternalEventUrl(url, platform)) {
+    return sendError(res, 400, "Please enter a valid HTTPS URL for the selected platform.");
+  }
+
+  const client = await pool.connect();
+
+  try {
+    await client.query("BEGIN");
+
+    await client.query(
+      "UPDATE admin_live_events SET active = FALSE WHERE active = TRUE"
+    );
+
+    const result = await client.query(
+      `INSERT INTO admin_live_events
+       (title, url, platform, active, updated_by)
+       VALUES ($1, $2, $3, TRUE, $4)
+       RETURNING id, title, url, platform, active, updated_at`,
+      [title, url, platform, req.user.id]
+    );
+
+    await client.query("COMMIT");
+
+    await audit(req.user.id, "live_event_started", null, {
+      event_id: result.rows[0].id,
+      platform
+    });
+
+    res.status(201).json({
+      success: true,
+      message: "Live event published.",
+      event: result.rows[0]
+    });
+
+  } catch (error) {
+    await client.query("ROLLBACK");
+    throw error;
+  } finally {
+    client.release();
+  }
+}));
+
+app.post("/api/admin/live-event/disable",
+authenticateToken, requireAdmin,
+asyncRoute(async (req, res) => {
+  await pool.query(
+    "UPDATE admin_live_events SET active = FALSE WHERE active = TRUE"
+  );
+
+  await audit(req.user.id, "live_event_disabled");
+
+  res.json({
+    success: true,
+    message: "Live event disabled."
+  });
+}));
+
+app.get("/api/public/live-event", asyncRoute(async (req, res) => {
+  const result = await pool.query(
+    `SELECT id, title, url, platform, active, updated_at
+     FROM admin_live_events
+     WHERE active = TRUE
+     ORDER BY updated_at DESC
+     LIMIT 1`
+  );
+
+  res.json({
+    success: true,
+    event: result.rows[0] || null
+  });
+}));
+
+
+// ==========================================
 // DEMO WALLET
-// GET /api/wallet
-// Balance is TEST CREDIT ONLY.
+// TEST CREDIT ONLY - NOT REAL MONEY
 // ==========================================
 
 app.get("/api/wallet", authenticateToken,
@@ -1135,12 +1421,6 @@ asyncRoute(async (req, res) => {
     balance: result.rows[0].balance
   });
 }));
-
-
-// ==========================================
-// DEMO WALLET TRANSACTION HISTORY
-// GET /api/wallet/transactions
-// ==========================================
 
 app.get("/api/wallet/transactions", authenticateToken,
 asyncRoute(async (req, res) => {
@@ -1163,7 +1443,6 @@ asyncRoute(async (req, res) => {
 
 // ==========================================
 // CREATE DEMO BET
-// POST /api/demo/bets
 // ==========================================
 
 app.post("/api/demo/bets", authenticateToken,
@@ -1240,12 +1519,6 @@ asyncRoute(async (req, res) => {
   }
 }));
 
-
-// ==========================================
-// DEMO BET HISTORY
-// GET /api/demo/bets
-// ==========================================
-
 app.get("/api/demo/bets", authenticateToken,
 asyncRoute(async (req, res) => {
   const result = await pool.query(
@@ -1257,16 +1530,12 @@ asyncRoute(async (req, res) => {
     [req.user.id]
   );
 
-  res.json({
-    success: true,
-    bets: result.rows
-  });
+  res.json({ success: true, bets: result.rows });
 }));
 
 
 // ==========================================
 // DEMO RESULTS
-// GET /api/results
 // ==========================================
 
 app.get("/api/results", asyncRoute(async (req, res) => {
@@ -1277,17 +1546,8 @@ app.get("/api/results", asyncRoute(async (req, res) => {
      LIMIT 100`
   );
 
-  res.json({
-    success: true,
-    results: result.rows
-  });
+  res.json({ success: true, results: result.rows });
 }));
-
-
-// ==========================================
-// ADMIN: PUBLISH DEMO RESULT
-// POST /api/admin/results
-// ==========================================
 
 app.post("/api/admin/results", authenticateToken, requireAdmin,
 asyncRoute(async (req, res) => {
@@ -1319,7 +1579,6 @@ asyncRoute(async (req, res) => {
 
 // ==========================================
 // ADMIN: AUDIT LOGS
-// GET /api/admin/audit-logs
 // ==========================================
 
 app.get("/api/admin/audit-logs", authenticateToken, requireAdmin,
@@ -1331,61 +1590,7 @@ asyncRoute(async (req, res) => {
      LIMIT 200`
   );
 
-  res.json({
-    success: true,
-    logs: result.rows
-  });
-}));
-
-
-// ==========================================
-// ADMIN: UPDATE USER PROFILE
-// Requires manage_profiles permission for moderators.
-// ==========================================
-
-app.patch("/api/moderator/profiles/:id",
-authenticateToken, requirePermission("manage_profiles"),
-asyncRoute(async (req, res) => {
-  const targetId = Number(req.params.id);
-
-  if (!Number.isSafeInteger(targetId)) {
-    return sendError(res, 400, "Invalid user ID.");
-  }
-
-  const fullName = req.body.full_name;
-  const bio = req.body.bio;
-
-  if (
-    (fullName !== undefined &&
-      (typeof fullName !== "string" || fullName.length > 100)) ||
-    (bio !== undefined &&
-      (typeof bio !== "string" || bio.length > 300))
-  ) {
-    return sendError(res, 400, "Invalid profile information.");
-  }
-
-  const result = await pool.query(
-    `INSERT INTO profiles (user_id, full_name, bio)
-     VALUES ($1, COALESCE($2, ''), COALESCE($3, ''))
-     ON CONFLICT (user_id)
-     DO UPDATE SET
-       full_name = COALESCE($2, profiles.full_name),
-       bio = COALESCE($3, profiles.bio),
-       updated_at = NOW()
-     RETURNING *`,
-    [
-      targetId,
-      fullName === undefined ? null : fullName.trim(),
-      bio === undefined ? null : bio.trim()
-    ]
-  );
-
-  await audit(req.user.id, "moderator_profile_updated", targetId);
-
-  res.json({
-    success: true,
-    profile: result.rows[0]
-  });
+  res.json({ success: true, logs: result.rows });
 }));
 
 
@@ -1429,7 +1634,7 @@ async function startServer() {
     await bootstrapAdmin();
 
     app.listen(PORT, "0.0.0.0", () => {
-      console.log("GLO 365 API v2.0.0 running on port " + PORT);
+      console.log("GLO 365 API v2.1.0 running on port " + PORT);
     });
 
   } catch (error) {
