@@ -1,0 +1,1646 @@
+<!DOCTYPE html>
+<html lang="bn">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="theme-color" content="#2196e8">
+<title>GLO 365 - Admin Deposits</title>
+
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+
+body{
+ font-family:Arial,sans-serif;
+ background:#f0f7fd;
+ color:#18334d;
+ min-height:100vh
+}
+
+.app{
+ max-width:650px;
+ min-height:100vh;
+ margin:auto;
+ background:#fff;
+ padding-bottom:35px;
+ box-shadow:0 0 25px #163c5c0b
+}
+
+header{
+ background:linear-gradient(120deg,#1687d5,#2196e8);
+ padding:20px 16px;
+ display:flex;
+ justify-content:space-between;
+ align-items:center;
+ border-bottom:1px solid #ffffff25
+}
+
+.logo{font-size:25px;font-weight:900;color:#fff}
+.logo span{color:#d9f0ff}
+
+.admin-label{
+ background:#ffffff20;
+ border:1px solid #ffffff45;
+ color:#fff;
+ padding:8px 11px;
+ border-radius:20px;
+ font-size:10px;
+ font-weight:bold
+}
+
+.heading{padding:23px 16px 15px}
+
+.heading h2{
+ font-size:24px;
+ font-weight:900;
+ color:#167fc4
+}
+
+.heading p{
+ font-size:12px;
+ color:#8195a8;
+ margin-top:7px;
+ line-height:1.6
+}
+
+.stats{
+ display:grid;
+ grid-template-columns:repeat(2,1fr);
+ gap:10px;
+ margin:0 13px 15px
+}
+
+.stat{
+ background:#fff;
+ border:1px solid #dcecf8;
+ border-radius:13px;
+ padding:15px;
+ box-shadow:0 3px 12px #173c5b08
+}
+
+.stat small{font-size:11px;color:#8195a8}
+
+.stat strong{
+ display:block;
+ font-size:25px;
+ margin-top:7px;
+ color:#1687d5
+}
+
+.section{
+ margin:13px;
+ padding:15px;
+ background:#fff;
+ border:1px solid #dcecf8;
+ border-radius:14px;
+ box-shadow:0 3px 14px #173c5b08
+}
+
+.section h3{
+ font-size:16px;
+ margin-bottom:13px;
+ color:#167fc4
+}
+
+input,select,textarea{
+ width:100%;
+ min-height:45px;
+ padding:11px 12px;
+ border-radius:9px;
+ border:1px solid #cbdfee;
+ background:#f7fbff;
+ color:#193b56;
+ outline:none;
+ font-size:13px
+}
+
+textarea{min-height:80px;resize:vertical}
+
+input:focus,select:focus,textarea:focus{
+ border-color:#2196e8;
+ box-shadow:0 0 0 3px #2196e817
+}
+
+label{
+ display:block;
+ font-size:11px;
+ font-weight:bold;
+ color:#526f87;
+ margin:12px 0 7px
+}
+
+.filters{
+ display:grid;
+ grid-template-columns:1fr 1fr;
+ gap:9px
+}
+
+.notice{
+ display:none;
+ margin:12px 13px;
+ padding:12px;
+ background:#eff8ff;
+ border:1px solid #cce7fa;
+ color:#2878aa;
+ border-radius:10px;
+ font-size:12px;
+ line-height:1.6
+}
+
+.empty{
+ padding:20px 10px;
+ text-align:center;
+ color:#8b9eaf;
+ font-size:12px;
+ line-height:1.7
+}
+
+.primary-btn{
+ width:100%;
+ border:0;
+ background:linear-gradient(100deg,#1687d5,#2196e8);
+ color:white;
+ padding:13px;
+ border-radius:9px;
+ font-weight:900;
+ font-size:12px;
+ cursor:pointer;
+ box-shadow:0 4px 12px #1687d526
+}
+
+.primary-btn:disabled{opacity:.5;cursor:not-allowed}
+
+.method-search-area{margin-top:13px}
+.method-search-area label{margin-top:0}
+
+.method-hint{
+ font-size:10px;
+ color:#8195a8;
+ margin-top:8px;
+ line-height:1.6
+}
+
+.method-card,.request-card{
+ background:#f7fbff;
+ border:1px solid #d8e9f6;
+ border-radius:12px;
+ padding:14px;
+ margin-top:11px
+}
+
+.method-top,.request-top{
+ display:flex;
+ align-items:center;
+ justify-content:space-between;
+ gap:10px
+}
+
+.method-info{
+ display:flex;
+ align-items:center;
+ gap:11px;
+ min-width:0
+}
+
+.method-logo{
+ width:43px;
+ height:43px;
+ min-width:43px;
+ border-radius:11px;
+ display:flex;
+ align-items:center;
+ justify-content:center;
+ font-size:17px;
+ font-weight:900;
+ color:white
+}
+
+.method-name{
+ font-size:14px;
+ font-weight:900;
+ color:#294760;
+ overflow-wrap:anywhere
+}
+
+.method-sub{
+ font-size:10px;
+ color:#8195a8;
+ margin-top:5px;
+ overflow-wrap:anywhere
+}
+
+.badge{
+ font-size:9px;
+ padding:6px 8px;
+ border-radius:20px;
+ background:#e4f8ed;
+ color:#16884b;
+ white-space:nowrap
+}
+
+.badge.off{background:#fff0f1;color:#d34c5e}
+
+.actions{
+ display:flex;
+ gap:7px;
+ margin-top:12px;
+ flex-wrap:wrap
+}
+
+.actions button{
+ flex:1;
+ min-width:75px;
+ border:0;
+ padding:10px 7px;
+ border-radius:8px;
+ font-size:10px;
+ font-weight:bold;
+ cursor:pointer
+}
+
+.edit-btn{background:#dceeff;color:#167fc4}
+.toggle-btn{background:#dff5e9;color:#16884b}
+.delete-btn{background:#ffebed;color:#d34c5e}
+
+.username{
+ font-size:15px;
+ font-weight:900;
+ color:#294760;
+ overflow-wrap:anywhere
+}
+
+.status{
+ padding:6px 9px;
+ border-radius:20px;
+ font-size:9px;
+ font-weight:900;
+ background:#fff5dc;
+ color:#a87613;
+ white-space:nowrap
+}
+
+.status.approved{background:#e4f8ed;color:#16884b}
+.status.rejected{background:#fff0f1;color:#d34c5e}
+
+.details{
+ margin-top:12px;
+ font-size:11px;
+ line-height:2;
+ color:#71869a;
+ overflow-wrap:anywhere
+}
+
+.details strong{color:#294760}
+
+.amount{
+ font-size:23px;
+ font-weight:900;
+ color:#1687d5;
+ margin-top:10px
+}
+
+.request-actions{
+ display:flex;
+ gap:8px;
+ margin-top:13px
+}
+
+.request-actions button{
+ flex:1;
+ border:0;
+ padding:11px 8px;
+ border-radius:9px;
+ font-size:11px;
+ font-weight:900;
+ cursor:pointer
+}
+
+.approve-btn{background:#dff5e9;color:#16884b}
+.reject-btn{background:#ffebed;color:#d34c5e}
+
+.modal{
+ display:none;
+ position:fixed;
+ inset:0;
+ z-index:100;
+ background:#102b42a8;
+ padding:15px;
+ align-items:center;
+ justify-content:center
+}
+
+.modal-box{
+ width:100%;
+ max-width:420px;
+ background:#fff;
+ border:1px solid #d8e9f6;
+ border-radius:15px;
+ padding:19px;
+ max-height:90vh;
+ overflow-y:auto;
+ box-shadow:0 15px 45px #102b4230
+}
+
+.modal-title{
+ font-size:19px;
+ font-weight:900;
+ color:#167fc4;
+ margin-bottom:9px
+}
+
+.modal-subtitle{
+ font-size:11px;
+ line-height:1.7;
+ color:#71869a;
+ margin-bottom:15px
+}
+
+.modal-actions{
+ display:flex;
+ gap:9px;
+ margin-top:16px
+}
+
+.modal-actions button{
+ flex:1;
+ border:0;
+ border-radius:9px;
+ padding:12px 8px;
+ font-weight:bold;
+ cursor:pointer
+}
+
+.confirm-btn{background:#1687d5;color:white}
+.cancel-btn{background:#eaf3fa;color:#42647d}
+
+.warning{
+ background:#eff8ff;
+ color:#526f87;
+ border:1px solid #d1eaff;
+ border-radius:9px;
+ padding:11px;
+ font-size:10px;
+ line-height:1.7;
+ margin-top:12px
+}
+
+.switch-row{
+ display:flex;
+ align-items:center;
+ gap:9px;
+ margin-top:13px;
+ font-size:12px;
+ color:#526f87
+}
+
+.switch-row input{
+ width:18px;
+ min-height:18px;
+ accent-color:#2196e8
+}
+
+.back-btn{
+ display:block;
+ width:100%;
+ margin:15px auto 0;
+ padding:12px 20px;
+ background:#eff7fd;
+ color:#2678ad;
+ border:1px solid #cbdfee;
+ border-radius:9px;
+ font-size:12px;
+ font-weight:bold;
+ cursor:pointer
+}
+
+@media(max-width:360px){
+ .stats{gap:7px}
+ .stat{padding:12px}
+ .stat strong{font-size:21px}
+}
+</style>
+</head>
+
+<body>
+<div class="app">
+
+<header>
+ <div class="logo">GLO <span>365</span></div>
+ <div class="admin-label">ADMIN PANEL</div>
+</header>
+
+<div class="heading">
+ <h2>Deposit Management</h2>
+ <p>Manage payment methods and review user deposit requests.</p>
+</div>
+
+<div id="notice" class="notice"></div>
+
+<div class="stats">
+ <div class="stat"><small>Total Requests</small><strong id="totalRequests">0</strong></div>
+ <div class="stat"><small>Pending Requests</small><strong id="pendingRequests">0</strong></div>
+ <div class="stat"><small>Approved Requests</small><strong id="approvedRequests">0</strong></div>
+ <div class="stat"><small>Rejected Requests</small><strong id="rejectedRequests">0</strong></div>
+</div>
+
+<!-- PAYMENT METHOD LIBRARY -->
+<div class="section">
+ <h3>Payment Method Management</h3>
+
+ <p style="font-size:11px;color:#8195a8;line-height:1.7;margin-bottom:13px">
+ Payment Method সংরক্ষণ করুন। সব মেথড লুকানো থাকবে। প্রয়োজন হলে Search করে বের করুন।
+ </p>
+
+ <button class="primary-btn" type="button" onclick="openMethodModal()">
+  ＋ Add Payment Method
+ </button>
+
+ <div class="method-search-area">
+  <label for="methodSearch">Search Saved Methods</label>
+  <input type="search" id="methodSearch" placeholder="Search bKash, Nagad, Binance, account number...">
+  <div class="method-hint">
+   Search না করলে কোনো মেথড দেখানো হবে না। একই মেথডের একাধিক অ্যাকাউন্ট যোগ করা যাবে।
+  </div>
+ </div>
+
+ <div id="methodList">
+  <div class="empty">Search করে আপনার সংরক্ষিত Payment Method খুঁজুন।</div>
+ </div>
+</div>
+
+<!-- DEPOSIT SEARCH -->
+<div class="section">
+ <h3>Search Deposit Requests</h3>
+
+ <input type="search" id="searchInput" placeholder="Search username, request ID or transaction ID">
+
+ <div class="filters">
+  <div>
+   <label>Filter Status</label>
+   <select id="statusFilter">
+    <option value="all">All Requests</option>
+    <option value="pending">Pending</option>
+    <option value="approved">Approved</option>
+    <option value="rejected">Rejected</option>
+   </select>
+  </div>
+
+  <div>
+   <label>Payment Method</label>
+   <select id="methodFilter">
+    <option value="all">All Methods</option>
+   </select>
+  </div>
+ </div>
+</div>
+
+<div class="section">
+ <h3>Deposit Requests</h3>
+ <div id="requestList">
+  <div class="empty">Loading...</div>
+ </div>
+</div>
+
+<div class="section">
+ <div class="warning">
+  <strong>Important:</strong><br>
+  Approve করার আগে Transaction ID ও Payment Amount যাচাই করুন।
+  একই Request দ্বিতীয়বার Approve করা যাবে না।
+  এই পেজ LocalStorage Demo System। বাস্তব অর্থের জন্য secure Backend verification প্রয়োজন।
+ </div>
+
+ <button class="back-btn" onclick="location.href='admin.html'">← Back to Dashboard</button>
+ <button class="back-btn" onclick="logout()">Logout</button>
+</div>
+
+</div>
+
+<!-- METHOD MODAL -->
+<div class="modal" id="methodModal">
+<div class="modal-box">
+
+ <div class="modal-title" id="methodModalTitle">Add Payment Method</div>
+ <div class="modal-subtitle">একই মেথডের একাধিক আলাদা অ্যাকাউন্ট যোগ করতে পারবেন।</div>
+
+ <label>Choose Payment Method *</label>
+ <select id="methodPreset">
+  <option value="bKash">bKash</option>
+  <option value="Nagad">Nagad</option>
+  <option value="Rocket">Rocket</option>
+  <option value="Binance">Binance</option>
+  <option value="RedotPay">RedotPay</option>
+  <option value="PayPal">PayPal</option>
+  <option value="Google Pay">Google Pay</option>
+  <option value="Bank Transfer">Bank Transfer</option>
+  <option value="Custom">Custom Method</option>
+ </select>
+
+ <div id="customNameWrap" style="display:none">
+  <label>Custom Method Name *</label>
+  <input id="customMethodName" maxlength="60" placeholder="Enter method name">
+ </div>
+
+ <div style="display:flex;align-items:center;gap:10px;margin-top:15px;background:#eff8ff;padding:12px;border-radius:10px">
+  <div id="previewLogo" class="method-logo" style="background:#d51b72">bK</div>
+  <div>
+   <div id="previewName" class="method-name">bKash</div>
+   <div id="previewCurrency" class="method-sub">BDT</div>
+  </div>
+ </div>
+
+ <label>Account Label (Optional)</label>
+ <input id="methodLabel" maxlength="60" placeholder="Example: Personal / Business / Wallet 2">
+
+ <label>Payment Account / Wallet ID</label>
+ <input id="methodAccount" maxlength="150" placeholder="Payment number or wallet ID">
+
+ <label>Currency</label>
+ <select id="methodCurrency">
+  <option value="BDT">BDT</option>
+  <option value="USDT">USDT</option>
+  <option value="USD">USD</option>
+  <option value="INR">INR</option>
+  <option value="Other">Other</option>
+ </select>
+
+ <label>Payment Instructions</label>
+ <textarea id="methodInstructions" maxlength="1000" placeholder="Payment instructions for users"></textarea>
+
+ <label class="switch-row">
+  <input type="checkbox" id="methodActive" checked>
+  Active
+ </label>
+
+ <div class="warning">Card Number, CVV, PIN বা OTP কখনো চাইবেন না।</div>
+
+ <div class="modal-actions">
+  <button class="cancel-btn" type="button" onclick="closeMethodModal()">Cancel</button>
+  <button class="confirm-btn" type="button" id="saveMethodBtn">Save Method</button>
+ </div>
+
+</div>
+</div>
+
+<!-- APPROVE MODAL -->
+<div class="modal" id="approveModal">
+<div class="modal-box">
+
+ <div class="modal-title">Approve Deposit</div>
+ <div class="modal-subtitle" id="approveInfo"></div>
+
+ <label>Points to Credit</label>
+ <input type="number" id="creditPoints" min="0.01" step="0.01" placeholder="Enter points">
+
+ <div class="modal-actions">
+  <button class="cancel-btn" onclick="closeApprove()">Cancel</button>
+  <button class="confirm-btn" id="confirmApprove">Confirm Approval</button>
+ </div>
+
+</div>
+</div>
+
+<!-- REJECT MODAL -->
+<div class="modal" id="rejectModal">
+<div class="modal-box">
+
+ <div class="modal-title">Reject Deposit</div>
+ <div class="modal-subtitle" id="rejectInfo"></div>
+
+ <label>Rejection Reason</label>
+ <input id="rejectReason" maxlength="200" placeholder="Enter reason">
+
+ <div class="modal-actions">
+  <button class="cancel-btn" onclick="closeReject()">Cancel</button>
+  <button class="confirm-btn" id="confirmReject">Confirm Reject</button>
+ </div>
+
+</div>
+</div>
+
+<script>
+"use strict";
+
+/* STORAGE KEYS */
+const USERS_KEY="glo365_users";
+const SESSION_KEY="glo365_session";
+const DEPOSIT_KEY="glo365_deposit_requests";
+const METHODS_KEY="glo365_payment_methods";
+const POINT_HISTORY_KEY="glo365_point_history";
+
+/* STATE */
+let methods=[];
+let deposits=[];
+let editingMethodId=null;
+let selectedRequestId=null;
+let noticeTimer=null;
+
+const PRESETS={
+ "bKash":{name:"bKash",short:"bK",color:"#d51b72",currency:"BDT"},
+ "Nagad":{name:"Nagad",short:"N",color:"#f58220",currency:"BDT"},
+ "Rocket":{name:"Rocket",short:"R",color:"#8b45a8",currency:"BDT"},
+ "Binance":{name:"Binance",short:"B",color:"#d9a400",currency:"USDT"},
+ "RedotPay":{name:"RedotPay",short:"R",color:"#df3154",currency:"USDT"},
+ "PayPal":{name:"PayPal",short:"P",color:"#1769aa",currency:"USD"},
+ "Google Pay":{name:"Google Pay",short:"G",color:"#4285f4",currency:"USD"},
+ "Bank Transfer":{name:"Bank Transfer",short:"BK",color:"#287c65",currency:"BDT"}
+};
+
+/* SAFE STORAGE */
+function readJSON(key,fallback){
+ try{
+  const raw=localStorage.getItem(key);
+  return raw===null?fallback:JSON.parse(raw);
+ }catch(e){
+  return fallback;
+ }
+}
+
+function saveJSON(key,value){
+ const json=JSON.stringify(value);
+ localStorage.setItem(key,json);
+
+ if(localStorage.getItem(key)!==json){
+  throw new Error("Storage verification failed");
+ }
+}
+
+/* NOTICE */
+function notify(message){
+ const box=document.getElementById("notice");
+
+ box.textContent=message;
+ box.style.display="block";
+
+ clearTimeout(noticeTimer);
+
+ noticeTimer=setTimeout(()=>{
+  box.style.display="none";
+ },4500);
+}
+
+/* ADMIN ACCESS */
+function requireAdmin(){
+ const session=readJSON(SESSION_KEY,null);
+
+ if(!session||session.role!=="admin"){
+  location.replace("login.html");
+  return false;
+ }
+
+ return true;
+}
+
+function logout(){
+ localStorage.removeItem(SESSION_KEY);
+ location.href="login.html";
+}
+
+/* LOAD DATA */
+function loadMethods(){
+ const saved=readJSON(METHODS_KEY,[]);
+
+ methods=Array.isArray(saved)?saved:[];
+}
+
+function loadDeposits(){
+ const data=readJSON(DEPOSIT_KEY,[]);
+
+ deposits=Array.isArray(data)?data:[];
+}
+
+/* METHOD LOGO */
+function logoInfo(method){
+ const preset=PRESETS[method.preset];
+
+ if(preset)return preset;
+
+ const name=method.name||"Custom";
+
+ return {
+  short:name.slice(0,2).toUpperCase(),
+  color:"#287eae"
+ };
+}
+
+/* SEARCHABLE HIDDEN METHOD LIBRARY */
+function renderMethods(){
+ const list=document.getElementById("methodList");
+
+ const query=document.getElementById("methodSearch")
+  .value.trim().toLowerCase();
+
+ list.replaceChildren();
+
+ if(!query){
+  const empty=document.createElement("div");
+
+  empty.className="empty";
+  empty.textContent="আপনার মেথডগুলো সংরক্ষিত আছে। দেখতে Search করুন।";
+
+  list.appendChild(empty);
+  return;
+ }
+
+ const filtered=methods.filter(method=>{
+  const text=[
+   method.name,
+   method.label,
+   method.account,
+   method.currency,
+   method.instructions,
+   method.id
+  ].join(" ").toLowerCase();
+
+  return text.includes(query);
+ });
+
+ if(!filtered.length){
+  const empty=document.createElement("div");
+
+  empty.className="empty";
+  empty.textContent=
+   "কোনো Payment Method পাওয়া যায়নি। নতুন মেথড যোগ করতে Add Payment Method চাপুন।";
+
+  list.appendChild(empty);
+  return;
+ }
+
+ filtered.forEach(method=>{
+  const info=logoInfo(method);
+
+  const card=document.createElement("div");
+  card.className="method-card";
+
+  const top=document.createElement("div");
+  top.className="method-top";
+
+  const left=document.createElement("div");
+  left.className="method-info";
+
+  const logo=document.createElement("div");
+  logo.className="method-logo";
+  logo.style.background=info.color;
+  logo.textContent=info.short;
+
+  const text=document.createElement("div");
+
+  const name=document.createElement("div");
+  name.className="method-name";
+  name.textContent=method.name||"Payment Method";
+
+  const sub=document.createElement("div");
+  sub.className="method-sub";
+
+  sub.textContent=
+   (method.label?method.label+" · ":"")+
+   (method.currency||"BDT")+" · "+
+   (method.account||"Account not set");
+
+  text.append(name,sub);
+  left.append(logo,text);
+
+  const badge=document.createElement("span");
+
+  badge.className="badge"+(method.active?"":" off");
+  badge.textContent=method.active?"ACTIVE":"INACTIVE";
+
+  top.append(left,badge);
+  card.appendChild(top);
+
+  const instructions=document.createElement("div");
+
+  instructions.className="details";
+  instructions.textContent=method.instructions||"No instructions";
+
+  card.appendChild(instructions);
+
+  const actions=document.createElement("div");
+  actions.className="actions";
+
+  const edit=document.createElement("button");
+  edit.className="edit-btn";
+  edit.textContent="Edit";
+  edit.onclick=()=>openMethodModal(method.id);
+
+  const toggle=document.createElement("button");
+  toggle.className="toggle-btn";
+  toggle.textContent=method.active?"Deactivate":"Activate";
+  toggle.onclick=()=>toggleMethod(method.id);
+
+  const del=document.createElement("button");
+  del.className="delete-btn";
+  del.textContent="Delete";
+  del.onclick=()=>deleteMethod(method.id);
+
+  actions.append(edit,toggle,del);
+  card.appendChild(actions);
+
+  list.appendChild(card);
+ });
+}
+
+/* METHOD FILTER */
+function renderMethodFilter(){
+ const select=document.getElementById("methodFilter");
+ const current=select.value||"all";
+
+ select.replaceChildren();
+
+ const all=document.createElement("option");
+ all.value="all";
+ all.textContent="All Methods";
+
+ select.appendChild(all);
+
+ [...new Set(deposits.map(x=>x.method).filter(Boolean))].forEach(name=>{
+  const option=document.createElement("option");
+
+  option.value=name;
+  option.textContent=name;
+
+  select.appendChild(option);
+ });
+
+ select.value=[...select.options].some(x=>x.value===current)?
+  current:"all";
+}
+
+/* METHOD PREVIEW */
+function updatePreview(){
+ const preset=document.getElementById("methodPreset").value;
+ const custom=preset==="Custom";
+
+ document.getElementById("customNameWrap").style.display=
+  custom?"block":"none";
+
+ const info=PRESETS[preset]||{
+  short:(document.getElementById("customMethodName").value||"CM")
+   .slice(0,2).toUpperCase(),
+  color:"#287eae",
+  currency:document.getElementById("methodCurrency").value
+ };
+
+ const name=custom?
+  (document.getElementById("customMethodName").value.trim()||"Custom Method"):
+  info.name;
+
+ document.getElementById("previewLogo").textContent=info.short;
+ document.getElementById("previewLogo").style.background=info.color;
+ document.getElementById("previewName").textContent=name;
+ document.getElementById("previewCurrency").textContent=info.currency;
+
+ if(!custom){
+  document.getElementById("methodCurrency").value=info.currency;
+ }
+}
+
+/* OPEN METHOD MODAL */
+function openMethodModal(id){
+ editingMethodId=id||null;
+
+ const method=id?
+  methods.find(x=>String(x.id)===String(id)):null;
+
+ document.getElementById("methodModalTitle").textContent=
+  method?"Edit Payment Method":"Add Payment Method";
+
+ document.getElementById("methodPreset").value=
+  method?.preset||"bKash";
+
+ document.getElementById("customMethodName").value=
+  method?.preset==="Custom"?(method.name||""):"";
+
+ document.getElementById("methodLabel").value=method?.label||"";
+ document.getElementById("methodAccount").value=method?.account||"";
+
+ document.getElementById("methodCurrency").value=
+  method?.currency||"BDT";
+
+ document.getElementById("methodInstructions").value=
+  method?.instructions||"";
+
+ document.getElementById("methodActive").checked=
+  method?!!method.active:true;
+
+ updatePreview();
+
+ document.getElementById("methodModal").style.display="flex";
+}
+
+function closeMethodModal(){
+ document.getElementById("methodModal").style.display="none";
+ editingMethodId=null;
+}
+
+/* SAVE METHOD */
+function saveMethod(){
+ const preset=document.getElementById("methodPreset").value;
+
+ const name=preset==="Custom"?
+  document.getElementById("customMethodName").value.trim():
+  PRESETS[preset]?.name;
+
+ if(!name){
+  notify("Payment Method name দিন।");
+  return;
+ }
+
+ /* Duplicate provider names are intentionally allowed. */
+ const label=document.getElementById("methodLabel").value.trim();
+ const account=document.getElementById("methodAccount").value.trim();
+ const currency=document.getElementById("methodCurrency").value;
+
+ const instructions=
+  document.getElementById("methodInstructions").value.trim();
+
+ const active=document.getElementById("methodActive").checked;
+
+ const updated=[...methods];
+ const oldId=editingMethodId;
+
+ let savedId;
+
+ if(oldId){
+  const index=updated.findIndex(x=>String(x.id)===String(oldId));
+
+  if(index<0){
+   notify("Method পাওয়া যায়নি।");
+   return;
+  }
+
+  savedId=updated[index].id;
+
+  updated[index]={
+   ...updated[index],
+   preset,
+   name,
+   label,
+   account,
+   currency,
+   instructions,
+   active
+  };
+
+ }else{
+  savedId="method-"+Date.now()+"-"+Math.random().toString(36).slice(2,9);
+
+  updated.push({
+   id:savedId,
+   preset,
+   name,
+   label,
+   account,
+   currency,
+   instructions,
+   active,
+   createdAt:new Date().toISOString()
+  });
+ }
+
+ const button=document.getElementById("saveMethodBtn");
+
+ button.disabled=true;
+ button.textContent="Saving...";
+
+ try{
+  saveJSON(METHODS_KEY,updated);
+
+  const verified=readJSON(METHODS_KEY,null);
+
+  if(!Array.isArray(verified)||
+   !verified.some(x=>String(x.id)===String(savedId))){
+   throw new Error("Saved method verification failed");
+  }
+
+  methods=verified;
+
+  closeMethodModal();
+
+  document.getElementById("methodSearch").value=name;
+
+  renderMethods();
+
+  notify(oldId?
+   "Payment Method updated.":
+   "Payment Method saved successfully.");
+
+ }catch(error){
+  console.error(error);
+
+  notify("Save হয়নি। Browser Storage full বা blocked হতে পারে।");
+
+ }finally{
+  button.disabled=false;
+  button.textContent="Save Method";
+ }
+}
+
+/* TOGGLE METHOD */
+function toggleMethod(id){
+ const index=methods.findIndex(x=>String(x.id)===String(id));
+
+ if(index<0)return;
+
+ const updated=[...methods];
+
+ updated[index]={
+  ...updated[index],
+  active:!updated[index].active
+ };
+
+ try{
+  saveJSON(METHODS_KEY,updated);
+
+  methods=readJSON(METHODS_KEY,updated);
+
+  renderMethods();
+
+  notify("Payment Method status updated.");
+
+ }catch(e){
+  notify("Status save করা যায়নি।");
+ }
+}
+
+/* DELETE METHOD */
+function deleteMethod(id){
+ const method=methods.find(x=>String(x.id)===String(id));
+
+ if(!method)return;
+
+ if(!confirm(
+  method.name+" ("+(method.account||"No account")+") Delete করবেন?"
+ ))return;
+
+ const updated=methods.filter(x=>String(x.id)!==String(id));
+
+ try{
+  saveJSON(METHODS_KEY,updated);
+
+  methods=readJSON(METHODS_KEY,updated);
+
+  renderMethods();
+
+  notify("Payment Method deleted.");
+
+ }catch(e){
+  notify("Delete করা যায়নি।");
+ }
+}
+
+/* DEPOSIT STATUS */
+function getStatus(r){
+ return String(r.status||"pending").toLowerCase();
+}
+
+function formatDate(value){
+ const d=new Date(value);
+
+ return Number.isNaN(d.getTime())?
+  "Unavailable":d.toLocaleString("en-GB");
+}
+
+function maskAccount(value){
+ const s=String(value||"");
+
+ return s.length<=4?"••••":"••••••"+s.slice(-4);
+}
+
+/* STATISTICS */
+function renderStats(){
+ document.getElementById("totalRequests").textContent=deposits.length;
+
+ document.getElementById("pendingRequests").textContent=
+  deposits.filter(x=>getStatus(x)==="pending").length;
+
+ document.getElementById("approvedRequests").textContent=
+  deposits.filter(x=>getStatus(x)==="approved").length;
+
+ document.getElementById("rejectedRequests").textContent=
+  deposits.filter(x=>getStatus(x)==="rejected").length;
+}
+
+/* REQUEST CARD */
+function createRequestCard(r){
+ const card=document.createElement("div");
+ card.className="request-card";
+
+ const top=document.createElement("div");
+ top.className="request-top";
+
+ const username=document.createElement("div");
+ username.className="username";
+ username.textContent=r.username||"Unknown User";
+
+ const status=document.createElement("span");
+ const state=getStatus(r);
+
+ status.className="status";
+
+ if(state==="approved")status.classList.add("approved");
+ if(state==="rejected")status.classList.add("rejected");
+
+ status.textContent=state.toUpperCase();
+
+ top.append(username,status);
+
+ const details=document.createElement("div");
+ details.className="details";
+
+ const rows=[
+  ["Request ID",r.id],
+  ["Payment Method",r.method],
+  ["Payment Account",r.paymentAccount],
+  ["Currency",r.currency||"BDT"],
+  ["Sender Account",maskAccount(r.senderAccount)],
+  ["Transaction ID",r.transactionId],
+  ["Request Date",formatDate(r.date)]
+ ];
+
+ if(r.reviewedAt)rows.push(["Reviewed At",formatDate(r.reviewedAt)]);
+ if(r.reviewedBy)rows.push(["Reviewed By",r.reviewedBy]);
+ if(r.rejectionReason)rows.push(["Rejection Reason",r.rejectionReason]);
+
+ rows.forEach(([key,value])=>{
+  const line=document.createElement("div");
+  const strong=document.createElement("strong");
+
+  strong.textContent=key+": ";
+
+  line.append(
+   strong,
+   document.createTextNode(String(value||"—"))
+  );
+
+  details.appendChild(line);
+ });
+
+ const amount=document.createElement("div");
+
+ amount.className="amount";
+
+ amount.textContent=
+  Number(r.amount||0).toFixed(2)+" "+(r.currency||"BDT");
+
+ card.append(top,details,amount);
+
+ if(state==="approved"){
+  const credited=document.createElement("div");
+
+  credited.className="details";
+  credited.style.color="#16884b";
+
+  credited.textContent=
+   "Credited Points: "+Number(r.creditedPoints||0).toFixed(2);
+
+  card.appendChild(credited);
+ }
+
+ if(state==="pending"){
+  const actions=document.createElement("div");
+
+  actions.className="request-actions";
+
+  const approve=document.createElement("button");
+
+  approve.className="approve-btn";
+  approve.textContent="✓ Approve";
+  approve.onclick=()=>openApprove(r.id);
+
+  const reject=document.createElement("button");
+
+  reject.className="reject-btn";
+  reject.textContent="✕ Reject";
+  reject.onclick=()=>openReject(r.id);
+
+  actions.append(approve,reject);
+
+  card.appendChild(actions);
+ }
+
+ return card;
+}
+
+/* RENDER REQUESTS */
+function renderRequests(){
+ loadDeposits();
+
+ renderStats();
+ renderMethodFilter();
+
+ const list=document.getElementById("requestList");
+
+ list.replaceChildren();
+
+ const search=document.getElementById("searchInput")
+  .value.trim().toLowerCase();
+
+ const sf=document.getElementById("statusFilter").value;
+ const mf=document.getElementById("methodFilter").value;
+
+ const filtered=deposits.filter(r=>{
+  const hay=[
+   r.username,
+   r.id,
+   r.transactionId,
+   r.method
+  ].join(" ").toLowerCase();
+
+  return (!search||hay.includes(search))&&
+   (sf==="all"||getStatus(r)===sf)&&
+   (mf==="all"||r.method===mf);
+ });
+
+ if(!filtered.length){
+  const empty=document.createElement("div");
+
+  empty.className="empty";
+  empty.textContent="No deposit requests found.";
+
+  list.appendChild(empty);
+  return;
+ }
+
+ filtered.forEach(r=>{
+  list.appendChild(createRequestCard(r));
+ });
+}
+
+/* APPROVE MODAL */
+function openApprove(id){
+ loadDeposits();
+
+ const r=deposits.find(x=>String(x.id)===String(id));
+
+ if(!r||getStatus(r)!=="pending"){
+  notify("Request আর Pending নেই।");
+  renderRequests();
+  return;
+ }
+
+ selectedRequestId=id;
+
+ document.getElementById("approveInfo").textContent=
+  "User: "+r.username+
+  " | "+r.method+
+  " | "+r.amount+" "+(r.currency||"BDT");
+
+ document.getElementById("creditPoints").value="";
+
+ document.getElementById("approveModal").style.display="flex";
+}
+
+function closeApprove(){
+ document.getElementById("approveModal").style.display="none";
+ selectedRequestId=null;
+}
+
+/*
+ * APPROVAL
+ * Request status, wallet and point history are checked before crediting.
+ * LocalStorage does not support a true multi-key transaction.
+ */
+document.getElementById("confirmApprove").onclick=()=>{
+ if(!selectedRequestId)return;
+
+ loadDeposits();
+
+ const index=deposits.findIndex(x=>
+  String(x.id)===String(selectedRequestId)
+ );
+
+ if(index<0){
+  notify("Request পাওয়া যায়নি।");
+  closeApprove();
+  return;
+ }
+
+ const request=deposits[index];
+
+ /* Prevent second approval. */
+ if(getStatus(request)!=="pending"){
+  notify("এই Request ইতোমধ্যে Review করা হয়েছে।");
+  closeApprove();
+  renderRequests();
+  return;
+ }
+
+ const points=Number(document.getElementById("creditPoints").value);
+
+ if(!Number.isFinite(points)||points<=0||
+  !Number.isSafeInteger(Math.round(points*100))){
+  notify("সঠিক Points লিখুন।");
+  return;
+ }
+
+ const users=readJSON(USERS_KEY,[]);
+
+ if(!Array.isArray(users)){
+  notify("User data invalid.");
+  return;
+ }
+
+ const ui=users.findIndex(u=>
+  String(u.username||"").toLowerCase()===
+  String(request.username||"").toLowerCase()
+ );
+
+ if(ui<0){
+  notify("User account পাওয়া যায়নি।");
+  return;
+ }
+
+ const current=Number(users[ui].points)||0;
+
+ if(!Number.isFinite(current)||current<0){
+  notify("Wallet balance invalid.");
+  return;
+ }
+
+ const pointHistory=readJSON(POINT_HISTORY_KEY,[]);
+
+ if(!Array.isArray(pointHistory)){
+  notify("Point History data invalid.");
+  return;
+ }
+
+ /* Idempotency check: this request must not already have a credit record. */
+ const alreadyCredited=pointHistory.some(item=>
+  String(item.requestId||item.referenceId||"")===
+  String(request.id)&&
+  String(item.type||"").toLowerCase()==="credit"
+ );
+
+ if(alreadyCredited){
+  notify("এই Request-এর Points ইতোমধ্যে Credit করা হয়েছে। Admin-এর সাহায্য নিন।");
+  return;
+ }
+
+ const admin=readJSON(SESSION_KEY,{});
+ const now=new Date().toISOString();
+ const creditedPoints=Number(points.toFixed(2));
+ const newBalance=Number((current+creditedPoints).toFixed(2));
+
+ if(!Number.isFinite(newBalance)||newBalance>Number.MAX_SAFE_INTEGER){
+  notify("Wallet balance limit exceeded.");
+  return;
+ }
+
+ const updatedUsers=users.map((u,i)=>
+  i===ui?{...u,points:newBalance}:u
+ );
+
+ const updatedDeposits=[...deposits];
+
+ updatedDeposits[index]={
+  ...request,
+  status:"approved",
+  creditedPoints,
+  reviewedAt:now,
+  reviewedBy:admin.username||"Admin"
+ };
+
+ const newHistoryRecord={
+  id:"PH"+Date.now()+"-"+Math.random().toString(36).slice(2,7),
+  username:request.username,
+  type:"credit",
+  amount:creditedPoints,
+  reason:"Deposit Approved",
+  requestId:request.id,
+  referenceId:request.id,
+  date:now,
+  createdAt:now
+ };
+
+ const updatedHistory=[
+  newHistoryRecord,
+  ...pointHistory
+ ];
+
+ const oldUsersRaw=localStorage.getItem(USERS_KEY);
+ const oldDepositsRaw=localStorage.getItem(DEPOSIT_KEY);
+ const oldHistoryRaw=localStorage.getItem(POINT_HISTORY_KEY);
+
+ const button=document.getElementById("confirmApprove");
+
+ button.disabled=true;
+ button.textContent="Processing...";
+
+ try{
+  /*
+   * Write wallet, history and request status.
+   * If a write fails, attempt to restore all previous values.
+   */
+  saveJSON(USERS_KEY,updatedUsers);
+  saveJSON(POINT_HISTORY_KEY,updatedHistory);
+  saveJSON(DEPOSIT_KEY,updatedDeposits);
+
+  /* Verify all three records after saving. */
+  const checkUsers=readJSON(USERS_KEY,[]);
+  const checkHistory=readJSON(POINT_HISTORY_KEY,[]);
+  const checkDeposits=readJSON(DEPOSIT_KEY,[]);
+
+  const savedUser=Array.isArray(checkUsers)?
+   checkUsers.find(u=>
+    String(u.username||"").toLowerCase()===
+    String(request.username||"").toLowerCase()
+   ):null;
+
+  const savedHistory=Array.isArray(checkHistory)?
+   checkHistory.some(item=>
+    String(item.requestId||item.referenceId||"")===
+    String(request.id)&&
+    String(item.type||"").toLowerCase()==="credit"
+   ):false;
+
+  const savedRequest=Array.isArray(checkDeposits)?
+   checkDeposits.find(item=>String(item.id)===String(request.id)):null;
+
+  if(!savedUser||
+   Number(savedUser.points)!==newBalance||
+   !savedHistory||
+   !savedRequest||
+   getStatus(savedRequest)!=="approved"){
+   throw new Error("Approval verification failed");
+  }
+
+  closeApprove();
+
+  notify("Deposit approved. Wallet Points and Point History updated.");
+
+  renderRequests();
+
+ }catch(e){
+  console.error(e);
+
+  /* Best-effort rollback of the three LocalStorage records. */
+  try{
+   if(oldUsersRaw===null)localStorage.removeItem(USERS_KEY);
+   else localStorage.setItem(USERS_KEY,oldUsersRaw);
+
+   if(oldHistoryRaw===null)localStorage.removeItem(POINT_HISTORY_KEY);
+   else localStorage.setItem(POINT_HISTORY_KEY,oldHistoryRaw);
+
+   if(oldDepositsRaw===null)localStorage.removeItem(DEPOSIT_KEY);
+   else localStorage.setItem(DEPOSIT_KEY,oldDepositsRaw);
+
+  }catch(rollbackError){
+   console.error("Rollback failed:",rollbackError);
+  }
+
+  notify("Approval সম্পন্ন হয়নি। Wallet ও History যাচাই করুন।");
+
+ }finally{
+  button.disabled=false;
+  button.textContent="Confirm Approval";
+ }
+};
+
+/* REJECT MODAL */
+function openReject(id){
+ loadDeposits();
+
+ const r=deposits.find(x=>String(x.id)===String(id));
+
+ if(!r||getStatus(r)!=="pending"){
+  notify("Request আর Pending নেই।");
+  return;
+ }
+
+ selectedRequestId=id;
+
+ document.getElementById("rejectInfo").textContent=
+  "Reject deposit from "+r.username+"?";
+
+ document.getElementById("rejectReason").value="";
+
+ document.getElementById("rejectModal").style.display="flex";
+}
+
+function closeReject(){
+ document.getElementById("rejectModal").style.display="none";
+ selectedRequestId=null;
+}
+
+document.getElementById("confirmReject").onclick=()=>{
+ if(!selectedRequestId)return;
+
+ loadDeposits();
+
+ const index=deposits.findIndex(x=>
+  String(x.id)===String(selectedRequestId)
+ );
+
+ if(index<0){
+  notify("Request পাওয়া যায়নি।");
+  closeReject();
+  return;
+ }
+
+ const r=deposits[index];
+
+ if(getStatus(r)!=="pending"){
+  notify("Already reviewed.");
+  closeReject();
+  renderRequests();
+  return;
+ }
+
+ const reason=document.getElementById("rejectReason")
+  .value.trim();
+
+ if(!reason){
+  notify("Rejection reason লিখুন।");
+  return;
+ }
+
+ const admin=readJSON(SESSION_KEY,{});
+ const updated=[...deposits];
+
+ updated[index]={
+  ...r,
+  status:"rejected",
+  rejectionReason:reason,
+  reviewedAt:new Date().toISOString(),
+  reviewedBy:admin.username||"Admin"
+ };
+
+ try{
+  saveJSON(DEPOSIT_KEY,updated);
+
+  closeReject();
+
+  notify("Deposit request rejected.");
+
+  renderRequests();
+
+ }catch(e){
+  notify("Rejection save হয়নি।");
+ }
+};
+
+/* EVENTS */
+document.getElementById("methodPreset")
+ .addEventListener("change",updatePreview);
+
+document.getElementById("customMethodName")
+ .addEventListener("input",updatePreview);
+
+document.getElementById("saveMethodBtn")
+ .addEventListener("click",saveMethod);
+
+document.getElementById("methodSearch")
+ .addEventListener("input",renderMethods);
+
+document.getElementById("searchInput")
+ .addEventListener("input",renderRequests);
+
+document.getElementById("statusFilter")
+ .addEventListener("change",renderRequests);
+
+document.getElementById("methodFilter")
+ .addEventListener("change",renderRequests);
+
+/* STORAGE SYNC */
+window.addEventListener("storage",e=>{
+ if([
+  METHODS_KEY,
+  DEPOSIT_KEY,
+  USERS_KEY,
+  POINT_HISTORY_KEY,
+  SESSION_KEY,
+  null
+ ].includes(e.key)){
+  loadMethods();
+  renderMethods();
+  renderRequests();
+ }
+});
+
+/* MODAL OUTSIDE CLICK */
+["methodModal","approveModal","rejectModal"].forEach(id=>{
+ document.getElementById(id).addEventListener("click",e=>{
+  if(e.target!==e.currentTarget)return;
+
+  if(id==="methodModal")closeMethodModal();
+  if(id==="approveModal")closeApprove();
+  if(id==="rejectModal")closeReject();
+ });
+});
+
+/* INITIALIZE */
+if(requireAdmin()){
+ try{
+  loadMethods();
+  loadDeposits();
+
+  renderMethods();
+  renderRequests();
+
+ }catch(e){
+  console.error(e);
+  notify("Storage error: Browser LocalStorage কাজ করছে না।");
+ }
+}
+</script>
+</body>
+</html>
