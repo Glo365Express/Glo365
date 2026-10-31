@@ -1,0 +1,606 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="theme-color" content="#2196e8">
+<title>GLO 365 - Draw Timer Settings</title>
+
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+
+:root{
+ --blue:#2196e8;
+ --dark:#087acb;
+ --bg:#f1f7fc;
+ --text:#18344b;
+ --muted:#71869a;
+ --border:#d8e9f5;
+ --white:#fff;
+ --green:#168653;
+ --red:#c73545;
+}
+
+body{
+ font-family:Arial,sans-serif;
+ background:var(--bg);
+ color:var(--text);
+}
+
+.app{
+ max-width:520px;
+ min-height:100vh;
+ margin:auto;
+ background:white;
+ padding-bottom:30px;
+}
+
+.header{
+ background:linear-gradient(120deg,#2196e8,#087acb);
+ padding:19px 16px;
+ color:white;
+ display:flex;
+ align-items:center;
+ justify-content:space-between;
+}
+
+.logo{
+ font-size:26px;
+ font-weight:900;
+}
+
+.logo span{color:#eaf5fd}
+
+.admin-label{
+ font-size:12px;
+ background:#ffffff25;
+ padding:8px 12px;
+ border-radius:20px;
+ font-weight:bold;
+}
+
+.heading{
+ text-align:center;
+ background:var(--blue);
+ color:white;
+ padding:16px;
+ font-size:19px;
+ font-weight:900;
+}
+
+.subtitle{
+ text-align:center;
+ padding:12px;
+ background:#eaf5fd;
+ color:var(--dark);
+ font-size:13px;
+ font-weight:bold;
+}
+
+.content{padding:15px 13px}
+
+.card{
+ background:white;
+ border:1px solid var(--border);
+ border-radius:13px;
+ padding:17px 14px;
+ margin-bottom:14px;
+ box-shadow:0 3px 12px #17344b08;
+}
+
+.card-title{
+ font-size:16px;
+ font-weight:900;
+ margin-bottom:16px;
+}
+
+.field{margin-bottom:15px}
+
+label{
+ display:block;
+ font-size:13px;
+ font-weight:bold;
+ margin-bottom:7px;
+}
+
+input{
+ width:100%;
+ height:48px;
+ border:1px solid var(--border);
+ border-radius:9px;
+ padding:0 12px;
+ font-size:15px;
+ color:var(--text);
+ background:#f7fbff;
+ outline:none;
+}
+
+input:focus{
+ border-color:var(--blue);
+ background:white;
+ box-shadow:0 0 0 2px #2196e820;
+}
+
+.save-btn{
+ width:100%;
+ padding:15px;
+ background:linear-gradient(90deg,#2196e8,#087acb);
+ border:0;
+ border-radius:10px;
+ color:white;
+ font-size:16px;
+ font-weight:900;
+ cursor:pointer;
+}
+
+.save-btn:disabled{
+ opacity:.55;
+ cursor:not-allowed;
+}
+
+.status{
+ display:none;
+ padding:12px;
+ border-radius:9px;
+ margin-bottom:13px;
+ font-size:13px;
+ line-height:1.5;
+ overflow-wrap:anywhere;
+}
+
+.status.show{display:block}
+.status.success{background:#e8f8ef;color:#167548}
+.status.error{background:#fff0f0;color:#b42332}
+.status.info{background:#eaf5fd;color:#087acb}
+
+.info-row{
+ display:flex;
+ justify-content:space-between;
+ gap:10px;
+ padding:12px 0;
+ border-bottom:1px solid #edf3f8;
+ font-size:13px;
+}
+
+.info-row:last-child{border:0}
+.info-row span:first-child{color:var(--muted)}
+.info-row strong{text-align:right;overflow-wrap:anywhere}
+
+.countdown{
+ text-align:center;
+ padding:18px 8px;
+ background:#eaf5fd;
+ border-radius:10px;
+ margin-top:12px;
+}
+
+.countdown-label{
+ font-size:12px;
+ color:var(--muted);
+ font-weight:bold;
+}
+
+.countdown-value{
+ font-size:27px;
+ font-weight:900;
+ color:var(--dark);
+ margin-top:8px;
+ font-variant-numeric:tabular-nums;
+}
+
+.lock-info{
+ font-size:12px;
+ color:var(--red);
+ text-align:center;
+ line-height:1.6;
+ margin-top:12px;
+}
+
+.back-btn{
+ display:block;
+ margin:12px auto 0;
+ padding:12px 20px;
+ border:0;
+ background:transparent;
+ color:var(--dark);
+ font-size:14px;
+ font-weight:bold;
+ cursor:pointer;
+}
+
+.footer{
+ text-align:center;
+ color:var(--muted);
+ font-size:11px;
+ padding:10px;
+ line-height:1.7;
+}
+
+</style>
+</head>
+
+<body>
+<div class="app">
+
+<header class="header">
+ <div class="logo">GLO <span>365</span></div>
+ <div class="admin-label">ADMIN ONLY</div>
+</header>
+
+<div class="heading">DRAW TIMER SETTINGS</div>
+<div class="subtitle">Manage Draw Schedule & Number</div>
+
+<main class="content">
+
+ <div id="status" class="status" role="alert"></div>
+
+ <section class="card">
+  <div class="card-title">Set New Draw</div>
+
+  <div class="field">
+   <label for="drawNumber">Draw Number</label>
+   <input
+    id="drawNumber"
+    type="text"
+    maxlength="50"
+    placeholder="Enter draw number"
+    autocomplete="off">
+  </div>
+
+  <div class="field">
+   <label for="drawAt">Draw Date & Time</label>
+   <input id="drawAt" type="datetime-local">
+  </div>
+
+  <button class="save-btn" id="saveButton" type="button">
+   SAVE DRAW SCHEDULE
+  </button>
+ </section>
+
+ <section class="card">
+  <div class="card-title">Current Draw Schedule</div>
+
+  <div class="info-row">
+   <span>Draw Number</span>
+   <strong id="currentNumber">Loading...</strong>
+  </div>
+
+  <div class="info-row">
+   <span>Draw Date & Time</span>
+   <strong id="currentTime">Loading...</strong>
+  </div>
+
+  <div class="info-row">
+   <span>Betting Status</span>
+   <strong id="currentStatus">Loading...</strong>
+  </div>
+
+  <div class="countdown">
+   <div class="countdown-label">TIME REMAINING</div>
+   <div class="countdown-value" id="countdown">--:--:--</div>
+  </div>
+
+  <div class="lock-info">
+   Betting automatically closes 45 minutes before the draw.
+  </div>
+ </section>
+
+ <button class="back-btn" onclick="location.href='admin.html'">
+  ← Back to Admin Dashboard
+ </button>
+
+</main>
+
+<div class="footer">
+ GLO 365 Admin Control Panel<br>
+ Draw settings are managed by the server.
+</div>
+
+</div>
+
+<script>
+"use strict";
+
+const API_BASE="https://glo365.onrender.com/api";
+const TOKEN_KEY="glo365_token";
+
+const LOCK_MINUTES=45;
+const LOCK_MS=LOCK_MINUTES*60*1000;
+
+const statusBox=document.getElementById("status");
+const saveButton=document.getElementById("saveButton");
+
+let currentDraw=null;
+let timerInterval=null;
+
+function getToken(){
+ return localStorage.getItem(TOKEN_KEY)||"";
+}
+
+function showStatus(message,type="info"){
+ statusBox.textContent=message;
+ statusBox.className="status show "+type;
+}
+
+function clearStatus(){
+ statusBox.textContent="";
+ statusBox.className="status";
+}
+
+async function apiRequest(path,options={}){
+
+ const token=getToken();
+
+ const response=await fetch(API_BASE+path,{
+  ...options,
+  headers:{
+   "Accept":"application/json",
+   "Content-Type":"application/json",
+   "Authorization":"Bearer "+token,
+   ...(options.headers||{})
+  },
+  credentials:"include"
+ });
+
+ let data={};
+
+ try{
+  data=await response.json();
+ }catch(error){
+  throw new Error("Invalid server response.");
+ }
+
+ if(!response.ok||data.success===false){
+  throw new Error(data.message||"Server request failed.");
+ }
+
+ return data;
+}
+
+function formatDate(value){
+
+ if(!value)return "Not configured";
+
+ const date=new Date(value);
+
+ if(Number.isNaN(date.getTime())){
+  return "Invalid date";
+ }
+
+ return date.toLocaleString("en-GB",{
+  day:"2-digit",
+  month:"short",
+  year:"numeric",
+  hour:"2-digit",
+  minute:"2-digit",
+  hour12:true
+ });
+}
+
+function formatRemaining(ms){
+
+ if(!Number.isFinite(ms)||ms<=0){
+  return "00:00:00";
+ }
+
+ const seconds=Math.floor(ms/1000);
+ const hours=Math.floor(seconds/3600);
+ const minutes=Math.floor((seconds%3600)/60);
+ const remaining=seconds%60;
+
+ return [
+  String(hours).padStart(2,"0"),
+  String(minutes).padStart(2,"0"),
+  String(remaining).padStart(2,"0")
+ ].join(":");
+}
+
+function updateDisplay(){
+
+ if(!currentDraw||!currentDraw.draw_at){
+
+  document.getElementById("currentNumber").textContent="Not configured";
+  document.getElementById("currentTime").textContent="Not configured";
+  document.getElementById("currentStatus").textContent="Unavailable";
+  document.getElementById("countdown").textContent="--:--:--";
+
+  return;
+ }
+
+ const timestamp=new Date(currentDraw.draw_at).getTime();
+ const remaining=timestamp-Date.now();
+
+ const locked=remaining<=LOCK_MS;
+
+ document.getElementById("currentNumber").textContent=
+  currentDraw.draw_number||"Not set";
+
+ document.getElementById("currentTime").textContent=
+  formatDate(currentDraw.draw_at);
+
+ const statusElement=document.getElementById("currentStatus");
+
+ statusElement.textContent=locked
+  ?"BETTING CLOSED"
+  :"BETTING OPEN";
+
+ statusElement.style.color=locked?"#c73545":"#168653";
+
+ document.getElementById("countdown").textContent=
+  remaining<=0
+   ?"DRAW TIME REACHED"
+   :formatRemaining(remaining);
+}
+
+async function checkAdmin(){
+
+ const data=await apiRequest("/auth/me");
+
+ if(!data.user||String(data.user.role).toLowerCase()!=="admin"){
+  throw new Error("Access denied. Only Admin can manage draw settings.");
+ }
+
+ return data.user;
+}
+
+async function loadSettings(){
+
+ clearStatus();
+
+ try{
+
+  const data=await apiRequest("/admin/draw-settings");
+
+  currentDraw=data.drawSettings||data.settings||null;
+
+  if(currentDraw){
+
+   document.getElementById("drawNumber").value=
+    currentDraw.draw_number||"";
+
+   if(currentDraw.draw_at){
+
+    const date=new Date(currentDraw.draw_at);
+
+    const localValue=new Date(
+     date.getTime()-date.getTimezoneOffset()*60000
+    ).toISOString().slice(0,16);
+
+    document.getElementById("drawAt").value=localValue;
+   }
+  }
+
+  updateDisplay();
+
+ }catch(error){
+
+  showStatus(error.message,"error");
+ }
+}
+
+async function saveSettings(){
+
+ if(saveButton.disabled)return;
+
+ clearStatus();
+
+ const drawNumber=
+  document.getElementById("drawNumber").value.trim();
+
+ const drawAt=
+  document.getElementById("drawAt").value;
+
+ if(!drawNumber){
+  showStatus("Please enter a Draw Number.","error");
+  return;
+ }
+
+ if(!drawAt){
+  showStatus("Please select Draw Date and Time.","error");
+  return;
+ }
+
+ const localDate=new Date(drawAt);
+
+ if(Number.isNaN(localDate.getTime())){
+  showStatus("Invalid Draw Date or Time.","error");
+  return;
+ }
+
+ if(localDate.getTime()<=Date.now()){
+  showStatus("Draw Date and Time must be in the future.","error");
+  return;
+ }
+
+ const confirmed=confirm(
+  "Save this Draw Schedule?\n\n"+
+  "Draw Number: "+drawNumber+
+  "\nDraw Time: "+formatDate(localDate.toISOString())+
+  "\n\nBetting will close 45 minutes before the draw."
+ );
+
+ if(!confirmed)return;
+
+ saveButton.disabled=true;
+ saveButton.textContent="SAVING...";
+
+ try{
+
+  const data=await apiRequest("/admin/draw-settings",{
+   method:"PUT",
+   body:JSON.stringify({
+    draw_number:drawNumber,
+    draw_at:localDate.toISOString()
+   })
+  });
+
+  currentDraw=
+   data.drawSettings||
+   data.settings||
+   {
+    draw_number:drawNumber,
+    draw_at:localDate.toISOString()
+   };
+
+  updateDisplay();
+
+  showStatus(
+   data.message||"Draw Schedule saved successfully.",
+   "success"
+  );
+
+ }catch(error){
+
+  showStatus(error.message,"error");
+
+ }finally{
+
+  saveButton.disabled=false;
+  saveButton.textContent="SAVE DRAW SCHEDULE";
+ }
+}
+
+async function initialize(){
+
+ try{
+
+  if(!getToken()){
+   location.replace("login.html");
+   return;
+  }
+
+  await checkAdmin();
+
+  await loadSettings();
+
+  timerInterval=setInterval(updateDisplay,1000);
+
+ }catch(error){
+
+  showStatus(error.message,"error");
+
+  if(
+   error.message.toLowerCase().includes("token")||
+   error.message.toLowerCase().includes("unauthorized")
+  ){
+   setTimeout(()=>location.replace("login.html"),1500);
+  }
+ }
+}
+
+saveButton.addEventListener("click",saveSettings);
+
+window.addEventListener("focus",()=>{
+ if(getToken())loadSettings();
+});
+
+window.addEventListener("beforeunload",()=>{
+ if(timerInterval)clearInterval(timerInterval);
+});
+
+initialize();
+
+</script>
+</body>
+</html>
