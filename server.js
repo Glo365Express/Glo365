@@ -1,3 +1,4 @@
+
 require("dotenv").config();
 
 const express = require("express");
@@ -24,19 +25,68 @@ if (!DATABASE_URL) {
   process.exit(1);
 }
 
+const allowedOrigins = (process.env.FRONTEND_URL || "")
+  .split(",")
+  .map(x => x.trim().replace(/\/+$/, ""))
+  .filter(Boolean);
+
+if (process.env.NODE_ENV === "production" && !allowedOrigins.length) {
+  console.error("ERROR: FRONTEND_URL must be configured in production.");
+  process.exit(1);
+}
+
 app.disable("x-powered-by");
 app.use(express.json({ limit: "1mb" }));
 
-const allowedOrigins = process.env.FRONTEND_URL
-  ? process.env.FRONTEND_URL.split(",").map(x => x.trim()).filter(Boolean)
-  : true;
+// ==========================================
+// CORS SECURITY
+// ==========================================
 
 app.use(cors({
-  origin: allowedOrigins,
+  origin: (origin, callback) => {
+    // Non-browser clients such as Postman may have no Origin header.
+    if (!origin) return callback(null, true);
+
+    if (allowedOrigins.includes(origin.replace(/\/+$/, ""))) {
+      return callback(null, true);
+    }
+
+    if (
+      process.env.NODE_ENV !== "production" &&
+      ["http://localhost:3000", "http://localhost:5500",
+       "http://127.0.0.1:5500"].includes(origin)
+    ) {
+      return callback(null, true);
+    }
+
+    return callback(new Error("Origin not allowed."));
+  },
   credentials: true,
   methods: ["GET", "POST", "PUT", "PATCH", "DELETE", "OPTIONS"],
   allowedHeaders: ["Content-Type", "Authorization"]
 }));
+
+// Extra Origin protection for requests that change data.
+app.use((req, res, next) => {
+  const origin = req.headers.origin;
+
+  if (!origin) return next();
+
+  const normalizedOrigin = origin.replace(/\/+$/, "");
+  const localAllowed =
+    process.env.NODE_ENV !== "production" &&
+    ["http://localhost:3000", "http://localhost:5500",
+     "http://127.0.0.1:5500"].includes(origin);
+
+  if (!allowedOrigins.includes(normalizedOrigin) && !localAllowed) {
+    return res.status(403).json({
+      success: false,
+      message: "Origin not allowed."
+    });
+  }
+
+  next();
+});
 
 const pool = new Pool({
   connectionString: DATABASE_URL,
@@ -113,15 +163,19 @@ function clearAuthCookie(res) {
 
 function getCookie(req, name) {
   const header = req.headers.cookie || "";
-  const parts = header.split(";");
 
-  for (const part of parts) {
+  for (const part of header.split(";")) {
     const index = part.indexOf("=");
     if (index < 0) continue;
 
     const key = part.slice(0, index).trim();
+
     if (key === name) {
-      return decodeURIComponent(part.slice(index + 1).trim());
+      try {
+        return decodeURIComponent(part.slice(index + 1).trim());
+      } catch {
+        return null;
+      }
     }
   }
 
@@ -160,18 +214,18 @@ function validExternalEventUrl(value, platform) {
       "www.fb.watch"
     ];
 
-    if (platform === "youtube") {
-      return youtubeHosts.includes(host);
-    }
-
-    if (platform === "facebook") {
-      return facebookHosts.includes(host);
-    }
+    if (platform === "youtube") return youtubeHosts.includes(host);
+    if (platform === "facebook") return facebookHosts.includes(host);
 
     return false;
   } catch {
     return false;
   }
+}
+
+function validId(value) {
+  const id = Number(value);
+  return Number.isSafeInteger(id) && id > 0 ? id : null;
 }
 
 
@@ -293,6 +347,7 @@ async function initializeDatabase() {
     CREATE INDEX IF NOT EXISTS idx_audit_logs_created ON audit_logs(created_at DESC);
     CREATE INDEX IF NOT EXISTS idx_wallet_user ON wallet_transactions(user_id);
     CREATE INDEX IF NOT EXISTS idx_affiliate_user ON affiliate_commissions(affiliate_id);
+    CREATE INDEX IF NOT EXISTS idx_affiliate_referred_user ON affiliate_commissions(referred_user_id);
     CREATE INDEX IF NOT EXISTS idx_admin_messages_active ON admin_messages(active);
     CREATE INDEX IF NOT EXISTS idx_admin_live_events_active ON admin_live_events(active);
   `);
@@ -332,26 +387,27 @@ async function audit(actorId, action, targetUserId = null, details = {}) {
 
 async function authenticateToken(req, res, next) {
   const authHeader = req.headers.authorization || "";
-
   let token = null;
 
   if (authHeader.startsWith("Bearer ")) {
     token = authHeader.substring(7).trim();
   }
 
-  if (!token) {
-    token = getCookie(req, AUTH_COOKIE);
-  }
+  if (!token) token = getCookie(req, AUTH_COOKIE);
 
   if (!token) {
     return sendError(res, 401, "Authentication required.");
   }
 
-  try {
-    const decoded = jwt.verify(token, JWT_SECRET, {
-      issuer: "glo365"
-    });
+  let decoded;
 
+  try {
+    decoded = jwt.verify(token, JWT_SECRET, { issuer: "glo365" });
+  } catch (error) {
+    return sendError(res, 401, "Invalid or expired token.");
+  }
+
+  try {
     const result = await pool.query(
       `SELECT id, username, email, role, status
        FROM users WHERE id = $1`,
@@ -369,10 +425,11 @@ async function authenticateToken(req, res, next) {
     }
 
     req.user = user;
-    next();
+    return next();
 
   } catch (error) {
-    return sendError(res, 401, "Invalid or expired token.");
+    console.error("Authentication database error:", error.message);
+    return sendError(res, 500, "Authentication service temporarily unavailable.");
   }
 }
 
@@ -385,6 +442,7 @@ function requireAdmin(req, res, next) {
   if (req.user.role !== "admin") {
     return sendError(res, 403, "Admin access required.");
   }
+
   next();
 }
 
@@ -430,8 +488,10 @@ async function bootstrapAdmin() {
     return;
   }
 
-  if (!username || !email || !password || !validUsername(username) ||
-      !validEmail(email) || password.length < 12) {
+  if (!username || !email || !password ||
+      !validUsername(username) ||
+      !validEmail(email) ||
+      password.length < 12) {
     throw new Error(
       "Admin bootstrap requires a valid username, email and password of at least 12 characters."
     );
@@ -488,7 +548,7 @@ app.get("/", (req, res) => {
   res.json({
     success: true,
     message: "GLO 365 Backend API is running.",
-    version: "2.1.0"
+    version: "2.2.0"
   });
 });
 
@@ -526,7 +586,8 @@ app.post("/api/auth/register", asyncRoute(async (req, res) => {
     return sendError(res, 400, "Please enter a valid email address.");
   }
 
-  if (typeof password !== "string" || password.length < 8 || password.length > 128) {
+  if (typeof password !== "string" ||
+      password.length < 8 || password.length > 128) {
     return sendError(res, 400, "Password must be 8-128 characters.");
   }
 
@@ -581,7 +642,6 @@ app.post("/api/auth/register", asyncRoute(async (req, res) => {
     user.referral_code = referralCodeForUser;
 
     const token = createToken(user);
-
     setAuthCookie(res, token);
 
     res.status(201).json({
@@ -653,7 +713,6 @@ app.post("/api/auth/login", asyncRoute(async (req, res) => {
   delete user.password_hash;
 
   const token = createToken(user);
-
   setAuthCookie(res, token);
 
   res.json({
@@ -667,7 +726,6 @@ app.post("/api/auth/login", asyncRoute(async (req, res) => {
 
 // ==========================================
 // LOGOUT
-// POST /api/auth/logout
 // ==========================================
 
 app.post("/api/auth/logout", (req, res) => {
@@ -682,7 +740,6 @@ app.post("/api/auth/logout", (req, res) => {
 
 // ==========================================
 // CURRENT USER
-// GET /api/auth/me
 // ==========================================
 
 app.get("/api/auth/me", authenticateToken, asyncRoute(async (req, res) => {
@@ -834,11 +891,10 @@ asyncRoute(async (req, res) => {
 
 app.patch("/api/admin/users/:id/status", authenticateToken, requireAdmin,
 asyncRoute(async (req, res) => {
-  const targetId = Number(req.params.id);
+  const targetId = validId(req.params.id);
   const status = req.body.status;
 
-  if (!Number.isSafeInteger(targetId) ||
-      !["active", "suspended"].includes(status)) {
+  if (!targetId || !["active", "suspended"].includes(status)) {
     return sendError(res, 400, "Invalid user or status.");
   }
 
@@ -868,11 +924,10 @@ asyncRoute(async (req, res) => {
 
 app.patch("/api/admin/users/:id/role", authenticateToken, requireAdmin,
 asyncRoute(async (req, res) => {
-  const targetId = Number(req.params.id);
+  const targetId = validId(req.params.id);
   const role = req.body.role;
 
-  if (!Number.isSafeInteger(targetId) ||
-      !["user", "moderator", "affiliate"].includes(role)) {
+  if (!targetId || !["user", "moderator", "affiliate"].includes(role)) {
     return sendError(res, 400, "Invalid role or user.");
   }
 
@@ -892,6 +947,13 @@ asyncRoute(async (req, res) => {
       `INSERT INTO moderator_permissions (user_id, permissions)
        VALUES ($1, '{}'::jsonb)
        ON CONFLICT (user_id) DO NOTHING`,
+      [targetId]
+    );
+  }
+
+  if (role !== "moderator") {
+    await pool.query(
+      "DELETE FROM moderator_permissions WHERE user_id = $1",
       [targetId]
     );
   }
@@ -962,7 +1024,7 @@ asyncRoute(async (req, res) => {
 app.put("/api/admin/moderators/:id/permissions",
 authenticateToken, requireAdmin,
 asyncRoute(async (req, res) => {
-  const targetId = Number(req.params.id);
+  const targetId = validId(req.params.id);
   const permissions = req.body.permissions;
 
   const allowedPermissions = [
@@ -973,9 +1035,12 @@ asyncRoute(async (req, res) => {
     "manage_affiliates"
   ];
 
-  if (!Number.isSafeInteger(targetId) ||
-      !permissions || typeof permissions !== "object" ||
-      Array.isArray(permissions)) {
+  if (
+    !targetId ||
+    !permissions ||
+    typeof permissions !== "object" ||
+    Array.isArray(permissions)
+  ) {
     return sendError(res, 400, "Invalid permission information.");
   }
 
@@ -1003,7 +1068,9 @@ asyncRoute(async (req, res) => {
     [targetId, JSON.stringify(cleanPermissions)]
   );
 
-  await audit(req.user.id, "moderator_permissions_updated", targetId);
+  await audit(req.user.id, "moderator_permissions_updated", targetId, {
+    permissions: cleanPermissions
+  });
 
   res.json({
     success: true,
@@ -1014,7 +1081,11 @@ asyncRoute(async (req, res) => {
 
 app.delete("/api/admin/moderators/:id", authenticateToken, requireAdmin,
 asyncRoute(async (req, res) => {
-  const targetId = Number(req.params.id);
+  const targetId = validId(req.params.id);
+
+  if (!targetId) {
+    return sendError(res, 400, "Invalid moderator ID.");
+  }
 
   const result = await pool.query(
     `UPDATE users SET role = 'user', updated_at = NOW()
@@ -1043,7 +1114,7 @@ asyncRoute(async (req, res) => {
 
 
 // ==========================================
-// MODERATOR
+// MODERATOR: EXISTING PERMISSIONS
 // ==========================================
 
 app.get("/api/moderator/users", authenticateToken,
@@ -1062,9 +1133,9 @@ asyncRoute(async (req, res) => {
 app.patch("/api/moderator/profiles/:id",
 authenticateToken, requirePermission("manage_profiles"),
 asyncRoute(async (req, res) => {
-  const targetId = Number(req.params.id);
+  const targetId = validId(req.params.id);
 
-  if (!Number.isSafeInteger(targetId)) {
+  if (!targetId) {
     return sendError(res, 400, "Invalid user ID.");
   }
 
@@ -1103,7 +1174,7 @@ asyncRoute(async (req, res) => {
 
 
 // ==========================================
-// AFFILIATE
+// AFFILIATE: SELF DASHBOARD
 // ==========================================
 
 app.get("/api/affiliate/me", authenticateToken,
@@ -1138,10 +1209,17 @@ asyncRoute(async (req, res) => {
   });
 }));
 
-app.get("/api/admin/affiliates", authenticateToken, requireAdmin,
-asyncRoute(async (req, res) => {
+
+// ==========================================
+// AFFILIATE MANAGEMENT HELPERS
+// Admin has full access.
+// Moderator requires manage_affiliates.
+// ==========================================
+
+async function getAffiliateList(res) {
   const result = await pool.query(
-    `SELECT u.id, u.username, u.email, u.referral_code,
+    `SELECT u.id, u.username, u.email, u.status,
+            u.referral_code, u.created_at,
             COUNT(r.id)::int AS referral_count
      FROM users u
      LEFT JOIN users r ON r.referred_by = u.id
@@ -1151,60 +1229,240 @@ asyncRoute(async (req, res) => {
   );
 
   res.json({ success: true, affiliates: result.rows });
+}
+
+async function createAffiliateCommission(req, res) {
+  const affiliateId = validId(req.params.id);
+  const referredUserId = validId(req.body.referred_user_id);
+  const amount = Number(req.body.amount);
+  const description = cleanText(req.body.description, 300);
+
+  if (
+    !affiliateId ||
+    !referredUserId ||
+    !Number.isFinite(amount) ||
+    amount <= 0 ||
+    amount > 1000000
+  ) {
+    return sendError(res, 400, "Affiliate, referred user and valid commission amount are required.");
+  }
+
+  if (affiliateId === referredUserId) {
+    return sendError(res, 400, "An affiliate cannot be their own referred user.");
+  }
+
+  const client = await pool.connect();
+
+  try {
+    await client.query("BEGIN");
+
+    const affiliate = await client.query(
+      `SELECT id FROM users
+       WHERE id = $1 AND role = 'affiliate' AND status = 'active'
+       FOR UPDATE`,
+      [affiliateId]
+    );
+
+    if (!affiliate.rows.length) {
+      await client.query("ROLLBACK");
+      return sendError(res, 404, "Active affiliate not found.");
+    }
+
+    // A commission can only be created for a real user
+    // who was actually referred by this affiliate.
+    const referredUser = await client.query(
+      `SELECT id FROM users
+       WHERE id = $1
+         AND referred_by = $2
+         AND role = 'user'
+       FOR UPDATE`,
+      [referredUserId, affiliateId]
+    );
+
+    if (!referredUser.rows.length) {
+      await client.query("ROLLBACK");
+      return sendError(
+        res,
+        400,
+        "This user is not referred by the selected affiliate."
+      );
+    }
+
+    const duplicate = await client.query(
+      `SELECT id FROM affiliate_commissions
+       WHERE affiliate_id = $1 AND referred_user_id = $2
+       LIMIT 1`,
+      [affiliateId, referredUserId]
+    );
+
+    if (duplicate.rows.length) {
+      await client.query("ROLLBACK");
+      return sendError(
+        res,
+        409,
+        "A commission record already exists for this referred user."
+      );
+    }
+
+    const result = await client.query(
+      `INSERT INTO affiliate_commissions
+       (affiliate_id, referred_user_id, amount, description, status)
+       VALUES ($1, $2, $3, $4, 'pending')
+       RETURNING *`,
+      [affiliateId, referredUserId, amount, description]
+    );
+
+    await client.query("COMMIT");
+
+    await audit(
+      req.user.id,
+      "affiliate_commission_recorded",
+      referredUserId,
+      {
+        affiliate_id: affiliateId,
+        commission_id: result.rows[0].id,
+        amount
+      }
+    );
+
+    return res.status(201).json({
+      success: true,
+      message: "Commission created successfully.",
+      commission: result.rows[0]
+    });
+
+  } catch (error) {
+    await client.query("ROLLBACK");
+    throw error;
+  } finally {
+    client.release();
+  }
+}
+
+async function updateAffiliateCommissionStatus(req, res) {
+  const commissionId = validId(req.params.id);
+  const status = cleanText(req.body.status, 20).toLowerCase();
+
+  if (!commissionId ||
+      !["pending", "approved", "rejected"].includes(status)) {
+    return sendError(
+      res,
+      400,
+      "Invalid commission ID or status. Use pending, approved or rejected."
+    );
+  }
+
+  const result = await pool.query(
+    `UPDATE affiliate_commissions
+     SET status = $1
+     WHERE id = $2
+     RETURNING *`,
+    [status, commissionId]
+  );
+
+  if (!result.rows.length) {
+    return sendError(res, 404, "Commission not found.");
+  }
+
+  await audit(
+    req.user.id,
+    "affiliate_commission_status_changed",
+    result.rows[0].referred_user_id,
+    {
+      commission_id: commissionId,
+      affiliate_id: result.rows[0].affiliate_id,
+      status
+    }
+  );
+
+  res.json({
+    success: true,
+    message: "Commission status updated.",
+    commission: result.rows[0]
+  });
+}
+
+async function getAffiliateCommissions(res, affiliateId = null) {
+  const result = await pool.query(
+    `SELECT c.id, c.affiliate_id, c.referred_user_id,
+            c.amount, c.description, c.status, c.created_at,
+            a.username AS affiliate_username,
+            r.username AS referred_username
+     FROM affiliate_commissions c
+     JOIN users a ON a.id = c.affiliate_id
+     JOIN users r ON r.id = c.referred_user_id
+     WHERE ($1::bigint IS NULL OR c.affiliate_id = $1)
+     ORDER BY c.created_at DESC
+     LIMIT 300`,
+    [affiliateId]
+  );
+
+  res.json({ success: true, commissions: result.rows });
+}
+
+
+// ==========================================
+// ADMIN: AFFILIATE MANAGEMENT
+// ==========================================
+
+app.get("/api/admin/affiliates", authenticateToken, requireAdmin,
+asyncRoute(async (req, res) => {
+  await getAffiliateList(res);
+}));
+
+app.get("/api/admin/affiliates/commissions",
+authenticateToken, requireAdmin,
+asyncRoute(async (req, res) => {
+  await getAffiliateCommissions(res);
 }));
 
 app.post("/api/admin/affiliates/:id/commissions",
 authenticateToken, requireAdmin,
 asyncRoute(async (req, res) => {
-  const affiliateId = Number(req.params.id);
-  const amount = Number(req.body.amount);
-  const description = cleanText(req.body.description, 300);
+  await createAffiliateCommission(req, res);
+}));
 
-  if (!Number.isSafeInteger(affiliateId) ||
-      !Number.isFinite(amount) || amount <= 0 || amount > 1000000) {
-    return sendError(res, 400, "Invalid commission information.");
-  }
+app.patch("/api/admin/commissions/:id/status",
+authenticateToken, requireAdmin,
+asyncRoute(async (req, res) => {
+  await updateAffiliateCommissionStatus(req, res);
+}));
 
-  const affiliate = await pool.query(
-    "SELECT id FROM users WHERE id = $1 AND role = 'affiliate'",
-    [affiliateId]
-  );
 
-  if (!affiliate.rows.length) {
-    return sendError(res, 404, "Affiliate not found.");
-  }
+// ==========================================
+// MODERATOR: AFFILIATE MANAGEMENT
+// Requires ONLY manage_affiliates for these routes.
+// ==========================================
 
-  const referredUserId = req.body.referred_user_id || affiliateId;
+app.get("/api/moderator/affiliates",
+authenticateToken, requirePermission("manage_affiliates"),
+asyncRoute(async (req, res) => {
+  await getAffiliateList(res);
+}));
 
-  const referredUser = await pool.query(
-    "SELECT id FROM users WHERE id = $1",
-    [referredUserId]
-  );
+app.get("/api/moderator/affiliates/commissions",
+authenticateToken, requirePermission("manage_affiliates"),
+asyncRoute(async (req, res) => {
+  const affiliateId = validId(req.query.affiliate_id);
 
-  if (!referredUser.rows.length) {
-    return sendError(res, 400, "Referred user not found.");
-  }
+  await getAffiliateCommissions(res, affiliateId);
+}));
 
-  const result = await pool.query(
-    `INSERT INTO affiliate_commissions
-     (affiliate_id, referred_user_id, amount, description, status)
-     VALUES ($1, $2, $3, $4, 'pending')
-     RETURNING *`,
-    [affiliateId, referredUserId, amount, description]
-  );
+app.post("/api/moderator/affiliates/:id/commissions",
+authenticateToken, requirePermission("manage_affiliates"),
+asyncRoute(async (req, res) => {
+  await createAffiliateCommission(req, res);
+}));
 
-  await audit(req.user.id, "affiliate_commission_recorded", affiliateId);
-
-  res.status(201).json({
-    success: true,
-    commission: result.rows[0]
-  });
+app.patch("/api/moderator/commissions/:id/status",
+authenticateToken, requirePermission("manage_affiliates"),
+asyncRoute(async (req, res) => {
+  await updateAffiliateCommissionStatus(req, res);
 }));
 
 
 // ==========================================
 // ADMIN MESSAGE MANAGEMENT
-// GET/POST /api/admin/messages
 // ==========================================
 
 app.get("/api/admin/messages", authenticateToken, requireAdmin,
@@ -1216,10 +1474,7 @@ asyncRoute(async (req, res) => {
      LIMIT 50`
   );
 
-  res.json({
-    success: true,
-    messages: result.rows
-  });
+  res.json({ success: true, messages: result.rows });
 }));
 
 app.post("/api/admin/messages", authenticateToken, requireAdmin,
@@ -1330,7 +1585,11 @@ asyncRoute(async (req, res) => {
   }
 
   if (!validExternalEventUrl(url, platform)) {
-    return sendError(res, 400, "Please enter a valid HTTPS URL for the selected platform.");
+    return sendError(
+      res,
+      400,
+      "Please enter a valid HTTPS URL for the selected platform."
+    );
   }
 
   const client = await pool.connect();
@@ -1413,6 +1672,10 @@ asyncRoute(async (req, res) => {
     "SELECT balance FROM users WHERE id = $1",
     [req.user.id]
   );
+
+  if (!result.rows.length) {
+    return sendError(res, 404, "User not found.");
+  }
 
   res.json({
     success: true,
@@ -1617,6 +1880,10 @@ app.use((error, req, res, next) => {
     return sendError(res, 400, "Invalid JSON request.");
   }
 
+  if (error.message === "Origin not allowed.") {
+    return sendError(res, 403, "Origin not allowed.");
+  }
+
   res.status(500).json({
     success: false,
     message: "Internal server error."
@@ -1634,7 +1901,7 @@ async function startServer() {
     await bootstrapAdmin();
 
     app.listen(PORT, "0.0.0.0", () => {
-      console.log("GLO 365 API v2.1.0 running on port " + PORT);
+      console.log("GLO 365 API v2.2.0 running on port " + PORT);
     });
 
   } catch (error) {
