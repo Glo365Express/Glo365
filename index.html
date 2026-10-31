@@ -1,0 +1,451 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="theme-color" content="#080b18">
+<title>GLO 365</title>
+
+<style>
+*{
+    margin:0;
+    padding:0;
+    box-sizing:border-box;
+}
+
+body{
+    font-family:Arial,sans-serif;
+    background:#080b18;
+    color:white;
+    min-height:100vh;
+    overflow:hidden;
+}
+
+.splash{
+    min-height:100vh;
+    display:flex;
+    flex-direction:column;
+    justify-content:center;
+    align-items:center;
+    padding:25px;
+    position:relative;
+    background:
+        radial-gradient(circle at 50% 40%,
+        rgba(0,220,255,.15),
+        transparent 35%),
+        radial-gradient(circle at 20% 80%,
+        rgba(110,60,255,.15),
+        transparent 35%),
+        #080b18;
+}
+
+.glow{
+    position:absolute;
+    width:240px;
+    height:240px;
+    background:#00d9ff;
+    filter:blur(130px);
+    opacity:.18;
+    border-radius:50%;
+}
+
+/* CUSTOM LOGO */
+
+.logo{
+    width:155px;
+    height:155px;
+    border-radius:35px;
+    position:relative;
+    z-index:1;
+    display:grid;
+    place-items:center;
+    background:linear-gradient(145deg,#20b5ff,#0875d9);
+    box-shadow:
+        0 0 45px rgba(0,180,255,.35),
+        inset 0 3px 10px #ffffff45,
+        inset 0 -8px 18px #003d8c55;
+    animation:float 3s ease-in-out infinite;
+    overflow:hidden;
+}
+
+.logo::before{
+    content:"";
+    position:absolute;
+    width:125px;
+    height:125px;
+    border-radius:50%;
+    background:#ffffff0b;
+    border:1px solid #ffffff35;
+}
+
+.logo svg{
+    width:94%;
+    height:94%;
+    position:relative;
+    z-index:2;
+    filter:drop-shadow(0 3px 3px #001e4d80);
+}
+
+.logo-glow{
+    position:absolute;
+    width:100px;
+    height:100px;
+    border-radius:50%;
+    background:#ffffff;
+    opacity:.12;
+    filter:blur(25px);
+}
+
+/* PREMIUM GLO 365 BRAND NAME */
+
+.brand-name{
+    position:relative;
+    z-index:2;
+    margin-top:30px;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    gap:9px;
+    font-size:48px;
+    font-weight:1000;
+    letter-spacing:4px;
+    line-height:1.1;
+    filter:drop-shadow(0 5px 12px #00aaff35);
+}
+
+.brand-glo{
+    background:linear-gradient(
+        180deg,
+        #ffffff 0%,
+        #d9efff 28%,
+        #91cfff 52%,
+        #ffffff 75%,
+        #7db9e8 100%
+    );
+    -webkit-background-clip:text;
+    background-clip:text;
+    -webkit-text-fill-color:transparent;
+    text-shadow:0 0 22px #70caff35;
+}
+
+.brand-number{
+    background:linear-gradient(
+        180deg,
+        #b8f5ff 0%,
+        #36d8ff 35%,
+        #078ce8 70%,
+        #75caff 100%
+    );
+    -webkit-background-clip:text;
+    background-clip:text;
+    -webkit-text-fill-color:transparent;
+    filter:drop-shadow(0 0 10px #00bfff70);
+}
+
+.brand-line{
+    width:125px;
+    height:3px;
+    margin:12px auto 0;
+    border-radius:20px;
+    background:linear-gradient(
+        90deg,
+        transparent,
+        #42d9ff,
+        #ffffff,
+        #42d9ff,
+        transparent
+    );
+    box-shadow:0 0 12px #00c8ff80;
+}
+
+/* TAGLINE */
+
+.tagline{
+    margin-top:14px;
+    font-size:12px;
+    color:#aab5cc;
+    letter-spacing:4px;
+    font-weight:bold;
+}
+
+.description{
+    margin-top:55px;
+    font-size:14px;
+    color:#8995ae;
+    text-align:center;
+    line-height:1.7;
+}
+
+/* LOADER */
+
+.loader{
+    width:190px;
+    height:4px;
+    background:#202a40;
+    border-radius:20px;
+    overflow:hidden;
+    margin-top:30px;
+}
+
+.loader span{
+    display:block;
+    height:100%;
+    width:0%;
+    background:linear-gradient(90deg,#00d9ff,#8060ff);
+    animation:loading 3s linear forwards;
+}
+
+.loading-text{
+    margin-top:12px;
+    font-size:11px;
+    color:#77849d;
+    letter-spacing:2px;
+}
+
+.footer{
+    position:absolute;
+    bottom:25px;
+    color:#56627b;
+    font-size:11px;
+    letter-spacing:2px;
+    text-align:center;
+}
+
+/* ANIMATIONS */
+
+@keyframes float{
+    0%,100%{transform:translateY(0)}
+    50%{transform:translateY(-12px)}
+}
+
+@keyframes loading{
+    from{width:0%}
+    to{width:100%}
+}
+
+.fade-out{
+    animation:fade .5s forwards;
+}
+
+@keyframes fade{
+    to{
+        opacity:0;
+        transform:scale(1.05);
+    }
+}
+
+@media(max-width:480px){
+    .brand-name{
+        font-size:40px;
+        letter-spacing:3px;
+        gap:7px;
+    }
+
+    .logo{
+        width:140px;
+        height:140px;
+    }
+}
+
+@media(max-width:350px){
+    .brand-name{
+        font-size:34px;
+        letter-spacing:2px;
+    }
+}
+</style>
+</head>
+
+<body>
+
+<div class="splash" id="splash">
+
+    <div class="glow"></div>
+
+    <!-- CUSTOM GLO 365 BLUE WHEEL LOGO -->
+
+    <div class="logo">
+
+        <div class="logo-glow"></div>
+
+        <svg viewBox="0 0 200 200"
+             xmlns="http://www.w3.org/2000/svg">
+
+            <defs>
+
+                <linearGradient id="silver" x1="0" y1="0" x2="1" y2="1">
+                    <stop offset="0%" stop-color="#ffffff"/>
+                    <stop offset="45%" stop-color="#a9d9ff"/>
+                    <stop offset="100%" stop-color="#ffffff"/>
+                </linearGradient>
+
+                <linearGradient id="darkBlue" x1="0" y1="0" x2="0" y2="1">
+                    <stop offset="0%" stop-color="#174b83"/>
+                    <stop offset="100%" stop-color="#062c63"/>
+                </linearGradient>
+
+            </defs>
+
+            <path
+                d="M100 5
+                L119 29 L143 19 L151 49
+                L181 48 L171 78 L195 100
+                L171 122 L181 152
+                L151 151 L143 181
+                L119 171 L100 195
+                L81 171 L57 181
+                L49 151 L19 152
+                L29 122 L5 100
+                L29 78 L19 48
+                L49 49 L57 19
+                L81 29 Z"
+                fill="url(#darkBlue)"
+                stroke="url(#silver)"
+                stroke-width="2.5"/>
+
+            <path
+                d="M100 12 L100 188
+                M12 100 L188 100
+                M38 38 L162 162
+                M162 38 L38 162"
+                stroke="#a9d9ff"
+                stroke-width="1"
+                opacity=".5"/>
+
+            <circle cx="100" cy="100" r="69"
+                fill="#0b4f91"
+                stroke="url(#silver)"
+                stroke-width="4"/>
+
+            <circle cx="100" cy="100" r="63"
+                fill="none"
+                stroke="#d8edff"
+                stroke-width="1.5"
+                stroke-dasharray="3 3"/>
+
+            <circle cx="100" cy="100" r="56"
+                fill="none"
+                stroke="url(#silver)"
+                stroke-width="3"/>
+
+            <circle cx="100" cy="100" r="51"
+                fill="none"
+                stroke="#c9e7ff"
+                stroke-width="1.5"/>
+
+            <circle cx="100" cy="94" r="31"
+                fill="#145a9e"
+                stroke="url(#silver)"
+                stroke-width="3"/>
+
+            <circle cx="100" cy="94" r="26"
+                fill="none"
+                stroke="#d8edff"
+                stroke-width="1.5"/>
+
+            <g stroke="#d9efff" stroke-width="2" fill="none">
+                <path d="M100 68 V120"/>
+                <path d="M74 94 H126"/>
+                <path d="M82 76 L118 112"/>
+                <path d="M118 76 L82 112"/>
+                <path d="M87 70 L113 118"/>
+                <path d="M113 70 L87 118"/>
+            </g>
+
+            <circle cx="100" cy="94" r="7"
+                fill="#d8edff"
+                stroke="#ffffff"
+                stroke-width="2"/>
+
+            <circle cx="100" cy="94" r="3"
+                fill="#145a9e"/>
+
+            <g fill="#bce4ff" stroke="#ffffff" stroke-width="1">
+                <circle cx="100" cy="72" r="3"/>
+                <circle cx="100" cy="116" r="3"/>
+                <circle cx="78" cy="94" r="3"/>
+                <circle cx="122" cy="94" r="3"/>
+                <circle cx="84" cy="78" r="2.5"/>
+                <circle cx="116" cy="78" r="2.5"/>
+                <circle cx="84" cy="110" r="2.5"/>
+                <circle cx="116" cy="110" r="2.5"/>
+            </g>
+
+            <path
+                d="M94 125 L87 139 H113 L106 125"
+                fill="none"
+                stroke="url(#silver)"
+                stroke-width="4"
+                stroke-linejoin="round"/>
+
+            <path
+                d="M78 141 H122"
+                stroke="url(#silver)"
+                stroke-width="4"
+                stroke-linecap="round"/>
+
+            <path
+                d="M85 146 H115"
+                stroke="#c7e7ff"
+                stroke-width="2"
+                stroke-linecap="round"/>
+
+        </svg>
+
+    </div>
+
+    <!-- PREMIUM BRAND NAME -->
+
+    <div class="brand-name">
+        <span class="brand-glo">GLO</span>
+        <span class="brand-number">365</span>
+    </div>
+
+    <div class="brand-line"></div>
+
+    <p class="tagline">YOUR WORLD. EVERY DAY.</p>
+
+    <p class="description">
+        Welcome to GLO 365<br>
+        A new experience begins here.
+    </p>
+
+    <div class="loader">
+        <span></span>
+    </div>
+
+    <p class="loading-text" id="loadingText">
+        PREPARING YOUR EXPERIENCE...
+    </p>
+
+    <div class="footer">
+        © 2026 GLO 365 • ALL RIGHTS RESERVED
+    </div>
+
+</div>
+
+<script>
+
+/* AUTOMATIC REDIRECT TO LOGIN */
+
+const splash = document.getElementById("splash");
+const loadingText = document.getElementById("loadingText");
+
+setTimeout(function(){
+
+    loadingText.innerText = "OPENING LOGIN PAGE...";
+
+    splash.classList.add("fade-out");
+
+    setTimeout(function(){
+
+        window.location.replace("login.html");
+
+    },500);
+
+},3000);
+
+</script>
+
+</body>
+</html>
