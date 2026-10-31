@@ -1,0 +1,1314 @@
+<!DOCTYPE html>
+<html lang="bn">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="theme-color" content="#ffb900">
+<title>GLO 365 - Number Reports</title>
+
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+
+body{
+ font-family:Arial,sans-serif;
+ background:#f2f3f5;
+ color:#202127;
+}
+
+.app{
+ max-width:520px;
+ min-height:100vh;
+ margin:auto;
+ padding-bottom:30px;
+}
+
+header{
+ background:linear-gradient(120deg,#f2a900,#ffd34d);
+ padding:19px 15px;
+ display:flex;
+ justify-content:space-between;
+ align-items:center;
+}
+
+.logo{font-size:25px;font-weight:900}
+.logo span{color:white}
+
+.admin-label{
+ font-size:11px;
+ background:#222;
+ color:#ffd34d;
+ padding:7px 10px;
+ border-radius:20px;
+}
+
+.welcome{padding:18px 15px}
+.welcome h2{font-size:22px}
+.welcome p{font-size:12px;color:#777;margin-top:6px}
+
+.section{
+ background:white;
+ margin:13px 12px;
+ padding:16px;
+ border-radius:15px;
+ box-shadow:0 3px 10px #00000008;
+}
+
+.section h3{
+ font-size:17px;
+ margin-bottom:13px;
+}
+
+label{
+ display:block;
+ font-size:12px;
+ font-weight:bold;
+ margin:12px 0 6px;
+ color:#555;
+}
+
+input,select{
+ width:100%;
+ padding:12px;
+ border:1px solid #ddd;
+ border-radius:9px;
+ font-size:14px;
+ background:white;
+ outline:none;
+}
+
+input:focus,select:focus{
+ border-color:#e6aa00;
+}
+
+button{
+ border:0;
+ border-radius:9px;
+ padding:12px 14px;
+ font-weight:bold;
+ cursor:pointer;
+}
+
+.primary{
+ background:#f3bd24;
+ color:#222;
+ width:100%;
+ margin-top:12px;
+}
+
+.dark{background:#222;color:white}
+
+.muted{
+ color:#888;
+ font-size:11px;
+ margin-top:6px;
+ line-height:1.6;
+}
+
+.notice{
+ display:none;
+ margin:12px;
+ padding:12px;
+ background:#e8f6e9;
+ color:#246b2a;
+ border-radius:9px;
+ font-size:13px;
+ line-height:1.5;
+}
+
+.report-summary{
+ display:grid;
+ grid-template-columns:repeat(2,1fr);
+ gap:8px;
+ margin-top:13px;
+}
+
+.report-stat{
+ background:#fff8e6;
+ border:1px solid #f1dfb0;
+ border-radius:10px;
+ padding:12px;
+ text-align:center;
+}
+
+.report-stat small{
+ display:block;
+ color:#777;
+ font-size:11px;
+}
+
+.report-stat strong{
+ display:block;
+ color:#a87900;
+ font-size:21px;
+ margin-top:6px;
+ overflow-wrap:anywhere;
+}
+
+.report-item{
+ border:1px solid #e8e8e8;
+ border-radius:11px;
+ padding:12px;
+ margin-top:10px;
+ background:#fff;
+}
+
+.item-top{
+ display:flex;
+ justify-content:space-between;
+ gap:8px;
+ align-items:center;
+}
+
+.report-user{
+ font-size:15px;
+ font-weight:900;
+ color:#222;
+ overflow-wrap:anywhere;
+}
+
+.report-number{
+ display:inline-block;
+ background:#fff3cf;
+ color:#785500;
+ padding:6px 10px;
+ border-radius:7px;
+ font-weight:900;
+ letter-spacing:1px;
+ margin-top:9px;
+}
+
+.report-game{
+ font-size:10px;
+ color:#777;
+ background:#eee;
+ padding:5px 8px;
+ border-radius:20px;
+ white-space:nowrap;
+}
+
+.report-values{
+ display:grid;
+ grid-template-columns:repeat(3,minmax(0,1fr));
+ gap:6px;
+ margin-top:10px;
+}
+
+.report-value{
+ background:#f4f5f6;
+ padding:10px 3px;
+ text-align:center;
+ border-radius:8px;
+ min-width:0;
+}
+
+.report-value small{
+ display:block;
+ font-size:10px;
+ color:#777;
+}
+
+.report-value strong{
+ display:block;
+ font-size:13px;
+ margin-top:5px;
+ overflow-wrap:anywhere;
+}
+
+.report-date{
+ color:#888;
+ font-size:11px;
+ margin-top:9px;
+ line-height:1.5;
+}
+
+.empty{
+ padding:20px 10px;
+ text-align:center;
+ color:#999;
+ font-size:13px;
+ line-height:1.6;
+}
+
+.filter-row{
+ display:flex;
+ gap:8px;
+ margin-top:10px;
+}
+
+.filter-row button{
+ flex:1;
+ font-size:11px;
+ background:#eee;
+ color:#444;
+}
+
+.filter-row button.active{
+ background:#222;
+ color:#ffd34d;
+}
+
+.retention-notice{
+ background:#fff8e6;
+ border:1px solid #f1dfb0;
+ border-radius:10px;
+ padding:11px;
+ color:#795900;
+ font-size:11px;
+ line-height:1.6;
+ margin-top:12px;
+}
+
+footer{
+ text-align:center;
+ color:#aaa;
+ font-size:11px;
+ padding:15px;
+}
+
+@media(max-width:360px){
+ .report-values{gap:4px}
+ .report-value strong{font-size:11px}
+ .report-user{font-size:13px}
+}
+</style>
+</head>
+
+<body>
+
+<div class="app">
+
+<header>
+ <div class="logo">GLO <span>365</span></div>
+ <div class="admin-label">ADMIN PANEL</div>
+</header>
+
+<div class="welcome">
+ <h2>Number Reports</h2>
+ <p id="adminName">Welcome, Admin</p>
+</div>
+
+<div id="notice" class="notice"></div>
+
+<div class="section">
+
+ <h3>Number Search Report</h3>
+
+ <p class="muted">
+ জমা দেওয়া নম্বর অনুযায়ী Username, Straight (D)
+ এবং Rumble (R) পয়েন্টের রেকর্ড এখানে দেখা যাবে।
+ </p>
+
+ <div class="retention-notice">
+  <strong>72 Hours Report Privacy</strong><br>
+  Winning Number প্রকাশের ৭২ ঘণ্টা পর,
+  প্রকাশের আগের জমা দেওয়া রেকর্ড রিপোর্ট থেকে
+  স্বয়ংক্রিয়ভাবে লুকানো হবে।
+ </div>
+
+ <label>Select Game</label>
+
+ <select id="reportGame">
+  <option value="all">All Games</option>
+  <option value="single">Single</option>
+  <option value="2d">2D</option>
+  <option value="3up">3 UP</option>
+  <option value="6up">6 UP</option>
+ </select>
+
+ <label>Search Number</label>
+
+ <input
+  id="reportNumber"
+  type="text"
+  inputmode="numeric"
+  autocomplete="off"
+  placeholder="Enter number"
+ >
+
+ <button class="primary" id="searchButton" type="button">
+  Search Number
+ </button>
+
+ <button
+  class="dark"
+  style="width:100%;margin-top:8px"
+  id="clearButton"
+  type="button"
+ >
+  Clear Search
+ </button>
+
+ <div class="report-summary">
+
+  <div class="report-stat">
+   <small>Matching Entries</small>
+   <strong id="reportEntryCount">0</strong>
+  </div>
+
+  <div class="report-stat">
+   <small>Matching Users</small>
+   <strong id="reportUserCount">0</strong>
+  </div>
+
+  <div class="report-stat">
+   <small>Total Straight (D)</small>
+   <strong id="reportTotalD">0.00</strong>
+  </div>
+
+  <div class="report-stat">
+   <small>Total Rumble (R)</small>
+   <strong id="reportTotalR">0.00</strong>
+  </div>
+
+ </div>
+
+ <div id="reportSearchInfo" class="muted"></div>
+
+</div>
+
+<div class="section">
+
+ <h3>Matching Submission Records</h3>
+
+ <div id="numberReportList">
+  <div class="empty">
+   Search a number to see submission records.
+  </div>
+ </div>
+
+</div>
+
+<div class="section">
+
+ <h3>All Recent Submissions</h3>
+
+ <p class="muted">
+ চারটি গেমের সর্বশেষ ১০০টি দৃশ্যমান জমা দেওয়া রেকর্ড।
+ ৭২ ঘণ্টার নিয়ম অনুযায়ী লুকানো রেকর্ড এখানে দেখানো হবে না।
+ </p>
+
+ <label>Filter Game</label>
+
+ <select id="recentGame">
+  <option value="all">All Games</option>
+  <option value="single">Single</option>
+  <option value="2d">2D</option>
+  <option value="3up">3 UP</option>
+  <option value="6up">6 UP</option>
+ </select>
+
+ <div id="recentReportList"></div>
+
+</div>
+
+<div class="section">
+
+ <h3>Report Information</h3>
+
+ <p class="muted">
+ এই রিপোর্ট glo365_demo_history এবং glo365_results
+ LocalStorage থেকে তথ্য পড়ে।
+ এটি কোনো ফলাফল, জয়-পরাজয় বা নগদ পেমেন্ট হিসাব করে না।
+ </p>
+
+ <p class="muted">
+ ৭২ ঘণ্টার নিয়ম কার্যকর করতে Winning Result-এর
+ publishedAt এবং জমা দেওয়ার createdAt সময় প্রয়োজন।
+ পুরোনো রেকর্ডে createdAt না থাকলে মেয়াদ শেষ হওয়ার পর
+ নিরাপত্তার জন্য সেই রেকর্ড লুকানো হবে।
+ </p>
+
+ <p class="muted">
+ এই পেজ শুধু রিপোর্ট থেকে তথ্য লুকায়।
+ LocalStorage থেকে মূল History রেকর্ড মুছে ফেলে না।
+ </p>
+
+</div>
+
+<div class="section">
+
+ <button
+  class="dark"
+  style="width:100%"
+  onclick="location.href='admin.html'"
+ >
+  ← Back to Dashboard
+ </button>
+
+ <button
+  class="dark"
+  style="width:100%;margin-top:9px"
+  onclick="logout()"
+ >
+  Logout
+ </button>
+
+</div>
+
+<footer>GLO 365 Admin · Number Reports</footer>
+
+</div>
+
+<script>
+
+/* ===================================
+   STORAGE KEYS
+=================================== */
+
+const HISTORY_KEY="glo365_demo_history";
+const RESULTS_KEY="glo365_results";
+const SESSION_KEY="glo365_session";
+
+const RETENTION_HOURS=72;
+const RETENTION_MS=RETENTION_HOURS*60*60*1000;
+
+
+/* ===================================
+   SAFE STORAGE
+=================================== */
+
+function read(key,fallback){
+
+ try{
+
+  const value=localStorage.getItem(key);
+
+  return value===null?fallback:JSON.parse(value);
+
+ }catch(error){
+
+  return fallback;
+
+ }
+
+}
+
+
+/* ===================================
+   ADMIN AUTHENTICATION
+=================================== */
+
+function requireAdmin(){
+
+ const session=read(SESSION_KEY,null);
+
+ if(!session||session.role!=="admin"){
+
+  location.replace("login.html");
+
+  return false;
+
+ }
+
+ document.getElementById("adminName").textContent=
+  "Logged in as "+(session.username||"Admin");
+
+ return true;
+
+}
+
+
+/* ===================================
+   LOGOUT
+=================================== */
+
+function logout(){
+
+ localStorage.removeItem(SESSION_KEY);
+
+ location.href="login.html";
+
+}
+
+
+/* ===================================
+   NOTIFICATION
+=================================== */
+
+let noticeTimer=null;
+
+function notify(message){
+
+ const box=document.getElementById("notice");
+
+ box.textContent=message;
+ box.style.display="block";
+
+ if(noticeTimer){
+  clearTimeout(noticeTimer);
+ }
+
+ noticeTimer=setTimeout(()=>{
+  box.style.display="none";
+ },3500);
+
+}
+
+
+/* ===================================
+   GAME LABEL
+=================================== */
+
+function getGameLabel(game){
+
+ const labels={
+  single:"Single",
+  "2d":"2D",
+  "3up":"3 UP",
+  "6up":"6 UP"
+ };
+
+ return labels[String(game||"").toLowerCase()]||"Unknown";
+
+}
+
+
+/* ===================================
+   GET HISTORY
+=================================== */
+
+function getAllBetRecords(){
+
+ const history=read(HISTORY_KEY,[]);
+
+ return Array.isArray(history)?history:[];
+
+}
+
+
+/* ===================================
+   GET RESULTS
+=================================== */
+
+function getAllResults(){
+
+ const results=read(RESULTS_KEY,[]);
+
+ return Array.isArray(results)?results:[];
+
+}
+
+
+/* ===================================
+   DATE NORMALIZATION
+=================================== */
+
+function normalizeDrawDate(value){
+
+ if(!value)return "";
+
+ const text=String(value).trim();
+
+ /*
+  * Standard YYYY-MM-DD format.
+  */
+
+ const match=text.match(/^(\d{4})-(\d{1,2})-(\d{1,2})/);
+
+ if(match){
+
+  return match[1]+"-"+
+   String(match[2]).padStart(2,"0")+"-"+
+   String(match[3]).padStart(2,"0");
+
+ }
+
+ /*
+  * Other date formats.
+  */
+
+ const parsed=new Date(text);
+
+ if(Number.isNaN(parsed.getTime()))return "";
+
+ return parsed.getFullYear()+"-"+
+  String(parsed.getMonth()+1).padStart(2,"0")+"-"+
+  String(parsed.getDate()).padStart(2,"0");
+
+}
+
+
+/* ===================================
+   PARSE TIMESTAMP
+=================================== */
+
+function parseTimestamp(value){
+
+ if(value===null||value===undefined||value===""){
+  return null;
+ }
+
+ if(typeof value==="number"){
+
+  return Number.isFinite(value)?value:null;
+
+ }
+
+ if(typeof value==="string"){
+
+  const trimmed=value.trim();
+
+  if(!trimmed)return null;
+
+  /*
+   * Numeric timestamp.
+   */
+
+  if(/^\d{10,13}$/.test(trimmed)){
+
+   const number=Number(trimmed);
+
+   return trimmed.length===10?number*1000:number;
+
+  }
+
+  const parsed=Date.parse(trimmed);
+
+  return Number.isNaN(parsed)?null:parsed;
+
+ }
+
+ return null;
+
+}
+
+
+/* ===================================
+   RESULT PUBLICATION TIME
+=================================== */
+
+function getResultPublishedAt(result){
+
+ if(!result||typeof result!=="object")return null;
+
+ /*
+  * Current admin-results.html uses publishedAt.
+  */
+
+ const possibleValues=[
+  result.publishedAt,
+  result.published_at,
+  result.publishedTime,
+  result.createdAt
+ ];
+
+ for(const value of possibleValues){
+
+  const timestamp=parseTimestamp(value);
+
+  if(timestamp!==null)return timestamp;
+
+ }
+
+ return null;
+
+}
+
+
+/* ===================================
+   BUILD RESULT DATE MAP
+=================================== */
+
+function getResultMap(){
+
+ const map=new Map();
+
+ getAllResults().forEach(result=>{
+
+  if(!result||typeof result!=="object")return;
+
+  const drawDate=normalizeDrawDate(result.date);
+
+  if(!drawDate)return;
+
+  const publishedAt=getResultPublishedAt(result);
+
+  if(publishedAt===null)return;
+
+  /*
+   * If duplicate dates exist, use the latest
+   * publication record for that draw date.
+   */
+
+  const existing=map.get(drawDate);
+
+  if(!existing||publishedAt>existing.publishedAt){
+
+   map.set(drawDate,{
+    publishedAt,
+    expiryAt:publishedAt+RETENTION_MS
+   });
+
+  }
+
+ });
+
+ return map;
+
+}
+
+
+/* ===================================
+   GET SUBMISSION TIMESTAMP
+=================================== */
+
+function getSubmissionTimestamp(entry,row){
+
+ const possibleValues=[
+  row.createdAt,
+  row.submittedAt,
+  row.timestamp,
+  row.created_at,
+  entry.createdAt,
+  entry.submittedAt,
+  entry.timestamp,
+  entry.created_at
+ ];
+
+ for(const value of possibleValues){
+
+  const timestamp=parseTimestamp(value);
+
+  if(timestamp!==null)return timestamp;
+
+ }
+
+ return null;
+
+}
+
+
+/* ===================================
+   72 HOURS VISIBILITY CHECK
+=================================== */
+
+function isReportVisible(record,resultMap){
+
+ const drawDate=normalizeDrawDate(record.drawDate);
+
+ /*
+  * No matching published result:
+  * keep the record visible.
+  */
+
+ if(!drawDate||!resultMap.has(drawDate)){
+
+  return true;
+
+ }
+
+ const result=resultMap.get(drawDate);
+
+ const now=Date.now();
+
+ /*
+  * The 72-hour period has not expired.
+  */
+
+ if(now<result.expiryAt){
+
+  return true;
+
+ }
+
+ /*
+  * After 72 hours, only submissions made
+  * at or after publication remain visible.
+  */
+
+ if(record.submissionTimestamp===null){
+
+  /*
+   * Legacy record with no reliable submission time.
+   * Hide it after expiry to avoid exposing
+   * potentially pre-publication information.
+   */
+
+  return false;
+
+ }
+
+ return record.submissionTimestamp>=result.publishedAt;
+
+}
+
+
+/* ===================================
+   FLATTEN SUBMISSION RECORDS
+=================================== */
+
+function getReportRows(){
+
+ const history=getAllBetRecords();
+
+ const records=[];
+
+ const resultMap=getResultMap();
+
+ history.forEach(entry=>{
+
+  if(!entry||typeof entry!=="object")return;
+
+  const game=String(entry.game||"").toLowerCase();
+
+  if(!["single","2d","3up","6up"].includes(game))return;
+
+  if(!Array.isArray(entry.rows))return;
+
+  const drawDate=normalizeDrawDate(entry.date);
+
+  entry.rows.forEach(row=>{
+
+   if(!row||typeof row!=="object")return;
+
+   const number=String(row.number??"").trim();
+
+   if(number==="")return;
+
+   const straight=
+    row.straight===""||row.straight==null?
+    0:Number(row.straight);
+
+   const rumble=
+    row.rumble===""||row.rumble==null?
+    0:Number(row.rumble);
+
+   const submissionTimestamp=
+    getSubmissionTimestamp(entry,row);
+
+   const dateText=
+    submissionTimestamp!==null?
+    new Date(submissionTimestamp).toLocaleString():
+    (
+     entry.createdAt?
+     new Date(entry.createdAt).toLocaleString():
+     (entry.date||"Date unavailable")
+    );
+
+   const record={
+
+    username:String(entry.username||"Unknown"),
+
+    game,
+
+    number,
+
+    straight:Number.isFinite(straight)?straight:0,
+
+    rumble:Number.isFinite(rumble)?rumble:0,
+
+    date:dateText,
+
+    drawDate,
+
+    createdAt:submissionTimestamp,
+
+    submissionTimestamp,
+
+    entryId:entry.id||""
+
+   };
+
+   /*
+    * Apply 72-hour visibility rule.
+    */
+
+   if(!isReportVisible(record,resultMap))return;
+
+   records.push(record);
+
+  });
+
+ });
+
+ /*
+  * Newest records first.
+  */
+
+ records.sort((a,b)=>{
+
+  const timeA=a.submissionTimestamp||0;
+  const timeB=b.submissionTimestamp||0;
+
+  return timeB-timeA;
+
+ });
+
+ return records;
+
+}
+
+
+/* ===================================
+   CREATE REPORT ITEM
+=================================== */
+
+function createReportItem(record){
+
+ const div=document.createElement("div");
+
+ div.className="report-item";
+
+ const top=document.createElement("div");
+
+ top.className="item-top";
+
+ const username=document.createElement("div");
+
+ username.className="report-user";
+
+ username.textContent=record.username;
+
+ const game=document.createElement("span");
+
+ game.className="report-game";
+
+ game.textContent=getGameLabel(record.game);
+
+ top.append(username,game);
+
+
+ const number=document.createElement("div");
+
+ number.className="report-number";
+
+ number.textContent="Number: "+record.number;
+
+
+ const values=document.createElement("div");
+
+ values.className="report-values";
+
+
+ /* STRAIGHT */
+
+ const d=document.createElement("div");
+
+ d.className="report-value";
+
+ const dLabel=document.createElement("small");
+
+ dLabel.textContent="Straight (D)";
+
+ const dValue=document.createElement("strong");
+
+ dValue.textContent=record.straight.toFixed(2);
+
+ d.append(dLabel,dValue);
+
+
+ /* RUMBLE */
+
+ const r=document.createElement("div");
+
+ r.className="report-value";
+
+ const rLabel=document.createElement("small");
+
+ rLabel.textContent="Rumble (R)";
+
+ const rValue=document.createElement("strong");
+
+ rValue.textContent=record.rumble.toFixed(2);
+
+ r.append(rLabel,rValue);
+
+
+ /* TOTAL */
+
+ const total=document.createElement("div");
+
+ total.className="report-value";
+
+ const totalLabel=document.createElement("small");
+
+ totalLabel.textContent="D + R Total";
+
+ const totalValue=document.createElement("strong");
+
+ totalValue.textContent=
+  (record.straight+record.rumble).toFixed(2);
+
+ total.append(totalLabel,totalValue);
+
+
+ values.append(d,r,total);
+
+
+ const date=document.createElement("div");
+
+ date.className="report-date";
+
+ date.textContent="Submitted: "+record.date;
+
+
+ div.append(top,number,values,date);
+
+ return div;
+
+}
+
+
+/* ===================================
+   UPDATE SUMMARY
+=================================== */
+
+function updateSummary(matches){
+
+ const uniqueUsers=new Set(
+  matches.map(record=>record.username)
+ );
+
+ const totalD=matches.reduce(
+  (sum,record)=>sum+record.straight,0
+ );
+
+ const totalR=matches.reduce(
+  (sum,record)=>sum+record.rumble,0
+ );
+
+ document.getElementById("reportEntryCount").textContent=
+  matches.length;
+
+ document.getElementById("reportUserCount").textContent=
+  uniqueUsers.size;
+
+ document.getElementById("reportTotalD").textContent=
+  totalD.toFixed(2);
+
+ document.getElementById("reportTotalR").textContent=
+  totalR.toFixed(2);
+
+}
+
+
+/* ===================================
+   SEARCH NUMBER
+=================================== */
+
+function searchNumberReport(){
+
+ const selectedGame=
+  document.getElementById("reportGame").value;
+
+ const searchNumber=
+  document.getElementById("reportNumber").value.trim();
+
+ const list=
+  document.getElementById("numberReportList");
+
+ const info=
+  document.getElementById("reportSearchInfo");
+
+ if(!searchNumber){
+
+  notify("যে নম্বরটি খুঁজতে চান সেটি লিখুন।");
+
+  document.getElementById("reportNumber").focus();
+
+  return;
+
+ }
+
+ if(!/^\d+$/.test(searchNumber)){
+
+  notify("শুধু সংখ্যা দিয়ে Search করুন।");
+
+  return;
+
+ }
+
+ const allRecords=getReportRows();
+
+ const matches=allRecords.filter(record=>{
+
+  const gameMatch=
+   selectedGame==="all"||
+   record.game===selectedGame;
+
+  /*
+   * Exact match:
+   * 07 এবং 7 আলাদা নম্বর।
+   */
+
+  const numberMatch=
+   record.number===searchNumber;
+
+  return gameMatch&&numberMatch;
+
+ });
+
+ updateSummary(matches);
+
+ info.textContent=
+  "Search: "+searchNumber+
+  " · Game: "+
+  (selectedGame==="all"?"All Games":getGameLabel(selectedGame));
+
+ list.innerHTML="";
+
+ if(!matches.length){
+
+  list.innerHTML=
+   '<div class="empty">এই নম্বরের কোনো দৃশ্যমান জমা দেওয়া রেকর্ড পাওয়া যায়নি।</div>';
+
+  return;
+
+ }
+
+ matches.forEach(record=>{
+
+  list.append(createReportItem(record));
+
+ });
+
+}
+
+
+/* ===================================
+   CLEAR SEARCH
+=================================== */
+
+function clearNumberReport(){
+
+ document.getElementById("reportGame").value="all";
+
+ document.getElementById("reportNumber").value="";
+
+ document.getElementById("reportEntryCount").textContent="0";
+
+ document.getElementById("reportUserCount").textContent="0";
+
+ document.getElementById("reportTotalD").textContent="0.00";
+
+ document.getElementById("reportTotalR").textContent="0.00";
+
+ document.getElementById("reportSearchInfo").textContent="";
+
+ document.getElementById("numberReportList").innerHTML=
+  '<div class="empty">Search a number to see submission records.</div>';
+
+}
+
+
+/* ===================================
+   RECENT REPORTS
+=================================== */
+
+function renderRecentReports(){
+
+ const list=document.getElementById("recentReportList");
+
+ const selectedGame=
+  document.getElementById("recentGame").value;
+
+ /*
+  * getReportRows() already applies
+  * the 72-hour visibility rule.
+  */
+
+ const records=getReportRows().filter(record=>
+  selectedGame==="all"||record.game===selectedGame
+ );
+
+ list.innerHTML="";
+
+ records.slice(0,100).forEach(record=>{
+
+  list.append(createReportItem(record));
+
+ });
+
+ if(!records.length){
+
+  list.innerHTML=
+   '<div class="empty">No visible submission records found.</div>';
+
+ }
+
+}
+
+
+/* ===================================
+   BUTTON EVENTS
+=================================== */
+
+document.getElementById("searchButton")
+.addEventListener("click",searchNumberReport);
+
+document.getElementById("clearButton")
+.addEventListener("click",clearNumberReport);
+
+document.getElementById("recentGame")
+.addEventListener("change",renderRecentReports);
+
+document.getElementById("reportNumber")
+.addEventListener("keydown",event=>{
+
+ if(event.key==="Enter"){
+  searchNumberReport();
+ }
+
+});
+
+
+/* ===================================
+   LIVE STORAGE SYNC
+=================================== */
+
+window.addEventListener("storage",event=>{
+
+ if(
+  event.key===HISTORY_KEY||
+  event.key===RESULTS_KEY||
+  event.key===null
+ ){
+
+  renderRecentReports();
+
+  /*
+   * Refresh active search as well.
+   */
+
+  if(document.getElementById("reportNumber").value.trim()){
+
+   searchNumberReport();
+
+  }
+
+ }
+
+});
+
+
+/* ===================================
+   PAGE REFRESH
+=================================== */
+
+window.addEventListener("focus",()=>{
+
+ renderRecentReports();
+
+ if(document.getElementById("reportNumber").value.trim()){
+
+  searchNumberReport();
+
+ }
+
+});
+
+
+/* ===================================
+   INITIALIZE
+=================================== */
+
+if(requireAdmin()){
+
+ renderRecentReports();
+
+}
+
+</script>
+
+</body>
+</html>
