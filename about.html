@@ -1,0 +1,392 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="theme-color" content="#2196e8">
+<title>About - GLO 365</title>
+
+<style>
+*{
+  box-sizing:border-box;
+  margin:0;
+  padding:0;
+}
+
+html,body{
+  width:100%;
+  max-width:100%;
+  overflow-x:hidden;
+}
+
+body{
+  font-family:Arial,sans-serif;
+  background:#f3f8fd;
+  color:#26364a;
+  min-height:100vh;
+}
+
+.header{
+  width:100%;
+  background:linear-gradient(135deg,#1688df,#36b5f4);
+  color:white;
+  padding:16px 14px 22px;
+  border-radius:0 0 20px 20px;
+}
+
+.topbar{
+  display:flex;
+  align-items:center;
+  gap:10px;
+  min-width:0;
+}
+
+.back{
+  border:0;
+  background:#ffffff25;
+  color:white;
+  width:36px;
+  height:36px;
+  flex-shrink:0;
+  border-radius:10px;
+  font-size:25px;
+  cursor:pointer;
+}
+
+.topbar h2{
+  font-size:18px;
+  min-width:0;
+  overflow-wrap:anywhere;
+}
+
+.hero{
+  text-align:center;
+  padding:22px 8px 3px;
+  min-width:0;
+}
+
+.logo{
+  width:68px;
+  height:68px;
+  border-radius:19px;
+  margin:auto;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  background:white;
+  color:#1688df;
+  font-size:19px;
+  font-weight:900;
+  box-shadow:0 6px 18px #075a9b35;
+  white-space:nowrap;
+}
+
+.logo span{
+  color:#19a9e9;
+}
+
+.hero h1{
+  font-size:25px;
+  margin-top:12px;
+  letter-spacing:1px;
+}
+
+.hero p{
+  font-size:12px;
+  opacity:.9;
+  margin-top:6px;
+  line-height:1.5;
+  overflow-wrap:anywhere;
+}
+
+.container{
+  width:100%;
+  max-width:600px;
+  margin:15px auto;
+  padding:0 12px;
+}
+
+.card{
+  width:100%;
+  min-width:0;
+  background:white;
+  border:1px solid #e0edf8;
+  border-radius:13px;
+  padding:13px;
+  margin-bottom:11px;
+  box-shadow:0 2px 8px #1c5b8509;
+  overflow:hidden;
+}
+
+.card h3{
+  color:#1688df;
+  font-size:16px;
+  margin-bottom:9px;
+  overflow-wrap:anywhere;
+}
+
+.card p{
+  width:100%;
+  max-width:100%;
+  min-width:0;
+  color:#637387;
+  font-size:12px;
+  line-height:1.65;
+  white-space:normal;
+  overflow-wrap:anywhere;
+  word-wrap:break-word;
+}
+
+.feature{
+  display:flex;
+  gap:10px;
+  align-items:center;
+  width:100%;
+  min-width:0;
+  padding:9px 0;
+  border-bottom:1px solid #edf2f7;
+}
+
+.feature:last-child{
+  border:0;
+  padding-bottom:0;
+}
+
+.feature-icon{
+  width:36px;
+  height:36px;
+  flex:0 0 36px;
+  background:#e9f5ff;
+  border-radius:10px;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  font-size:18px;
+}
+
+.feature > div:last-child{
+  flex:1;
+  min-width:0;
+  max-width:100%;
+}
+
+.feature h4{
+  font-size:13px;
+  margin:2px 0 4px;
+  color:#26364a;
+  overflow-wrap:anywhere;
+}
+
+.feature p{
+  font-size:11px;
+  line-height:1.5;
+  min-width:0;
+}
+
+.info-row{
+  display:flex;
+  justify-content:space-between;
+  align-items:flex-start;
+  gap:10px;
+  width:100%;
+  min-width:0;
+  padding:9px 0;
+  border-bottom:1px solid #edf2f7;
+  font-size:12px;
+}
+
+.info-row:last-child{
+  border:0;
+}
+
+.info-row span{
+  min-width:0;
+  overflow-wrap:anywhere;
+}
+
+.info-row span:first-child{
+  color:#748397;
+  flex:1;
+}
+
+.info-row span:last-child{
+  color:#26364a;
+  font-weight:600;
+  text-align:right;
+  flex:1;
+}
+
+.notice{
+  width:100%;
+  max-width:100%;
+  min-width:0;
+  background:#eaf5ff;
+  border:1px solid #cce7ff;
+  border-radius:10px;
+  padding:11px;
+  color:#36729f;
+  font-size:11px;
+  line-height:1.65;
+  overflow-wrap:anywhere;
+  word-wrap:break-word;
+}
+
+.footer{
+  width:100%;
+  text-align:center;
+  color:#8b9aab;
+  font-size:10px;
+  padding:10px 12px 20px;
+  line-height:1.8;
+  overflow-wrap:anywhere;
+}
+
+.footer strong{
+  color:#1688df;
+  font-size:13px;
+}
+
+@media(max-width:380px){
+  .hero h1{
+    font-size:23px;
+  }
+
+  .card{
+    padding:11px;
+  }
+
+  .container{
+    padding:0 10px;
+  }
+
+  .feature{
+    gap:8px;
+  }
+}
+</style>
+</head>
+
+<body>
+
+<header class="header">
+
+  <div class="topbar">
+    <button class="back" onclick="history.back()" aria-label="Go back">‹</button>
+    <h2>About GLO 365</h2>
+  </div>
+
+  <div class="hero">
+    <div class="logo">GLO<span>365</span></div>
+    <h1>GLO 365</h1>
+    <p>Your daily results and information companion</p>
+  </div>
+
+</header>
+
+<main class="container">
+
+  <section class="card">
+    <h3>About Us</h3>
+    <p>
+      Welcome to GLO 365. This application is designed to provide users
+      with an easy-to-use platform for viewing available results,
+      checking their activity and managing their account in one place.
+      Our aim is to make the experience simple, accessible and convenient.
+    </p>
+  </section>
+
+  <section class="card">
+    <h3>Our Features</h3>
+
+    <div class="feature">
+      <div class="feature-icon">📊</div>
+      <div>
+        <h4>Results</h4>
+        <p>View available results and previous result information.</p>
+      </div>
+    </div>
+
+    <div class="feature">
+      <div class="feature-icon">🎟️</div>
+      <div>
+        <h4>My Bets</h4>
+        <p>Review your submitted entries and their status.</p>
+      </div>
+    </div>
+
+    <div class="feature">
+      <div class="feature-icon">👤</div>
+      <div>
+        <h4>Profile</h4>
+        <p>Manage your account information and personal settings.</p>
+      </div>
+    </div>
+
+    <div class="feature">
+      <div class="feature-icon">📱</div>
+      <div>
+        <h4>Easy to Use</h4>
+        <p>A simple, mobile-friendly interface for convenient access.</p>
+      </div>
+    </div>
+
+  </section>
+
+  <section class="card">
+    <h3>App Information</h3>
+
+    <div class="info-row">
+      <span>Application</span>
+      <span>GLO 365</span>
+    </div>
+
+    <div class="info-row">
+      <span>Version</span>
+      <span>1.0.0</span>
+    </div>
+
+    <div class="info-row">
+      <span>Platform</span>
+      <span>Web Application</span>
+    </div>
+
+    <div class="info-row">
+      <span>Category</span>
+      <span>Results & Account</span>
+    </div>
+  </section>
+
+  <section class="card">
+    <h3>Important Notice</h3>
+
+    <div class="notice">
+      Please use this application responsibly and follow all applicable
+      laws and regulations in your location. Any result or entry-related
+      activity is subject to the applicable rules and age restrictions.
+      GLO 365 does not guarantee winnings or outcomes.
+    </div>
+  </section>
+
+  <section class="card">
+    <h3>Our Commitment</h3>
+    <p>
+      We aim to improve GLO 365 and provide a clear, user-friendly
+      experience. Thank you for being a part of GLO 365.
+    </p>
+  </section>
+
+</main>
+
+<footer class="footer">
+  <strong>GLO 365</strong><br>
+  Made for a better user experience.<br>
+  © <span id="year"></span> GLO 365. All rights reserved.
+</footer>
+
+<script>
+document.getElementById("year").textContent =
+  new Date().getFullYear();
+</script>
+
+</body>
+</html>
