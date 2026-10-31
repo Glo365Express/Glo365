@@ -1,0 +1,1231 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="theme-color" content="#2196e8">
+<title>GLO 365 - 2D</title>
+
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+
+body{
+ font-family:Arial,sans-serif;
+ background:#f0f7fd;
+ color:#18334d
+}
+
+.app{
+ max-width:520px;
+ min-height:100vh;
+ margin:auto;
+ background:#fff;
+ padding-bottom:25px;
+ box-shadow:0 0 25px #163c5c0b
+}
+
+.header{
+ background:linear-gradient(120deg,#1687d5,#2196e8);
+ padding:17px 15px;
+ display:flex;
+ justify-content:space-between;
+ align-items:center
+}
+
+.logo{
+ font-size:27px;
+ font-weight:900;
+ color:#fff
+}
+
+.logo span{color:#d9f0ff}
+
+.balance{
+ background:#fff;
+ color:#167fc4;
+ padding:10px 14px;
+ border-radius:30px;
+ font-size:13px;
+ font-weight:bold
+}
+
+.page-title{
+ background:#2196e8;
+ text-align:center;
+ padding:15px 10px;
+ font-size:19px;
+ font-weight:900;
+ color:#fff
+}
+
+.subtitle{
+ text-align:center;
+ padding:12px 5px;
+ background:#eff8ff;
+ color:#167fc4;
+ font-size:13px;
+ font-weight:bold
+}
+
+/* BET LOCK NOTICE */
+
+.lock-notice{
+ display:none;
+ margin:12px 11px 4px;
+ padding:14px 12px;
+ background:#fff0f0;
+ border:1px solid #ffcaca;
+ border-radius:11px;
+ text-align:center;
+ color:#b42332
+}
+
+.lock-notice.show{display:block}
+
+.lock-notice strong{
+ display:block;
+ font-size:14px;
+ font-weight:900;
+ margin-bottom:5px
+}
+
+.lock-notice span{
+ display:block;
+ font-size:12px;
+ line-height:1.6;
+ overflow-wrap:anywhere
+}
+
+.lock-countdown{
+ margin-top:7px;
+ font-weight:bold
+}
+
+.bet-area{padding:8px 9px 0}
+
+.bet-area.locked input{
+ background:#f0f0f0;
+ color:#999;
+ border-color:#ddd;
+ cursor:not-allowed
+}
+
+.bet-area.locked .remove-btn{
+ opacity:.35;
+ cursor:not-allowed
+}
+
+.column-heading,.bet-row{
+ display:grid;
+ grid-template-columns:23px minmax(0,1.05fr) minmax(0,.9fr) minmax(0,.9fr) 20px;
+ gap:5px
+}
+
+.column-heading{
+ padding:8px 0;
+ font-size:10px;
+ font-weight:bold;
+ color:#8195a8;
+ text-align:center
+}
+
+.bet-row{
+ align-items:center;
+ margin-bottom:8px
+}
+
+.serial{
+ text-align:center;
+ font-size:14px;
+ color:#526f87
+}
+
+.bet-row input{
+ width:100%;
+ min-width:0;
+ height:49px;
+ border:1px solid #cbdfee;
+ background:#f7fbff;
+ border-radius:10px;
+ text-align:center;
+ font-size:14px;
+ color:#18334d;
+ outline:none;
+ padding:4px
+}
+
+.bet-row input:focus{
+ border-color:#2196e8;
+ background:#fff;
+ box-shadow:0 0 0 3px #2196e817
+}
+
+.bet-row input::placeholder{color:#9aabba}
+
+.remove-btn{
+ border:0;
+ background:transparent;
+ color:#d34c5e;
+ font-size:20px;
+ font-weight:bold;
+ padding:3px 0;
+ cursor:pointer
+}
+
+.add-area{
+ display:flex;
+ justify-content:flex-end;
+ padding:5px 3px 17px
+}
+
+.add-btn{
+ width:43px;
+ height:43px;
+ border-radius:50%;
+ background:#eff8ff;
+ color:#1687d5;
+ border:1px solid #cbdfee;
+ font-size:29px;
+ font-weight:bold;
+ display:grid;
+ place-items:center;
+ cursor:pointer
+}
+
+.add-btn:disabled{
+ opacity:.4;
+ cursor:not-allowed
+}
+
+.summary{padding:5px 11px}
+
+.summary-box{
+ background:#eff8ff;
+ border:1px solid #dcebf6;
+ border-radius:12px;
+ padding:16px 7px;
+ text-align:center;
+ font-size:14px;
+ margin-bottom:9px;
+ color:#526f87
+}
+
+.summary-box strong{
+ font-weight:900;
+ color:#167fc4
+}
+
+.discount-line{
+ display:flex;
+ align-items:center;
+ justify-content:center;
+ flex-wrap:wrap;
+ gap:7px
+}
+
+.discount-value{
+ background:#fff;
+ border:1px solid #cbdfee;
+ border-radius:7px;
+ min-width:55px;
+ padding:7px 9px;
+ font-weight:bold;
+ color:#167fc4
+}
+
+.discount-percent{
+ color:#526f87;
+ font-weight:bold
+}
+
+.discount-amount{
+ font-weight:bold;
+ color:#1687d5
+}
+
+.place-btn{
+ width:calc(100% - 22px);
+ margin:17px 11px 0;
+ padding:16px 8px;
+ background:linear-gradient(90deg,#1687d5,#2196e8);
+ border:0;
+ border-radius:10px;
+ color:#fff;
+ font-size:17px;
+ font-weight:900;
+ box-shadow:0 4px 12px #1687d530;
+ cursor:pointer
+}
+
+.place-btn:active{transform:scale(.98)}
+
+.place-btn:disabled{
+ opacity:.6;
+ cursor:not-allowed;
+ background:#8999a5;
+ box-shadow:none
+}
+
+/* ADSTERRA BANNER */
+
+.ad-container{
+ width:100%;
+ min-height:58px;
+ margin:10px auto 8px;
+ display:flex;
+ justify-content:center;
+ align-items:center;
+ overflow:hidden;
+ background:#fff
+}
+
+.ad-container iframe{
+ max-width:100%;
+ border:0
+}
+
+.back-btn{
+ display:block;
+ margin:10px auto;
+ border:0;
+ background:transparent;
+ color:#167fc4;
+ padding:10px;
+ font-size:13px;
+ cursor:pointer
+}
+
+.notice{
+ margin:10px 11px;
+ padding:12px;
+ background:#eff8ff;
+ border:1px solid #dcebf6;
+ border-radius:9px;
+ text-align:center;
+ color:#526f87;
+ font-size:11px;
+ line-height:1.7
+}
+
+.notice strong{color:#167fc4}
+
+@media(max-width:380px){
+ .logo{font-size:24px}
+ .balance{font-size:11px;padding:9px}
+ .bet-row input{height:45px;font-size:12px}
+ .column-heading{font-size:9px;gap:3px}
+ .bet-row{gap:3px}
+ .serial{font-size:12px}
+ .summary-box{font-size:13px}
+}
+</style>
+</head>
+
+<body>
+<div class="app">
+
+<header class="header">
+ <div class="logo">GLO <span>365</span></div>
+ <div class="balance">
+  <span id="balance">0.00</span> Points
+ </div>
+</header>
+
+<div class="page-title">2D NUMBER</div>
+<div class="subtitle">Enter 2 Digit Number & Virtual Points</div>
+
+<div class="lock-notice" id="lockNotice" role="alert">
+ <strong id="lockTitle">BETTING CLOSED – DRAW TIME APPROACHING</strong>
+ <span id="lockMessage"></span>
+ <span class="lock-countdown" id="lockCountdown"></span>
+</div>
+
+<section class="bet-area" id="betArea">
+
+ <div class="column-heading">
+  <span>#</span>
+  <span>NUMBER</span>
+  <span>STRAIGHT (D)</span>
+  <span>RUMBLE (R)</span>
+  <span></span>
+ </div>
+
+ <div id="betRows"></div>
+
+ <div class="add-area">
+  <button class="add-btn" id="addRow" type="button" title="Add more rows">+</button>
+ </div>
+
+</section>
+
+<section class="summary">
+
+ <div class="summary-box">
+  Total Amount = <strong id="totalAmount">0.00</strong> Points
+ </div>
+
+ <div class="summary-box">
+  <div class="discount-line">
+   <span>Discount</span>
+   <span class="discount-value" id="discountPercent">0</span>
+   <span class="discount-percent">%</span>
+   <strong class="discount-amount" id="discountAmount">0.00</strong>
+   <span>Points</span>
+  </div>
+ </div>
+
+ <div class="summary-box">
+  Bet Amount = <strong id="betAmount">0.00</strong> Points
+ </div>
+
+</section>
+
+<button class="place-btn" id="placeBet" type="button">
+ PLACE DEMO BET
+</button>
+
+<!-- ADSTERRA 320x50 BANNER -->
+<div class="ad-container">
+ <script>
+  var atOptions = {
+   'key' : 'ab837cf0ea9c26ae43b7bc4e05a0b5de',
+   'format' : 'iframe',
+   'height' : 50,
+   'width' : 320,
+   'params' : {}
+  };
+ </script>
+ <script src="https://bicea.org/22/ab837cf0ea9c26ae43b7bc4e05a0b5de"></script>
+</div>
+
+<button class="back-btn" onclick="location.href='home.html'">
+ ← Back to Home
+</button>
+
+<div class="notice">
+ <strong>DEMO MODE ONLY</strong><br>
+ Virtual points are used for testing.<br>
+ No real-money transactions or cash payouts.
+</div>
+
+</div>
+
+<script>
+"use strict";
+
+const STORAGE={
+ users:"glo365_users",
+ history:"glo365_demo_history",
+ discount:"glo365_2d_discount",
+ session:"glo365_session",
+ pointHistory:"glo365_point_history",
+
+ // Same keys used by Admin Timer Settings
+ drawTime:"glo365_draw_time",
+ drawNumber:"glo365_draw_number"
+};
+
+const MIN_ROWS=10;
+const MAX_ROWS=50;
+const LOCK_MINUTES=45;
+const LOCK_TIME=LOCK_MINUTES*60*1000;
+
+function readStorage(key,fallback){
+ try{
+  const value=localStorage.getItem(key);
+  return value===null?fallback:JSON.parse(value);
+ }catch(error){
+  return fallback;
+ }
+}
+
+/* ===================================
+   DRAW TIME / BET LOCK SYSTEM
+=================================== */
+
+function getDrawSchedule(){
+
+ const saved=readStorage(STORAGE.drawTime,null);
+
+ if(
+  typeof saved!=="string"||
+  !/^\d{4}-\d{2}-\d{2}T([01]\d|2[0-3]):[0-5]\d$/.test(saved)
+ ){
+  return null;
+ }
+
+ const parts=saved.split("T");
+ const dateParts=parts[0].split("-");
+ const timeParts=parts[1].split(":");
+
+ const year=Number(dateParts[0]);
+ const month=Number(dateParts[1]);
+ const day=Number(dateParts[2]);
+ const hour=Number(timeParts[0]);
+ const minute=Number(timeParts[1]);
+
+ const timestamp=new Date(
+  year,month-1,day,hour,minute,0,0
+ ).getTime();
+
+ if(!Number.isFinite(timestamp))return null;
+
+ const check=new Date(timestamp);
+
+ if(
+  check.getFullYear()!==year||
+  check.getMonth()+1!==month||
+  check.getDate()!==day||
+  check.getHours()!==hour||
+  check.getMinutes()!==minute
+ ){
+  return null;
+ }
+
+ return{
+  value:saved,
+  timestamp:timestamp,
+  drawNumber:String(
+   localStorage.getItem(STORAGE.drawNumber)||""
+  ).trim()
+ };
+}
+
+function formatDrawTime(timestamp){
+ return new Date(timestamp).toLocaleString("en-GB",{
+  day:"2-digit",
+  month:"short",
+  year:"numeric",
+  hour:"2-digit",
+  minute:"2-digit",
+  hour12:true
+ });
+}
+
+function getLockStatus(){
+
+ const schedule=getDrawSchedule();
+
+ if(!schedule){
+  return{
+   locked:true,
+   reason:"missing",
+   remaining:null,
+   schedule:null
+  };
+ }
+
+ const remaining=schedule.timestamp-Date.now();
+
+ return{
+  locked:remaining<=LOCK_TIME,
+  reason:remaining<=LOCK_TIME?"cutoff":"open",
+  remaining:remaining,
+  schedule:schedule
+ };
+}
+
+function formatRemaining(milliseconds){
+
+ if(!Number.isFinite(milliseconds)||milliseconds<0){
+  return "00:00:00";
+ }
+
+ const totalSeconds=Math.floor(milliseconds/1000);
+ const hours=Math.floor(totalSeconds/3600);
+ const minutes=Math.floor((totalSeconds%3600)/60);
+ const seconds=totalSeconds%60;
+
+ return[
+  String(hours).padStart(2,"0"),
+  String(minutes).padStart(2,"0"),
+  String(seconds).padStart(2,"0")
+ ].join(":");
+}
+
+let isBetLocked=true;
+
+function applyBetLock(){
+
+ const status=getLockStatus();
+ isBetLocked=status.locked;
+
+ const notice=document.getElementById("lockNotice");
+ const title=document.getElementById("lockTitle");
+ const message=document.getElementById("lockMessage");
+ const countdown=document.getElementById("lockCountdown");
+
+ const area=document.getElementById("betArea");
+ const addButton=document.getElementById("addRow");
+ const placeButton=document.getElementById("placeBet");
+
+ if(status.locked){
+
+  notice.classList.add("show");
+  area.classList.add("locked");
+
+  if(status.reason==="missing"){
+
+   title.textContent="BETTING UNAVAILABLE";
+
+   message.textContent=
+    "Draw time is not configured. Please wait for the Admin to set the next draw schedule.";
+
+   countdown.textContent="";
+
+  }else{
+
+   title.textContent="BETTING CLOSED – DRAW TIME APPROACHING";
+
+   message.textContent=
+    (status.schedule.drawNumber
+     ?"Draw Number: "+status.schedule.drawNumber+". "
+     :"")+
+    "Draw Time: "+formatDrawTime(status.schedule.timestamp);
+
+   countdown.textContent=
+    "Draw starts in: "+
+    formatRemaining(Math.max(0,status.remaining));
+  }
+
+ }else{
+
+  notice.classList.remove("show");
+  area.classList.remove("locked");
+  countdown.textContent="";
+ }
+
+ // Disable all betting inputs and remove buttons.
+ document.querySelectorAll(
+  "#betRows input, #betRows button"
+ ).forEach(control=>{
+  control.disabled=isBetLocked;
+ });
+
+ addButton.disabled=
+  isBetLocked||
+  document.querySelectorAll("#betRows .bet-row").length>=MAX_ROWS;
+
+ placeButton.disabled=isBetLocked;
+
+ placeButton.textContent=isBetLocked
+  ?"BETTING CLOSED"
+  :"PLACE DEMO BET";
+}
+
+function startDrawLockMonitor(){
+ applyBetLock();
+
+ setInterval(()=>{
+  applyBetLock();
+ },1000);
+}
+
+/* CURRENT USER */
+
+function getSession(){
+ return readStorage(STORAGE.session,null);
+}
+
+function getUsers(){
+ const users=readStorage(STORAGE.users,[]);
+ return Array.isArray(users)?users:[];
+}
+
+function getCurrentUser(){
+ const session=getSession();
+
+ if(!session||!session.username)return null;
+
+ return getUsers().find(user=>
+  String(user.username||"").toLowerCase()===
+  String(session.username).toLowerCase()
+ )||null;
+}
+
+let currentUser=getCurrentUser();
+
+if(!currentUser){
+ alert("Please login first.");
+ location.replace("login.html");
+ throw new Error("User login required.");
+}
+
+let wallet=Math.max(0,Number(currentUser.points)||0);
+let discount=0;
+
+const rowsContainer=document.getElementById("betRows");
+const addButton=document.getElementById("addRow");
+
+const totalElement=document.getElementById("totalAmount");
+const discountElement=document.getElementById("discountAmount");
+const discountPercentElement=document.getElementById("discountPercent");
+const betAmountElement=document.getElementById("betAmount");
+const balanceElement=document.getElementById("balance");
+const placeButton=document.getElementById("placeBet");
+
+/* ADMIN DISCOUNT */
+
+function loadAdminDiscount(){
+ const saved=localStorage.getItem(STORAGE.discount);
+ const value=Number(saved);
+
+ discount=(saved!==null&&Number.isFinite(value))
+  ?Math.min(100,Math.max(0,value)):0;
+
+ discountPercentElement.textContent=
+  discount.toFixed(2).replace(/\.00$/,"");
+
+ calculate();
+}
+
+/* WALLET */
+
+function updateWallet(){
+ currentUser=getCurrentUser();
+
+ if(!currentUser){
+  wallet=0;
+ }else{
+  wallet=Math.max(0,Number(currentUser.points)||0);
+ }
+
+ balanceElement.textContent=wallet.toFixed(2);
+}
+
+/* CREATE ROW */
+
+function addRow(){
+
+ if(getLockStatus().locked){
+  applyBetLock();
+  return;
+ }
+
+ const currentCount=rowsContainer.querySelectorAll(".bet-row").length;
+
+ if(currentCount>=MAX_ROWS){
+  alert("Maximum 50 rows allowed.");
+  return;
+ }
+
+ const row=document.createElement("div");
+ row.className="bet-row";
+
+ const serial=document.createElement("span");
+ serial.className="serial";
+
+ const number=document.createElement("input");
+ number.type="text";
+ number.inputMode="numeric";
+ number.maxLength=2;
+ number.placeholder="Number";
+ number.dataset.field="number";
+
+ const straight=document.createElement("input");
+ straight.type="number";
+ straight.inputMode="decimal";
+ straight.min="0";
+ straight.step="0.01";
+ straight.placeholder="D";
+ straight.dataset.field="straight";
+
+ const rumble=document.createElement("input");
+ rumble.type="number";
+ rumble.inputMode="decimal";
+ rumble.min="0";
+ rumble.step="0.01";
+ rumble.placeholder="R";
+ rumble.dataset.field="rumble";
+
+ const remove=document.createElement("button");
+ remove.type="button";
+ remove.className="remove-btn";
+ remove.textContent="×";
+ remove.title="Clear or remove row";
+
+ row.append(serial,number,straight,rumble,remove);
+ rowsContainer.appendChild(row);
+
+ [number,straight,rumble].forEach(input=>{
+  input.addEventListener("input",()=>{
+
+   if(getLockStatus().locked){
+    applyBetLock();
+    return;
+   }
+
+   if(input===number){
+    input.value=input.value.replace(/\D/g,"").slice(0,2);
+   }
+
+   calculate();
+  });
+ });
+
+ remove.addEventListener("click",()=>{
+
+  if(getLockStatus().locked){
+   applyBetLock();
+   return;
+  }
+
+  const count=rowsContainer.querySelectorAll(".bet-row").length;
+
+  if(count>MIN_ROWS){
+   row.remove();
+  }else{
+   number.value="";
+   straight.value="";
+   rumble.value="";
+  }
+
+  updateSerials();
+  calculate();
+ });
+
+ updateSerials();
+ calculate();
+ updateAddButton();
+ applyBetLock();
+}
+
+/* SERIAL NUMBERS */
+
+function updateSerials(){
+ const rows=rowsContainer.querySelectorAll(".bet-row");
+
+ rows.forEach((row,index)=>{
+  row.querySelector(".serial").textContent=(index+1)+".";
+ });
+
+ updateAddButton();
+}
+
+/* ROW LIMIT */
+
+function updateAddButton(){
+ const count=rowsContainer.querySelectorAll(".bet-row").length;
+
+ addButton.disabled=isBetLocked||count>=MAX_ROWS;
+
+ addButton.title=isBetLocked
+  ?"Betting is closed"
+  :count>=MAX_ROWS
+   ?"Maximum 50 rows reached"
+   :"Add row ("+count+"/"+MAX_ROWS+")";
+}
+
+addButton.addEventListener("click",addRow);
+
+/* GET VALID ROW DATA */
+
+function getRows(){
+ const data=[];
+
+ rowsContainer.querySelectorAll(".bet-row").forEach(row=>{
+  const number=row.querySelector('[data-field="number"]').value.trim();
+
+  const dValue=row.querySelector('[data-field="straight"]').value;
+  const rValue=row.querySelector('[data-field="rumble"]').value;
+
+  if(number==="")return;
+  if(dValue===""&&rValue==="")return;
+
+  const straight=dValue===""?0:Number(dValue);
+  const rumble=rValue===""?0:Number(rValue);
+
+  data.push({number,straight,rumble});
+ });
+
+ return data;
+}
+
+/* CALCULATE AMOUNTS */
+
+function calculate(){
+ let total=0;
+
+ rowsContainer.querySelectorAll(".bet-row").forEach(row=>{
+  const number=row.querySelector('[data-field="number"]').value.trim();
+
+  if(number==="")return;
+
+  const dValue=row.querySelector('[data-field="straight"]').value;
+  const rValue=row.querySelector('[data-field="rumble"]').value;
+
+  const d=dValue===""?0:Number(dValue);
+  const r=rValue===""?0:Number(rValue);
+
+  if(Number.isFinite(d)&&d>0)total+=d;
+  if(Number.isFinite(r)&&r>0)total+=r;
+ });
+
+ const discountAmount=total*discount/100;
+ const finalAmount=total-discountAmount;
+
+ totalElement.textContent=total.toFixed(2);
+ discountElement.textContent=discountAmount.toFixed(2);
+ betAmountElement.textContent=finalAmount.toFixed(2);
+
+ return{
+  total,
+  discount,
+  discountAmount,
+  finalAmount
+ };
+}
+
+/* VALIDATION */
+
+function validateRows(rows){
+ if(rows.length===0){
+  alert("Please enter at least one Number and D or R Points.");
+  return false;
+ }
+
+ for(const row of rows){
+  if(!/^\d{2}$/.test(row.number)){
+   alert("2D Number must contain exactly two digits (00-99).");
+   return false;
+  }
+
+  if(
+   !Number.isFinite(row.straight)||
+   !Number.isFinite(row.rumble)||
+   row.straight<0||
+   row.rumble<0
+  ){
+   alert("Please enter valid non-negative amounts.");
+   return false;
+  }
+
+  if(row.straight===0&&row.rumble===0){
+   alert("Please enter points in either D or R.");
+   return false;
+  }
+ }
+
+ return true;
+}
+
+/* SAVE DEMO ENTRY */
+
+placeButton.addEventListener("click",()=>{
+
+ // First check: cutoff must not have passed.
+ if(getLockStatus().locked){
+  applyBetLock();
+  alert("BETTING CLOSED – Draw time is approaching. You cannot place a bet now.");
+  return;
+ }
+
+ currentUser=getCurrentUser();
+
+ if(!currentUser){
+  alert("Your login session has expired. Please login again.");
+  location.replace("login.html");
+  return;
+ }
+
+ // Second check after user validation.
+ if(getLockStatus().locked){
+  applyBetLock();
+  alert("BETTING CLOSED – You cannot place a bet now.");
+  return;
+ }
+
+ const rows=getRows();
+ const result=calculate();
+
+ if(!validateRows(rows))return;
+
+ if(result.finalAmount<=0){
+  alert("Please enter a valid amount.");
+  return;
+ }
+
+ updateWallet();
+
+ if(result.finalAmount>wallet){
+  alert("Insufficient demo points.");
+  return;
+ }
+
+ const users=getUsers();
+
+ const userIndex=users.findIndex(user=>
+  String(user.username||"").toLowerCase()===
+  String(currentUser.username).toLowerCase()
+ );
+
+ if(userIndex===-1){
+  alert("User account not found.");
+  return;
+ }
+
+ const history=readStorage(STORAGE.history,[]);
+ const safeHistory=Array.isArray(history)?history:[];
+
+ const pointHistory=readStorage(STORAGE.pointHistory,[]);
+ const safePointHistory=Array.isArray(pointHistory)?pointHistory:[];
+
+ // Final cutoff check immediately before preparing the entry.
+ if(getLockStatus().locked){
+  applyBetLock();
+  alert("BETTING CLOSED – You cannot place a bet now.");
+  return;
+ }
+
+ const now=new Date();
+ const entryId="2D"+Date.now()+"-"+Math.random().toString(36).slice(2,7);
+
+ const newBalance=wallet-result.finalAmount;
+
+ const schedule=getDrawSchedule();
+
+ const entry={
+  id:entryId,
+  game:"2d",
+  username:currentUser.username,
+  rows:rows,
+  total:result.total,
+  discount:result.discount,
+  discountValue:result.discountAmount,
+  amount:result.finalAmount,
+  drawNumber:schedule?schedule.drawNumber:"",
+  drawTime:schedule?schedule.value:"",
+  createdAt:now.toISOString(),
+  submittedAt:now.getTime(),
+  timestamp:now.getTime(),
+  date:now.toLocaleString(),
+  status:"DEMO SAVED"
+ };
+
+ const debitRecord={
+  id:"PH"+Date.now()+"-"+Math.random().toString(36).slice(2,7),
+  username:currentUser.username,
+  type:"debit",
+  amount:result.finalAmount,
+  reason:"2D Bet",
+  referenceId:entryId,
+  date:now.toISOString(),
+  createdAt:now.toISOString(),
+  timestamp:now.getTime()
+ };
+
+ /*
+  * Preserve all existing user properties.
+  * Wallet is stored in the current user's points field.
+  */
+
+ const updatedUser={
+  ...users[userIndex],
+  points:newBalance
+ };
+
+ users[userIndex]=updatedUser;
+
+ try{
+
+  // One more cutoff check before wallet update.
+  if(getLockStatus().locked){
+   applyBetLock();
+   alert("BETTING CLOSED – You cannot place a bet now.");
+   return;
+  }
+
+  localStorage.setItem(STORAGE.users,JSON.stringify(users));
+
+  safeHistory.unshift(entry);
+  localStorage.setItem(STORAGE.history,JSON.stringify(safeHistory));
+
+  safePointHistory.unshift(debitRecord);
+  localStorage.setItem(STORAGE.pointHistory,JSON.stringify(safePointHistory));
+
+  /* Verify saved data */
+  const verifyUsers=readStorage(STORAGE.users,[]);
+  const verifyUser=Array.isArray(verifyUsers)?
+   verifyUsers.find(user=>
+    String(user.username||"").toLowerCase()===
+    String(currentUser.username).toLowerCase()
+   ):null;
+
+  const verifyHistory=readStorage(STORAGE.history,[]);
+  const verifyPointHistory=readStorage(STORAGE.pointHistory,[]);
+
+  const userSaved=verifyUser&&
+   Number(verifyUser.points)===newBalance;
+
+  const betSaved=Array.isArray(verifyHistory)&&
+   verifyHistory.some(item=>String(item.id)===entryId);
+
+  const debitSaved=Array.isArray(verifyPointHistory)&&
+   verifyPointHistory.some(item=>String(item.referenceId)===entryId);
+
+  if(!userSaved||!betSaved||!debitSaved){
+   throw new Error("Save verification failed");
+  }
+
+  wallet=newBalance;
+  updateWallet();
+
+  alert(
+   "2D demo entry saved successfully!"+
+   "\nUsername: "+currentUser.username+
+   "\nBet Amount: "+result.finalAmount.toFixed(2)+
+   "\nRemaining Points: "+wallet.toFixed(2)
+  );
+
+  resetRows();
+
+ }catch(error){
+  console.error("2D bet save error:",error);
+
+  alert(
+   "Bet save could not be verified. Please check your browser storage before retrying."
+  );
+ }
+});
+
+/* RESET */
+
+function resetRows(){
+ rowsContainer.replaceChildren();
+
+ // Create the original 10 rows even if betting is locked.
+ for(let i=0;i<MIN_ROWS;i++){
+  createEmptyRow();
+ }
+
+ updateSerials();
+ calculate();
+ applyBetLock();
+}
+
+/* CREATE EMPTY ROW */
+
+function createEmptyRow(){
+
+ const row=document.createElement("div");
+ row.className="bet-row";
+
+ const serial=document.createElement("span");
+ serial.className="serial";
+
+ const number=document.createElement("input");
+ number.type="text";
+ number.inputMode="numeric";
+ number.maxLength=2;
+ number.placeholder="Number";
+ number.dataset.field="number";
+
+ const straight=document.createElement("input");
+ straight.type="number";
+ straight.inputMode="decimal";
+ straight.min="0";
+ straight.step="0.01";
+ straight.placeholder="D";
+ straight.dataset.field="straight";
+
+ const rumble=document.createElement("input");
+ rumble.type="number";
+ rumble.inputMode="decimal";
+ rumble.min="0";
+ rumble.step="0.01";
+ rumble.placeholder="R";
+ rumble.dataset.field="rumble";
+
+ const remove=document.createElement("button");
+ remove.type="button";
+ remove.className="remove-btn";
+ remove.textContent="×";
+ remove.title="Clear or remove row";
+
+ row.append(serial,number,straight,rumble,remove);
+ rowsContainer.appendChild(row);
+
+ [number,straight,rumble].forEach(input=>{
+  input.addEventListener("input",()=>{
+
+   if(getLockStatus().locked){
+    applyBetLock();
+    return;
+   }
+
+   if(input===number){
+    input.value=input.value.replace(/\D/g,"").slice(0,2);
+   }
+
+   calculate();
+  });
+ });
+
+ remove.addEventListener("click",()=>{
+
+  if(getLockStatus().locked){
+   applyBetLock();
+   return;
+  }
+
+  const count=rowsContainer.querySelectorAll(".bet-row").length;
+
+  if(count>MIN_ROWS){
+   row.remove();
+  }else{
+   number.value="";
+   straight.value="";
+   rumble.value="";
+  }
+
+  updateSerials();
+  calculate();
+ });
+
+}
+
+/* STORAGE SYNC */
+
+window.addEventListener("storage",event=>{
+
+ if(event.key===STORAGE.discount||event.key===null){
+  loadAdminDiscount();
+ }
+
+ if(event.key===STORAGE.users||event.key===null){
+  updateWallet();
+ }
+
+ // Admin timer changes.
+ if(
+  event.key===STORAGE.drawTime||
+  event.key===STORAGE.drawNumber||
+  event.key===null
+ ){
+  applyBetLock();
+ }
+
+});
+
+window.addEventListener("focus",()=>{
+ loadAdminDiscount();
+ updateWallet();
+ applyBetLock();
+});
+
+window.addEventListener("pageshow",()=>{
+ loadAdminDiscount();
+ updateWallet();
+ applyBetLock();
+});
+
+/* INITIALIZE */
+
+resetRows();
+loadAdminDiscount();
+updateWallet();
+startDrawLockMonitor();
+
+</script>
+</body>
+</html>
