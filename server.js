@@ -1,4 +1,3 @@
-
 require("dotenv").config();
 
 const express = require("express");
@@ -15,6 +14,9 @@ const DATABASE_URL = process.env.DATABASE_URL;
 const AUTH_COOKIE = "glo365_token";
 const COOKIE_MAX_AGE = 7 * 24 * 60 * 60 * 1000;
 const DRAW_LOCK_MINUTES = 45;
+
+// Only this username can ever have the admin role.
+const PRIMARY_ADMIN_USERNAME = "adminglo365";
 
 if (!JWT_SECRET || JWT_SECRET.length < 32) {
   console.error("ERROR: JWT_SECRET must be at least 32 characters.");
@@ -107,7 +109,6 @@ const pool = new Pool({
 pool.on("error", error => {
   console.error("Unexpected database error:", error.message);
 });
-
 
 // ==========================================
 // COMMON HELPERS
@@ -251,7 +252,6 @@ function validId(value) {
     : null;
 }
 
-
 // ==========================================
 // DRAW DATE VALIDATION
 // ==========================================
@@ -261,13 +261,7 @@ function validDrawDate(value) {
     return false;
   }
 
-  const timestamp = Date.parse(value);
-
-  if (!Number.isFinite(timestamp)) {
-    return false;
-  }
-
-  return true;
+  return Number.isFinite(Date.parse(value));
 }
 
 async function getCurrentDraw(client = pool) {
@@ -290,7 +284,6 @@ function isDrawBettingLocked(draw) {
 
   return drawTime - Date.now() <= DRAW_LOCK_MINUTES * 60 * 1000;
 }
-
 
 // ==========================================
 // DATABASE INITIALIZATION
@@ -404,8 +397,6 @@ async function initializeDatabase() {
       updated_at TIMESTAMPTZ DEFAULT NOW()
     );
 
-    -- Draw schedule: one persistent current schedule.
-    -- Existing draw data is never deleted by initialization.
     CREATE TABLE IF NOT EXISTS draw_settings (
       id SMALLINT PRIMARY KEY CHECK (id = 1),
       draw_number VARCHAR(50) NOT NULL DEFAULT '',
@@ -430,15 +421,91 @@ async function initializeDatabase() {
     CREATE INDEX IF NOT EXISTS idx_draw_settings_time ON draw_settings(draw_at);
   `);
 
+  // Keep existing accounts and their data.
+  // Any previous admin other than the permanent owner becomes a normal user.
+  await pool.query(`
+    UPDATE users
+    SET role = 'user',
+        updated_at = NOW()
+    WHERE role = 'admin'
+      AND username <> 'adminglo365'
+  `);
+
+  // Restore the permanent owner's active/admin status if the account exists.
+  await pool.query(`
+    UPDATE users
+    SET role = 'admin',
+        status = 'active',
+        updated_at = NOW()
+    WHERE username = 'adminglo365'
+  `);
+
   await pool.query(`
     UPDATE users
     SET referral_code = 'GLO' || id
     WHERE referral_code IS NULL
   `);
 
+  // At most one admin can exist.
+  await pool.query(`
+    CREATE UNIQUE INDEX IF NOT EXISTS idx_users_single_admin
+    ON users (role)
+    WHERE role = 'admin'
+  `);
+
   console.log("GLO 365 database initialized.");
 }
 
+// ==========================================
+// PRIMARY ADMIN DATABASE PROTECTION
+// Install after bootstrap so initial promotion can happen.
+// ==========================================
+
+async function installPrimaryAdminProtection() {
+  await pool.query(`
+    CREATE OR REPLACE FUNCTION glo365_protect_primary_admin()
+    RETURNS TRIGGER AS $$
+    BEGIN
+      IF TG_OP = 'DELETE' THEN
+        IF OLD.username = 'adminglo365' AND OLD.role = 'admin' THEN
+          RAISE EXCEPTION 'Primary Admin account cannot be deleted.';
+        END IF;
+
+        RETURN OLD;
+      END IF;
+
+      IF NEW.role = 'admin' AND NEW.username <> 'adminglo365' THEN
+        RAISE EXCEPTION 'Only adminglo365 can have the admin role.';
+      END IF;
+
+      IF OLD.username = 'adminglo365' AND OLD.role = 'admin' THEN
+        IF NEW.username <> 'adminglo365'
+           OR NEW.role <> 'admin'
+           OR NEW.status <> 'active' THEN
+          RAISE EXCEPTION 'Primary Admin account is protected.';
+        END IF;
+      END IF;
+
+      RETURN NEW;
+    END;
+    $$ LANGUAGE plpgsql;
+
+    DROP TRIGGER IF EXISTS trg_glo365_protect_primary_admin ON users;
+
+    CREATE TRIGGER trg_glo365_protect_primary_admin
+    BEFORE UPDATE OR DELETE ON users
+    FOR EACH ROW
+    EXECUTE FUNCTION glo365_protect_primary_admin();
+
+    DROP TRIGGER IF EXISTS trg_glo365_only_primary_admin_insert ON users;
+
+    CREATE TRIGGER trg_glo365_only_primary_admin_insert
+    BEFORE INSERT ON users
+    FOR EACH ROW
+    WHEN (NEW.role = 'admin')
+    EXECUTE FUNCTION glo365_protect_primary_admin();
+  `);
+}
 
 // ==========================================
 // AUDIT LOG
@@ -461,7 +528,6 @@ async function audit(actorId, action, targetUserId = null, details = {}) {
     console.error("Audit log error:", error.message);
   }
 }
-
 
 // ==========================================
 // AUTHENTICATION
@@ -523,14 +589,21 @@ async function authenticateToken(req, res, next) {
   }
 }
 
-
 // ==========================================
 // ROLE & PERMISSION CHECKS
 // ==========================================
 
+function isPrimaryAdmin(user) {
+  return Boolean(
+    user &&
+    user.role === "admin" &&
+    user.username === PRIMARY_ADMIN_USERNAME
+  );
+}
+
 function requireAdmin(req, res, next) {
-  if (req.user.role !== "admin") {
-    return sendError(res, 403, "Admin access required.");
+  if (!isPrimaryAdmin(req.user)) {
+    return sendError(res, 403, "Primary Admin access required.");
   }
 
   next();
@@ -538,7 +611,7 @@ function requireAdmin(req, res, next) {
 
 function requirePermission(permission) {
   return asyncRoute(async (req, res, next) => {
-    if (req.user.role === "admin") return next();
+    if (isPrimaryAdmin(req.user)) return next();
 
     if (req.user.role !== "moderator") {
       return sendError(res, 403, "Permission denied.");
@@ -561,16 +634,12 @@ function requirePermission(permission) {
   });
 }
 
-
 // ==========================================
-// BOOTSTRAP FIRST ADMIN
+// BOOTSTRAP SINGLE PRIMARY ADMIN
 // ==========================================
 
 async function bootstrapAdmin() {
-  const username = cleanText(
-    process.env.BOOTSTRAP_ADMIN_USERNAME,
-    30
-  ).toLowerCase();
+  const username = PRIMARY_ADMIN_USERNAME;
 
   const email = cleanText(
     process.env.BOOTSTRAP_ADMIN_EMAIL,
@@ -579,62 +648,97 @@ async function bootstrapAdmin() {
 
   const password = process.env.BOOTSTRAP_ADMIN_PASSWORD;
 
-  if (!username && !email && !password) {
-    console.log("Admin bootstrap not configured.");
-    return;
-  }
-
-  if (
-    !username ||
-    !email ||
-    !password ||
-    !validUsername(username) ||
-    !validEmail(email) ||
-    password.length < 12
-  ) {
-    throw new Error(
-      "Admin bootstrap requires a valid username, email and password of at least 12 characters."
-    );
-  }
-
   const existing = await pool.query(
-    "SELECT id FROM users WHERE role = 'admin' LIMIT 1"
+    `SELECT id, username
+     FROM users
+     WHERE username = $1
+     LIMIT 1`,
+    [username]
   );
 
-  if (existing.rows.length) {
-    console.log("An admin account already exists. Bootstrap skipped.");
-    return;
-  }
-
-  const passwordHash = await bcrypt.hash(password, 12);
   const client = await pool.connect();
 
   try {
     await client.query("BEGIN");
 
-    const result = await client.query(
-      `INSERT INTO users
-       (username, email, password_hash, role, status, referral_code)
-       VALUES ($1, $2, $3, 'admin', 'active', 'GLOADMIN')
-       ON CONFLICT DO NOTHING
-       RETURNING id`,
-      [username, email, passwordHash]
+    let adminId;
+
+    // Demote all previous admin accounts first.
+    await client.query(
+      `UPDATE users
+       SET role = 'user',
+           updated_at = NOW()
+       WHERE role = 'admin'
+         AND username <> $1`,
+      [username]
     );
 
-    if (result.rows.length) {
+    if (existing.rows.length) {
+      adminId = existing.rows[0].id;
+
+      // Existing owner's password and email are preserved.
+      await client.query(
+        `UPDATE users
+         SET role = 'admin',
+             status = 'active',
+             updated_at = NOW()
+         WHERE id = $1`,
+        [adminId]
+      );
+
+    } else {
+      if (
+        !email ||
+        !validEmail(email) ||
+        typeof password !== "string" ||
+        password.length < 12 ||
+        password.length > 128
+      ) {
+        throw new Error(
+          "Primary Admin does not exist. Set BOOTSTRAP_ADMIN_EMAIL and BOOTSTRAP_ADMIN_PASSWORD (minimum 12 characters) in Render."
+        );
+      }
+
+      const emailOwner = await client.query(
+        "SELECT id FROM users WHERE email = $1 LIMIT 1",
+        [email]
+      );
+
+      if (emailOwner.rows.length) {
+        throw new Error(
+          "BOOTSTRAP_ADMIN_EMAIL is already used by another account."
+        );
+      }
+
+      const passwordHash = await bcrypt.hash(password, 12);
+
+      const created = await client.query(
+        `INSERT INTO users
+         (username, email, password_hash, role, status, referral_code)
+         VALUES ($1, $2, $3, 'admin', 'active', 'GLOADMIN')
+         RETURNING id`,
+        [username, email, passwordHash]
+      );
+
+      adminId = created.rows[0].id;
+
       await client.query(
         `INSERT INTO profiles (user_id)
          VALUES ($1)
-         ON CONFLICT DO NOTHING`,
-        [result.rows[0].id]
+         ON CONFLICT (user_id) DO NOTHING`,
+        [adminId]
       );
     }
 
+    await client.query(
+      `DELETE FROM moderator_permissions
+       WHERE user_id = $1`,
+      [adminId]
+    );
+
     await client.query("COMMIT");
 
-    console.log(
-      "Admin bootstrap completed if no account conflict occurred."
-    );
+    console.log("Single Primary Admin ready: adminglo365.");
 
   } catch (error) {
     await client.query("ROLLBACK");
@@ -644,7 +748,6 @@ async function bootstrapAdmin() {
   }
 }
 
-
 // ==========================================
 // HEALTH CHECK
 // ==========================================
@@ -653,7 +756,7 @@ app.get("/", (req, res) => {
   res.json({
     success: true,
     message: "GLO 365 Backend API is running.",
-    version: "2.3.0"
+    version: "2.4.0"
   });
 });
 
@@ -667,7 +770,6 @@ app.get("/health", asyncRoute(async (req, res) => {
   });
 }));
 
-
 // ==========================================
 // REGISTER
 // ==========================================
@@ -679,11 +781,7 @@ app.post("/api/auth/register", asyncRoute(async (req, res) => {
   const referralCode = cleanText(req.body.referral_code, 30);
 
   if (!username || !email || !password) {
-    return sendError(
-      res,
-      400,
-      "Username, email and password are required."
-    );
+    return sendError(res, 400, "Username, email and password are required.");
   }
 
   if (!validUsername(username)) {
@@ -696,6 +794,10 @@ app.post("/api/auth/register", asyncRoute(async (req, res) => {
 
   if (!validEmail(email)) {
     return sendError(res, 400, "Please enter a valid email address.");
+  }
+
+  if (username === PRIMARY_ADMIN_USERNAME) {
+    return sendError(res, 409, "This username is reserved.");
   }
 
   if (
@@ -775,14 +877,12 @@ app.post("/api/auth/register", asyncRoute(async (req, res) => {
     }
 
     console.error("Register error:", error.message);
-
     return sendError(res, 500, "Registration failed.");
 
   } finally {
     client.release();
   }
 }));
-
 
 // ==========================================
 // LOGIN
@@ -840,7 +940,6 @@ app.post("/api/auth/login", asyncRoute(async (req, res) => {
   });
 }));
 
-
 // ==========================================
 // LOGOUT
 // ==========================================
@@ -853,7 +952,6 @@ app.post("/api/auth/logout", (req, res) => {
     message: "Logged out successfully."
   });
 });
-
 
 // ==========================================
 // CURRENT USER
@@ -884,7 +982,6 @@ app.get(
   })
 );
 
-
 // ==========================================
 // PROFILE
 // ==========================================
@@ -912,10 +1009,7 @@ app.get(
 app.get(
   "/api/profile/:username",
   asyncRoute(async (req, res) => {
-    const username = cleanText(
-      req.params.username,
-      30
-    ).toLowerCase();
+    const username = cleanText(req.params.username, 30).toLowerCase();
 
     const result = await pool.query(
       `SELECT u.id, u.username, u.role,
@@ -983,13 +1077,10 @@ app.put(
   })
 );
 
-
 // ==========================================
 // ADMIN: DRAW SETTINGS
-// ONLY ADMIN CAN READ/CHANGE ADMIN SETTINGS
 // ==========================================
 
-// Admin reads the current schedule.
 app.get(
   "/api/admin/draw-settings",
   authenticateToken,
@@ -1004,7 +1095,6 @@ app.get(
   })
 );
 
-// Admin creates or updates the current schedule.
 app.put(
   "/api/admin/draw-settings",
   authenticateToken,
@@ -1081,10 +1171,8 @@ app.put(
   })
 );
 
-
 // ==========================================
 // PUBLIC DRAW SETTINGS
-// Read-only. Used by Home and Betting pages.
 // ==========================================
 
 app.get(
@@ -1092,17 +1180,14 @@ app.get(
   asyncRoute(async (req, res) => {
     const drawSettings = await getCurrentDraw();
 
-    const locked = isDrawBettingLocked(drawSettings);
-
     res.json({
       success: true,
       drawSettings,
-      betting_locked: locked,
+      betting_locked: isDrawBettingLocked(drawSettings),
       lock_minutes: DRAW_LOCK_MINUTES
     });
   })
 );
-
 
 // ==========================================
 // ADMIN: DASHBOARD
@@ -1115,12 +1200,8 @@ app.get(
   asyncRoute(async (req, res) => {
     const [users, moderators, affiliates, bets] = await Promise.all([
       pool.query("SELECT COUNT(*)::int AS total FROM users"),
-      pool.query(
-        "SELECT COUNT(*)::int AS total FROM users WHERE role = 'moderator'"
-      ),
-      pool.query(
-        "SELECT COUNT(*)::int AS total FROM users WHERE role = 'affiliate'"
-      ),
+      pool.query("SELECT COUNT(*)::int AS total FROM users WHERE role = 'moderator'"),
+      pool.query("SELECT COUNT(*)::int AS total FROM users WHERE role = 'affiliate'"),
       pool.query("SELECT COUNT(*)::int AS total FROM demo_bets")
     ]);
 
@@ -1135,7 +1216,6 @@ app.get(
     });
   })
 );
-
 
 // ==========================================
 // ADMIN: USERS
@@ -1185,21 +1265,18 @@ app.patch(
     const result = await pool.query(
       `UPDATE users
        SET status = $1, updated_at = NOW()
-       WHERE id = $2 AND role <> 'admin'
+       WHERE id = $2
+         AND role <> 'admin'
+         AND username <> $3
        RETURNING id, username, status`,
-      [status, targetId]
+      [status, targetId, PRIMARY_ADMIN_USERNAME]
     );
 
     if (!result.rows.length) {
       return sendError(res, 404, "User not found or protected.");
     }
 
-    await audit(
-      req.user.id,
-      "account_status_changed",
-      targetId,
-      { status }
-    );
+    await audit(req.user.id, "account_status_changed", targetId, { status });
 
     res.json({
       success: true,
@@ -1227,9 +1304,11 @@ app.patch(
     const result = await pool.query(
       `UPDATE users
        SET role = $1, updated_at = NOW()
-       WHERE id = $2 AND role <> 'admin'
+       WHERE id = $2
+         AND role <> 'admin'
+         AND username <> $3
        RETURNING id, username, email, role, status`,
-      [role, targetId]
+      [role, targetId, PRIMARY_ADMIN_USERNAME]
     );
 
     if (!result.rows.length) {
@@ -1243,9 +1322,7 @@ app.patch(
          ON CONFLICT (user_id) DO NOTHING`,
         [targetId]
       );
-    }
-
-    if (role !== "moderator") {
+    } else {
       await pool.query(
         "DELETE FROM moderator_permissions WHERE user_id = $1",
         [targetId]
@@ -1261,7 +1338,6 @@ app.patch(
     });
   })
 );
-
 
 // ==========================================
 // ADMIN: MODERATORS
@@ -1293,21 +1369,24 @@ app.post(
   authenticateToken,
   requireAdmin,
   asyncRoute(async (req, res) => {
-    const username = cleanText(
-      req.body.username,
-      30
-    ).toLowerCase();
+    const username = cleanText(req.body.username, 30).toLowerCase();
 
     if (!validUsername(username)) {
       return sendError(res, 400, "Enter a valid username.");
     }
 
+    if (username === PRIMARY_ADMIN_USERNAME) {
+      return sendError(res, 403, "Primary Admin cannot become a moderator.");
+    }
+
     const result = await pool.query(
       `UPDATE users
        SET role = 'moderator', updated_at = NOW()
-       WHERE username = $1 AND role <> 'admin'
+       WHERE username = $1
+         AND role <> 'admin'
+         AND username <> $2
        RETURNING id, username, email, role`,
-      [username]
+      [username, PRIMARY_ADMIN_USERNAME]
     );
 
     if (!result.rows.length) {
@@ -1435,7 +1514,6 @@ app.delete(
   })
 );
 
-
 // ==========================================
 // MODERATOR: EXISTING PERMISSIONS
 // ==========================================
@@ -1498,11 +1576,7 @@ app.patch(
       ]
     );
 
-    await audit(
-      req.user.id,
-      "moderator_profile_updated",
-      targetId
-    );
+    await audit(req.user.id, "moderator_profile_updated", targetId);
 
     res.json({
       success: true,
@@ -1510,7 +1584,6 @@ app.patch(
     });
   })
 );
-
 
 // ==========================================
 // AFFILIATE: SELF DASHBOARD
@@ -1550,7 +1623,6 @@ app.get(
     });
   })
 );
-
 
 // ==========================================
 // AFFILIATE MANAGEMENT HELPERS
@@ -1663,12 +1735,7 @@ async function createAffiliateCommission(req, res) {
        (affiliate_id, referred_user_id, amount, description, status)
        VALUES ($1, $2, $3, $4, 'pending')
        RETURNING *`,
-      [
-        affiliateId,
-        referredUserId,
-        amount,
-        description
-      ]
+      [affiliateId, referredUserId, amount, description]
     );
 
     await client.query("COMMIT");
@@ -1764,7 +1831,6 @@ async function getAffiliateCommissions(res, affiliateId = null) {
   });
 }
 
-
 // ==========================================
 // ADMIN: AFFILIATE MANAGEMENT
 // ==========================================
@@ -1805,7 +1871,6 @@ app.patch(
   })
 );
 
-
 // ==========================================
 // MODERATOR: AFFILIATE MANAGEMENT
 // ==========================================
@@ -1825,7 +1890,6 @@ app.get(
   requirePermission("manage_affiliates"),
   asyncRoute(async (req, res) => {
     const affiliateId = validId(req.query.affiliate_id);
-
     await getAffiliateCommissions(res, affiliateId);
   })
 );
@@ -1847,7 +1911,6 @@ app.patch(
     await updateAffiliateCommissionStatus(req, res);
   })
 );
-
 
 // ==========================================
 // ADMIN MESSAGE MANAGEMENT
@@ -1959,7 +2022,6 @@ app.get(
   })
 );
 
-
 // ==========================================
 // LIVE EVENT MANAGEMENT
 // ==========================================
@@ -1990,10 +2052,7 @@ app.post(
   asyncRoute(async (req, res) => {
     const title = cleanText(req.body.title, 80);
     const url = cleanText(req.body.url, 1000);
-    const platform = cleanText(
-      req.body.platform,
-      20
-    ).toLowerCase();
+    const platform = cleanText(req.body.platform, 20).toLowerCase();
 
     if (!title || !url) {
       return sendError(res, 400, "Event title and URL are required.");
@@ -2091,7 +2150,6 @@ app.get(
   })
 );
 
-
 // ==========================================
 // DEMO WALLET
 // TEST CREDIT ONLY - NOT REAL MONEY
@@ -2140,7 +2198,6 @@ app.get(
   })
 );
 
-
 // ==========================================
 // CREATE DEMO BET
 // SERVER ENFORCES THE 45-MINUTE DRAW LOCK
@@ -2169,7 +2226,6 @@ app.post(
     try {
       await client.query("BEGIN");
 
-      // Lock the schedule row while checking and creating the bet.
       const drawResult = await client.query(
         `SELECT id, draw_number, draw_at
          FROM draw_settings
@@ -2239,14 +2295,8 @@ app.post(
 
     } catch (error) {
       await client.query("ROLLBACK");
-
       console.error("Demo bet error:", error.message);
-
-      return sendError(
-        res,
-        500,
-        "Could not create demo bet."
-      );
+      return sendError(res, 500, "Could not create demo bet.");
 
     } finally {
       client.release();
@@ -2273,7 +2323,6 @@ app.get(
     });
   })
 );
-
 
 // ==========================================
 // DEMO RESULTS
@@ -2305,11 +2354,7 @@ app.post(
     const resultValue = cleanText(req.body.result, 100);
 
     if (!gameName || !resultValue) {
-      return sendError(
-        res,
-        400,
-        "Game name and result are required."
-      );
+      return sendError(res, 400, "Game name and result are required.");
     }
 
     const result = await pool.query(
@@ -2334,7 +2379,6 @@ app.post(
   })
 );
 
-
 // ==========================================
 // ADMIN: AUDIT LOGS
 // ==========================================
@@ -2358,7 +2402,6 @@ app.get(
   })
 );
 
-
 // ==========================================
 // 404
 // ==========================================
@@ -2369,7 +2412,6 @@ app.use((req, res) => {
     message: "API endpoint not found."
   });
 });
-
 
 // ==========================================
 // GLOBAL ERROR HANDLER
@@ -2386,12 +2428,15 @@ app.use((error, req, res, next) => {
     return sendError(res, 403, "Origin not allowed.");
   }
 
+  if (error.code === "23505") {
+    return sendError(res, 409, "A record with this information already exists.");
+  }
+
   res.status(500).json({
     success: false,
     message: "Internal server error."
   });
 });
-
 
 // ==========================================
 // START SERVER
@@ -2400,12 +2445,16 @@ app.use((error, req, res, next) => {
 async function startServer() {
   try {
     await initializeDatabase();
+
     await bootstrapAdmin();
+
+    await installPrimaryAdminProtection();
 
     app.listen(PORT, "0.0.0.0", () => {
       console.log(
-        "GLO 365 API v2.3.0 running on port " + PORT
+        "GLO 365 API v2.4.0 running on port " + PORT
       );
+      console.log("Primary Admin username: adminglo365");
     });
 
   } catch (error) {
