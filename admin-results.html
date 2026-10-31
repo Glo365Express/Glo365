@@ -1,0 +1,624 @@
+<!DOCTYPE html>
+<html lang="bn">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="theme-color" content="#ffb900">
+<title>GLO 365 - Result Management</title>
+
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:Arial,sans-serif;background:#f2f3f5;color:#202127}
+.app{max-width:1100px;margin:auto;padding:18px}
+.header{display:flex;justify-content:space-between;align-items:center;gap:12px;flex-wrap:wrap;margin-bottom:20px}
+.brand{font-size:23px;font-weight:800;color:#202127}
+.brand span{color:#e6a600}
+.actions{display:flex;gap:8px;flex-wrap:wrap}
+button,a.btn{border:0;border-radius:8px;padding:10px 14px;font-weight:700;cursor:pointer;text-decoration:none;font-size:13px}
+.back{background:#202127;color:white}
+.logout{background:#ffe4e4;color:#bd2525}
+.primary{background:#ffb900;color:#202127}
+.card{background:white;border-radius:13px;padding:18px;margin-bottom:16px;box-shadow:0 3px 12px #00000008}
+h2{font-size:19px;margin-bottom:15px}
+.stats{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin-bottom:16px}
+.stat{background:white;padding:16px;border-radius:12px;box-shadow:0 3px 12px #00000008}
+.stat small{color:#777}
+.stat strong{display:block;font-size:24px;margin-top:7px}
+label{display:block;font-size:13px;font-weight:700;margin:12px 0 6px}
+input{width:100%;padding:12px;border:1px solid #ddd;border-radius:8px;font-size:15px;outline:none}
+input:focus{border-color:#e6a600}
+.grid{display:grid;grid-template-columns:repeat(2,1fr);gap:12px}
+.help{font-size:12px;color:#777;margin-top:5px}
+.notice{padding:12px;border-radius:8px;background:#fff7dc;color:#765600;font-size:13px;line-height:1.6;margin-bottom:14px}
+.success{background:#e7f8ec;color:#176b32}
+.error{background:#ffe8e8;color:#a51f1f}
+.result{border:1px solid #eee;border-radius:10px;padding:14px;margin-top:10px}
+.result-head{display:flex;justify-content:space-between;gap:10px;flex-wrap:wrap;margin-bottom:12px}
+.result-date{font-weight:800}
+.published{font-size:11px;background:#e5f8eb;color:#16763a;padding:5px 8px;border-radius:20px}
+.numbers{display:grid;grid-template-columns:repeat(3,1fr);gap:8px}
+.number-box{background:#f7f7f8;border-radius:8px;padding:10px;text-align:center;min-width:0}
+.number-box small{display:block;color:#777;font-size:11px;margin-bottom:6px}
+.number-box strong{font-size:18px;overflow-wrap:anywhere}
+.result-summary{margin-top:12px;padding:12px;border-radius:8px;background:#f5f6f7;font-size:13px;line-height:1.7}
+.empty{text-align:center;color:#888;padding:25px}
+.timer{margin-top:12px;padding:11px;border-radius:8px;background:#fff7dc;color:#765600;font-size:12px;line-height:1.7}
+.timer.expired{background:#ffe8e8;color:#a51f1f}
+@media(max-width:600px){
+ .app{padding:12px}
+ .stats{grid-template-columns:1fr 1fr}
+ .grid{grid-template-columns:1fr}
+ .numbers{grid-template-columns:1fr 1fr}
+ .stat strong{font-size:20px}
+}
+</style>
+</head>
+
+<body>
+<div class="app">
+
+<header class="header">
+ <div class="brand">
+  GLO <span>365</span>
+  <small style="font-size:12px;color:#777">/ Results</small>
+ </div>
+
+ <div class="actions">
+  <a class="btn back" href="admin.html">← Dashboard</a>
+  <button class="logout" onclick="logout()">Logout</button>
+ </div>
+</header>
+
+<div class="stats">
+ <div class="stat">
+  <small>মোট প্রকাশিত ফলাফল</small>
+  <strong id="totalResults">0</strong>
+ </div>
+
+ <div class="stat">
+  <small>সর্বশেষ ফলাফলের তারিখ</small>
+  <strong id="latestDate" style="font-size:16px">—</strong>
+ </div>
+
+ <div class="stat">
+  <small>আজকের ফলাফল</small>
+  <strong id="todayResults">0</strong>
+ </div>
+</div>
+
+<section class="card">
+ <h2>➕ নতুন ফলাফল প্রকাশ করুন</h2>
+
+ <div class="notice">
+  ফলাফল Publish করলে একই Draw Date-এর Running Bet স্বয়ংক্রিয়ভাবে যাচাই হবে এবং Bet-এর Status WIN অথবা LOSS হবে।
+
+  <br><br>
+  <b>Single:</b> First Prize-এর শেষ ১ ডিজিট
+  <br>
+  <b>2D:</b> Last Two
+  <br>
+  <b>3UP:</b> Front Three-এর যেকোনো একটি
+  <br>
+  <b>6UP:</b> সম্পূর্ণ First Prize
+
+  <br><br>
+  <b>৭২ ঘণ্টার নিয়ম:</b> Winning Number Publish হওয়ার ৭২ ঘণ্টা পর Publish-এর আগের Betting Submission Number Reports থেকে লুকানো হবে।
+ </div>
+
+ <form id="resultForm">
+
+  <label for="drawDate">Draw Date</label>
+  <input type="date" id="drawDate" required>
+
+  <div class="grid">
+   <div>
+    <label for="firstPrize">First Prize</label>
+    <input id="firstPrize" type="text" inputmode="numeric"
+     maxlength="6" placeholder="যেমন: 012345" required>
+    <div class="help">১–৬ ডিজিট লিখুন। সংরক্ষণের সময় ৬ ডিজিট করা হবে।</div>
+   </div>
+
+   <div>
+    <label for="lastTwo">Last Two</label>
+    <input id="lastTwo" type="text" inputmode="numeric"
+     maxlength="2" placeholder="যেমন: 07" required>
+    <div class="help">১–২ ডিজিট লিখুন। সংরক্ষণের সময় ২ ডিজিট করা হবে।</div>
+   </div>
+  </div>
+
+  <label for="frontThree">Front Three</label>
+  <input id="frontThree" type="text"
+   placeholder="যেমন: 123, 456, 789">
+
+  <div class="help">
+   কমা দিয়ে আলাদা করে ৩ ডিজিটের নম্বর লিখুন।
+  </div>
+
+  <button class="primary" type="submit" style="width:100%;margin-top:18px">
+   Publish Result
+  </button>
+ </form>
+
+ <div id="message" style="display:none;margin-top:12px;padding:12px;border-radius:8px;font-size:13px"></div>
+</section>
+
+<section class="card">
+ <h2>📋 প্রকাশিত ফলাফল</h2>
+ <div id="resultList"></div>
+</section>
+
+</div>
+
+<script>
+"use strict";
+
+const SESSION_KEY="glo365_session";
+const RESULTS_KEY="glo365_results";
+const HISTORY_KEY="glo365_demo_history";
+
+const RETENTION_HOURS=72;
+const RETENTION_MS=RETENTION_HOURS*60*60*1000;
+
+function read(key,fallback){
+ try{
+  const value=localStorage.getItem(key);
+  return value===null?fallback:JSON.parse(value);
+ }catch(error){
+  return fallback;
+ }
+}
+
+function write(key,value){
+ localStorage.setItem(key,JSON.stringify(value));
+}
+
+function checkAdmin(){
+ const session=read(SESSION_KEY,null);
+
+ if(!session||session.role!=="admin"){
+  location.href="login.html";
+  return false;
+ }
+
+ return true;
+}
+
+function logout(){
+ localStorage.removeItem(SESSION_KEY);
+ location.href="login.html";
+}
+
+function showMessage(message,type){
+ const box=document.getElementById("message");
+ box.textContent=message;
+ box.className=type||"";
+ box.style.display="block";
+}
+
+function getToday(){
+ const now=new Date();
+ const year=now.getFullYear();
+ const month=String(now.getMonth()+1).padStart(2,"0");
+ const day=String(now.getDate()).padStart(2,"0");
+ return `${year}-${month}-${day}`;
+}
+
+function getBetDate(value){
+ if(!value)return "";
+
+ const text=String(value);
+ const match=text.match(/^(\d{4}-\d{2}-\d{2})/);
+
+ if(match)return match[1];
+
+ const date=new Date(value);
+
+ if(Number.isNaN(date.getTime()))return "";
+
+ const year=date.getFullYear();
+ const month=String(date.getMonth()+1).padStart(2,"0");
+ const day=String(date.getDate()).padStart(2,"0");
+
+ return `${year}-${month}-${day}`;
+}
+
+function normalizeNumber(value,length){
+ return String(value??"").trim().padStart(length,"0");
+}
+
+function getGameType(game){
+ const value=String(game||"").toLowerCase().replace(/\s/g,"");
+
+ if(value==="single")return "single";
+ if(value==="2d")return "2d";
+ if(value==="3up")return "3up";
+ if(value==="6up")return "6up";
+
+ return "";
+}
+
+/*
+ ৭২ ঘণ্টার নিয়ম:
+ publishedAt = প্রথম Publish-এর সময়
+ hideBefore = publishedAt + 72 ঘণ্টা
+
+ ৭২ ঘণ্টা পূর্ণ হলে Publish-এর আগের Submission
+ Number Reports থেকে লুকানোর জন্য এই তথ্য ব্যবহার হবে।
+*/
+
+function getPublishTime(result){
+ const time=Number(result&&result.publishedAt);
+
+ return Number.isFinite(time)&&time>0?time:0;
+}
+
+function getExpiryTime(result){
+ const publishedAt=getPublishTime(result);
+
+ return publishedAt?publishedAt+RETENTION_MS:0;
+}
+
+function isRetentionExpired(result){
+ const expiry=getExpiryTime(result);
+
+ return expiry>0&&Date.now()>=expiry;
+}
+
+function getRemainingTime(result){
+ const expiry=getExpiryTime(result);
+
+ if(!expiry)return 0;
+
+ return Math.max(0,expiry-Date.now());
+}
+
+function formatRemainingTime(milliseconds){
+ const totalSeconds=Math.floor(milliseconds/1000);
+
+ const hours=Math.floor(totalSeconds/3600);
+ const minutes=Math.floor((totalSeconds%3600)/60);
+ const seconds=totalSeconds%60;
+
+ return `${hours} ঘণ্টা ${minutes} মিনিট ${seconds} সেকেন্ড`;
+}
+
+/*
+ WIN RULES:
+ SINGLE = First Prize-এর শেষ ১ ডিজিট
+ 2D     = Last Two
+ 3UP    = Front Three-এর যেকোনো একটি
+ 6UP    = সম্পূর্ণ First Prize
+*/
+
+function checkBetWin(bet,result){
+ const game=getGameType(bet.game);
+ const rows=Array.isArray(bet.rows)?bet.rows:[];
+
+ if(!game||!rows.length)return false;
+
+ const firstPrize=normalizeNumber(result.firstPrize,6);
+ const lastTwo=normalizeNumber(result.lastTwo,2);
+ const singleNumber=firstPrize.slice(-1);
+
+ const frontThree=Array.isArray(result.frontThree)
+  ?result.frontThree.map(value=>normalizeNumber(value,3))
+  :[];
+
+ return rows.some(row=>{
+  const number=String(row.number??"").trim();
+
+  if(!number)return false;
+
+  if(game==="single"){
+   return /^\d{1}$/.test(number)&&number===singleNumber;
+  }
+
+  if(game==="2d"){
+   return /^\d{1,2}$/.test(number)&&
+    normalizeNumber(number,2)===lastTwo;
+  }
+
+  if(game==="3up"){
+   return /^\d{1,3}$/.test(number)&&
+    frontThree.includes(normalizeNumber(number,3));
+  }
+
+  if(game==="6up"){
+   return /^\d{1,6}$/.test(number)&&
+    normalizeNumber(number,6)===firstPrize;
+  }
+
+  return false;
+ });
+}
+
+function settleBetsForResult(result){
+ const history=read(HISTORY_KEY,[]);
+ const safeHistory=Array.isArray(history)?history:[];
+
+ let checked=0;
+ let won=0;
+ let lost=0;
+
+ safeHistory.forEach(bet=>{
+  if(getBetDate(bet.date)!==result.date)return;
+
+  const currentStatus=String(bet.status||"pending").toLowerCase();
+
+  if(["win","won","loss","lose","lost","cancelled","canceled"].includes(currentStatus)){
+   return;
+  }
+
+  const game=getGameType(bet.game);
+  if(!game)return;
+
+  const isWin=checkBetWin(bet,result);
+
+  bet.status=isWin?"win":"loss";
+  bet.resultDate=result.date;
+  bet.resultPublished=true;
+  bet.resultId=result.id;
+
+  checked++;
+
+  if(isWin)won++;
+  else lost++;
+ });
+
+ write(HISTORY_KEY,safeHistory);
+
+ return {checked,won,lost};
+}
+
+/*
+ পুরোনো Result-এ publishedAt না থাকলে
+ বর্তমান সময়ে একটি timestamp যোগ হবে।
+ এটি legacy data-কে নতুনভাবে শনাক্ত করার জন্য।
+*/
+
+function normalizeLegacyResults(){
+ const results=read(RESULTS_KEY,[]);
+ if(!Array.isArray(results))return;
+
+ let changed=false;
+
+ results.forEach(result=>{
+  if(!result||typeof result!=="object")return;
+
+  if(!result.publishedAt){
+   result.publishedAt=Date.now();
+   result.retentionHours=RETENTION_HOURS;
+   changed=true;
+  }
+ });
+
+ if(changed){
+  write(RESULTS_KEY,results);
+ }
+}
+
+function renderResults(){
+ const results=read(RESULTS_KEY,[]);
+ const safeResults=Array.isArray(results)?results:[];
+ const today=getToday();
+
+ document.getElementById("totalResults").textContent=safeResults.length;
+
+ document.getElementById("todayResults").textContent=
+  safeResults.filter(item=>item.date===today).length;
+
+ document.getElementById("latestDate").textContent=
+  safeResults.length&&safeResults[0].date
+   ?safeResults[0].date
+   :"—";
+
+ const container=document.getElementById("resultList");
+ container.replaceChildren();
+
+ if(!safeResults.length){
+  const empty=document.createElement("div");
+  empty.className="empty";
+  empty.textContent="এখনো কোনো ফলাফল প্রকাশ করা হয়নি।";
+  container.appendChild(empty);
+  return;
+ }
+
+ safeResults.forEach(item=>{
+  const card=document.createElement("div");
+  card.className="result";
+
+  const head=document.createElement("div");
+  head.className="result-head";
+
+  const date=document.createElement("div");
+  date.className="result-date";
+  date.textContent="Draw Date: "+String(item.date||"");
+
+  const status=document.createElement("span");
+  status.className="published";
+  status.textContent="Published";
+
+  head.append(date,status);
+
+  const numbers=document.createElement("div");
+  numbers.className="numbers";
+
+  const fields=[
+   ["First Prize",item.firstPrize],
+   ["Last Two",item.lastTwo]
+  ];
+
+  fields.forEach(([label,value])=>{
+   const box=document.createElement("div");
+   box.className="number-box";
+
+   const small=document.createElement("small");
+   small.textContent=label;
+
+   const strong=document.createElement("strong");
+   strong.textContent=String(value||"—");
+
+   box.append(small,strong);
+   numbers.appendChild(box);
+  });
+
+  const thirdBox=document.createElement("div");
+  thirdBox.className="number-box";
+
+  const thirdLabel=document.createElement("small");
+  thirdLabel.textContent="Front Three";
+
+  const thirdValue=document.createElement("strong");
+
+  const front=Array.isArray(item.frontThree)
+   ?item.frontThree.join(", ")
+   :String(item.frontThree||"—");
+
+  thirdValue.textContent=front||"—";
+
+  thirdBox.append(thirdLabel,thirdValue);
+  numbers.appendChild(thirdBox);
+
+  const timer=document.createElement("div");
+  timer.className="timer";
+
+  const publishedAt=getPublishTime(item);
+
+  if(isRetentionExpired(item)){
+   timer.classList.add("expired");
+   timer.textContent=
+    "৭২ ঘণ্টা শেষ হয়েছে। Publish-এর আগের Submission Number Reports-এ আর দেখানো হবে না।";
+  }else if(publishedAt){
+   timer.textContent=
+    "৭২ ঘণ্টার Report Retention: "+
+    formatRemainingTime(getRemainingTime(item))+
+    " বাকি।";
+  }else{
+   timer.textContent=
+    "Publish Timestamp পাওয়া যায়নি।";
+  }
+
+  card.append(head,numbers,timer);
+  container.appendChild(card);
+ });
+}
+
+document.getElementById("resultForm").addEventListener("submit",function(event){
+ event.preventDefault();
+
+ if(!checkAdmin())return;
+
+ const date=document.getElementById("drawDate").value;
+ const firstInput=document.getElementById("firstPrize").value.trim();
+ const lastInput=document.getElementById("lastTwo").value.trim();
+ const frontInput=document.getElementById("frontThree").value.trim();
+
+ if(!date){
+  showMessage("Draw Date নির্বাচন করুন।","error");
+  return;
+ }
+
+ if(!/^\d{1,6}$/.test(firstInput)){
+  showMessage("First Prize-এ ১ থেকে ৬ ডিজিটের সংখ্যা লিখুন।","error");
+  return;
+ }
+
+ if(!/^\d{1,2}$/.test(lastInput)){
+  showMessage("Last Two-তে ১ বা ২ ডিজিটের সংখ্যা লিখুন।","error");
+  return;
+ }
+
+ let frontThree=[];
+
+ if(frontInput){
+  frontThree=frontInput.split(",").map(value=>value.trim());
+
+  if(frontThree.some(value=>!/^\d{3}$/.test(value))){
+   showMessage("Front Three-এর প্রতিটি নম্বর অবশ্যই ৩ ডিজিটের হতে হবে।","error");
+   return;
+  }
+
+  frontThree=[...new Set(frontThree)];
+ }
+
+ const results=read(RESULTS_KEY,[]);
+ const safeResults=Array.isArray(results)?results:[];
+
+ const existingIndex=safeResults.findIndex(item=>item.date===date);
+
+ const now=Date.now();
+
+ /*
+ একই Draw Date আগে Publish করা থাকলে
+ প্রথম Publish Timestamp অপরিবর্তিত থাকবে।
+ */
+
+ const previous=existingIndex>=0?safeResults[existingIndex]:null;
+
+ const result={
+  id:previous&&previous.id?previous.id:now,
+  date:date,
+  firstPrize:firstInput.padStart(6,"0"),
+  lastTwo:lastInput.padStart(2,"0"),
+  frontThree:frontThree,
+  published:true,
+
+  publishedAt:
+   previous&&Number(previous.publishedAt)>0
+    ?Number(previous.publishedAt)
+    :now,
+
+  retentionHours:RETENTION_HOURS
+ };
+
+ try{
+  if(existingIndex>=0){
+   safeResults[existingIndex]=result;
+  }else{
+   safeResults.unshift(result);
+  }
+
+  write(RESULTS_KEY,safeResults);
+
+  const summary=settleBetsForResult(result);
+
+  this.reset();
+
+  document.getElementById("drawDate").value=getToday();
+
+  showMessage(
+   "ফলাফল সফলভাবে Publish হয়েছে। মোট যাচাই: "+
+   summary.checked+
+   " টি Bet | WIN: "+
+   summary.won+
+   " টি | LOSS: "+
+   summary.lost+
+   " টি। ৭২ ঘণ্টার Timer সংরক্ষিত হয়েছে।",
+   "success"
+  );
+
+  renderResults();
+
+ }catch(error){
+  showMessage(
+   "ফলাফল সংরক্ষণ করা যায়নি। Browser LocalStorage পরীক্ষা করুন।",
+   "error"
+  );
+ }
+});
+
+if(checkAdmin()){
+ normalizeLegacyResults();
+ document.getElementById("drawDate").value=getToday();
+ renderResults();
+}
+
+window.addEventListener("storage",function(event){
+ if(event.key===RESULTS_KEY||event.key===HISTORY_KEY){
+  renderResults();
+ }
+});
+</script>
+
+</body>
+</html>
