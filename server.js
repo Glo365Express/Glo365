@@ -462,6 +462,34 @@
         VALUES (1, 0)
         ON CONFLICT (id) DO NOTHING;
 
+        -- Dedicated 6UP demo records; existing games and 3UP data are untouched.
+        CREATE TABLE IF NOT EXISTS demo_6up_bets (
+          id BIGSERIAL PRIMARY KEY,
+          user_id BIGINT NOT NULL REFERENCES users(id) ON DELETE CASCADE,
+          draw_number VARCHAR(50) NOT NULL DEFAULT '',
+          rows JSONB NOT NULL,
+          total_amount NUMERIC(12,2) NOT NULL CHECK (total_amount > 0),
+          discount_percent NUMERIC(5,2) NOT NULL DEFAULT 0
+            CHECK (discount_percent BETWEEN 0 AND 100),
+          discount_amount NUMERIC(12,2) NOT NULL DEFAULT 0
+            CHECK (discount_amount >= 0),
+          payable_amount NUMERIC(12,2) NOT NULL CHECK (payable_amount > 0),
+          status VARCHAR(20) NOT NULL DEFAULT 'pending',
+          created_at TIMESTAMPTZ DEFAULT NOW()
+        );
+
+        CREATE TABLE IF NOT EXISTS demo_6up_settings (
+          id SMALLINT PRIMARY KEY CHECK (id = 1),
+          discount_percent NUMERIC(5,2) NOT NULL DEFAULT 0
+            CHECK (discount_percent BETWEEN 0 AND 100),
+          updated_by BIGINT REFERENCES users(id) ON DELETE SET NULL,
+          updated_at TIMESTAMPTZ DEFAULT NOW()
+        );
+
+        INSERT INTO demo_6up_settings (id, discount_percent)
+        VALUES (1, 0)
+        ON CONFLICT (id) DO NOTHING;
+
         CREATE INDEX IF NOT EXISTS idx_users_username ON users(username);
         CREATE INDEX IF NOT EXISTS idx_users_email ON users(email);
         CREATE INDEX IF NOT EXISTS idx_demo_bets_user ON demo_bets(user_id);
@@ -474,6 +502,8 @@
         CREATE INDEX IF NOT EXISTS idx_draw_settings_time ON draw_settings(draw_at);
         CREATE INDEX IF NOT EXISTS idx_demo_3up_user
           ON demo_3up_bets(user_id, created_at DESC);
+        CREATE INDEX IF NOT EXISTS idx_demo_6up_user
+          ON demo_6up_bets(user_id, created_at DESC);
       `);
 
       // Keep existing accounts and their data.
@@ -811,7 +841,7 @@
       res.json({
         success: true,
         message: "GLO 365 Backend API is running.",
-        version: "2.5.0"
+        version: "2.6.0"
       });
     });
 
@@ -2708,6 +2738,325 @@
     );
 
     // ==========================================
+    // 6UP DEMO SETTINGS & ENTRIES
+    // ==========================================
+
+    // Public settings: draw schedule and server-controlled discount.
+    app.get(
+      "/api/public/6up-settings",
+      asyncRoute(async (req, res) => {
+        const [drawSettings, settingsResult] = await Promise.all([
+          getCurrentDraw(),
+          pool.query(
+            `SELECT discount_percent
+             FROM demo_6up_settings
+             WHERE id = 1`
+          )
+        ]);
+
+        res.json({
+          success: true,
+          drawSettings,
+          discount_percent: Number(
+            settingsResult.rows[0]?.discount_percent || 0
+          ),
+          betting_locked: isDrawBettingLocked(drawSettings),
+          lock_minutes: DRAW_LOCK_MINUTES,
+          currency: "DEMO",
+          is_demo: true
+        });
+      })
+    );
+
+    // Primary Admin reads 6UP discount settings.
+    app.get(
+      "/api/admin/6up-settings",
+      authenticateToken,
+      requireAdmin,
+      asyncRoute(async (req, res) => {
+        const result = await pool.query(
+          `SELECT discount_percent, updated_by, updated_at
+           FROM demo_6up_settings
+           WHERE id = 1`
+        );
+
+        res.json({
+          success: true,
+          settings: result.rows[0] || { discount_percent: "0.00" }
+        });
+      })
+    );
+
+    // Primary Admin changes the server-side 6UP discount.
+    app.put(
+      "/api/admin/6up-settings",
+      authenticateToken,
+      requireAdmin,
+      asyncRoute(async (req, res) => {
+        const rawDiscount = req.body.discount_percent;
+        const discount = Number(rawDiscount);
+
+        if (
+          rawDiscount === "" ||
+          rawDiscount === null ||
+          rawDiscount === undefined ||
+          !Number.isFinite(discount) ||
+          discount < 0 ||
+          discount > 100 ||
+          Math.round(discount * 100) !== discount * 100
+        ) {
+          return sendError(
+            res,
+            400,
+            "Discount must be a number from 0 to 100 with up to 2 decimal places."
+          );
+        }
+
+        const result = await pool.query(
+          `INSERT INTO demo_6up_settings
+           (id, discount_percent, updated_by, updated_at)
+           VALUES (1, $1, $2, NOW())
+           ON CONFLICT (id)
+           DO UPDATE SET
+             discount_percent = EXCLUDED.discount_percent,
+             updated_by = EXCLUDED.updated_by,
+             updated_at = NOW()
+           RETURNING discount_percent, updated_by, updated_at`,
+          [discount, req.user.id]
+        );
+
+        await audit(
+          req.user.id,
+          "6up_discount_updated",
+          null,
+          { discount_percent: discount }
+        );
+
+        res.json({
+          success: true,
+          message: "6UP discount settings saved.",
+          settings: result.rows[0]
+        });
+      })
+    );
+
+    // Submit 6UP demo entries. Discount and payable amount are calculated here.
+    app.post(
+      "/api/demo/6up/bets",
+      authenticateToken,
+      asyncRoute(async (req, res) => {
+        const inputRows = req.body.rows;
+
+        if (
+          !Array.isArray(inputRows) ||
+          inputRows.length < 1 ||
+          inputRows.length > 50
+        ) {
+          return sendError(res, 400, "Submit between 1 and 50 6UP rows.");
+        }
+
+        let totalCents = 0;
+        const cleanRows = [];
+
+        for (let index = 0; index < inputRows.length; index++) {
+          const row = inputRows[index];
+
+          if (!row || typeof row !== "object" || Array.isArray(row)) {
+            return sendError(res, 400, `Invalid 6UP row at position ${index + 1}.`);
+          }
+
+          const number = String(row.number ?? "").trim();
+
+          if (!/^\d{6}$/.test(number)) {
+            return sendError(
+              res,
+              400,
+              `Row ${index + 1}: number must contain exactly 6 digits.`
+            );
+          }
+
+          const straightCents = amountToCents(row.straight);
+          const rumbleCents = amountToCents(row.rumble);
+
+          if (straightCents === null || rumbleCents === null) {
+            return sendError(
+              res,
+              400,
+              `Row ${index + 1}: D/R amounts must be non-negative numbers with up to 2 decimals.`
+            );
+          }
+
+          if (straightCents + rumbleCents <= 0) {
+            return sendError(
+              res,
+              400,
+              `Row ${index + 1}: enter a Straight or Rumble amount.`
+            );
+          }
+
+          totalCents += straightCents + rumbleCents;
+
+          if (totalCents > 10000000) {
+            return sendError(res, 400, "Total 6UP amount cannot exceed 100000 DEMO points.");
+          }
+
+          cleanRows.push({
+            number,
+            straight: centsToAmount(straightCents),
+            rumble: centsToAmount(rumbleCents)
+          });
+        }
+
+        const client = await pool.connect();
+
+        try {
+          await client.query("BEGIN");
+
+          // Keep the same authoritative draw cutoff as the 3UP endpoint.
+          const drawResult = await client.query(
+            `SELECT id, draw_number, draw_at
+             FROM draw_settings
+             WHERE id = 1
+             FOR SHARE`
+          );
+
+          const draw = drawResult.rows[0] || null;
+
+          if (isDrawBettingLocked(draw)) {
+            await client.query("ROLLBACK");
+            return sendError(
+              res,
+              403,
+              "6UP entries are closed. The draw is missing or within the 45-minute cutoff."
+            );
+          }
+
+          const settingsResult = await client.query(
+            `SELECT discount_percent
+             FROM demo_6up_settings
+             WHERE id = 1`
+          );
+
+          const discountPercent = Number(
+            settingsResult.rows[0]?.discount_percent || 0
+          );
+          const discountCents = Math.round(totalCents * discountPercent / 100);
+          const payableCents = totalCents - discountCents;
+
+          if (payableCents <= 0) {
+            await client.query("ROLLBACK");
+            return sendError(res, 400, "Payable amount must be greater than zero.");
+          }
+
+          const userResult = await client.query(
+            `SELECT balance
+             FROM users
+             WHERE id = $1
+             FOR UPDATE`,
+            [req.user.id]
+          );
+
+          if (!userResult.rows.length) {
+            await client.query("ROLLBACK");
+            return sendError(res, 404, "User not found.");
+          }
+
+          const balanceCents = Math.round(Number(userResult.rows[0].balance) * 100);
+
+          if (balanceCents < payableCents) {
+            await client.query("ROLLBACK");
+            return sendError(res, 400, "Insufficient demo balance.");
+          }
+
+          await client.query(
+            `UPDATE users
+             SET balance = balance - $1,
+                 updated_at = NOW()
+             WHERE id = $2`,
+            [centsToAmount(payableCents), req.user.id]
+          );
+
+          const betResult = await client.query(
+            `INSERT INTO demo_6up_bets
+             (user_id, draw_number, rows, total_amount,
+              discount_percent, discount_amount, payable_amount)
+             VALUES ($1, $2, $3::jsonb, $4, $5, $6, $7)
+             RETURNING id, user_id, draw_number, rows, total_amount,
+                       discount_percent, discount_amount, payable_amount,
+                       status, created_at`,
+            [
+              req.user.id,
+              draw.draw_number || "",
+              JSON.stringify(cleanRows),
+              centsToAmount(totalCents),
+              discountPercent,
+              centsToAmount(discountCents),
+              centsToAmount(payableCents)
+            ]
+          );
+
+          await client.query(
+            `INSERT INTO wallet_transactions
+             (user_id, type, amount, currency, description, reference)
+             VALUES ($1, 'demo_6up_bet', $2, 'DEMO', $3, $4)`,
+            [
+              req.user.id,
+              -Number(centsToAmount(payableCents)),
+              "6UP Demo Entry",
+              "6UP-" + betResult.rows[0].id
+            ]
+          );
+
+          const updatedBalance = await client.query(
+            "SELECT balance FROM users WHERE id = $1",
+            [req.user.id]
+          );
+
+          await client.query("COMMIT");
+
+          res.status(201).json({
+            success: true,
+            message: "6UP demo entry submitted successfully.",
+            currency: "DEMO",
+            is_demo: true,
+            bet: betResult.rows[0],
+            balance: updatedBalance.rows[0].balance
+          });
+        } catch (error) {
+          await client.query("ROLLBACK");
+          console.error("6UP demo entry error:", error.message);
+          return sendError(res, 500, "Could not submit 6UP demo entry.");
+        } finally {
+          client.release();
+        }
+      })
+    );
+
+    // Each user can see only their own 6UP entries.
+    app.get(
+      "/api/demo/6up/bets",
+      authenticateToken,
+      asyncRoute(async (req, res) => {
+        const result = await pool.query(
+          `SELECT id, draw_number, rows, total_amount,
+                  discount_percent, discount_amount, payable_amount,
+                  status, created_at
+           FROM demo_6up_bets
+           WHERE user_id = $1
+           ORDER BY created_at DESC
+           LIMIT 100`,
+          [req.user.id]
+        );
+
+        res.json({
+          success: true,
+          currency: "DEMO",
+          bets: result.rows
+        });
+      })
+    );
+
+    // ==========================================
     // DEMO RESULTS
     // ==========================================
 
@@ -2835,7 +3184,7 @@
 
         app.listen(PORT, "0.0.0.0", () => {
           console.log(
-            "GLO 365 API v2.5.0 running on port " + PORT
+            "GLO 365 API v2.6.0 running on port " + PORT
           );
           console.log("Primary Admin username: adminglo365");
         });
