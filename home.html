@@ -1,0 +1,1140 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="theme-color" content="#ed2860">
+<title>GLO 365 - Home</title>
+
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:Arial,sans-serif;background:#f5f5f5;color:#30343b}
+.app{max-width:520px;min-height:100vh;margin:auto;background:#fff;padding-bottom:90px;overflow:hidden}
+header{background:linear-gradient(120deg,#bd1747,#ed2860,#fa557c);padding:16px 15px;display:flex;justify-content:space-between;align-items:center;box-shadow:0 5px 18px #ed286025}
+.logo{font-size:32px;font-weight:900;letter-spacing:1px;color:#fff}
+.logo span{color:#ffe0e9}
+.account{display:flex;align-items:center;gap:9px}
+.balance{background:#fff;color:#e92760;padding:12px 15px;border-radius:30px;font-size:15px;font-weight:bold;cursor:pointer;border:0;white-space:nowrap}
+.balance:active{transform:scale(.97)}
+
+/* PROFILE AVATAR */
+.profile{
+ width:43px;height:43px;border-radius:50%;
+ background:#9e123c;color:#fff;
+ display:grid;place-items:center;font-size:24px;
+ cursor:pointer;border:2px solid #ffffff90;
+ overflow:hidden;flex-shrink:0;
+}
+.profile img{
+ width:100%;height:100%;object-fit:cover;
+ display:block;border-radius:50%;
+}
+
+.shortcuts{display:flex;gap:10px;padding:14px 12px}
+.shortcut{flex:1;min-width:0;border:1px solid #f4c5d2;border-radius:40px;background:linear-gradient(145deg,#fff5f8,#ffe6ed);padding:14px 5px;font-size:14px;font-weight:bold;color:#d91d54;cursor:pointer}
+.shortcut:active{transform:scale(.97)}
+
+/* DRAW BOARD */
+.draw-board{margin:2px 8px 12px;display:grid;grid-template-columns:1.15fr .88fr 1.35fr;gap:7px;align-items:stretch}
+.official-box{min-width:0;min-height:150px;border-radius:25px;overflow:hidden;background:linear-gradient(145deg,#a40d3b,#ed2860);display:flex;flex-direction:column;justify-content:space-between;text-decoration:none;color:#fff;text-align:center;border:1px solid #f3c0ce}
+.official-art{flex:1;display:grid;place-items:center;background:radial-gradient(circle at 50% 45%,#ffb4c7 0,#ed2860 28%,#a40d3b 72%);padding:8px}
+.official-logo{width:100%;height:100%;max-width:105px;max-height:105px;filter:drop-shadow(0 4px 5px #55051d70)}
+.official-label{background:#ed2860;padding:10px 2px;font-size:clamp(15px,4vw,25px);font-weight:bold}
+.days-box{min-width:0;border-radius:25px;background:#ed2860;color:#fff;display:flex;flex-direction:column;justify-content:center;align-items:center;text-align:center;padding:8px 2px}
+.days-number{font-size:clamp(35px,10vw,57px);font-weight:400;line-height:1.1}
+.days-label{font-size:clamp(17px,5vw,28px);white-space:nowrap;margin-top:8px}
+.draw-info{min-width:0;display:flex;flex-direction:column;gap:7px}
+.draw-number{background:#fff;border-radius:30px;padding:10px 5px;text-align:center;color:#777;font-size:clamp(13px,4vw,24px);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;border:1px solid #eee}
+.time-row{display:grid;grid-template-columns:1fr 1fr;gap:6px;flex:1}
+.time-box{display:grid;grid-template-columns:1fr auto;align-items:center;overflow:hidden;border-radius:30px;background:#ed2860;color:#fff;min-width:0}
+.time-value{text-align:center;font-size:clamp(20px,6vw,37px);padding:8px 1px;font-variant-numeric:tabular-nums}
+.time-label{background:#d94b72;height:100%;display:grid;place-items:center;padding:3px;font-size:clamp(11px,3.5vw,22px)}
+.draw-status{grid-column:1/-1;text-align:center;color:#a33b5b;font-size:11px;font-weight:bold;padding:2px}
+
+/* RESULTS */
+.results-heading{margin:0 8px 6px;color:#d91d54;font-size:14px;font-weight:900}
+.results-board{margin:0 8px 9px;display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:4px}
+.result-card{min-width:0;background:#3d414a;border:1px solid #24272e;border-radius:10px 10px 0 0;height:76px;display:flex;flex-direction:column;align-items:center;justify-content:center;position:relative;padding:5px 2px}
+.result-rank{position:absolute;left:5px;top:5px;width:21px;height:21px;border-radius:7px;background:#d97983;color:#fff;display:grid;place-items:center;font-size:12px;font-weight:bold}
+.result-number{width:100%;color:#fff;font-size:clamp(12px,3.2vw,17px);font-weight:600;text-align:center;white-space:nowrap;overflow:hidden;text-overflow:clip;padding:0 1px;margin-top:10px;line-height:1.2}
+.result-caption{color:#f3aabb;font-size:8px;font-weight:bold;margin-top:5px;text-transform:uppercase}
+
+/* NOTICE */
+.notice-wrap{margin:0 12px 12px;display:none;overflow:hidden;min-height:43px;align-items:center;background:#fff;border-top:1px solid #d9eaf8;border-bottom:1px solid #d9eaf8;border-radius:5px}
+.notice-wrap.show{display:flex}
+.notice-icon{flex-shrink:0;width:34px;height:34px;margin-left:7px;border-radius:50%;background:#eaf5ff;color:#1976c9;display:grid;place-items:center;font-size:18px;z-index:2}
+.notice-window{flex:1;min-width:0;overflow:hidden;position:relative}
+.notice-track{display:flex;align-items:center;width:max-content;white-space:nowrap;animation:noticeMove 22s linear infinite;will-change:transform}
+.notice-track span{display:inline-block;flex:0 0 auto;padding:12px 25px;color:#1976c9;font-size:13px;font-weight:bold;white-space:nowrap}
+.notice-wrap:hover .notice-track{animation-play-state:paused}
+@keyframes noticeMove{0%{transform:translateX(0)}100%{transform:translateX(-50%)}}
+
+/* LIVE EVENT */
+.event{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:7px;margin:0 12px 15px;align-items:stretch}
+.event>div{min-width:0;width:100%;text-align:center;background:linear-gradient(145deg,#fff5f8,#ffe9ef);border:1px solid #f4d0da;border-radius:22px;padding:10px 5px}
+.live-event{display:flex;justify-content:center;align-items:center;gap:6px;cursor:pointer;font-weight:bold;color:#b51b48;white-space:nowrap;font-size:clamp(11px,3.4vw,16px)}
+.live-dot{color:#ed263d;font-size:14px;flex-shrink:0}
+.platform-logos{display:flex;align-items:center;gap:4px;flex-shrink:0}
+.platform-logo{width:17px;height:17px;display:inline-flex;align-items:center;justify-content:center;flex-shrink:0}
+.platform-logo svg{width:100%;height:100%;display:block}
+.event .next-date{color:#d91d54;font-weight:900;font-size:11px;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:4px;white-space:normal;overflow-wrap:anywhere;line-height:1.3;min-width:0}
+.next-date small{font-size:9px;color:#9b7883;font-weight:bold}
+.next-date strong{font-size:11px;white-space:normal;overflow-wrap:anywhere;max-width:100%}
+
+/* GAME CARDS */
+.cards{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:13px;padding:0 12px}
+.game-card{height:174px;border-radius:23px;position:relative;overflow:hidden;display:flex;flex-direction:column;align-items:center;justify-content:center;text-decoration:none;isolation:isolate;transition:transform .2s;border:1px solid #ffffffc9;box-shadow:0 8px 18px #17466d15}
+.game-card:active{transform:scale(.965)}
+.game-card::before{content:"";position:absolute;width:220px;height:100px;border:2px solid #ffffff65;border-radius:50%;transform:rotate(-23deg);bottom:15px;left:-65px;z-index:-1}
+.game-card::after{content:"";position:absolute;width:150px;height:150px;border-radius:50%;background:#ffffff55;filter:blur(35px);top:-65px;right:-40px;z-index:-1}
+.card-glow{position:absolute;width:90px;height:90px;border-radius:50%;background:#ffffff45;filter:blur(20px);bottom:-35px;right:-25px;z-index:-1}
+.card-crown{font-size:27px;line-height:1;margin-bottom:4px}
+.balls{display:flex;justify-content:center;align-items:center;gap:5px;height:48px}
+.ball{width:39px;height:39px;border-radius:50%;background:radial-gradient(circle at 32% 25%,#fff 0%,#fff 25%,#e8edf3 62%,#a9b5c2 100%);border:3px solid var(--ball-color);box-shadow:0 4px 7px #00000035,inset 0 -3px 5px #00000020,0 0 0 3px #ffffff70;display:grid;place-items:center;font-size:21px;font-weight:900;color:#26384a}
+.game-card h2{font-size:26px;line-height:1;font-weight:1000;letter-spacing:1.5px;text-align:center;margin:6px 0 11px}
+.play{width:84%;padding:7px 10px 7px 15px;border-radius:30px;background:#ffffffdf;display:flex;justify-content:space-between;align-items:center;font-size:12px;font-weight:900;letter-spacing:.7px}
+.play-arrow{width:30px;height:30px;border-radius:50%;background:var(--accent);color:white;display:grid;place-items:center;font-size:19px}
+.single{--ball-color:#1688df;--accent:#087acb;background:linear-gradient(145deg,#eaf8ff,#c4eaff,#a9dcff);color:#075c9b}
+.two{--ball-color:#0877ec;--accent:#0968db;background:linear-gradient(145deg,#e5f5ff,#b6e4ff,#91d2ff);color:#0755b5}
+.three{--ball-color:#e3294b;--accent:#d71943;background:linear-gradient(145deg,#fff0f3,#ffd0d9,#ffb2c2);color:#a90024}
+.six{--ball-color:#06a84c;--accent:#079a49;background:linear-gradient(145deg,#eafff0,#c3f8d3,#9cebb8);color:#087638}
+.single .ball{width:46px;height:46px;font-size:26px}
+.two .ball{width:44px;height:44px}
+.three .ball{width:35px;height:35px;font-size:19px}
+.six .ball{width:28px;height:28px;font-size:14px;border-width:2px}
+
+/* AD */
+.ad-banner{margin:17px 12px 20px;min-height:90px;border:1px solid #f2d5dd;border-radius:15px;background:#fff8fa;display:flex;align-items:center;justify-content:center;padding:12px;overflow:hidden}
+.ad-content{width:100%;text-align:center}
+.ad-label{display:block;font-size:9px;color:#a78b94;margin-bottom:7px;letter-spacing:1px;font-weight:bold}
+.ad-frame{width:100%;min-height:50px;display:flex;justify-content:center;align-items:center;overflow:hidden}
+.ad-frame iframe{max-width:100%;border:0}
+
+/* NAV */
+nav{position:fixed;bottom:0;left:50%;transform:translateX(-50%);width:100%;max-width:520px;background:#fff;border-top:1px solid #f0dce2;display:flex;justify-content:space-around;padding:11px 4px 16px;z-index:5;box-shadow:0 -3px 12px #00000008}
+nav button{flex:1;border:0;background:none;color:#93828a;font-size:11px;display:flex;flex-direction:column;align-items:center;gap:5px;cursor:pointer}
+nav button strong{font-size:23px}
+nav button.active{color:#e92760}
+.empty{text-align:center;color:#999;padding:22px;font-size:13px}
+
+/* NAV PROFILE AVATAR */
+.nav-profile-avatar{
+ width:25px;
+ height:25px;
+ border-radius:50%;
+ overflow:hidden;
+ display:grid;
+ place-items:center;
+ border:1.5px solid #e92760;
+ font-size:19px;
+ line-height:1;
+}
+.nav-profile-avatar img{
+ width:100%;
+ height:100%;
+ object-fit:cover;
+ display:block;
+ border-radius:50%;
+}
+
+/* MODALS */
+.points-modal,.live-modal{display:none;position:fixed;inset:0;background:#071d35b8;z-index:20;padding:15px;align-items:center;justify-content:center}
+.points-modal.show,.live-modal.show{display:flex}
+.points-content{width:100%;max-width:460px;max-height:85vh;overflow-y:auto;background:white;border:1px solid #f1cbd6;border-radius:16px;padding:18px}
+.points-header{display:flex;justify-content:space-between;align-items:center;margin-bottom:15px}
+.points-header h3{font-size:18px;color:#b51b48}
+.close-btn{border:0;background:#ffeaf0;color:#bd1747;padding:8px 12px;border-radius:8px;font-weight:bold;cursor:pointer}
+.points-total{background:linear-gradient(120deg,#bd1747,#ed2860);color:#fff;padding:18px;border-radius:12px;margin-bottom:15px}
+.points-total small{color:#ffe5ec}
+.points-total strong{display:block;font-size:29px;margin-top:6px}
+.points-content h4{color:#b51b48}
+.point-entry{border:1px solid #f2dce2;background:#fffafb;border-radius:10px;padding:12px;margin-top:9px;font-size:13px;line-height:1.7;color:#555}
+.point-entry .amount{color:#17833c;font-weight:bold;font-size:16px}
+.point-entry .debit{color:#d14343}
+.point-entry small{color:#999;display:block}
+
+/* LIVE PLAYER */
+.live-box{width:100%;max-width:480px;max-height:92vh;overflow-y:auto;background:white;border:1px solid #f1cbd6;border-radius:17px;padding:16px}
+.live-heading{display:flex;justify-content:space-between;align-items:center;gap:10px;margin-bottom:15px}
+.live-heading h3{font-size:18px;color:#b51b48}
+.live-player{width:100%;aspect-ratio:16/9;background:#071a2d;border-radius:12px;overflow:hidden}
+.live-player iframe{width:100%;height:100%;border:0;display:block}
+
+/* LIVE CLOSED */
+.live-message-box{width:100%;max-width:390px;background:#fff;border:1px solid #f1cbd6;border-radius:20px;padding:25px 20px;text-align:center;box-shadow:0 15px 45px #0004;animation:livePopup .25s ease}
+@keyframes livePopup{from{opacity:0;transform:scale(.88)}to{opacity:1;transform:scale(1)}}
+.live-message-icon{width:70px;height:70px;border-radius:50%;background:#fff0f4;display:grid;place-items:center;font-size:32px;margin:0 auto 15px}
+.live-message-box h3{font-size:20px;margin-bottom:10px;color:#b51b48}
+.live-message-box p{color:#887781;font-size:14px;line-height:1.7;margin-bottom:18px}
+.live-message-logos{display:flex;justify-content:center;align-items:center;gap:12px;margin-bottom:20px}
+.live-message-logos .platform-logo{width:27px;height:27px}
+.live-message-button{width:100%;border:0;border-radius:30px;padding:13px;background:#ed2860;color:white;font-size:15px;font-weight:bold;cursor:pointer}
+
+@media(max-width:380px){
+.logo{font-size:26px}.balance{font-size:12px;padding:10px 11px}
+.profile{width:38px;height:38px}
+.game-card{height:158px;border-radius:19px}.game-card h2{font-size:21px}
+.ball{width:34px;height:34px}.single .ball{width:41px;height:41px}
+.two .ball{width:37px;height:37px}.three .ball{width:29px;height:29px}
+.six .ball{width:23px;height:23px;font-size:12px}
+.play{width:89%;padding:6px 8px 6px 12px;font-size:10px}
+.shortcut{font-size:12px}.platform-logo{width:17px;height:17px}
+.ad-banner{min-height:85px;padding:8px}
+.draw-board{gap:4px;margin-left:5px;margin-right:5px}
+.official-box{min-height:125px;border-radius:18px}
+.official-logo{max-width:85px;max-height:85px}
+.days-box{border-radius:18px}.draw-number{font-size:12px;padding:9px 2px}
+.time-row{gap:3px}.time-box{border-radius:18px}
+.time-value{font-size:19px}.time-label{font-size:10px}
+.result-card{height:68px;padding:4px 1px}
+.result-rank{width:19px;height:19px;font-size:11px;left:4px;top:4px}
+.result-number{font-size:14px;margin-top:9px}
+.result-caption{font-size:7px;margin-top:4px}
+.results-heading{font-size:13px}
+.event{gap:5px;margin-left:8px;margin-right:8px}
+.event>div{padding:9px 4px}.event .next-date{gap:3px}
+.next-date small{font-size:8px}.next-date strong{font-size:9px}
+.live-event{gap:3px}.notice-wrap{margin-left:8px;margin-right:8px}
+.notice-track span{font-size:12px;padding:11px 20px}
+}
+@media(max-width:340px){
+.draw-board{grid-template-columns:1fr .75fr 1.2fr}
+.official-label{font-size:14px}.result-number{font-size:12px}
+.next-date small{font-size:7px}.next-date strong{font-size:8px}
+.live-event{font-size:10px}
+}
+</style>
+</head>
+
+<body>
+<div class="app">
+
+<header>
+ <div class="logo">GLO <span>365</span></div>
+ <div class="account">
+  <button class="balance" id="balance" type="button" onclick="togglePointsVisibility()" title="Show or hide points">👁️ 0 Points</button>
+  <div class="profile" id="homeProfileAvatar"
+       onclick="location.href='profile.html'"
+       title="My Profile"
+       role="button"
+       aria-label="Open My Profile">♙</div>
+ </div>
+</header>
+
+<div class="shortcuts">
+ <button class="shortcut" onclick="location.href='mybets.html'">◷ My Bets</button>
+ <button class="shortcut" onclick="location.href='results.html'">🏆 Live Results</button>
+</div>
+
+<section class="draw-board">
+ <a class="official-box" href="index.html">
+  <div class="official-art">
+   <svg class="official-logo" viewBox="0 0 200 200" xmlns="http://www.w3.org/2000/svg">
+    <defs>
+     <linearGradient id="silver" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0%" stop-color="#ffffff"/><stop offset="45%" stop-color="#a9d9ff"/><stop offset="100%" stop-color="#ffffff"/>
+     </linearGradient>
+     <linearGradient id="darkBlue" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0%" stop-color="#174b83"/><stop offset="100%" stop-color="#062c63"/>
+     </linearGradient>
+    </defs>
+    <path d="M100 5 L119 29 L143 19 L151 49 L181 48 L171 78 L195 100 L171 122 L181 152 L151 151 L143 181 L119 171 L100 195 L81 171 L57 181 L49 151 L19 152 L29 122 L5 100 L29 78 L19 48 L49 49 L57 19 L81 29 Z" fill="url(#darkBlue)" stroke="url(#silver)" stroke-width="2.5"/>
+    <path d="M100 12 L100 188 M12 100 L188 100 M38 38 L162 162 M162 38 L38 162" stroke="#a9d9ff" stroke-width="1" opacity=".5"/>
+    <circle cx="100" cy="100" r="69" fill="#0b4f91" stroke="url(#silver)" stroke-width="4"/>
+    <circle cx="100" cy="100" r="63" fill="none" stroke="#d8edff" stroke-width="1.5" stroke-dasharray="3 3"/>
+    <circle cx="100" cy="100" r="56" fill="none" stroke="url(#silver)" stroke-width="3"/>
+    <circle cx="100" cy="100" r="51" fill="none" stroke="#c9e7ff" stroke-width="1.5"/>
+    <circle cx="100" cy="94" r="31" fill="#145a9e" stroke="url(#silver)" stroke-width="3"/>
+    <circle cx="100" cy="94" r="26" fill="none" stroke="#d8edff" stroke-width="1.5"/>
+    <g stroke="#d9efff" stroke-width="2" fill="none">
+     <path d="M100 68 V120"/><path d="M74 94 H126"/><path d="M82 76 L118 112"/><path d="M118 76 L82 112"/><path d="M87 70 L113 118"/><path d="M113 70 L87 118"/>
+    </g>
+    <circle cx="100" cy="94" r="7" fill="#d8edff" stroke="#ffffff" stroke-width="2"/>
+    <circle cx="100" cy="94" r="3" fill="#145a9e"/>
+    <g fill="#bce4ff" stroke="#ffffff" stroke-width="1">
+     <circle cx="100" cy="72" r="3"/><circle cx="100" cy="116" r="3"/><circle cx="78" cy="94" r="3"/><circle cx="122" cy="94" r="3"/><circle cx="84" cy="78" r="2.5"/><circle cx="116" cy="78" r="2.5"/><circle cx="84" cy="110" r="2.5"/><circle cx="116" cy="110" r="2.5"/>
+    </g>
+    <path d="M94 125 L87 139 H113 L106 125" fill="none" stroke="url(#silver)" stroke-width="4" stroke-linejoin="round"/>
+    <path d="M78 141 H122" stroke="url(#silver)" stroke-width="4" stroke-linecap="round"/>
+    <path d="M85 146 H115" stroke="#c7e7ff" stroke-width="2" stroke-linecap="round"/>
+   </svg>
+  </div>
+  <div class="official-label">Official Site</div>
+ </a>
+
+ <div class="days-box">
+  <div class="days-number" id="countDays">--</div>
+  <div class="days-label">– Days –</div>
+ </div>
+
+ <div class="draw-info">
+  <div class="draw-number" id="drawNumber">Draw #: --</div>
+  <div class="time-row">
+   <div class="time-box"><span class="time-value" id="countHours">--</span><span class="time-label">HR</span></div>
+   <div class="time-box"><span class="time-value" id="countMinutes">--</span><span class="time-label">MIN</span></div>
+  </div>
+  <div class="draw-status" id="drawScheduleStatus">Checking schedule...</div>
+ </div>
+</section>
+
+<div class="results-heading">🏆 PREVIOUS DRAW RESULTS</div>
+
+<section class="results-board">
+ <div class="result-card"><span class="result-rank">1</span><div class="result-number" id="resultFirst">--</div><div class="result-caption">1st Prize</div></div>
+ <div class="result-card"><span class="result-rank">2</span><div class="result-number" id="resultSecond">--</div><div class="result-caption">2nd Prize</div></div>
+ <div class="result-card"><span class="result-rank">3</span><div class="result-number" id="resultThird">--</div><div class="result-caption">3rd Prize</div></div>
+ <div class="result-card"><span class="result-rank">4</span><div class="result-number" id="resultFourth">--</div><div class="result-caption">4th Prize</div></div>
+</section>
+
+<section class="notice-wrap" id="noticeWrap">
+ <div class="notice-icon">📢</div>
+ <div class="notice-window"><div class="notice-track" id="noticeTrack"></div></div>
+</section>
+
+<div class="event">
+ <div class="live-event" onclick="openLiveEvent()">
+  <span class="live-dot">🔴</span><span>Live Event</span>
+  <span class="platform-logos">
+   <span class="platform-logo"><svg viewBox="0 0 24 24"><rect x="1" y="4" width="22" height="16" rx="5" fill="#FF0033"/><path d="M10 8L16 12L10 16Z" fill="#fff"/></svg></span>
+   <span class="platform-logo"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="11" fill="#1877F2"/><path d="M13.5 20V13.1H16L16.4 10.2H13.5V8.4C13.5 7.6 13.8 7.1 14.9 7.1H16.5V4.5C16.2 4.5 15.2 4.4 14.2 4.4C11.7 4.4 10.1 5.9 10.1 8.1V10.2H7.7V13.1H10.1V20Z" fill="#fff"/></svg></span>
+  </span>
+ </div>
+ <div class="next-date"><small>NEXT DRAW DATE</small><strong id="nextDrawDate">Not scheduled</strong></div>
+</div>
+
+<section class="cards">
+ <a class="game-card single" href="single.html"><span class="card-glow"></span><div class="card-crown">👑</div><div class="balls"><div class="ball">7</div></div><h2>SINGLE</h2><div class="play">PLAY NOW <span class="play-arrow">➜</span></div></a>
+ <a class="game-card two" href="2D.html"><span class="card-glow"></span><div class="card-crown">👑</div><div class="balls"><div class="ball">2</div><div class="ball">8</div></div><h2>2D</h2><div class="play">PLAY NOW <span class="play-arrow">➜</span></div></a>
+ <a class="game-card three" href="3up.html"><span class="card-glow"></span><div class="card-crown">👑</div><div class="balls"><div class="ball">1</div><div class="ball">3</div><div class="ball">6</div></div><h2>3 UP</h2><div class="play">PLAY NOW <span class="play-arrow">➜</span></div></a>
+ <a class="game-card six" href="6up.html"><span class="card-glow"></span><div class="card-crown">👑</div><div class="balls"><div class="ball">1</div><div class="ball">2</div><div class="ball">3</div><div class="ball">4</div><div class="ball">5</div><div class="ball">6</div></div><h2>6 UP</h2><div class="play">PLAY NOW <span class="play-arrow">➜</span></div></a>
+</section>
+
+<section class="ad-banner" id="homeAdBanner">
+ <div class="ad-content">
+  <span class="ad-label">ADVERTISEMENT</span>
+  <div class="ad-frame">
+   <script>
+    atOptions={'key':'ab837cf0ea9c26ae43b7bc4e05a0b5de','format':'iframe','height':50,'width':320,'params':{}};
+   </script>
+   <script src="https://bicea.org/22/ab837cf0ea9c26ae43b7bc4e05a0b5de"></script>
+  </div>
+ </div>
+</section>
+
+<nav>
+ <button class="active" onclick="location.href='home.html'"><strong>⌂</strong>Home</button>
+ <button onclick="location.href='mybets.html'"><strong>🎯</strong>My Bets</button>
+ <button onclick="location.href='results.html'"><strong>🏆</strong>Results</button>
+ <button onclick="location.href='profile.html'">
+  <strong class="nav-profile-avatar" id="navProfileAvatar">♙</strong>
+  Profile
+ </button>
+</nav>
+</div>
+
+<!-- POINTS MODAL -->
+<div class="points-modal" id="pointsModal">
+ <div class="points-content">
+  <div class="points-header"><h3>💰 My Points</h3><button class="close-btn" onclick="closePoints()">✕</button></div>
+  <div class="points-total"><small>My Available Points</small><strong id="modalPoints">0</strong></div>
+  <h4 style="margin-bottom:10px">Point History</h4>
+  <div id="myPointHistory"></div>
+ </div>
+</div>
+
+<!-- LIVE VIDEO MODAL -->
+<div class="live-modal" id="liveModal">
+ <div class="live-box">
+  <div class="live-heading"><h3 id="liveTitle">🔴 GLO 365 Live Event</h3><button class="close-btn" onclick="closeLiveModal()">✕</button></div>
+  <div class="live-player" id="livePlayer"></div>
+ </div>
+</div>
+
+<!-- LIVE CLOSED MESSAGE -->
+<div class="live-modal" id="liveMessageModal">
+ <div class="live-message-box">
+  <div class="live-message-icon" id="liveMessageIcon">🔴</div>
+  <h3 id="liveMessageTitle">Live Event is currently closed</h3>
+  <p id="liveMessageText">You can watch the next live event here.</p>
+  <div class="live-message-logos">
+   <span class="platform-logo"><svg viewBox="0 0 24 24"><rect x="1" y="4" width="22" height="16" rx="5" fill="#FF0033"/><path d="M10 8L16 12L10 16Z" fill="#fff"/></svg></span>
+   <span class="platform-logo"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="11" fill="#1877F2"/><path d="M13.5 20V13.1H16L16.4 10.2H13.5V8.4C13.5 7.6 13.8 7.1 14.9 7.1H16.5V4.5C16.2 4.5 15.2 4.4 14.2 4.4C11.7 4.4 10.1 5.9 10.1 8.1V10.2H7.7V13.1H10.1V20Z" fill="#fff"/></svg></span>
+  </div>
+  <button class="live-message-button" onclick="closeLiveMessage()">OK</button>
+ </div>
+</div>
+
+<script>
+"use strict";
+
+/* STORAGE KEYS */
+const USERS_KEY="glo365_users";
+const SESSION_KEY="glo365_session";
+const POINT_HISTORY_KEY="glo365_point_history";
+const LIVE_EVENT_KEY="glo365_live_event";
+const DRAW_TIME_KEY="glo365_draw_time";
+const DRAW_NUMBER_KEY="glo365_draw_number";
+const RESULTS_KEY="glo365_results";
+const POINTS_VISIBILITY_KEY="glo365_points_visible";
+const HOME_MESSAGES_KEY="glo365_home_messages";
+
+/* PROFILE AVATAR STORAGE KEYS */
+const PROFILE_KEY="glo365_profile";
+const AVATARS_KEY="glo365_user_avatars";
+
+/* SAFE LOCAL STORAGE */
+function read(key,fallback){
+ try{
+  const value=localStorage.getItem(key);
+  return value===null?fallback:JSON.parse(value);
+ }catch(error){return fallback}
+}
+
+/* PROFILE AVATAR DEFINITIONS - SAME AS PROFILE PAGE */
+const HOME_AVATARS=[
+ {id:"royal-blue",name:"Royal Blue",bg:"#dceeff",skin:"#e9b58f",hair:"#172d4c",shirt:"#1878ce",style:1},
+ {id:"pink-star",name:"Pink Star",bg:"#ffe4f0",skin:"#f0c09e",hair:"#542b45",shirt:"#d94e91",style:2},
+ {id:"green-pro",name:"Green Pro",bg:"#dff8e9",skin:"#c98e68",hair:"#282c2a",shirt:"#15996d",style:3},
+ {id:"purple-elite",name:"Purple Elite",bg:"#eee5ff",skin:"#f0c5a3",hair:"#39295e",shirt:"#7654c8",style:4},
+ {id:"gold-king",name:"Gold King",bg:"#fff0c9",skin:"#d69c72",hair:"#35251c",shirt:"#bd8423",style:5},
+ {id:"red-champion",name:"Red Champion",bg:"#ffe2df",skin:"#edb28b",hair:"#392322",shirt:"#d94b43",style:6},
+ {id:"silver-gentle",name:"Silver Gentle",bg:"#e9eff5",skin:"#e8bd9f",hair:"#7b8793",shirt:"#536d83",style:7},
+ {id:"black-premium",name:"Black Premium",bg:"#e4e7ef",skin:"#9c684d",hair:"#171b25",shirt:"#292e42",style:8}
+];
+
+/* GENERATE THE SAME AVATAR SVG */
+function homeAvatarSVG(item){
+ const s=item.style;
+
+ const hairExtra=s===5
+  ?'<path d="M33 43 Q34 10 62 12 Q88 12 88 44 Q72 26 58 30 Q45 29 33 43" fill="'+item.hair+'"/>'
+  :s===7
+  ?'<path d="M34 45 Q30 17 60 15 Q91 15 86 47 L79 36 Q59 26 42 39Z" fill="'+item.hair+'"/>'
+  :'<path d="M34 48 Q28 13 59 12 Q91 12 86 49 L79 35 Q60 26 42 37Z" fill="'+item.hair+'"/>';
+
+ const accessory=s===5
+  ?'<path d="M40 22 L80 22 L75 14 L45 14Z" fill="#d9a32e"/><path d="M43 23H77" stroke="#fff0b0" stroke-width="3"/>'
+  :s===4
+  ?'<path d="M35 48 Q60 31 85 48" fill="none" stroke="#7654c8" stroke-width="5"/>'
+  :s===8
+  ?'<path d="M37 51 Q60 42 83 51" fill="none" stroke="#161a24" stroke-width="5"/>'
+  :'';
+
+ const shirtDetail=s===5
+  ?'<path d="M60 96 L53 105 L60 115 L67 105Z" fill="#f6d98c"/>'
+  :'<path d="M43 88 L60 101 L77 88" fill="none" stroke="#ffffff" stroke-width="3" opacity=".75"/>';
+
+ const svg=`
+ <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 120 120">
+  <defs>
+   <linearGradient id="bg" x1="0" y1="0" x2="1" y2="1">
+    <stop offset="0%" stop-color="${item.bg}"/>
+    <stop offset="100%" stop-color="#ffffff"/>
+   </linearGradient>
+   <linearGradient id="shirt" x1="0" y1="0" x2="0" y2="1">
+    <stop offset="0%" stop-color="${item.shirt}"/>
+    <stop offset="100%" stop-color="${item.shirt}" stop-opacity=".78"/>
+   </linearGradient>
+  </defs>
+  <circle cx="60" cy="60" r="60" fill="url(#bg)"/>
+  <circle cx="60" cy="60" r="53" fill="none" stroke="#ffffff" stroke-width="2" opacity=".65"/>
+  <path d="M10 120 Q14 80 60 80 Q106 80 110 120Z" fill="url(#shirt)"/>
+  ${shirtDetail}
+  <path d="M48 75 L48 89 Q60 101 72 89 L72 75Z" fill="${item.skin}"/>
+  <ellipse cx="60" cy="52" rx="26" ry="31" fill="${item.skin}"/>
+  ${hairExtra}
+  <path d="M35 47 Q29 56 36 65" fill="none" stroke="${item.skin}" stroke-width="5"/>
+  <path d="M85 47 Q91 56 84 65" fill="none" stroke="${item.skin}" stroke-width="5"/>
+  <ellipse cx="49" cy="55" rx="3" ry="2.7" fill="#25364a"/>
+  <ellipse cx="71" cy="55" rx="3" ry="2.7" fill="#25364a"/>
+  <path d="M44 48 Q49 45 54 48 M66 48 Q71 45 76 48" fill="none" stroke="${item.hair}" stroke-width="2.5" stroke-linecap="round"/>
+  <path d="M60 57 L57 65 Q60 68 63 65" fill="none" stroke="#b77d67" stroke-width="1.5" stroke-linecap="round"/>
+  <path d="M51 72 Q60 78 69 72" fill="none" stroke="#9c5551" stroke-width="2.5" stroke-linecap="round"/>
+  ${accessory}
+  <path d="M42 86 L60 99 L78 86" fill="none" stroke="#ffffff" stroke-width="2.5" opacity=".65"/>
+ </svg>`;
+
+ return "data:image/svg+xml;charset=UTF-8,"+encodeURIComponent(svg);
+}
+
+/* UPDATE HEADER AND NAVIGATION PROFILE AVATARS */
+function updateHomeProfileAvatar(){
+
+ const headerAvatar=document.getElementById("homeProfileAvatar");
+ const navAvatar=document.getElementById("navProfileAvatar");
+
+ if(!headerAvatar && !navAvatar)return;
+
+ const session=read(SESSION_KEY,null);
+ let avatarURL="";
+
+ if(session && session.username){
+
+  const username=String(session.username);
+  const savedAvatars=read(AVATARS_KEY,{});
+
+  const savedId=
+   savedAvatars && typeof savedAvatars==="object"
+   ?savedAvatars[username]||""
+   :"";
+
+  const selected=HOME_AVATARS.find(
+   item=>item.id===savedId
+  );
+
+  const profiles=read(PROFILE_KEY,{});
+  let profile={};
+
+  if(profiles && typeof profiles==="object"){
+
+   if(
+    profiles[username] &&
+    typeof profiles[username]==="object"
+   ){
+    profile=profiles[username];
+
+   }else if(
+    profiles.username &&
+    String(profiles.username).toLowerCase()===
+    username.toLowerCase()
+   ){
+    profile=profiles;
+   }
+  }
+
+  const photo=profile.photo||profile.avatar||"";
+
+  if(selected){
+   avatarURL=homeAvatarSVG(selected);
+  }else if(photo){
+   avatarURL=photo;
+  }else{
+   avatarURL=homeAvatarSVG(HOME_AVATARS[0]);
+  }
+ }
+
+ function renderAvatar(element){
+
+  if(!element)return;
+
+  if(!avatarURL){
+   element.textContent="♙";
+   return;
+  }
+
+  const img=document.createElement("img");
+  img.alt="My Profile Avatar";
+  img.src=avatarURL;
+
+  img.onerror=function(){
+   this.onerror=null;
+   this.src=homeAvatarSVG(HOME_AVATARS[0]);
+  };
+
+  element.replaceChildren(img);
+ }
+
+ renderAvatar(headerAvatar);
+ renderAvatar(navAvatar);
+}
+
+/* HOME NOTICE SLIDER */
+let homeMessages=[];
+
+function getHomeMessages(){
+ const stored=read(HOME_MESSAGES_KEY,[]);
+ if(!Array.isArray(stored))return [];
+
+ return stored.filter(item=>{
+  if(typeof item==="string")return item.trim().length>0;
+  return item&&typeof item==="object"&&item.active!==false&&
+   typeof(item.text||item.message)==="string"&&
+   String(item.text||item.message).trim().length>0;
+ }).map(item=>{
+  return typeof item==="string"?item.trim():String(item.text||item.message).trim();
+ });
+}
+
+function renderHomeMessages(){
+ const wrap=document.getElementById("noticeWrap");
+ const track=document.getElementById("noticeTrack");
+
+ homeMessages=getHomeMessages();
+ track.replaceChildren();
+
+ if(!homeMessages.length){
+  wrap.classList.remove("show");
+  return;
+ }
+
+ wrap.classList.add("show");
+
+ const messageText="📢 GLO 365 NOTICE: "+homeMessages.join("     ★     ");
+
+ const first=document.createElement("span");
+ first.textContent=messageText;
+
+ const second=document.createElement("span");
+ second.textContent=messageText;
+
+ track.append(first,second);
+}
+
+/* POINT VISIBILITY */
+function arePointsVisible(){
+ return read(POINTS_VISIBILITY_KEY,true)!==false;
+}
+
+function updatePointsVisibility(){
+ const visible=arePointsVisible();
+ const balance=document.getElementById("balance");
+
+ balance.textContent=visible
+  ?"👁️ "+getMyPoints().toLocaleString()+" Points"
+  :"🙈 •••••• Points";
+
+ balance.setAttribute("aria-label",visible?"Hide points":"Show points");
+ balance.title=visible?"Tap to hide points":"Tap to show points";
+
+ updateBalance();
+ renderMyPointHistory();
+}
+
+function togglePointsVisibility(){
+ const nextValue=!arePointsVisible();
+
+ try{
+  localStorage.setItem(POINTS_VISIBILITY_KEY,JSON.stringify(nextValue));
+ }catch(error){
+  console.warn("Could not save points visibility preference.",error);
+ }
+
+ updatePointsVisibility();
+}
+
+/* USER AND POINTS */
+function getSession(){
+ return read(SESSION_KEY,null);
+}
+
+function getCurrentUser(){
+ const session=getSession();
+
+ if(!session||!session.username)return null;
+
+ const users=read(USERS_KEY,[]);
+ if(!Array.isArray(users))return null;
+
+ return users.find(user=>
+  String(user.username).toLowerCase()===
+  String(session.username).toLowerCase()
+ )||null;
+}
+
+function getMyPoints(){
+ const user=getCurrentUser();
+ if(!user)return 0;
+
+ const points=Number(user.points||0);
+
+ return Number.isSafeInteger(points)&&points>=0?points:0;
+}
+
+function updateBalance(){
+ const user=getCurrentUser();
+ const balance=document.getElementById("balance");
+
+ if(!user){
+  balance.textContent="Login Required";
+  return;
+ }
+
+ balance.textContent=arePointsVisible()
+  ?"👁️ "+getMyPoints().toLocaleString()+" Points"
+  :"🙈 •••••• Points";
+}
+
+/* POINT HISTORY */
+function openPoints(){
+ if(!getCurrentUser()){
+  alert("Please log in to your account.");
+  location.href="login.html";
+  return;
+ }
+
+ renderMyPointHistory();
+ document.getElementById("pointsModal").classList.add("show");
+}
+
+function closePoints(){
+ document.getElementById("pointsModal").classList.remove("show");
+}
+
+function renderMyPointHistory(){
+ const user=getCurrentUser();
+ const container=document.getElementById("myPointHistory");
+
+ container.replaceChildren();
+
+ const visible=arePointsVisible();
+
+ document.getElementById("modalPoints").textContent=
+  visible?getMyPoints().toLocaleString():"••••••";
+
+ if(!user)return;
+
+ const history=read(POINT_HISTORY_KEY,[]);
+
+ const mine=Array.isArray(history)
+  ?history.filter(item=>
+    String(item.username).toLowerCase()===
+    String(user.username).toLowerCase()
+   )
+  :[];
+
+ if(!mine.length){
+  const empty=document.createElement("div");
+  empty.className="empty";
+  empty.textContent="No point history yet.";
+  container.appendChild(empty);
+  return;
+ }
+
+ mine.forEach(item=>{
+  const card=document.createElement("div");
+  card.className="point-entry";
+
+  const amount=document.createElement("div");
+  amount.className="amount";
+
+  amount.textContent=visible
+   ?(item.type==="debit"?"-":"+")+
+    Number(item.amount||0).toLocaleString()+" Points"
+   :"•••••• Points";
+
+  if(item.type==="debit")amount.classList.add("debit");
+
+  const reason=document.createElement("div");
+  reason.textContent="Reason: "+(item.reason||"—");
+
+  const admin=document.createElement("div");
+  admin.textContent="Given by: "+(item.awardedBy||"Admin");
+
+  const date=document.createElement("small");
+  const parsed=new Date(item.date);
+
+  date.textContent="Date: "+
+   (Number.isNaN(parsed.getTime())
+    ?String(item.date||"—")
+    :parsed.toLocaleString()
+   );
+
+  card.append(amount,reason,admin,date);
+  container.appendChild(card);
+ });
+}
+
+/* DRAW SCHEDULE */
+function getConfiguredDrawDate(){
+ const value=read(DRAW_TIME_KEY,null);
+
+ if(
+  typeof value!=="string"||
+  !/^\d{4}-\d{2}-\d{2}T([01]\d|2[0-3]):[0-5]\d$/.test(value)
+ )return null;
+
+ const match=value.match(
+  /^(\d{4})-(\d{2})-(\d{2})T(\d{2}):(\d{2})$/
+ );
+
+ if(!match)return null;
+
+ const [year,month,day,hour,minute]=
+  match.slice(1).map(Number);
+
+ const date=new Date(year,month-1,day,hour,minute,0,0);
+
+ if(
+  date.getFullYear()!==year||
+  date.getMonth()!==month-1||
+  date.getDate()!==day||
+  date.getHours()!==hour||
+  date.getMinutes()!==minute
+ )return null;
+
+ return date;
+}
+
+function getConfiguredDrawNumber(){
+ try{
+  const value=localStorage.getItem(DRAW_NUMBER_KEY);
+  return value===null?"":String(value).trim();
+ }catch(error){
+  return "";
+ }
+}
+
+function updateCountdown(){
+ const status=document.getElementById("drawScheduleStatus");
+ const dateDisplay=document.getElementById("nextDrawDate");
+ const drawNumber=document.getElementById("drawNumber");
+ const days=document.getElementById("countDays");
+ const hours=document.getElementById("countHours");
+ const minutes=document.getElementById("countMinutes");
+
+ const next=getConfiguredDrawDate();
+ const configuredNumber=getConfiguredDrawNumber();
+
+ drawNumber.textContent="Draw #: "+(configuredNumber||"--");
+
+ if(!next){
+  days.textContent="--";
+  hours.textContent="--";
+  minutes.textContent="--";
+  status.textContent="Admin has not scheduled a draw.";
+  dateDisplay.textContent="Not scheduled";
+  return;
+ }
+
+ dateDisplay.textContent=next.toLocaleString("en-GB",{
+  day:"2-digit",
+  month:"short",
+  year:"numeric",
+  hour:"2-digit",
+  minute:"2-digit",
+  hour12:true
+ });
+
+ const remaining=next.getTime()-Date.now();
+
+ if(remaining<=0){
+  days.textContent="0";
+  hours.textContent="00";
+  minutes.textContent="00";
+  status.textContent="DRAW TIME REACHED";
+  return;
+ }
+
+ const total=Math.floor(remaining/1000);
+
+ days.textContent=Math.floor(total/86400);
+ hours.textContent=String(
+  Math.floor(total%86400/3600)
+ ).padStart(2,"0");
+
+ minutes.textContent=String(
+  Math.floor(total%3600/60)
+ ).padStart(2,"0");
+}
+
+/* RESULTS */
+function firstValue(object,keys){
+ if(!object||typeof object!=="object")return "";
+
+ for(const key of keys){
+  const value=object[key];
+
+  if(
+   value!==undefined&&
+   value!==null&&
+   String(value).trim()!==""
+  )return value;
+ }
+
+ return "";
+}
+
+function getResultNumber(value){
+ if(value===undefined||value===null)return "";
+
+ if(typeof value==="object"){
+  return String(firstValue(value,[
+   "number","result","value","winningNumber",
+   "winning_number","digits"
+  ])||"");
+ }
+
+ return String(value);
+}
+
+function getLatestPublishedResult(){
+ const stored=read(RESULTS_KEY,[]);
+ let results=[];
+
+ if(Array.isArray(stored)){
+  results=stored;
+ }else if(stored&&typeof stored==="object"){
+  if(Array.isArray(stored.results)){
+   results=stored.results;
+  }else{
+   results=[stored];
+  }
+ }
+
+ const published=results.filter(item=>
+  item&&typeof item==="object"&&item.published!==false
+ );
+
+ if(!published.length)return null;
+
+ published.sort((a,b)=>{
+  const da=new Date(firstValue(a,[
+   "date","drawDate","draw_date","publishedAt","createdAt"
+  ])).getTime()||0;
+
+  const db=new Date(firstValue(b,[
+   "date","drawDate","draw_date","publishedAt","createdAt"
+  ])).getTime()||0;
+
+  return db-da;
+ });
+
+ return published[0];
+}
+
+function updateResults(){
+ const ids=[
+  "resultFirst","resultSecond",
+  "resultThird","resultFourth"
+ ];
+
+ const result=getLatestPublishedResult();
+
+ if(!result){
+  ids.forEach(id=>{
+   document.getElementById(id).textContent="--";
+  });
+  return;
+ }
+
+ const nested=result.numbers||result.prizes||result.winners||result;
+
+ const fields=[
+  ["first","firstPrize","first_prize","prize1","number1","result1","winningNumber","winning_number","1st"],
+  ["second","secondPrize","second_prize","prize2","number2","result2","2nd"],
+  ["third","thirdPrize","third_prize","prize3","number3","result3","3rd"],
+  ["fourth","fourthPrize","fourth_prize","prize4","number4","result4","4th"]
+ ];
+
+ ids.forEach((id,index)=>{
+  const value=getResultNumber(
+   firstValue(nested,fields[index])
+  );
+
+  document.getElementById(id).textContent=value||"--";
+ });
+}
+
+/* LIVE EVENT */
+function getLiveEvent(){
+ const event=read(LIVE_EVENT_KEY,null);
+
+ if(
+  !event||
+  typeof event!=="object"||
+  event.active!==true||
+  typeof event.url!=="string"
+ )return null;
+
+ return event;
+}
+
+function showLiveMessage(title,message,icon){
+ document.getElementById("liveMessageTitle").textContent=title;
+ document.getElementById("liveMessageText").textContent=message;
+ document.getElementById("liveMessageIcon").textContent=icon||"🔴";
+
+ document.getElementById("liveMessageModal").classList.add("show");
+}
+
+function closeLiveMessage(){
+ document.getElementById("liveMessageModal").classList.remove("show");
+}
+
+document.getElementById("liveMessageModal").addEventListener("click",function(e){
+ if(e.target===this)closeLiveMessage();
+});
+
+/* YOUTUBE / FACEBOOK EMBED */
+function getVideoEmbed(url){
+ try{
+  const parsed=new URL(url);
+
+  if(parsed.protocol!=="https:")return null;
+
+  const host=parsed.hostname.toLowerCase();
+
+  if([
+   "youtube.com","www.youtube.com",
+   "m.youtube.com","youtu.be","www.youtu.be"
+  ].includes(host)){
+   let id="";
+
+   if(host.includes("youtu.be")){
+    id=parsed.pathname.split("/").filter(Boolean)[0]||"";
+   }else if(parsed.searchParams.get("v")){
+    id=parsed.searchParams.get("v");
+   }else{
+    const parts=parsed.pathname.split("/").filter(Boolean);
+
+    if(
+     parts.length>=2&&
+     ["live","embed","shorts"].includes(parts[0])
+    ){
+     id=parts[1];
+    }
+   }
+
+   if(!/^[a-zA-Z0-9_-]{6,20}$/.test(id))return null;
+
+   return{
+    type:"youtube",
+    embed:"https://www.youtube-nocookie.com/embed/"+
+     id+"?autoplay=1&playsinline=1&rel=0"
+   };
+  }
+
+  if([
+   "facebook.com","www.facebook.com",
+   "m.facebook.com","fb.watch"
+  ].includes(host)){
+   return{
+    type:"facebook",
+    embed:"https://www.facebook.com/plugins/video.php?href="+
+     encodeURIComponent(parsed.href)+"&show_text=false&width=500"
+   };
+  }
+
+  return null;
+
+ }catch(error){
+  return null;
+ }
+}
+
+function openLiveEvent(){
+ const event=getLiveEvent();
+
+ if(!event){
+  showLiveMessage(
+   "Live Event is currently closed",
+   "You can watch the next live event here.",
+   "🔴"
+  );
+  return;
+ }
+
+ const video=getVideoEmbed(event.url);
+
+ if(!video){
+  showLiveMessage(
+   "Invalid video link",
+   "Admin has not configured a valid YouTube or Facebook video link.",
+   "⚠️"
+  );
+  return;
+ }
+
+ document.getElementById("liveTitle").textContent=
+  "🔴 "+(event.title||"GLO 365 Live Event");
+
+ const player=document.getElementById("livePlayer");
+ player.replaceChildren();
+
+ const iframe=document.createElement("iframe");
+ iframe.src=video.embed;
+ iframe.title="GLO 365 Live Event";
+ iframe.allow="autoplay; encrypted-media; picture-in-picture; fullscreen";
+ iframe.allowFullscreen=true;
+ iframe.referrerPolicy="strict-origin-when-cross-origin";
+
+ player.appendChild(iframe);
+
+ document.getElementById("liveModal").classList.add("show");
+}
+
+function closeLiveModal(){
+ document.getElementById("livePlayer").replaceChildren();
+ document.getElementById("liveModal").classList.remove("show");
+}
+
+document.getElementById("liveModal").addEventListener("click",function(e){
+ if(e.target===this)closeLiveModal();
+});
+
+/* STORAGE UPDATES */
+window.addEventListener("storage",function(e){
+
+ if(
+  e.key===HOME_MESSAGES_KEY||
+  e.key===null
+ ){
+  renderHomeMessages();
+ }
+
+ if([
+  USERS_KEY,
+  POINT_HISTORY_KEY,
+  DRAW_TIME_KEY,
+  DRAW_NUMBER_KEY,
+  RESULTS_KEY,
+  null
+ ].includes(e.key)){
+  updateBalance();
+  renderMyPointHistory();
+  updateCountdown();
+  updateResults();
+ }
+
+ if(e.key===POINTS_VISIBILITY_KEY){
+  updatePointsVisibility();
+ }
+
+ if(e.key===LIVE_EVENT_KEY){
+  closeLiveModal();
+ }
+
+ /* UPDATE BOTH AVATARS WHEN PROFILE DATA CHANGES */
+ if(
+  e.key===AVATARS_KEY||
+  e.key===PROFILE_KEY||
+  e.key===SESSION_KEY||
+  e.key===null
+ ){
+  updateHomeProfileAvatar();
+ }
+});
+
+/* INITIAL LOAD */
+renderHomeMessages();
+updatePointsVisibility();
+updateBalance();
+updateCountdown();
+updateResults();
+updateHomeProfileAvatar();
+
+/* PAGE SHOW */
+window.addEventListener("pageshow",function(){
+ renderHomeMessages();
+ updatePointsVisibility();
+ updateBalance();
+ updateCountdown();
+ updateResults();
+ updateHomeProfileAvatar();
+});
+
+/* COUNTDOWN REFRESH */
+setInterval(updateCountdown,1000);
+
+/* NOTICE REFRESH */
+setInterval(()=>{
+ const latest=getHomeMessages();
+
+ if(JSON.stringify(latest)!==JSON.stringify(homeMessages)){
+  renderHomeMessages();
+ }
+},3000);
+
+</script>
+</body>
+</html>
