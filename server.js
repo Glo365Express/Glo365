@@ -351,6 +351,19 @@
           created_at TIMESTAMPTZ DEFAULT NOW()
         );
 
+        -- New structured draw results. Legacy demo_results are left untouched.
+        CREATE TABLE IF NOT EXISTS draw_results (
+          id BIGSERIAL PRIMARY KEY,
+          draw_date DATE NOT NULL UNIQUE,
+          first_prize VARCHAR(6) NOT NULL,
+          last_two VARCHAR(2) NOT NULL,
+          front_three JSONB NOT NULL DEFAULT '[]'::jsonb,
+          published_at TIMESTAMPTZ NOT NULL DEFAULT NOW(),
+          updated_at TIMESTAMPTZ NOT NULL DEFAULT NOW(),
+          updated_by BIGINT REFERENCES users(id) ON DELETE SET NULL
+        );
+
+
         ALTER TABLE users
           ADD COLUMN IF NOT EXISTS role VARCHAR(20) NOT NULL DEFAULT 'user';
 
@@ -489,6 +502,17 @@
         INSERT INTO demo_6up_settings (id, discount_percent)
         VALUES (1, 0)
         ON CONFLICT (id) DO NOTHING;
+
+        ALTER TABLE demo_bets ADD COLUMN IF NOT EXISTS draw_date DATE;
+        ALTER TABLE demo_bets ADD COLUMN IF NOT EXISTS result_id BIGINT REFERENCES draw_results(id) ON DELETE SET NULL;
+        ALTER TABLE demo_3up_bets ADD COLUMN IF NOT EXISTS draw_date DATE;
+        ALTER TABLE demo_3up_bets ADD COLUMN IF NOT EXISTS result_id BIGINT REFERENCES draw_results(id) ON DELETE SET NULL;
+        ALTER TABLE demo_6up_bets ADD COLUMN IF NOT EXISTS draw_date DATE;
+        ALTER TABLE demo_6up_bets ADD COLUMN IF NOT EXISTS result_id BIGINT REFERENCES draw_results(id) ON DELETE SET NULL;
+        CREATE INDEX IF NOT EXISTS idx_draw_results_date ON draw_results(draw_date DESC);
+        CREATE INDEX IF NOT EXISTS idx_demo_bets_draw_date ON demo_bets(draw_date, status);
+        CREATE INDEX IF NOT EXISTS idx_demo_3up_draw_date ON demo_3up_bets(draw_date, status);
+        CREATE INDEX IF NOT EXISTS idx_demo_6up_draw_date ON demo_6up_bets(draw_date, status);
 
         CREATE INDEX IF NOT EXISTS idx_users_username ON users(username);
         CREATE INDEX IF NOT EXISTS idx_users_email ON users(email);
@@ -2352,10 +2376,10 @@
 
           const betResult = await client.query(
             `INSERT INTO demo_bets
-             (user_id, game_name, selection, amount)
-             VALUES ($1, $2, $3, $4)
+             (user_id, game_name, selection, amount, draw_date)
+             VALUES ($1, $2, $3, $4, ($5::timestamptz AT TIME ZONE 'Asia/Dhaka')::date)
              RETURNING *`,
-            [req.user.id, gameName, selection, amount]
+            [req.user.id, gameName, selection, amount, draw.draw_at]
           );
 
           await client.query(
@@ -2659,8 +2683,9 @@
           const betResult = await client.query(
             `INSERT INTO demo_3up_bets
              (user_id, draw_number, rows, total_amount,
-              discount_percent, discount_amount, payable_amount)
-             VALUES ($1, $2, $3::jsonb, $4, $5, $6, $7)
+              discount_percent, discount_amount, payable_amount, draw_date)
+             VALUES ($1, $2, $3::jsonb, $4, $5, $6, $7,
+                     ($8::timestamptz AT TIME ZONE 'Asia/Dhaka')::date)
              RETURNING id, user_id, draw_number, rows, total_amount,
                        discount_percent, discount_amount, payable_amount,
                        status, created_at`,
@@ -2671,7 +2696,8 @@
               centsToAmount(totalCents),
               discountPercent,
               centsToAmount(discountCents),
-              centsToAmount(payableCents)
+              centsToAmount(payableCents),
+              draw.draw_at
             ]
           );
 
@@ -2979,8 +3005,9 @@
           const betResult = await client.query(
             `INSERT INTO demo_6up_bets
              (user_id, draw_number, rows, total_amount,
-              discount_percent, discount_amount, payable_amount)
-             VALUES ($1, $2, $3::jsonb, $4, $5, $6, $7)
+              discount_percent, discount_amount, payable_amount, draw_date)
+             VALUES ($1, $2, $3::jsonb, $4, $5, $6, $7,
+                     ($8::timestamptz AT TIME ZONE 'Asia/Dhaka')::date)
              RETURNING id, user_id, draw_number, rows, total_amount,
                        discount_percent, discount_amount, payable_amount,
                        status, created_at`,
@@ -2991,7 +3018,8 @@
               centsToAmount(totalCents),
               discountPercent,
               centsToAmount(discountCents),
-              centsToAmount(payableCents)
+              centsToAmount(payableCents),
+              draw.draw_at
             ]
           );
 
@@ -3057,59 +3085,147 @@
     );
 
     // ==========================================
-    // DEMO RESULTS
+    // STRUCTURED DRAW RESULTS + SERVER SETTLEMENT
     // ==========================================
 
-    app.get(
-      "/api/results",
-      asyncRoute(async (req, res) => {
-        const result = await pool.query(
-          `SELECT id, game_name, result, created_at
-           FROM demo_results
-           ORDER BY created_at DESC
-           LIMIT 100`
+    function resultMatches(game, selection, result) {
+      const g = String(game || "").toLowerCase().replace(/[\s_-]/g, "");
+      const n = String(selection || "").trim();
+      const first = String(result.first_prize || "").padStart(6, "0");
+      const last = String(result.last_two || "").padStart(2, "0");
+      const fronts = Array.isArray(result.front_three) ? result.front_three : [];
+      if (g.includes("single")) return /^\d$/.test(n) && n === first.slice(-1);
+      if (g === "2d" || g.includes("2d")) return /^\d{1,2}$/.test(n) && n.padStart(2, "0") === last;
+      if (g.includes("3up")) return /^\d{1,3}$/.test(n) && fronts.includes(n.padStart(3, "0"));
+      if (g.includes("6up")) return /^\d{1,6}$/.test(n) && n.padStart(6, "0") === first;
+      return false;
+    }
+
+    async function settleDrawBets(client, result) {
+      let checked = 0, won = 0, lost = 0;
+      const singleRows = await client.query(
+        `SELECT id, game_name, selection FROM demo_bets
+         WHERE draw_date = $1 AND LOWER(status) NOT IN ('win','won','loss','lose','lost','cancelled','canceled')
+         FOR UPDATE`, [result.draw_date]
+      );
+      for (const bet of singleRows.rows) {
+        const isWin = resultMatches(bet.game_name, bet.selection, result);
+        await client.query(`UPDATE demo_bets SET status=$1, result_id=$2 WHERE id=$3`, [isWin ? 'win' : 'loss', result.id, bet.id]);
+        checked++; if (isWin) won++; else lost++;
+      }
+
+      for (const [table, game] of [['demo_3up_bets','3up'], ['demo_6up_bets','6up']]) {
+        const rows = await client.query(
+          `SELECT id, rows FROM ${table}
+           WHERE draw_date=$1 AND LOWER(status) NOT IN ('win','won','loss','lose','lost','cancelled','canceled')
+           FOR UPDATE`, [result.draw_date]
         );
-
-        res.json({
-          success: true,
-          results: result.rows
-        });
-      })
-    );
-
-    app.post(
-      "/api/admin/results",
-      authenticateToken,
-      requireAdmin,
-      asyncRoute(async (req, res) => {
-        const gameName = cleanText(req.body.game_name, 100);
-        const resultValue = cleanText(req.body.result, 100);
-
-        if (!gameName || !resultValue) {
-          return sendError(res, 400, "Game name and result are required.");
+        for (const bet of rows.rows) {
+          const selections = Array.isArray(bet.rows) ? bet.rows : [];
+          const isWin = selections.some(row => {
+            const n = String(row.number || '').trim();
+            return game === '3up'
+              ? /^\d{3}$/.test(n) && result.front_three.includes(n)
+              : /^\d{6}$/.test(n) && n === result.first_prize;
+          });
+          await client.query(`UPDATE ${table} SET status=$1, result_id=$2 WHERE id=$3`, [isWin ? 'win' : 'loss', result.id, bet.id]);
+          checked++; if (isWin) won++; else lost++;
         }
+      }
+      return { checked, won, lost };
+    }
 
-        const result = await pool.query(
-          `INSERT INTO demo_results (game_name, result)
-           VALUES ($1, $2)
-           RETURNING *`,
-          [gameName, resultValue]
+    app.get('/api/results', asyncRoute(async (req, res) => {
+      const result = await pool.query(
+        `SELECT id, TO_CHAR(draw_date, 'YYYY-MM-DD') AS date,
+                first_prize AS "firstPrize", last_two AS "lastTwo",
+                front_three AS "frontThree", published_at AS "publishedAt",
+                updated_at AS "updatedAt"
+         FROM draw_results ORDER BY draw_date DESC LIMIT 100`
+      );
+      res.json({ success: true, results: result.rows });
+    }));
+
+    app.get('/api/admin/results', authenticateToken, requireAdmin, asyncRoute(async (req, res) => {
+      const result = await pool.query(
+        `SELECT id, TO_CHAR(draw_date, 'YYYY-MM-DD') AS date,
+                first_prize AS "firstPrize", last_two AS "lastTwo",
+                front_three AS "frontThree", published_at AS "publishedAt",
+                updated_at AS "updatedAt"
+         FROM draw_results ORDER BY draw_date DESC LIMIT 100`
+      );
+      res.json({ success: true, results: result.rows });
+    }));
+
+    app.post('/api/admin/results', authenticateToken, requireAdmin, asyncRoute(async (req, res) => {
+      const date = String(req.body.drawDate || req.body.date || '').trim();
+      const firstRaw = String(req.body.firstPrize ?? '').trim();
+      const lastRaw = String(req.body.lastTwo ?? '').trim();
+      const frontRaw = req.body.frontThree;
+      if (!/^\d{4}-\d{2}-\d{2}$/.test(date) || !/^\d{1,6}$/.test(firstRaw) || !/^\d{1,2}$/.test(lastRaw)) {
+        return sendError(res, 400, 'Enter a valid Draw Date, First Prize and Last Two.');
+      }
+      const fronts = Array.isArray(frontRaw)
+        ? frontRaw.map(x => String(x).trim())
+        : String(frontRaw || '').split(',').map(x => x.trim()).filter(Boolean);
+      if (fronts.some(x => !/^\d{3}$/.test(x))) return sendError(res, 400, 'Every Front Three number must contain exactly 3 digits.');
+      const uniqueFronts = [...new Set(fronts)];
+      const client = await pool.connect();
+      try {
+        await client.query('BEGIN');
+        const saved = await client.query(
+          `INSERT INTO draw_results
+           (draw_date, first_prize, last_two, front_three, published_at, updated_at, updated_by)
+           VALUES ($1::date, $2, $3, $4::jsonb, NOW(), NOW(), $5)
+           ON CONFLICT (draw_date) DO UPDATE SET
+             first_prize=EXCLUDED.first_prize, last_two=EXCLUDED.last_two,
+             front_three=EXCLUDED.front_three, updated_at=NOW(), updated_by=EXCLUDED.updated_by
+           RETURNING id, TO_CHAR(draw_date, 'YYYY-MM-DD') AS date,
+             first_prize AS "firstPrize", last_two AS "lastTwo", front_three AS "frontThree",
+             published_at AS "publishedAt", updated_at AS "updatedAt"`,
+          [date, firstRaw.padStart(6,'0'), lastRaw.padStart(2,'0'), JSON.stringify(uniqueFronts), req.user.id]
         );
+        const result = saved.rows[0];
+        // On re-publish, retain the original published_at timestamp.
+        const settled = await settleDrawBets(client, { ...result, draw_date: date, first_prize: result.firstPrize, last_two: result.lastTwo, front_three: result.frontThree });
+        await client.query('COMMIT');
+        await audit(req.user.id, 'draw_result_published', null, { result_id: result.id, draw_date: date, ...settled });
+        res.status(201).json({ success: true, message: 'Result published and bets settled.', result, settlement: settled });
+      } catch (error) {
+        await client.query('ROLLBACK');
+        console.error('Draw result publish error:', error.message);
+        return sendError(res, 500, 'Could not publish or settle this result.');
+      } finally { client.release(); }
+    }));
 
-        await audit(
-          req.user.id,
-          "demo_result_published",
-          null,
-          { result_id: result.rows[0].id }
-        );
-
-        res.status(201).json({
-          success: true,
-          message: "Demo result published.",
-          result: result.rows[0]
-        });
-      })
-    );
+    // Submission-number report: hide entries submitted before publication once 72h have elapsed.
+    app.get('/api/admin/number-reports', authenticateToken, requireAdmin, asyncRoute(async (req, res) => {
+      const result = await pool.query(`
+        SELECT 'single' AS game, b.id, b.game_name, b.selection AS number, b.amount,
+               b.status, b.draw_date, b.created_at, u.username
+        FROM demo_bets b JOIN users u ON u.id=b.user_id
+        LEFT JOIN draw_results r ON r.draw_date=b.draw_date
+        WHERE r.id IS NULL OR b.created_at >= r.published_at OR NOW() < r.published_at + INTERVAL '72 hours'
+        UNION ALL
+        SELECT '3up', b.id, '3UP', row_item->>'number',
+               COALESCE((row_item->>'straight')::numeric,0)+COALESCE((row_item->>'rumble')::numeric,0),
+               b.status, b.draw_date, b.created_at, u.username
+        FROM demo_3up_bets b JOIN users u ON u.id=b.user_id
+        CROSS JOIN LATERAL jsonb_array_elements(b.rows) row_item
+        LEFT JOIN draw_results r ON r.draw_date=b.draw_date
+        WHERE r.id IS NULL OR b.created_at >= r.published_at OR NOW() < r.published_at + INTERVAL '72 hours'
+        UNION ALL
+        SELECT '6up', b.id, '6UP', row_item->>'number',
+               COALESCE((row_item->>'straight')::numeric,0)+COALESCE((row_item->>'rumble')::numeric,0),
+               b.status, b.draw_date, b.created_at, u.username
+        FROM demo_6up_bets b JOIN users u ON u.id=b.user_id
+        CROSS JOIN LATERAL jsonb_array_elements(b.rows) row_item
+        LEFT JOIN draw_results r ON r.draw_date=b.draw_date
+        WHERE r.id IS NULL OR b.created_at >= r.published_at OR NOW() < r.published_at + INTERVAL '72 hours'
+        ORDER BY created_at DESC LIMIT 1000
+      `);
+      res.json({ success: true, reports: result.rows });
+    }));
 
     // ==========================================
     // ADMIN: AUDIT LOGS
