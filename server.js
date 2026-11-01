@@ -458,6 +458,26 @@
         CREATE UNIQUE INDEX IF NOT EXISTS idx_deposit_transaction_unique
           ON deposit_requests(LOWER(transaction_id));
 
+
+        -- Withdrawal requests are stored server-side; review changes status only.
+        CREATE TABLE IF NOT EXISTS withdrawal_requests (
+          id BIGSERIAL PRIMARY KEY,
+          user_id BIGINT NOT NULL REFERENCES users(id) ON DELETE CASCADE,
+          amount NUMERIC(12,2) NOT NULL CHECK (amount > 0),
+          method VARCHAR(80) NOT NULL,
+          account VARCHAR(180) NOT NULL,
+          status VARCHAR(20) NOT NULL DEFAULT 'pending'
+            CHECK (status IN ('pending','approved','rejected')),
+          reviewed_by BIGINT REFERENCES users(id) ON DELETE SET NULL,
+          reviewed_at TIMESTAMPTZ,
+          rejection_reason VARCHAR(200) NOT NULL DEFAULT '',
+          created_at TIMESTAMPTZ NOT NULL DEFAULT NOW()
+        );
+        CREATE INDEX IF NOT EXISTS idx_withdrawal_requests_status_date
+          ON withdrawal_requests(status, created_at DESC);
+        CREATE INDEX IF NOT EXISTS idx_withdrawal_requests_user_date
+          ON withdrawal_requests(user_id, created_at DESC);
+
         CREATE TABLE IF NOT EXISTS admin_messages (
           id BIGSERIAL PRIMARY KEY,
           text VARCHAR(300) NOT NULL,
@@ -2495,6 +2515,98 @@
       if (!result.rows.length) return sendError(res,409,"Request not found or already reviewed.");
       await audit(req.user.id,"deposit_rejected",result.rows[0].user_id,{deposit_id:id,reason});
       res.json({ success:true, request:result.rows[0] });
+    }));
+
+    // ==========================================
+    // WITHDRAWAL REQUESTS (SERVER-SIDE DEMO REVIEW)
+    // Approval/rejection changes request status only; no real payment is sent.
+    // ==========================================
+
+    app.post("/api/withdrawals", authenticateToken, asyncRoute(async (req, res) => {
+      const amount = Number(req.body.amount);
+      const method = cleanText(req.body.method, 80);
+      const account = cleanText(req.body.account, 180);
+      if (!Number.isFinite(amount) || amount <= 0 || amount > 10000000 || Math.round(amount * 100) !== amount * 100 || !method || !account) {
+        return sendError(res, 400, "Enter a valid withdrawal amount, method and account.");
+      }
+      const result = await pool.query(
+        `INSERT INTO withdrawal_requests (user_id,amount,method,account)
+         VALUES ($1,$2,$3,$4)
+         RETURNING id,amount,method,account,status,created_at`,
+        [req.user.id, amount.toFixed(2), method, account]
+      );
+      res.status(201).json({ success:true, request:result.rows[0] });
+    }));
+
+    app.get("/api/withdrawals/me", authenticateToken, asyncRoute(async (req, res) => {
+      const result = await pool.query(
+        `SELECT id,amount,method,account,status,rejection_reason,created_at,reviewed_at
+         FROM withdrawal_requests WHERE user_id=$1 ORDER BY created_at DESC LIMIT 100`,
+        [req.user.id]
+      );
+      res.json({ success:true, requests:result.rows });
+    }));
+
+    app.get("/api/admin/withdrawals", authenticateToken, requireAdmin, asyncRoute(async (req, res) => {
+      const status = cleanText(req.query.status || "all", 20).toLowerCase();
+      const search = cleanText(req.query.search, 150).toLowerCase();
+      const params = [];
+      let where = "TRUE";
+      if (["pending","approved","rejected"].includes(status)) {
+        params.push(status); where += ` AND w.status=$${params.length}`;
+      }
+      if (search) {
+        params.push(`%${search}%`);
+        where += ` AND LOWER(CONCAT_WS(' ',u.username,w.id::text,w.method,w.account)) LIKE $${params.length}`;
+      }
+      const [items, counts] = await Promise.all([
+        pool.query(
+          `SELECT w.id,w.user_id,u.username,w.amount,w.method,w.account,w.status,
+                  w.created_at,w.reviewed_at,w.rejection_reason,admin.username AS reviewed_by
+           FROM withdrawal_requests w JOIN users u ON u.id=w.user_id
+           LEFT JOIN users admin ON admin.id=w.reviewed_by
+           WHERE ${where} ORDER BY w.created_at DESC LIMIT 500`, params
+        ),
+        pool.query(`SELECT COUNT(*)::int AS total,
+          COUNT(*) FILTER (WHERE status='pending')::int AS pending,
+          COUNT(*) FILTER (WHERE status='approved')::int AS approved,
+          COUNT(*) FILTER (WHERE status='rejected')::int AS rejected
+          FROM withdrawal_requests`)
+      ]);
+      res.json({ success:true, requests:items.rows, stats:counts.rows[0] });
+    }));
+
+    app.post("/api/admin/withdrawals/:id/approve", authenticateToken, requireAdmin, asyncRoute(async (req, res) => {
+      const id = Number(req.params.id);
+      if (!Number.isSafeInteger(id) || id < 1) return sendError(res,400,"Invalid withdrawal request ID.");
+      const client = await pool.connect();
+      try {
+        await client.query("BEGIN");
+        const found = await client.query("SELECT * FROM withdrawal_requests WHERE id=$1 FOR UPDATE",[id]);
+        if (!found.rows.length) { await client.query("ROLLBACK"); return sendError(res,404,"Withdrawal request not found."); }
+        if (found.rows[0].status !== "pending") { await client.query("ROLLBACK"); return sendError(res,409,"This request has already been reviewed."); }
+        const updated = await client.query(
+          `UPDATE withdrawal_requests SET status='approved',reviewed_by=$1,reviewed_at=NOW()
+           WHERE id=$2 AND status='pending' RETURNING *`,[req.user.id,id]
+        );
+        await client.query("COMMIT");
+        await audit(req.user.id,"withdrawal_approved",found.rows[0].user_id,{withdrawal_id:id,amount:found.rows[0].amount});
+        res.json({success:true,request:updated.rows[0],message:"Approved in demo system. No real payment was sent."});
+      } catch(error) { await client.query("ROLLBACK"); throw error; }
+      finally { client.release(); }
+    }));
+
+    app.post("/api/admin/withdrawals/:id/reject", authenticateToken, requireAdmin, asyncRoute(async (req, res) => {
+      const id = Number(req.params.id);
+      const reason = cleanText(req.body.reason || "Rejected by admin",200);
+      if (!Number.isSafeInteger(id) || id < 1) return sendError(res,400,"Invalid withdrawal request ID.");
+      const result = await pool.query(
+        `UPDATE withdrawal_requests SET status='rejected',rejection_reason=$1,reviewed_by=$2,reviewed_at=NOW()
+         WHERE id=$3 AND status='pending' RETURNING *`,[reason,req.user.id,id]
+      );
+      if (!result.rows.length) return sendError(res,409,"Request not found or already reviewed.");
+      await audit(req.user.id,"withdrawal_rejected",result.rows[0].user_id,{withdrawal_id:id,reason});
+      res.json({success:true,request:result.rows[0]});
     }));
 
     // ==========================================
