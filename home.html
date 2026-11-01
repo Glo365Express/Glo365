@@ -1,3 +1,4 @@
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -270,8 +271,7 @@ nav button.active{color:#e92760}
 /* GLO 365 SERVER CONFIGURATION */
 const API_BASE_URL="https://glo365.onrender.com/api";
 const TOKEN_KEY="glo365_token";
-const SESSION_KEY="glo365_session";
-const POINTS_VISIBILITY_KEY="glo365_points_visible";
+const USER_KEY="glo365_user";
 
 let currentUser=null;
 let currentWallet=null;
@@ -285,15 +285,19 @@ let countdownTimer=null;
 let pointsVisible=true;
 
 /* SAFE HELPERS */
-function readLocal(key,fallback){
+function readSession(key,fallback){
  try{
-  const value=localStorage.getItem(key);
+  const value=sessionStorage.getItem(key);
   return value===null?fallback:JSON.parse(value);
  }catch(error){return fallback}
 }
 
 function getToken(){
- return localStorage.getItem(TOKEN_KEY)||"";
+ try{
+  return sessionStorage.getItem(TOKEN_KEY)||"";
+ }catch(error){
+  return "";
+ }
 }
 
 async function apiRequest(path,options={}){
@@ -340,13 +344,12 @@ function getCurrentPoints(){
  return 0;
 }
 
-/* POINT VISIBILITY */
+/* POINT VISIBILITY - MEMORY ONLY */
 function arePointsVisible(){
- return readLocal(POINTS_VISIBILITY_KEY,true)!==false;
+ return pointsVisible!==false;
 }
 
 function updatePointsVisibility(){
- pointsVisible=arePointsVisible();
  const button=document.getElementById("balance");
  if(!button)return;
 
@@ -366,8 +369,7 @@ function updatePointsVisibility(){
 }
 
 function togglePointsVisibility(){
- const next=!arePointsVisible();
- try{localStorage.setItem(POINTS_VISIBILITY_KEY,JSON.stringify(next))}catch(error){}
+ pointsVisible=!pointsVisible;
  updatePointsVisibility();
  renderPointHistory();
 }
@@ -404,13 +406,18 @@ function renderProfileAvatar(){
 
 /* AUTHENTICATION */
 async function loadCurrentUser(){
- if(!getToken()){
+ const token=getToken();
+
+ if(!token){
   location.replace("login.html");
   throw new Error("Please log in.");
  }
 
  const data=await apiRequest("/auth/me");
- if(!data.success||!data.user)throw new Error("Unable to verify your account.");
+
+ if(!data.success||!data.user){
+  throw new Error("Unable to verify your account.");
+ }
 
  currentUser=data.user;
 
@@ -420,30 +427,33 @@ async function loadCurrentUser(){
   throw new Error("Account is not active.");
  }
 
- const session=readLocal(SESSION_KEY,{})||{};
- const updatedSession={
-  ...session,
-  id:currentUser.id,
-  username:currentUser.username,
-  email:currentUser.email,
-  role:currentUser.role,
-  loginTime:session.loginTime||Date.now()
- };
-
- try{localStorage.setItem(SESSION_KEY,JSON.stringify(updatedSession))}catch(error){}
-
- if(["admin","moderator"].includes(String(currentUser.role||"").toLowerCase())){
-  // Do not redirect staff; they may view the public home page.
+ /* Keep the latest user information in temporary session storage. */
+ try{
+  sessionStorage.setItem(USER_KEY,JSON.stringify(currentUser));
+ }catch(error){
+  console.warn("Could not update temporary user information.");
  }
 
  return currentUser;
 }
 
 async function logoutAndRedirect(){
- try{await apiRequest("/auth/logout",{method:"POST"})}catch(error){}
- localStorage.removeItem(TOKEN_KEY);
- localStorage.removeItem(SESSION_KEY);
- localStorage.removeItem("glo365_user");
+ try{
+  await apiRequest("/auth/logout",{method:"POST"});
+ }catch(error){
+  console.warn("Server logout request failed:",error);
+ }
+
+ try{
+  sessionStorage.removeItem(TOKEN_KEY);
+  sessionStorage.removeItem(USER_KEY);
+ }catch(error){}
+
+ currentUser=null;
+ currentWallet=null;
+ currentProfile=null;
+ currentTransactions=[];
+
  location.replace("login.html");
 }
 
@@ -835,6 +845,7 @@ async function refreshPublicData(){
  await Promise.allSettled(tasks);
 }
 
+/* PAGE RESTORE */
 window.addEventListener("pageshow",()=>{
  if(currentUser){
   loadHome();
@@ -859,7 +870,7 @@ document.addEventListener("keydown",event=>{
 });
 
 /* START */
-pointsVisible=arePointsVisible();
+pointsVisible=true;
 loadHome();
 countdownTimer=setInterval(updateCountdown,1000);
 
