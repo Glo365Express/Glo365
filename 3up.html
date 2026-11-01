@@ -66,7 +66,7 @@ body{font-family:Arial,sans-serif;background:#f0f7fd;color:#18334d}
 <button class="place-btn" id="placeBet" type="button" disabled>LOADING…</button>
 <div class="ad-container"><script>var atOptions={'key':'ab837cf0ea9c26ae43b7bc4e05a0b5de','format':'iframe','height':50,'width':320,'params':{}};</script><script src="https://bicea.org/22/ab837cf0ea9c26ae43b7bc4e05a0b5de"></script></div>
 <button class="back-btn" id="backHome" type="button">← Back to Home</button>
-<div class="notice"><strong>DEMO MODE ONLY</strong><br>Virtual points are used for testing.<br>No real-money transactions or cash payouts.</div>
+
 </div>
 <script>
 "use strict";
@@ -102,7 +102,7 @@ function applyBettingLock(){
  rowsContainer.querySelectorAll(".bet-row").forEach(row=>{row.querySelectorAll("input").forEach(input=>input.disabled=bettingLocked||submitting||!authenticated);const b=row.querySelector(".remove-btn");if(b)b.disabled=bettingLocked||submitting||!authenticated});
  const count=rowsContainer.querySelectorAll(".bet-row").length;addButton.disabled=bettingLocked||submitting||!authenticated||count>=MAX_ROWS;
  placeButton.disabled=bettingLocked||submitting||!authenticated||!serverSettingsLoaded;
- placeButton.textContent=submitting?"SUBMITTING…":!authenticated?"LOGIN REQUIRED":bettingLocked?"BETTING CLOSED":"PLACE DEMO BET";
+ placeButton.textContent=submitting?"SUBMITTING…":!authenticated?"LOGIN REQUIRED":bettingLocked?"BETTING CLOSED":"PLACE BET";
 }
 function updateSerials(){rowsContainer.querySelectorAll(".bet-row").forEach((r,i)=>r.querySelector(".serial").textContent=(i+1)+".");applyBettingLock()}
 function addRow(force=false){
@@ -143,9 +143,9 @@ async function submitBet(){
   const response=await apiRequest("/demo/3up/bets",{method:"POST",body:JSON.stringify({rows})});
   if(response.balance!==undefined)setWallet(response.balance);else await loadCurrentUser();
   const bet=response.bet||{};const charged=Number(bet.payable_amount??response.payable_amount??result.finalAmount);
-  showMessage("3 UP demo entry saved successfully!\nBet ID: "+(bet.id??"Confirmed")+"\nBet Amount: "+formatPoints(charged)+"\nRemaining Points: "+formatPoints(wallet),"success");
+  showMessage("3 UP entry saved successfully!\nBet ID: "+(bet.id??"Confirmed")+"\nBet Amount: "+formatPoints(charged)+"\nRemaining Points: "+formatPoints(wallet),"success");
   resetRows();await loadSettings();
- }catch(error){console.error("3 UP submit error:",error);showMessage(error.message||"Could not submit your demo entry.","error");if(error.status===401){authenticated=false;redirectToLogin()}try{await loadCurrentUser()}catch(_){}try{await loadSettings()}catch(_){}}
+ }catch(error){console.error("3 UP submit error:",error);showMessage(error.message||"Could not submit your entry.","error");if(error.status===401){authenticated=false;redirectToLogin()}try{await loadCurrentUser()}catch(_){}try{await loadSettings()}catch(_){}}
  finally{submitting=false;applyBettingLock()}
 }
 addButton.addEventListener("click",()=>addRow());placeButton.addEventListener("click",submitBet);
