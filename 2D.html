@@ -1,3 +1,4 @@
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -128,8 +129,10 @@ body{font-family:Arial,sans-serif;background:#f0f7fd;color:#18334d}
 
 /* =========================================
    GLO 365 - 2D BACKEND VERSION
-   Server/PostgreSQL is the source of truth.
-   Only the authentication token is local.
+   PostgreSQL is the source of truth.
+   Authentication supports:
+   1. HttpOnly Cookie
+   2. sessionStorage token fallback
 ========================================= */
 
 const API_BASE = "https://glo365.onrender.com/api";
@@ -157,8 +160,30 @@ const discountElement = document.getElementById("discountAmount");
 const discountPercentElement = document.getElementById("discountPercent");
 const betAmountElement = document.getElementById("betAmount");
 
+/* =========================================
+   AUTH TOKEN
+   Login page stores fallback token in
+   sessionStorage, not localStorage.
+========================================= */
+
 function getToken(){
- return localStorage.getItem(TOKEN_KEY) || "";
+ try{
+  return sessionStorage.getItem(TOKEN_KEY) || "";
+ }catch(error){
+  console.warn("Session storage unavailable:",error);
+  return "";
+}
+
+}
+
+function clearSession(){
+ try{
+  sessionStorage.removeItem(TOKEN_KEY);
+  sessionStorage.removeItem("glo365_user");
+  sessionStorage.removeItem("glo365_session");
+ }catch(error){
+  console.warn("Could not clear session storage:",error);
+ }
 }
 
 async function api(path, options = {}){
@@ -188,9 +213,9 @@ async function api(path, options = {}){
  }
 
  if(response.status === 401){
-  localStorage.removeItem(TOKEN_KEY);
+  clearSession();
   location.replace("login.html");
-  throw new Error("Your login session has expired.");
+  throw new Error("Your login session has expired. Please log in again.");
  }
 
  if(!response.ok){
@@ -216,14 +241,11 @@ function money(value){
 
 /* =========================================
    AUTHENTICATION
+   Do not require a browser token here.
+   HttpOnly cookie may authenticate the user.
 ========================================= */
 
 async function loadCurrentUser(){
- if(!getToken()){
-  location.replace("login.html");
-  throw new Error("Login required.");
- }
-
  const response = await api("/auth/me");
  const data = unwrap(response);
 
@@ -255,7 +277,6 @@ async function loadWallet(){
 
 /* =========================================
    DRAW SETTINGS
-   Admin-managed settings must come from server.
 ========================================= */
 
 function parseDrawTime(value){
@@ -400,13 +421,6 @@ function applyBetLock(){
 /* =========================================
    DISCOUNT
 ========================================= */
-
-/*
-  The current backend does not expose a 2D
-  discount API in the known server routes.
-  Do not read admin discount from LocalStorage.
-  Keep discount at 0 until a server API exists.
-*/
 
 async function loadDiscount(){
  discount = 0;
@@ -621,19 +635,6 @@ function validateRows(rows){
    SUBMIT BET TO BACKEND
 ========================================= */
 
-/*
-  Existing backend contract:
-  POST /api/demo/bets
-  {
-    game_name: string,
-    selection: string (max 100 characters),
-    amount: number
-  }
-
-  The server validates and deducts wallet balance
-  inside a database transaction.
-*/
-
 function makeSelection(rows){
  return rows.map(row=>{
   let item = row.number;
@@ -672,11 +673,6 @@ async function submitBet(){
 
  const selection = makeSelection(rows);
 
- /*
-  * Existing server accepts selection with a maximum
-  * length of 100 characters. Reject longer entries
-  * instead of silently truncating the user's numbers.
-  */
  if(selection.length > 100){
   alert("These selections are too long for the current server API. Please submit fewer rows at a time.");
   return;
@@ -693,19 +689,16 @@ async function submitBet(){
  applyBetLock();
 
  try{
-  // Recheck draw lock immediately before submitting.
   if(getLockStatus().locked){
    throw new Error("Betting has closed because the draw time is approaching.");
   }
 
-  // Refresh server wallet before submission.
   await loadWallet();
 
   if(amounts.finalAmount > wallet){
    throw new Error("Insufficient demo points. Your current balance is "+wallet.toFixed(2)+".");
   }
 
-  // Final schedule check.
   if(getLockStatus().locked){
    throw new Error("Betting has closed. Please try the next draw.");
   }
@@ -719,10 +712,6 @@ async function submitBet(){
    }
   });
 
-  /*
-   * The backend is responsible for wallet deduction.
-   * Never deduct points again in browser code.
-   */
   await loadWallet();
 
   alert(
@@ -788,7 +777,13 @@ async function initialize(){
  placeButton.textContent = "LOADING...";
 
  try{
+  /*
+   * First check /auth/me.
+   * Cookie authentication works even when
+   * sessionStorage has no token.
+   */
   await loadCurrentUser();
+
   await refreshPageData();
 
   if(!lockTimer){
@@ -803,18 +798,19 @@ async function initialize(){
   console.error(error);
   alert("Unable to load 2D page: "+error.message);
 
-  if(!getToken()){
-   location.replace("login.html");
-  }
+  /*
+   * A 401 response is already redirected by api().
+   * Other errors are shown without forcing logout.
+   */
  }
 }
 
 window.addEventListener("focus",()=>{
- if(!submitting) refreshPageData();
+ if(!submitting && currentUser) refreshPageData();
 });
 
 window.addEventListener("pageshow",()=>{
- if(!submitting) refreshPageData();
+ if(!submitting && currentUser) refreshPageData();
 });
 
 resetRows();
