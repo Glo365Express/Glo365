@@ -2529,13 +2529,49 @@
       if (!Number.isFinite(amount) || amount <= 0 || amount > 10000000 || Math.round(amount * 100) !== amount * 100 || !method || !account) {
         return sendError(res, 400, "Enter a valid withdrawal amount, method and account.");
       }
-      const result = await pool.query(
-        `INSERT INTO withdrawal_requests (user_id,amount,method,account)
-         VALUES ($1,$2,$3,$4)
-         RETURNING id,amount,method,account,status,created_at`,
-        [req.user.id, amount.toFixed(2), method, account]
-      );
-      res.status(201).json({ success:true, request:result.rows[0] });
+
+      // Lock the user's wallet row and validate pending reservations server-side.
+      // This prevents concurrent requests from exceeding the available DEMO balance.
+      const client = await pool.connect();
+      try {
+        await client.query("BEGIN");
+        const walletResult = await client.query(
+          "SELECT balance,status FROM users WHERE id=$1 FOR UPDATE",
+          [req.user.id]
+        );
+        if (!walletResult.rows.length) {
+          await client.query("ROLLBACK");
+          return sendError(res, 404, "User not found.");
+        }
+        if (String(walletResult.rows[0].status || "active").toLowerCase() !== "active") {
+          await client.query("ROLLBACK");
+          return sendError(res, 403, "Your account is not active.");
+        }
+        const pendingResult = await client.query(
+          "SELECT COALESCE(SUM(amount),0) AS reserved FROM withdrawal_requests WHERE user_id=$1 AND status='pending'",
+          [req.user.id]
+        );
+        const balance = Number(walletResult.rows[0].balance || 0);
+        const reserved = Number(pendingResult.rows[0].reserved || 0);
+        const available = Math.max(0, balance - reserved);
+        if (amount > available) {
+          await client.query("ROLLBACK");
+          return sendError(res, 400, "Insufficient available DEMO points.");
+        }
+        const result = await client.query(
+          `INSERT INTO withdrawal_requests (user_id,amount,method,account)
+           VALUES ($1,$2,$3,$4)
+           RETURNING id,amount,method,account,status,created_at`,
+          [req.user.id, amount.toFixed(2), method, account]
+        );
+        await client.query("COMMIT");
+        res.status(201).json({ success:true, request:result.rows[0], available_balance:Number((available-amount).toFixed(2)) });
+      } catch (error) {
+        await client.query("ROLLBACK");
+        throw error;
+      } finally {
+        client.release();
+      }
     }));
 
     app.get("/api/withdrawals/me", authenticateToken, asyncRoute(async (req, res) => {
