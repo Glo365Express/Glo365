@@ -125,6 +125,7 @@ body{margin:0;background:var(--bg);color:var(--text);font-family:Arial,Helvetica
     <a class="menu-item" href="about.html"><span class="menu-left"><span class="menu-icon">ℹ️</span>About GLO 365</span><span class="arrow">›</span></a>
     <div class="menu-item" onclick="logout()"><span class="menu-left"><span class="menu-icon">🚪</span>Logout</span><span class="arrow">›</span></div>
   </section>
+
   <p class="small-muted" style="text-align:center">GLO 365 · My Profile</p>
 </main>
 
@@ -173,6 +174,19 @@ body{margin:0;background:var(--bg);color:var(--text);font-family:Arial,Helvetica
 const API_BASE="https://glo365.onrender.com/api";
 const TOKEN_KEY="glo365_token";
 
+/*
+  Authentication:
+  1. HttpOnly cookie is the primary method.
+  2. sessionStorage JWT is only a compatibility fallback.
+  3. No application data is saved in localStorage.
+*/
+
+let token=sessionStorage.getItem(TOKEN_KEY)||"";
+let currentUser=null;
+let currentProfile={};
+let selectedAvatar=null;
+let isLoggingOut=false;
+
 const AVATARS=[
  {id:"royal-blue",name:"Royal Blue",bg:"#dceeff",skin:"#e9b58f",hair:"#172d4c",shirt:"#1878ce"},
  {id:"pink-star",name:"Pink Star",bg:"#ffe4f0",skin:"#f0c09e",hair:"#542b45",shirt:"#d94e91"},
@@ -183,11 +197,6 @@ const AVATARS=[
  {id:"silver-gentle",name:"Silver Gentle",bg:"#e9eff5",skin:"#e8bd9f",hair:"#7b8793",shirt:"#536d83"},
  {id:"black-premium",name:"Black Premium",bg:"#e4e7ef",skin:"#9c684d",hair:"#171b25",shirt:"#292e42"}
 ];
-
-let token=localStorage.getItem(TOKEN_KEY);
-let currentUser=null;
-let currentProfile={};
-let selectedAvatar=null;
 
 function toast(message){
  const el=document.getElementById("toast");
@@ -205,26 +214,32 @@ function escapeHTML(value){
 
 async function api(path,options={}){
  const headers={...(options.headers||{})};
- if(token)headers.Authorization="Bearer "+token;
- if(options.body&&!headers["Content-Type"])headers["Content-Type"]="application/json";
+
+ if(token){
+  headers.Authorization="Bearer "+token;
+ }
+
+ if(options.body&&!headers["Content-Type"]){
+  headers["Content-Type"]="application/json";
+ }
 
  const response=await fetch(API_BASE+path,{
-  ...options,headers,credentials:"include"
+  ...options,
+  headers,
+  credentials:"include"
  });
 
  let data={};
- try{data=await response.json()}catch(e){}
-
- if(response.status===401||response.status===403){
-  if(response.status===401){
-   localStorage.removeItem(TOKEN_KEY);
-   location.replace("login.html");
-  }
- }
+ try{
+  data=await response.json();
+ }catch(e){}
 
  if(!response.ok){
-  throw new Error(data.message||data.error||"Request failed ("+response.status+")");
+  throw new Error(
+   data.message||data.error||"Request failed ("+response.status+")"
+  );
  }
+
  return data;
 }
 
@@ -233,7 +248,8 @@ function avatarSVG(item){
  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 120 120">
  <defs>
   <linearGradient id="bg" x1="0" y1="0" x2="1" y2="1">
-   <stop offset="0%" stop-color="${item.bg}"/><stop offset="100%" stop-color="#fff"/>
+   <stop offset="0%" stop-color="${item.bg}"/>
+   <stop offset="100%" stop-color="#fff"/>
   </linearGradient>
  </defs>
  <circle cx="60" cy="60" r="60" fill="url(#bg)"/>
@@ -248,22 +264,33 @@ function avatarSVG(item){
  <path d="M51 72 Q60 78 69 72" fill="none" stroke="#9c5551" stroke-width="2.5"/>
  <path d="M43 88 L60 101 L77 88" fill="none" stroke="#fff" stroke-width="3" opacity=".7"/>
  </svg>`;
+
  return "data:image/svg+xml;charset=UTF-8,"+encodeURIComponent(svg);
 }
 
 function setAvatar(source){
  const fallback=avatarSVG(AVATARS[0]);
  const main=document.getElementById("avatar");
+
  main.innerHTML="";
  const img=document.createElement("img");
  img.alt="Profile picture";
  img.src=source||fallback;
- img.onerror=()=>{img.onerror=null;img.src=fallback};
+
+ img.onerror=()=>{
+  img.onerror=null;
+  img.src=fallback;
+ };
+
  main.appendChild(img);
 
  const nav=document.getElementById("navProfileAvatar");
  nav.src=source||fallback;
- nav.onerror=()=>{nav.onerror=null;nav.src=fallback};
+
+ nav.onerror=()=>{
+  nav.onerror=null;
+  nav.src=fallback;
+ };
 }
 
 function getAvatarId(){
@@ -275,12 +302,17 @@ function renderProfile(){
  if(!currentUser)return;
 
  const username=currentUser.username||"";
- const fullName=currentProfile.full_name||
-  currentProfile.fullName||currentUser.full_name||
-  currentUser.fullName||username;
+
+ const fullName=
+  currentProfile.full_name||
+  currentProfile.fullName||
+  currentUser.full_name||
+  currentUser.fullName||
+  username;
 
  document.getElementById("profileName").textContent=fullName;
  document.getElementById("userId").textContent="User ID: "+username;
+
  document.getElementById("profileBio").textContent=
   currentProfile.bio||"Welcome to GLO 365";
 
@@ -290,13 +322,19 @@ function renderProfile(){
  if(status==="active"){
   statusEl.innerHTML='<span class="verified">✓ Active Account</span>';
  }else{
-  statusEl.innerHTML='<span class="verified unverified">'+
+  statusEl.innerHTML=
+   '<span class="verified unverified">'+
    escapeHTML(status.toUpperCase())+'</span>';
  }
 
  const avatarId=getAvatarId();
  const avatarItem=AVATARS.find(a=>a.id===avatarId);
- setAvatar(avatarItem?avatarSVG(avatarItem):(currentProfile.avatar||""));
+
+ if(avatarItem){
+  setAvatar(avatarSVG(avatarItem));
+ }else{
+  setAvatar(currentProfile.avatar||currentUser.avatar||"");
+ }
 }
 
 function extractUser(data){
@@ -318,8 +356,10 @@ async function loadWallet(){
   const data=await api("/wallet");
   const wallet=data.wallet||data;
   const balance=Number(wallet.balance??data.balance??0);
+
   document.getElementById("walletBalance").textContent=
    Number.isFinite(balance)?balance.toLocaleString():"0";
+
  }catch(error){
   document.getElementById("walletBalance").textContent="Unavailable";
   console.error("Wallet loading error:",error);
@@ -336,12 +376,19 @@ function getBetsArray(data){
 
 async function loadActivity(){
  try{
+  /*
+   * The current backend provides /api/demo/bets.
+   * This endpoint returns the current user's demo entries.
+   */
   const data=await api("/demo/bets");
   const bets=getBetsArray(data);
-  let wins=0,losses=0;
+
+  let wins=0;
+  let losses=0;
 
   bets.forEach(bet=>{
    const status=String(bet.status||bet.result||"").toUpperCase();
+
    if(["WIN","WON"].includes(status))wins++;
    if(["LOSS","LOST"].includes(status))losses++;
   });
@@ -349,14 +396,18 @@ async function loadActivity(){
   document.getElementById("totalBets").textContent=bets.length;
   document.getElementById("totalWins").textContent=wins;
   document.getElementById("totalLosses").textContent=losses;
+
   document.getElementById("activityStatus").textContent=
    "Loaded from your server account.";
+
  }catch(error){
   document.getElementById("totalBets").textContent="--";
   document.getElementById("totalWins").textContent="--";
   document.getElementById("totalLosses").textContent="--";
+
   document.getElementById("activityStatus").textContent=
    "Activity could not be loaded: "+error.message;
+
   console.error("Activity loading error:",error);
  }
 }
@@ -367,6 +418,7 @@ function renderAvatarChoices(){
 
  AVATARS.forEach(item=>{
   const option=document.createElement("div");
+
   option.className="avatar-option"+
    (selectedAvatar===item.id?" selected":"");
 
@@ -378,13 +430,16 @@ function renderAvatarChoices(){
   name.textContent=item.name;
 
   const label=document.createElement("small");
-  label.textContent=selectedAvatar===item.id?"✓ Selected":"Tap to select";
+  label.textContent=
+   selectedAvatar===item.id?"✓ Selected":"Tap to select";
 
   option.append(img,name,label);
+
   option.onclick=()=>{
    selectedAvatar=item.id;
    renderAvatarChoices();
   };
+
   grid.appendChild(option);
  });
 }
@@ -400,7 +455,10 @@ window.closeAvatarPicker=function(){
 };
 
 window.saveSelectedAvatar=async function(){
- if(!selectedAvatar){toast("Please select an avatar.");return}
+ if(!selectedAvatar){
+  toast("Please select an avatar.");
+  return;
+ }
 
  const button=document.getElementById("saveAvatarButton");
  button.disabled=true;
@@ -410,14 +468,19 @@ window.saveSelectedAvatar=async function(){
   const response=await api("/profile",{
    method:"PUT",
    body:JSON.stringify({
-    full_name:currentProfile.full_name||currentProfile.fullName||
-      currentUser.full_name||currentUser.username,
+    full_name:
+     currentProfile.full_name||
+     currentProfile.fullName||
+     currentUser.full_name||
+     currentUser.username,
+
     avatar:selectedAvatar,
     bio:currentProfile.bio||""
    })
   });
 
   const updated=extractProfile(response)||{};
+
   currentProfile={
    ...currentProfile,
    ...updated,
@@ -427,9 +490,11 @@ window.saveSelectedAvatar=async function(){
   renderProfile();
   closeAvatarPicker();
   toast("Avatar saved to your account successfully.");
+
  }catch(error){
   console.error("Avatar save error:",error);
   toast("Could not save avatar: "+error.message);
+
  }finally{
   button.disabled=false;
   button.textContent="Save Avatar";
@@ -439,32 +504,49 @@ window.saveSelectedAvatar=async function(){
 window.showKycInfo=function(){
  document.getElementById("infoModal").classList.add("show");
 };
+
 window.closeInfoModal=function(){
  document.getElementById("infoModal").classList.remove("show");
 };
 
 window.logout=async function(){
+ if(isLoggingOut)return;
+
  if(!confirm("Are you sure you want to logout?"))return;
 
+ isLoggingOut=true;
+
  try{
-  await api("/auth/logout",{method:"POST"});
+  await fetch(API_BASE+"/auth/logout",{
+   method:"POST",
+   credentials:"include",
+   headers:token?{Authorization:"Bearer "+token}:{}
+  });
  }catch(error){
   console.warn("Logout request:",error.message);
  }
 
- localStorage.removeItem(TOKEN_KEY);
- localStorage.removeItem("glo365_user");
- localStorage.removeItem("glo365_session");
+ /*
+  * Only the temporary authentication fallback is removed.
+  * No application data is stored in localStorage.
+  */
+ sessionStorage.removeItem(TOKEN_KEY);
+ sessionStorage.removeItem("glo365_user");
+ sessionStorage.removeItem("glo365_session");
+
  location.replace("login.html");
 };
 
 async function initialize(){
- if(!token){
-  location.replace("login.html");
-  return;
- }
+ document.getElementById("profileName").textContent="Loading...";
+ document.getElementById("profileBio").textContent="Checking your account...";
 
  try{
+  /*
+   * First try the HttpOnly cookie.
+   * If the browser has a cookie, the server authenticates it.
+   * If not, the optional sessionStorage JWT is sent as fallback.
+   */
   const authData=await api("/auth/me");
   currentUser=extractUser(authData);
 
@@ -472,22 +554,47 @@ async function initialize(){
    throw new Error("Your account information could not be loaded.");
   }
 
-  await Promise.allSettled([
+  /*
+   * The account is authenticated.
+   * Load profile, wallet and activity independently.
+   */
+  const results=await Promise.allSettled([
    loadProfile(),
    loadWallet(),
    loadActivity()
   ]);
 
-  if(!currentProfile||!Object.keys(currentProfile).length){
+  const profileResult=results[0];
+
+  if(profileResult.status==="rejected"){
+   console.error("Profile loading error:",profileResult.reason);
+
    currentProfile={
     full_name:currentUser.full_name||currentUser.username,
-    bio:"Welcome to GLO 365",
+    bio:currentUser.bio||"Welcome to GLO 365",
     avatar:currentUser.avatar||""
    };
+
    renderProfile();
   }
+
  }catch(error){
   console.error("Profile initialization error:",error);
+
+  /*
+   * An authentication failure sends the user to login.
+   * Other errors are shown without deleting any server data.
+   */
+  if(
+   /401|403|unauthorized|token|authentication/i.test(error.message)
+  ){
+   sessionStorage.removeItem(TOKEN_KEY);
+   location.replace("login.html");
+   return;
+  }
+
+  document.getElementById("profileName").textContent="Unable to load";
+  document.getElementById("profileBio").textContent=error.message;
   toast(error.message||"Could not load your profile.");
  }
 }
@@ -495,8 +602,8 @@ async function initialize(){
 initialize();
 
 window.addEventListener("pageshow",()=>{
- if(token&&currentUser){
-  loadProfile().catch(console.error);
+ if(currentUser&&!isLoggingOut){
+  loadProfile().catch(error=>console.error(error));
   loadWallet();
   loadActivity();
  }
