@@ -216,7 +216,6 @@ input:focus{
  padding:10px;
  line-height:1.7;
 }
-
 </style>
 </head>
 
@@ -302,6 +301,16 @@ input:focus{
 <script>
 "use strict";
 
+/* =========================================
+   GLO 365 - DRAW TIMER SETTINGS
+   Authentication:
+   1. HttpOnly Cookie
+   2. sessionStorage fallback
+
+   Server/PostgreSQL remains the source
+   of truth for draw settings.
+========================================= */
+
 const API_BASE="https://glo365.onrender.com/api";
 const TOKEN_KEY="glo365_token";
 
@@ -313,10 +322,41 @@ const saveButton=document.getElementById("saveButton");
 
 let currentDraw=null;
 let timerInterval=null;
+let currentAdmin=null;
+let saving=false;
+
+/* =========================================
+   AUTHENTICATION
+========================================= */
 
 function getToken(){
- return localStorage.getItem(TOKEN_KEY)||"";
+ try{
+  return sessionStorage.getItem(TOKEN_KEY)||"";
+ }catch(error){
+  console.warn("Session storage unavailable:",error);
+  return "";
 }
+
+}
+
+function clearSession(){
+ try{
+  sessionStorage.removeItem(TOKEN_KEY);
+  sessionStorage.removeItem("glo365_user");
+  sessionStorage.removeItem("glo365_session");
+ }catch(error){
+  console.warn("Session cleanup failed:",error);
+ }
+}
+
+function redirectToLogin(){
+ clearSession();
+ location.replace("login.html");
+}
+
+/* =========================================
+   STATUS MESSAGE
+========================================= */
 
 function showStatus(message,type="info"){
  statusBox.textContent=message;
@@ -328,35 +368,89 @@ function clearStatus(){
  statusBox.className="status";
 }
 
+/* =========================================
+   API REQUEST
+========================================= */
+
 async function apiRequest(path,options={}){
 
  const token=getToken();
 
+ const headers={
+  "Accept":"application/json",
+  ...(options.body?{"Content-Type":"application/json"}:{}),
+  ...(token?{"Authorization":"Bearer "+token}:{})
+ };
+
  const response=await fetch(API_BASE+path,{
-  ...options,
-  headers:{
-   "Accept":"application/json",
-   "Content-Type":"application/json",
-   "Authorization":"Bearer "+token,
-   ...(options.headers||{})
-  },
-  credentials:"include"
+  method:options.method||"GET",
+  headers,
+  credentials:"include",
+  cache:"no-store",
+  body:options.body
+   ?(typeof options.body==="string"
+      ?options.body
+      :JSON.stringify(options.body))
+   :undefined
  });
+
+ const raw=await response.text();
 
  let data={};
 
  try{
-  data=await response.json();
+  data=raw?JSON.parse(raw):{};
  }catch(error){
   throw new Error("Invalid server response.");
  }
 
- if(!response.ok||data.success===false){
-  throw new Error(data.message||"Server request failed.");
+ if(response.status===401){
+  redirectToLogin();
+  throw new Error("Your login session has expired. Please log in again.");
+ }
+
+ if(response.status===403){
+  throw new Error(
+   data.message||
+   data.error||
+   "Access denied. Admin permission is required."
+  );
+ }
+
+ if(!response.ok){
+  throw new Error(
+   data.message||
+   data.error||
+   "Server request failed ("+response.status+")."
+  );
+ }
+
+ if(data.success===false){
+  throw new Error(
+   data.message||
+   data.error||
+   "Request failed."
+  );
  }
 
  return data;
 }
+
+/* =========================================
+   RESPONSE NORMALIZATION
+========================================= */
+
+function unwrap(data){
+ if(!data||typeof data!=="object")return {};
+
+ return data.data&&typeof data.data==="object"
+  ?data.data
+  :data;
+}
+
+/* =========================================
+   DATE AND TIME
+========================================= */
 
 function formatDate(value){
 
@@ -396,6 +490,53 @@ function formatRemaining(ms){
  ].join(":");
 }
 
+function toLocalDateTimeInput(value){
+
+ if(!value)return "";
+
+ const date=new Date(value);
+
+ if(Number.isNaN(date.getTime()))return "";
+
+ const localValue=new Date(
+  date.getTime()-date.getTimezoneOffset()*60000
+ );
+
+ return localValue.toISOString().slice(0,16);
+}
+
+/* =========================================
+   ADMIN AUTHORIZATION
+========================================= */
+
+async function checkAdmin(){
+
+ const response=await apiRequest("/auth/me");
+ const data=unwrap(response);
+
+ const user=data.user||data.profile||data;
+
+ if(!user||!user.id){
+  throw new Error("Unable to verify your account.");
+ }
+
+ const role=String(user.role||"").toLowerCase();
+
+ if(role!=="admin"){
+  throw new Error(
+   "Access denied. Only Admin can manage draw settings."
+  );
+ }
+
+ currentAdmin=user;
+
+ return user;
+}
+
+/* =========================================
+   DRAW DISPLAY
+========================================= */
+
 function updateDisplay(){
 
  if(!currentDraw||!currentDraw.draw_at){
@@ -409,8 +550,14 @@ function updateDisplay(){
  }
 
  const timestamp=new Date(currentDraw.draw_at).getTime();
- const remaining=timestamp-Date.now();
 
+ if(!Number.isFinite(timestamp)){
+  document.getElementById("currentStatus").textContent="Invalid schedule";
+  document.getElementById("countdown").textContent="--:--:--";
+  return;
+ }
+
+ const remaining=timestamp-Date.now();
  const locked=remaining<=LOCK_MS;
 
  document.getElementById("currentNumber").textContent=
@@ -425,7 +572,9 @@ function updateDisplay(){
   ?"BETTING CLOSED"
   :"BETTING OPEN";
 
- statusElement.style.color=locked?"#c73545":"#168653";
+ statusElement.style.color=locked
+  ?"var(--red)"
+  :"var(--green)";
 
  document.getElementById("countdown").textContent=
   remaining<=0
@@ -433,16 +582,9 @@ function updateDisplay(){
    :formatRemaining(remaining);
 }
 
-async function checkAdmin(){
-
- const data=await apiRequest("/auth/me");
-
- if(!data.user||String(data.user.role).toLowerCase()!=="admin"){
-  throw new Error("Access denied. Only Admin can manage draw settings.");
- }
-
- return data.user;
-}
+/* =========================================
+   LOAD DRAW SETTINGS
+========================================= */
 
 async function loadSettings(){
 
@@ -450,24 +592,39 @@ async function loadSettings(){
 
  try{
 
-  const data=await apiRequest("/admin/draw-settings");
+  const response=await apiRequest("/admin/draw-settings");
+  const data=unwrap(response);
 
-  currentDraw=data.drawSettings||data.settings||null;
+  currentDraw=
+   data.drawSettings||
+   data.draw_settings||
+   data.settings||
+   null;
 
   if(currentDraw){
 
    document.getElementById("drawNumber").value=
-    currentDraw.draw_number||"";
+    currentDraw.draw_number||
+    currentDraw.drawNumber||
+    "";
 
-   if(currentDraw.draw_at){
+   const drawAt=
+    currentDraw.draw_at||
+    currentDraw.drawAt||
+    currentDraw.draw_time||
+    currentDraw.drawTime;
 
-    const date=new Date(currentDraw.draw_at);
+   if(drawAt){
+    document.getElementById("drawAt").value=
+     toLocalDateTimeInput(drawAt);
+   }
 
-    const localValue=new Date(
-     date.getTime()-date.getTimezoneOffset()*60000
-    ).toISOString().slice(0,16);
+   if(!currentDraw.draw_at&&drawAt){
+    currentDraw.draw_at=drawAt;
+   }
 
-    document.getElementById("drawAt").value=localValue;
+   if(!currentDraw.draw_number&&currentDraw.drawNumber){
+    currentDraw.draw_number=currentDraw.drawNumber;
    }
   }
 
@@ -476,12 +633,17 @@ async function loadSettings(){
  }catch(error){
 
   showStatus(error.message,"error");
+  throw error;
  }
 }
 
+/* =========================================
+   SAVE DRAW SETTINGS
+========================================= */
+
 async function saveSettings(){
 
- if(saveButton.disabled)return;
+ if(saving)return;
 
  clearStatus();
 
@@ -513,35 +675,49 @@ async function saveSettings(){
   return;
  }
 
+ const isoDate=localDate.toISOString();
+
  const confirmed=confirm(
   "Save this Draw Schedule?\n\n"+
   "Draw Number: "+drawNumber+
-  "\nDraw Time: "+formatDate(localDate.toISOString())+
+  "\nDraw Time: "+formatDate(isoDate)+
   "\n\nBetting will close 45 minutes before the draw."
  );
 
  if(!confirmed)return;
 
+ saving=true;
  saveButton.disabled=true;
  saveButton.textContent="SAVING...";
 
  try{
 
-  const data=await apiRequest("/admin/draw-settings",{
+  const response=await apiRequest("/admin/draw-settings",{
    method:"PUT",
-   body:JSON.stringify({
+   body:{
     draw_number:drawNumber,
-    draw_at:localDate.toISOString()
-   })
+    draw_at:isoDate
+   }
   });
+
+  const data=unwrap(response);
 
   currentDraw=
    data.drawSettings||
+   data.draw_settings||
    data.settings||
    {
     draw_number:drawNumber,
-    draw_at:localDate.toISOString()
+    draw_at:isoDate
    };
+
+  if(!currentDraw.draw_at){
+   currentDraw.draw_at=isoDate;
+  }
+
+  if(!currentDraw.draw_number){
+   currentDraw.draw_number=drawNumber;
+  }
 
   updateDisplay();
 
@@ -556,47 +732,78 @@ async function saveSettings(){
 
  }finally{
 
+  saving=false;
   saveButton.disabled=false;
   saveButton.textContent="SAVE DRAW SCHEDULE";
  }
 }
 
+/* =========================================
+   INITIALIZATION
+========================================= */
+
 async function initialize(){
+
+ saveButton.disabled=true;
+ saveButton.textContent="VERIFYING ADMIN...";
 
  try{
 
-  if(!getToken()){
-   location.replace("login.html");
-   return;
-  }
-
+  /*
+   * No localStorage token requirement.
+   * Cookie or sessionStorage token can
+   * authenticate /auth/me.
+   */
   await checkAdmin();
 
   await loadSettings();
 
+  if(timerInterval){
+   clearInterval(timerInterval);
+  }
+
   timerInterval=setInterval(updateDisplay,1000);
+
+  saveButton.disabled=false;
+  saveButton.textContent="SAVE DRAW SCHEDULE";
 
  }catch(error){
 
+  console.error("Draw Timer initialization:",error);
+
   showStatus(error.message,"error");
 
-  if(
-   error.message.toLowerCase().includes("token")||
-   error.message.toLowerCase().includes("unauthorized")
-  ){
-   setTimeout(()=>location.replace("login.html"),1500);
-  }
+  saveButton.disabled=true;
+  saveButton.textContent="ADMIN ACCESS REQUIRED";
  }
 }
 
+/* =========================================
+   EVENTS
+========================================= */
+
 saveButton.addEventListener("click",saveSettings);
 
-window.addEventListener("focus",()=>{
- if(getToken())loadSettings();
+window.addEventListener("focus",async()=>{
+ if(currentAdmin&&!saving){
+  try{
+   await loadSettings();
+  }catch(error){
+   console.warn(error);
+  }
+ }
+});
+
+window.addEventListener("pageshow",()=>{
+ if(currentAdmin&&!saving){
+  updateDisplay();
+ }
 });
 
 window.addEventListener("beforeunload",()=>{
- if(timerInterval)clearInterval(timerInterval);
+ if(timerInterval){
+  clearInterval(timerInterval);
+ }
 });
 
 initialize();
