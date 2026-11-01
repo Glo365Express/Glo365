@@ -336,18 +336,13 @@ body {
   </div>
 
   <button type="button" class="bet-button" id="placeBetButton">
-    PLACE DEMO BET
+    PLACE BET
   </button>
 
   <a class="back-link" href="index.html">← Back to Home</a>
 
   <div id="message" class="message"></div>
 
-  <div class="demo-notice">
-    <strong>DEMO MODE ONLY</strong>
-    Virtual points are used for testing.
-    No real-money transactions or cash payouts.
-  </div>
 
 </div>
 
@@ -862,7 +857,7 @@ async function placeDemoBet() {
     await loadWallet();
 
     showMessage(
-      completed + " demo bet(s) placed successfully. Total: " +
+      completed + " bet(s) placed successfully. Total: " +
       amount.toFixed(2) + " Points.",
       "success"
     );
@@ -892,7 +887,7 @@ async function placeDemoBet() {
   } finally {
     isSubmitting = false;
     placeBetButton.disabled = false;
-    placeBetButton.textContent = "PLACE DEMO BET";
+    placeBetButton.textContent = "PLACE BET";
   }
 }
 
