@@ -5,655 +5,107 @@
 <meta name="viewport" content="width=device-width,initial-scale=1">
 <meta name="theme-color" content="#2196e8">
 <title>GLO 365 - Login & Create Account</title>
-
 <style>
 *{box-sizing:border-box;margin:0;padding:0}
-
-body{
- font-family:Arial,sans-serif;
- background:#f3f8fc;
- min-height:100vh;
- display:flex;
- justify-content:center;
- align-items:center;
- padding:18px;
- color:#17233d;
-}
-
-.login-box{
- width:100%;
- max-width:420px;
- background:#fff;
- border:1px solid #d9eaf6;
- border-radius:20px;
- padding:28px 22px;
- box-shadow:0 8px 30px rgba(24,100,160,.10);
-}
-
-.logo{
- text-align:center;
- font-size:37px;
- font-weight:900;
- color:#17233d;
- letter-spacing:1px;
- margin-bottom:6px;
-}
-
-.logo span{color:#2196e8}
-
-.subtitle{
- text-align:center;
- color:#71869a;
- font-size:13px;
- margin-bottom:25px;
-}
-
-.tabs{
- display:grid;
- grid-template-columns:1fr 1fr;
- gap:7px;
- padding:5px;
- background:#edf6fc;
- border:1px solid #d9eaf6;
- border-radius:12px;
- margin-bottom:25px;
-}
-
-.tabs button{
- border:0;
- padding:12px 5px;
- border-radius:9px;
- background:transparent;
- color:#668096;
- font-size:13px;
- font-weight:bold;
- cursor:pointer;
-}
-
-.tabs button.active{
- background:#2196e8;
- color:#fff;
- box-shadow:0 3px 9px #2196e833;
-}
-
-h2{
- font-size:21px;
- color:#172f4b;
- margin-bottom:21px;
-}
-
-.form-group{margin-bottom:17px}
-
-label{
- display:block;
- font-size:13px;
- font-weight:bold;
- color:#294762;
- margin-bottom:8px;
-}
-
-input{
- width:100%;
- padding:14px;
- border:1px solid #cbddea;
- border-radius:10px;
- font-size:15px;
- color:#172f4b;
- background:#fbfdff;
- outline:none;
-}
-
-input:focus{
- border-color:#2196e8;
- background:#fff;
- box-shadow:0 0 0 3px #2196e81a;
-}
-
-input::placeholder{color:#9aabba}
-
-.action-btn{
- width:100%;
- border:0;
- padding:15px;
- border-radius:10px;
- background:#2196e8;
- color:white;
- font-size:16px;
- font-weight:900;
- cursor:pointer;
- margin-top:5px;
- box-shadow:0 4px 12px #2196e833;
-}
-
-.action-btn:hover{background:#147fce}
-
-.action-btn:disabled{
- opacity:.65;
- cursor:not-allowed;
-}
-
-.message{
- display:none;
- margin-top:15px;
- padding:12px;
- border-radius:9px;
- font-size:13px;
- text-align:center;
- line-height:1.6;
- overflow-wrap:anywhere;
-}
-
-.message.error{
- background:#fff0f0;
- color:#c62828;
- border:1px solid #ffd1d1;
-}
-
-.message.success{
- background:#eaf8ef;
- color:#247a40;
- border:1px solid #ccebd5;
-}
-
-.demo-info{
- margin-top:22px;
- padding:14px;
- background:#edf7ff;
- border:1px solid #cfe8fa;
- border-radius:11px;
- font-size:12px;
- line-height:1.9;
- color:#315c7b;
-}
-
-.demo-info b{
- color:#147fc9;
- font-size:13px;
-}
-
-.footer{
- text-align:center;
- margin-top:21px;
- font-size:11px;
- color:#91a2b1;
-}
-
-.form-panel{display:none}
-.form-panel.active{display:block}
-
-@media(max-width:360px){
- .login-box{padding:24px 17px}
- .logo{font-size:33px}
- h2{font-size:19px}
- .tabs button{font-size:11px}
-}
+body{font-family:Arial,sans-serif;background:#f3f8fc;min-height:100vh;display:flex;justify-content:center;align-items:center;padding:18px;color:#17233d}
+.login-box{width:100%;max-width:420px;background:#fff;border:1px solid #d9eaf6;border-radius:20px;padding:28px 22px;box-shadow:0 8px 30px rgba(24,100,160,.10)}
+.logo{text-align:center;font-size:37px;font-weight:900;color:#17233d;letter-spacing:1px;margin-bottom:6px}.logo span{color:#2196e8}
+.subtitle{text-align:center;color:#71869a;font-size:13px;margin-bottom:25px}
+.tabs{display:grid;grid-template-columns:1fr 1fr;gap:7px;padding:5px;background:#edf6fc;border:1px solid #d9eaf6;border-radius:12px;margin-bottom:25px}
+.tabs button{border:0;padding:12px 5px;border-radius:9px;background:transparent;color:#668096;font-size:13px;font-weight:bold;cursor:pointer}
+.tabs button.active{background:#2196e8;color:#fff;box-shadow:0 3px 9px #2196e833}
+h2{font-size:21px;color:#172f4b;margin-bottom:21px}.form-group{margin-bottom:17px}
+label{display:block;font-size:13px;font-weight:bold;color:#294762;margin-bottom:8px}
+input{width:100%;padding:14px;border:1px solid #cbddea;border-radius:10px;font-size:15px;color:#172f4b;background:#fbfdff;outline:none}
+input:focus{border-color:#2196e8;background:#fff;box-shadow:0 0 0 3px #2196e81a}
+.action-btn{width:100%;border:0;padding:15px;border-radius:10px;background:#2196e8;color:white;font-size:16px;font-weight:900;cursor:pointer;margin-top:5px;box-shadow:0 4px 12px #2196e833}
+.action-btn:disabled{opacity:.65;cursor:not-allowed}
+.message{display:none;margin-top:15px;padding:12px;border-radius:9px;font-size:13px;text-align:center;line-height:1.6;overflow-wrap:anywhere}
+.message.error{background:#fff0f0;color:#c62828;border:1px solid #ffd1d1}.message.success{background:#eaf8ef;color:#247a40;border:1px solid #ccebd5}
+.demo-info{margin-top:22px;padding:14px;background:#edf7ff;border:1px solid #cfe8fa;border-radius:11px;font-size:12px;line-height:1.9;color:#315c7b}.demo-info b{color:#147fc9;font-size:13px}
+.footer{text-align:center;margin-top:21px;font-size:11px;color:#91a2b1}
+.form-panel{display:none}.form-panel.active{display:block}
+@media(max-width:360px){.login-box{padding:24px 17px}.logo{font-size:33px}h2{font-size:19px}.tabs button{font-size:11px}}
 </style>
 </head>
-
 <body>
-
 <div class="login-box">
-
  <div class="logo">GLO <span>365</span></div>
-
  <div class="subtitle">Welcome to GLO 365</div>
-
  <div class="tabs">
   <button type="button" id="loginTab" class="active">LOGIN</button>
   <button type="button" id="registerTab">CREATE ACCOUNT</button>
  </div>
-
- <!-- LOGIN -->
  <div class="form-panel active" id="loginPanel">
-
   <h2>Login to your account</h2>
-
   <form id="loginForm">
-
-   <div class="form-group">
-    <label>Username or Email</label>
-    <input
-     id="loginUsername"
-     type="text"
-     placeholder="Enter username or email"
-     autocomplete="username"
-     required
-    >
-   </div>
-
-   <div class="form-group">
-    <label>Password</label>
-    <input
-     id="loginPassword"
-     type="password"
-     placeholder="Enter password"
-     autocomplete="current-password"
-     required
-    >
-   </div>
-
-   <button class="action-btn" id="loginButton" type="submit">
-    LOGIN
-   </button>
-
+   <div class="form-group"><label>Username or Email</label><input id="loginUsername" type="text" placeholder="Enter username or email" autocomplete="username" required></div>
+   <div class="form-group"><label>Password</label><input id="loginPassword" type="password" placeholder="Enter password" autocomplete="current-password" required></div>
+   <button class="action-btn" id="loginButton" type="submit">LOGIN</button>
   </form>
  </div>
-
- <!-- REGISTER -->
  <div class="form-panel" id="registerPanel">
-
   <h2>Create New Account</h2>
-
   <form id="registerForm">
-
-   <div class="form-group">
-    <label>Username</label>
-    <input
-     id="registerUsername"
-     type="text"
-     placeholder="Choose username"
-     minlength="3"
-     maxlength="30"
-     autocomplete="username"
-     required
-    >
-   </div>
-
-   <div class="form-group">
-    <label>Email Address</label>
-    <input
-     id="registerEmail"
-     type="email"
-     placeholder="Enter your email address"
-     maxlength="150"
-     autocomplete="email"
-     required
-    >
-   </div>
-
-   <div class="form-group">
-    <label>Password</label>
-    <input
-     id="registerPassword"
-     type="password"
-     placeholder="Create password (minimum 8 characters)"
-     minlength="8"
-     maxlength="128"
-     autocomplete="new-password"
-     required
-    >
-   </div>
-
-   <div class="form-group">
-    <label>Confirm Password</label>
-    <input
-     id="confirmPassword"
-     type="password"
-     placeholder="Enter password again"
-     minlength="8"
-     maxlength="128"
-     autocomplete="new-password"
-     required
-    >
-   </div>
-
-   <button class="action-btn" id="registerButton" type="submit">
-    CREATE ACCOUNT
-   </button>
-
+   <div class="form-group"><label>Username</label><input id="registerUsername" type="text" placeholder="Choose username" minlength="3" maxlength="30" autocomplete="username" required></div>
+   <div class="form-group"><label>Email Address</label><input id="registerEmail" type="email" placeholder="Enter your email address" maxlength="150" autocomplete="email" required></div>
+   <div class="form-group"><label>Password</label><input id="registerPassword" type="password" placeholder="Create password (minimum 8 characters)" minlength="8" maxlength="128" autocomplete="new-password" required></div>
+   <div class="form-group"><label>Confirm Password</label><input id="confirmPassword" type="password" placeholder="Enter password again" minlength="8" maxlength="128" autocomplete="new-password" required></div>
+   <button class="action-btn" id="registerButton" type="submit">CREATE ACCOUNT</button>
   </form>
  </div>
-
  <div class="message" id="message" role="status" aria-live="polite"></div>
-
- <div class="demo-info">
-  <b>Account Information</b><br>
-  নতুন User নিজের Username, Email ও Password দিয়ে অ্যাকাউন্ট তৈরি করতে পারবেন।
-  <br><br>
-  আপনার অ্যাকাউন্ট সার্ভারের ডেটাবেজে সংরক্ষিত হবে।
- </div>
-
+ <div class="demo-info"><b>Account Information</b><br>নতুন User নিজের Username, Email ও Password দিয়ে অ্যাকাউন্ট তৈরি করতে পারবেন।<br><br>আপনার অ্যাকাউন্ট সার্ভারের ডেটাবেজে সংরক্ষিত হবে।</div>
  <div class="footer">GLO 365 © 2026</div>
-
 </div>
-
 <script>
-/* =================================
-   API CONFIGURATION
-================================= */
-
-const API_BASE_URL = "https://glo365.onrender.com/api";
-
-const TOKEN_KEY = "glo365_token";
-const USER_KEY = "glo365_user";
-const SESSION_KEY = "glo365_session";
-
-
-/* =================================
-   MESSAGE
-================================= */
-
-function showMessage(message,type){
-
- const box=document.getElementById("message");
-
- box.textContent=message;
- box.className="message "+type;
- box.style.display="block";
-
-}
-
-function clearMessage(){
-
- const box=document.getElementById("message");
-
- box.textContent="";
- box.style.display="none";
- box.className="message";
-
-}
-
-
-/* =================================
-   API REQUEST
-================================= */
-
+"use strict";
+const API_BASE_URL="https://glo365.onrender.com/api";
+const TOKEN_KEY="glo365_token";
+function showMessage(message,type){const box=document.getElementById("message");box.textContent=message;box.className="message "+type;box.style.display="block"}
+function clearMessage(){const box=document.getElementById("message");box.textContent="";box.style.display="none";box.className="message"}
 async function apiRequest(endpoint,data){
-
- const response=await fetch(API_BASE_URL+endpoint,{
-  method:"POST",
-  headers:{
-   "Content-Type":"application/json",
-   "Accept":"application/json"
-  },
-  body:JSON.stringify(data)
- });
-
- let result;
-
- try{
-  result=await response.json();
- }catch(error){
-  throw new Error("Server returned an invalid response.");
- }
-
- if(!response.ok || result.success===false){
-  throw new Error(
-   result.message || "Request failed. Please try again."
-  );
- }
-
+ const response=await fetch(API_BASE_URL+endpoint,{method:"POST",credentials:"include",headers:{"Content-Type":"application/json","Accept":"application/json"},body:JSON.stringify(data)});
+ let result;try{result=await response.json()}catch(_){throw new Error("Server returned an invalid response.")}
+ if(!response.ok||result.success===false)throw new Error(result.message||result.error||"Request failed. Please try again.");
  return result;
 }
-
-
-/* =================================
-   TAB SWITCH
-================================= */
-
-function showTab(tab){
-
- clearMessage();
-
- document.getElementById("loginTab")
- .classList.toggle("active",tab==="login");
-
- document.getElementById("registerTab")
- .classList.toggle("active",tab==="register");
-
- document.getElementById("loginPanel")
- .classList.toggle("active",tab==="login");
-
- document.getElementById("registerPanel")
- .classList.toggle("active",tab==="register");
-
-}
-
-document.getElementById("loginTab")
-.addEventListener("click",()=>showTab("login"));
-
-document.getElementById("registerTab")
-.addEventListener("click",()=>showTab("register"));
-
-
-/* =================================
-   SAVE SERVER SESSION
-================================= */
-
+function showTab(tab){clearMessage();document.getElementById("loginTab").classList.toggle("active",tab==="login");document.getElementById("registerTab").classList.toggle("active",tab==="register");document.getElementById("loginPanel").classList.toggle("active",tab==="login");document.getElementById("registerPanel").classList.toggle("active",tab==="register")}
+document.getElementById("loginTab").addEventListener("click",()=>showTab("login"));
+document.getElementById("registerTab").addEventListener("click",()=>showTab("register"));
 function saveSession(token,user){
-
- if(!token || !user || !user.id){
-  throw new Error("Server did not return valid account information.");
- }
-
- localStorage.setItem(TOKEN_KEY,token);
- localStorage.setItem(USER_KEY,JSON.stringify(user));
-
- localStorage.setItem(SESSION_KEY,JSON.stringify({
-  id:user.id,
-  username:user.username,
-  email:user.email,
-  role:user.role || "user",
-  token:token,
-  loginTime:new Date().toISOString()
- }));
-
+ if(!token||!user||!user.id)throw new Error("Server did not return valid account information.");
+ try{sessionStorage.setItem(TOKEN_KEY,token);sessionStorage.setItem("glo365_user",JSON.stringify(user));}
+ catch(_){throw new Error("This browser could not save your login session. Please enable site storage and try again.")}
 }
-
-
-/* =================================
-   REDIRECT
-================================= */
-
-function redirectByRole(user){
-
- const role=String(user.role || "user").toLowerCase();
-
- if(role==="admin"){
-  location.replace("admin.html");
-  return;
- }
-
- if(role==="affiliate"){
-  location.replace("affiliate.html");
-  return;
- }
-
- location.replace("home.html");
-
-}
-
-
-/* =================================
-   LOGIN
-================================= */
-
-document.getElementById("loginForm")
-.addEventListener("submit",async function(event){
-
- event.preventDefault();
- clearMessage();
-
- const button=document.getElementById("loginButton");
-
- const loginValue=document
- .getElementById("loginUsername")
- .value.trim().toLowerCase();
-
- const password=document
- .getElementById("loginPassword")
- .value;
-
- if(!loginValue || !password){
-  showMessage("Username/Email ও Password লিখুন।","error");
-  return;
- }
-
- button.disabled=true;
- button.textContent="PLEASE WAIT...";
-
- try{
-
-  const result=await apiRequest("/auth/login",{
-   email:loginValue,
-   password:password
-  });
-
-  saveSession(result.token,result.user);
-
-  showMessage("Login successful. Opening your account...","success");
-
-  setTimeout(()=>{
-   redirectByRole(result.user);
-  },500);
-
- }catch(error){
-
-  showMessage(error.message,"error");
-
- }finally{
-
-  button.disabled=false;
-  button.textContent="LOGIN";
-
- }
-
+function redirectByRole(user){const role=String(user.role||"user").toLowerCase();if(role==="admin"){location.replace("admin.html");return}if(role==="affiliate"){location.replace("affiliate.html");return}location.replace("home.html")}
+document.getElementById("loginForm").addEventListener("submit",async function(event){
+ event.preventDefault();clearMessage();const button=document.getElementById("loginButton");
+ const loginValue=document.getElementById("loginUsername").value.trim().toLowerCase();
+ const password=document.getElementById("loginPassword").value;
+ if(!loginValue||!password){showMessage("Username/Email ও Password লিখুন।","error");return}
+ button.disabled=true;button.textContent="PLEASE WAIT...";
+ try{const result=await apiRequest("/auth/login",{email:loginValue,password});saveSession(result.token,result.user);showMessage("Login successful. Opening your account...","success");setTimeout(()=>redirectByRole(result.user),500)}
+ catch(error){showMessage(error.message,"error")}
+ finally{button.disabled=false;button.textContent="LOGIN"}
 });
-
-
-/* =================================
-   REGISTER
-================================= */
-
-document.getElementById("registerForm")
-.addEventListener("submit",async function(event){
-
- event.preventDefault();
- clearMessage();
-
- const button=document.getElementById("registerButton");
-
- const username=document
- .getElementById("registerUsername")
- .value.trim().toLowerCase();
-
- const email=document
- .getElementById("registerEmail")
- .value.trim().toLowerCase();
-
- const password=document
- .getElementById("registerPassword")
- .value;
-
- const confirm=document
- .getElementById("confirmPassword")
- .value;
-
-
- /* USERNAME VALIDATION */
-
- if(!/^[a-z0-9_]{3,30}$/.test(username)){
-
-  showMessage(
-   "Username 3-30 অক্ষরের হতে হবে। শুধু English letter, number ও underscore ব্যবহার করুন।",
-   "error"
-  );
-
-  return;
- }
-
-
- /* EMAIL VALIDATION */
-
- if(!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)){
-
-  showMessage("সঠিক Email Address লিখুন।","error");
-  return;
-
- }
-
-
- /* PASSWORD VALIDATION */
-
- if(password.length<8 || password.length>128){
-
-  showMessage(
-   "Password কমপক্ষে ৮ এবং সর্বোচ্চ ১২৮ অক্ষরের হতে হবে।",
-   "error"
-  );
-
-  return;
- }
-
-
- if(password!==confirm){
-
-  showMessage("দুটি Password মিলছে না।","error");
-  return;
-
- }
-
-
- button.disabled=true;
- button.textContent="CREATING ACCOUNT...";
-
+document.getElementById("registerForm").addEventListener("submit",async function(event){
+ event.preventDefault();clearMessage();const button=document.getElementById("registerButton");
+ const username=document.getElementById("registerUsername").value.trim().toLowerCase();
+ const email=document.getElementById("registerEmail").value.trim().toLowerCase();
+ const password=document.getElementById("registerPassword").value;const confirm=document.getElementById("confirmPassword").value;
+ if(!/^[a-z0-9_]{3,30}$/.test(username)){showMessage("Username 3-30 অক্ষরের হতে হবে। শুধু English letter, number ও underscore ব্যবহার করুন।","error");return}
+ if(!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)){showMessage("সঠিক Email Address লিখুন।","error");return}
+ if(password.length<8||password.length>128){showMessage("Password কমপক্ষে ৮ এবং সর্বোচ্চ ১২৮ অক্ষরের হতে হবে।","error");return}
+ if(password!==confirm){showMessage("দুটি Password মিলছে না।","error");return}
+ button.disabled=true;button.textContent="CREATING ACCOUNT...";
  try{
-
-  const result=await apiRequest("/auth/register",{
-   username:username,
-   email:email,
-   password:password
-  });
-
-  /*
-    Registration is completed on the server.
-    The returned token is saved for the new account.
-  */
-
-  if(result.token && result.user){
-
-   saveSession(result.token,result.user);
-
-   showMessage(
-    "অ্যাকাউন্ট সফলভাবে তৈরি হয়েছে। আপনার Home Page খুলছে...",
-    "success"
-   );
-
-   document.getElementById("registerForm").reset();
-
-   setTimeout(()=>{
-    redirectByRole(result.user);
-   },700);
-
-  }else{
-
-   document.getElementById("registerForm").reset();
-
-   document.getElementById("loginUsername").value=username;
-
-   showTab("login");
-
-   showMessage(
-    "অ্যাকাউন্ট তৈরি হয়েছে। এখন Login করুন।",
-    "success"
-   );
-
-  }
-
- }catch(error){
-
-  showMessage(error.message,"error");
-
- }finally{
-
-  button.disabled=false;
-  button.textContent="CREATE ACCOUNT";
-
- }
-
+  const result=await apiRequest("/auth/register",{username,email,password});
+  if(result.token&&result.user){saveSession(result.token,result.user);showMessage("অ্যাকাউন্ট সফলভাবে তৈরি হয়েছে। আপনার Home Page খুলছে...","success");document.getElementById("registerForm").reset();setTimeout(()=>redirectByRole(result.user),700)}
+  else{document.getElementById("registerForm").reset();document.getElementById("loginUsername").value=username;showTab("login");showMessage("অ্যাকাউন্ট তৈরি হয়েছে। এখন Login করুন।","success")}
+ }catch(error){showMessage(error.message,"error")}
+ finally{button.disabled=false;button.textContent="CREATE ACCOUNT"}
 });
-
 </script>
-
 </body>
 </html>
