@@ -2378,10 +2378,21 @@
 
     app.get("/api/public/payment-methods", asyncRoute(async (req, res) => {
       const result = await pool.query(
-        `SELECT id,name,label,account,currency,instructions
+        `SELECT id,preset,name,label,account,currency,instructions
          FROM payment_methods WHERE active=TRUE ORDER BY name, id`
       );
       res.json({ success: true, methods: result.rows });
+    }));
+
+    // Authenticated user's own deposit history. Never expose another user's requests.
+    app.get("/api/deposits/me", authenticateToken, asyncRoute(async (req, res) => {
+      const result = await pool.query(
+        `SELECT id,payment_method_id,method,payment_account,currency,amount,
+                sender_account,transaction_id,status,credited_points,rejection_reason,created_at,reviewed_at
+         FROM deposit_requests WHERE user_id=$1 ORDER BY created_at DESC LIMIT 100`,
+        [req.user.id]
+      );
+      res.json({ success:true, requests:result.rows });
     }));
 
     // User-side request endpoint; transaction reference is unique across requests.
