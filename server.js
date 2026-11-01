@@ -322,7 +322,7 @@
           username VARCHAR(30) UNIQUE NOT NULL,
           email VARCHAR(150) UNIQUE NOT NULL,
           password_hash TEXT NOT NULL,
-          balance NUMERIC(12,2) NOT NULL DEFAULT 1000.00,
+          balance NUMERIC(12,2) NOT NULL DEFAULT 100.00,
           created_at TIMESTAMPTZ DEFAULT NOW()
         );
 
