@@ -1,4 +1,3 @@
-
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -49,8 +48,6 @@ header{
  gap:8px;
 }
 
-/* SMALLER POINTS BUTTON */
-
 .balance{
  background:#fff;
  color:#0874c5;
@@ -65,8 +62,6 @@ header{
 }
 
 .balance:active,.profile:active{transform:scale(.96)}
-
-/* HEADER SUPPORT BUTTON */
 
 .profile{
  width:40px;
@@ -364,7 +359,7 @@ header{
 }
 
 .event>div,
-.event>a{
+.event> a{
  min-width:0;
  width:100%;
  text-align:center;
@@ -429,14 +424,8 @@ header{
  overflow-wrap:anywhere;
  line-height:1.3;
  min-width:0;
- text-decoration:none;
- cursor:pointer;
- transition:transform .15s,background .15s;
-}
-
-.event .next-date:active{
- transform:scale(.97);
- background:#dcefff;
+ cursor:default;
+ user-select:none;
 }
 
 .next-date small{
@@ -447,21 +436,16 @@ header{
 }
 
 .next-date .millionaire-time{
- font-size:11px;
+ font-size:12px;
  color:#0874c5;
  font-weight:900;
+ font-variant-numeric:tabular-nums;
 }
 
 .next-date .millionaire-result{
  font-size:10px;
  color:#123c63;
  font-weight:800;
-}
-
-.next-date .millionaire-open{
- font-size:9px;
- color:#1688df;
- font-weight:900;
 }
 
 /* GAME CARDS */
@@ -1038,9 +1022,8 @@ nav button.active{color:#087acb}
 
  .event .next-date{gap:4px}
  .next-date small{font-size:9px}
- .next-date .millionaire-time{font-size:10px}
+ .next-date .millionaire-time{font-size:11px}
  .next-date .millionaire-result{font-size:9px}
- .next-date .millionaire-open{font-size:8px}
 
  .live-event{gap:3px}
 
@@ -1061,9 +1044,8 @@ nav button.active{color:#087acb}
  .official-label{font-size:14px}
  .result-number{font-size:12px}
  .next-date small{font-size:8px}
- .next-date .millionaire-time{font-size:9px}
+ .next-date .millionaire-time{font-size:10px}
  .next-date .millionaire-result{font-size:8px}
- .next-date .millionaire-open{font-size:7px}
  .live-event{font-size:10px}
 
 }
@@ -1082,7 +1064,6 @@ nav button.active{color:#087acb}
   <button class="balance" id="balance" type="button"
    onclick="openPoints()" title="Show or hide points">Loading...</button>
 
-  <!-- HEADER SUPPORT BUTTON -->
   <button class="profile" id="homeSupportButton"
    onclick="location.href='support.html'"
    title="Live Support"
@@ -1264,24 +1245,23 @@ nav button.active{color:#087acb}
   </span>
  </div>
 
- <!-- DAILY MILLIONAIRE INFORMATION CARD -->
+ <!-- DAILY MILLIONAIRE INFORMATION CARD: DISPLAY ONLY -->
 
- <a class="next-date" id="dailyMillionaireInfo" href="millionaire.html"
-    aria-label="Open Daily Millionaire information">
+ <div class="next-date" id="dailyMillionaireInfo"
+      role="status" aria-live="polite"
+      aria-label="Daily Millionaire countdown and latest result">
 
   <small>💎 DAILY MILLIONAIRE</small>
 
   <strong class="millionaire-time" id="millionaireNextDraw">
-   Next Draw: Not announced
+   Next Draw In: Loading...
   </strong>
 
   <strong class="millionaire-result" id="millionaireLatestResult">
    Latest Result: Not announced
   </strong>
 
-  <span class="millionaire-open">TAP TO VIEW DETAILS ➜</span>
-
- </a>
+ </div>
 
 </div>
 
@@ -1599,6 +1579,7 @@ let homeLoaded=false;
 let refreshRunning=false;
 let countdownTimer=null;
 let publicRefreshTimer=null;
+let millionaireCountdownTimer=null;
 
 /* API */
 
@@ -1607,7 +1588,8 @@ function getToken(){
   return sessionStorage.getItem(TOKEN_KEY)||"";
  }catch(error){
   return "";
- }
+}
+
 }
 
 async function apiRequest(path,options={}){
@@ -2129,7 +2111,91 @@ function updateResults(){
  });
 }
 
-/* DAILY MILLIONAIRE INFORMATION */
+/* DAILY MILLIONAIRE COUNTDOWN AND RESULT */
+
+/*
+ Daily draw time:
+ Every day at 12:15 AM Bangladesh time (Asia/Dhaka).
+ This time is fixed in this page and is not loaded from Admin settings.
+ Admin only controls the published latest result.
+*/
+
+const MILLIONAIRE_TIME_ZONE="Asia/Dhaka";
+const MILLIONAIRE_DRAW_HOUR=0;
+const MILLIONAIRE_DRAW_MINUTE=15;
+const BANGLADESH_UTC_OFFSET_MINUTES=360;
+
+function getBangladeshDateParts(date=new Date()){
+
+ const parts=new Intl.DateTimeFormat("en-GB",{
+  timeZone:MILLIONAIRE_TIME_ZONE,
+  year:"numeric",
+  month:"2-digit",
+  day:"2-digit"
+ }).formatToParts(date);
+
+ const values={};
+
+ parts.forEach(part=>{
+  values[part.type]=part.value;
+ });
+
+ return {
+  year:Number(values.year),
+  month:Number(values.month),
+  day:Number(values.day)
+ };
+}
+
+function getNextMillionaireDraw(){
+
+ const now=new Date();
+
+ const bd=getBangladeshDateParts(now);
+
+ /*
+  Bangladesh time is UTC+6.
+  00:15 Bangladesh time = 18:15 UTC on the previous UTC date.
+  Date.UTC is used so the countdown does not depend on the visitor's
+  device timezone.
+ */
+
+ let targetUtc=Date.UTC(
+  bd.year,
+  bd.month-1,
+  bd.day,
+  MILLIONAIRE_DRAW_HOUR,
+  MILLIONAIRE_DRAW_MINUTE
+ )-(BANGLADESH_UTC_OFFSET_MINUTES*60*1000);
+
+ if(targetUtc<=now.getTime()){
+  targetUtc+=24*60*60*1000;
+ }
+
+ return targetUtc;
+}
+
+function updateMillionaireCountdown(){
+
+ const target=getNextMillionaireDraw();
+
+ const remaining=Math.max(0,target-Date.now());
+
+ const totalSeconds=Math.floor(remaining/1000);
+
+ const hours=Math.floor(totalSeconds/3600);
+ const minutes=Math.floor((totalSeconds%3600)/60);
+ const seconds=totalSeconds%60;
+
+ const formattedHours=String(hours).padStart(2,"0");
+ const formattedMinutes=String(minutes).padStart(2,"0");
+ const formattedSeconds=String(seconds).padStart(2,"0");
+
+ setText(
+  "millionaireNextDraw",
+  "Next Draw In: "+formattedHours+":"+formattedMinutes+":"+formattedSeconds
+ );
+}
 
 function getFirstAvailableValue(object,keys){
 
@@ -2145,24 +2211,6 @@ function getFirstAvailableValue(object,keys){
  }
 
  return null;
-}
-
-function formatMillionaireDate(value){
-
- if(!value)return "Not announced";
-
- const date=parseDrawDate(value);
-
- if(!date)return String(value);
-
- return date.toLocaleString("en-GB",{
-  day:"2-digit",
-  month:"short",
-  year:"numeric",
-  hour:"2-digit",
-  minute:"2-digit",
-  hour12:true
- });
 }
 
 function getMillionaireResult(data){
@@ -2213,24 +2261,9 @@ function renderDailyMillionaire(){
 
  const data=currentDailyMillionaire||{};
 
- const drawValue=getFirstAvailableValue(data,[
-  "next_draw_at",
-  "nextDrawAt",
-  "draw_at",
-  "drawAt",
-  "next_draw",
-  "nextDraw",
-  "draw_time",
-  "drawTime"
- ]);
-
- const nextDrawText=drawValue
-  ?"Next Draw: "+formatMillionaireDate(drawValue)
-  :"Next Draw: Not announced";
-
  const latestResult=getMillionaireResult(data);
 
- setText("millionaireNextDraw",nextDrawText);
+ updateMillionaireCountdown();
 
  setText(
   "millionaireLatestResult",
@@ -2245,7 +2278,7 @@ async function loadDailyMillionaire(){
   const data=await apiRequest("/public/daily-millionaire");
 
   if(!data||data.success===false){
-   throw new Error("Daily Millionaire data is unavailable.");
+   throw new Error("Daily Millionaire result is unavailable.");
   }
 
   currentDailyMillionaire=
@@ -2258,7 +2291,13 @@ async function loadDailyMillionaire(){
 
  }catch(error){
 
-  console.warn("Daily Millionaire information unavailable:",error);
+  console.warn("Daily Millionaire result unavailable:",error);
+
+  /*
+   If the endpoint is not available yet, keep the countdown working.
+   The result will show Not announced until Admin publishes a result
+   through the connected backend endpoint.
+  */
 
   if(!currentDailyMillionaire){
    currentDailyMillionaire={};
@@ -2608,6 +2647,7 @@ document.addEventListener("visibilitychange",()=>{
 
  if(!document.hidden&&homeLoaded){
   refreshPublicData();
+  updateMillionaireCountdown();
  }
 
 });
@@ -2615,6 +2655,8 @@ document.addEventListener("visibilitychange",()=>{
 window.addEventListener("focus",()=>{
 
  if(homeLoaded)refreshPublicData();
+
+ updateMillionaireCountdown();
 
 });
 
@@ -2637,6 +2679,15 @@ pointsVisible=true;
 loadHome();
 
 countdownTimer=setInterval(updateCountdown,1000);
+
+/* Daily Millionaire countdown refreshes every second independently. */
+
+updateMillionaireCountdown();
+
+millionaireCountdownTimer=setInterval(
+ updateMillionaireCountdown,
+ 1000
+);
 
 publicRefreshTimer=setInterval(()=>{
 
