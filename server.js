@@ -471,8 +471,11 @@
           reviewed_by BIGINT REFERENCES users(id) ON DELETE SET NULL,
           reviewed_at TIMESTAMPTZ,
           rejection_reason VARCHAR(200) NOT NULL DEFAULT '',
+          points_deducted BOOLEAN NOT NULL DEFAULT FALSE,
           created_at TIMESTAMPTZ NOT NULL DEFAULT NOW()
         );
+        ALTER TABLE withdrawal_requests
+          ADD COLUMN IF NOT EXISTS points_deducted BOOLEAN NOT NULL DEFAULT FALSE;
         CREATE INDEX IF NOT EXISTS idx_withdrawal_requests_status_date
           ON withdrawal_requests(status, created_at DESC);
         CREATE INDEX IF NOT EXISTS idx_withdrawal_requests_user_date
@@ -2560,8 +2563,8 @@
         return sendError(res, 400, "Enter a valid withdrawal amount, method and account.");
       }
 
-      // Lock the user's wallet row and validate pending reservations server-side.
-      // This prevents concurrent requests from exceeding the available DEMO balance.
+      // Deduct DEMO points immediately when the request is created.
+      // The wallet row lock prevents concurrent withdrawals from overspending.
       const client = await pool.connect();
       try {
         await client.query("BEGIN");
@@ -2577,25 +2580,55 @@
           await client.query("ROLLBACK");
           return sendError(res, 403, "Your account is not active.");
         }
-        const pendingResult = await client.query(
-          "SELECT COALESCE(SUM(amount),0) AS reserved FROM withdrawal_requests WHERE user_id=$1 AND status='pending'",
+
+        // Only legacy pending requests (created before immediate deduction was enabled)
+        // are reserved here. New requests have already been deducted from users.balance.
+        const legacyPendingResult = await client.query(
+          `SELECT COALESCE(SUM(amount),0) AS reserved
+           FROM withdrawal_requests
+           WHERE user_id=$1 AND status='pending' AND points_deducted=FALSE`,
           [req.user.id]
         );
         const balance = Number(walletResult.rows[0].balance || 0);
-        const reserved = Number(pendingResult.rows[0].reserved || 0);
-        const available = Math.max(0, balance - reserved);
-        if (amount > available) {
+        const legacyReserved = Number(legacyPendingResult.rows[0].reserved || 0);
+        const available = Math.max(0, balance - legacyReserved);
+        if (!Number.isFinite(balance) || amount > available) {
           await client.query("ROLLBACK");
           return sendError(res, 400, "Insufficient available DEMO points.");
         }
+
+        const newBalance = Number((balance - amount).toFixed(2));
         const result = await client.query(
-          `INSERT INTO withdrawal_requests (user_id,amount,method,account)
-           VALUES ($1,$2,$3,$4)
-           RETURNING id,amount,method,account,status,created_at`,
+          `INSERT INTO withdrawal_requests (user_id,amount,method,account,points_deducted)
+           VALUES ($1,$2,$3,$4,TRUE)
+           RETURNING id,amount,method,account,status,points_deducted,created_at`,
           [req.user.id, amount.toFixed(2), method, account]
         );
+        const withdrawalId = result.rows[0].id;
+
+        await client.query(
+          `UPDATE users SET balance=$1,updated_at=NOW() WHERE id=$2`,
+          [newBalance.toFixed(2), req.user.id]
+        );
+        await client.query(
+          `INSERT INTO wallet_transactions (user_id,type,amount,currency,description,reference)
+           VALUES ($1,'withdrawal_debit',$2,'DEMO',$3,$4)`,
+          [req.user.id, (-amount).toFixed(2), "Withdrawal points deducted at request submission", "WD-" + withdrawalId]
+        );
+
         await client.query("COMMIT");
-        res.status(201).json({ success:true, request:result.rows[0], available_balance:Number((available-amount).toFixed(2)) });
+        await audit(req.user.id, "withdrawal_requested", req.user.id, {
+          withdrawal_id: withdrawalId,
+          amount,
+          new_balance: newBalance
+        });
+        res.status(201).json({
+          success: true,
+          request: result.rows[0],
+          balance: newBalance,
+          available_balance: Number((newBalance - legacyReserved).toFixed(2)),
+          message: "Withdrawal request submitted. DEMO points were deducted from your wallet."
+        });
       } catch (error) {
         await client.query("ROLLBACK");
         throw error;
@@ -2686,62 +2719,49 @@
           return sendError(res, 400, "The withdrawal amount is invalid.");
         }
 
-        // Lock the wallet row and ensure the reserved points still exist.
-        const walletResult = await client.query(
-          `SELECT balance, status
-           FROM users
-           WHERE id = $1
-           FOR UPDATE`,
-          [request.user_id]
-        );
-
-        if (!walletResult.rows.length) {
-          await client.query("ROLLBACK");
-          return sendError(res, 404, "Withdrawal user's account was not found.");
-        }
-
-        if (String(walletResult.rows[0].status || "active").toLowerCase() !== "active") {
-          await client.query("ROLLBACK");
-          return sendError(res, 403, "The user's account is not active.");
-        }
-
-        const currentBalance = Number(walletResult.rows[0].balance || 0);
-
-        if (!Number.isFinite(currentBalance) || currentBalance < amount) {
-          await client.query("ROLLBACK");
-          return sendError(
-            res,
-            409,
-            "Insufficient DEMO points in the wallet. The pending withdrawal remains unchanged."
+        // New requests have already deducted their points at submission.
+        // Legacy pending requests are deducted here once, for backward compatibility.
+        let newBalance = Number.NaN;
+        if (request.points_deducted !== true) {
+          const walletResult = await client.query(
+            `SELECT balance, status FROM users WHERE id = $1 FOR UPDATE`,
+            [request.user_id]
           );
+          if (!walletResult.rows.length) {
+            await client.query("ROLLBACK");
+            return sendError(res, 404, "Withdrawal user's account was not found.");
+          }
+          if (String(walletResult.rows[0].status || "active").toLowerCase() !== "active") {
+            await client.query("ROLLBACK");
+            return sendError(res, 403, "The user's account is not active.");
+          }
+          const currentBalance = Number(walletResult.rows[0].balance || 0);
+          if (!Number.isFinite(currentBalance) || currentBalance < amount) {
+            await client.query("ROLLBACK");
+            return sendError(res, 409, "Insufficient DEMO points for this legacy pending withdrawal.");
+          }
+          newBalance = Number((currentBalance - amount).toFixed(2));
+          await client.query(
+            `UPDATE users SET balance=$1,updated_at=NOW() WHERE id=$2`,
+            [newBalance.toFixed(2), request.user_id]
+          );
+          await client.query(
+            `INSERT INTO wallet_transactions (user_id,type,amount,currency,description,reference)
+             VALUES ($1,'withdrawal_debit',$2,'DEMO',$3,$4)`,
+            [request.user_id,(-amount).toFixed(2),"Legacy withdrawal points deducted on approval","WD-"+id]
+          );
+        } else {
+          const walletResult = await client.query(
+            "SELECT balance FROM users WHERE id=$1",
+            [request.user_id]
+          );
+          newBalance = walletResult.rows.length ? Number(walletResult.rows[0].balance) : Number.NaN;
         }
-
-        const newBalance = Number((currentBalance - amount).toFixed(2));
-
-        // Deduct points and write the wallet ledger entry in this same transaction.
-        await client.query(
-          `UPDATE users
-           SET balance = $1,
-               updated_at = NOW()
-           WHERE id = $2`,
-          [newBalance.toFixed(2), request.user_id]
-        );
-
-        await client.query(
-          `INSERT INTO wallet_transactions
-           (user_id, type, amount, currency, description, reference)
-           VALUES ($1, 'withdrawal_debit', $2, 'DEMO', $3, $4)`,
-          [
-            request.user_id,
-            (-amount).toFixed(2),
-            "Admin-approved demo withdrawal",
-            "WD-" + id
-          ]
-        );
 
         const updated = await client.query(
           `UPDATE withdrawal_requests
            SET status = 'approved',
+               points_deducted = TRUE,
                reviewed_by = $1,
                reviewed_at = NOW()
            WHERE id = $2
@@ -2771,7 +2791,7 @@
           success: true,
           request: updated.rows[0],
           new_balance: newBalance,
-          message: "Approved successfully. DEMO points were deducted from the wallet. No real payment was sent."
+          message: "Approved successfully. The withdrawal points were already deducted from the wallet. No real payment was sent."
         });
 
       } catch (error) {
@@ -2786,13 +2806,84 @@
       const id = Number(req.params.id);
       const reason = cleanText(req.body.reason || "Rejected by admin",200);
       if (!Number.isSafeInteger(id) || id < 1) return sendError(res,400,"Invalid withdrawal request ID.");
-      const result = await pool.query(
-        `UPDATE withdrawal_requests SET status='rejected',rejection_reason=$1,reviewed_by=$2,reviewed_at=NOW()
-         WHERE id=$3 AND status='pending' RETURNING *`,[reason,req.user.id,id]
-      );
-      if (!result.rows.length) return sendError(res,409,"Request not found or already reviewed.");
-      await audit(req.user.id,"withdrawal_rejected",result.rows[0].user_id,{withdrawal_id:id,reason});
-      res.json({success:true,request:result.rows[0]});
+
+      const client = await pool.connect();
+      try {
+        await client.query("BEGIN");
+        const found = await client.query(
+          "SELECT * FROM withdrawal_requests WHERE id=$1 FOR UPDATE",
+          [id]
+        );
+        if (!found.rows.length) {
+          await client.query("ROLLBACK");
+          return sendError(res,404,"Withdrawal request not found.");
+        }
+        const request = found.rows[0];
+        if (request.status !== "pending") {
+          await client.query("ROLLBACK");
+          return sendError(res,409,"Request not found or already reviewed.");
+        }
+
+        let refundedBalance = null;
+        if (request.points_deducted === true) {
+          const amount = Number(request.amount);
+          if (!Number.isFinite(amount) || amount <= 0) {
+            await client.query("ROLLBACK");
+            return sendError(res,400,"The withdrawal amount is invalid.");
+          }
+          const walletResult = await client.query(
+            "SELECT balance FROM users WHERE id=$1 FOR UPDATE",
+            [request.user_id]
+          );
+          if (!walletResult.rows.length) {
+            await client.query("ROLLBACK");
+            return sendError(res,404,"Withdrawal user's account was not found.");
+          }
+          const currentBalance = Number(walletResult.rows[0].balance || 0);
+          refundedBalance = Number((currentBalance + amount).toFixed(2));
+          if (!Number.isFinite(refundedBalance) || refundedBalance > 9999999999.99) {
+            await client.query("ROLLBACK");
+            return sendError(res,409,"Refund would exceed the wallet balance limit.");
+          }
+          await client.query(
+            "UPDATE users SET balance=$1,updated_at=NOW() WHERE id=$2",
+            [refundedBalance.toFixed(2),request.user_id]
+          );
+          await client.query(
+            `INSERT INTO wallet_transactions (user_id,type,amount,currency,description,reference)
+             VALUES ($1,'withdrawal_refund',$2,'DEMO',$3,$4)`,
+            [request.user_id,amount.toFixed(2),"Refund for rejected withdrawal request","WDR-"+id]
+          );
+        }
+
+        const updated = await client.query(
+          `UPDATE withdrawal_requests
+           SET status='rejected',rejection_reason=$1,reviewed_by=$2,reviewed_at=NOW()
+           WHERE id=$3 AND status='pending' RETURNING *`,
+          [reason,req.user.id,id]
+        );
+        if (!updated.rows.length) throw new Error("Withdrawal rejection state changed unexpectedly.");
+        await client.query("COMMIT");
+        await audit(req.user.id,"withdrawal_rejected",request.user_id,{
+          withdrawal_id:id,
+          reason,
+          refunded:request.points_deducted === true,
+          refunded_balance:refundedBalance
+        });
+        res.json({
+          success:true,
+          request:updated.rows[0],
+          ...(refundedBalance !== null ? {new_balance:refundedBalance} : {}),
+          message:request.points_deducted === true
+            ? "Withdrawal rejected. DEMO points have been refunded to the wallet."
+            : "Withdrawal rejected. No points were deducted for this legacy request."
+        });
+      } catch(error) {
+        await client.query("ROLLBACK");
+        throw error;
+      } finally {
+        client.release();
+      }
     }));
 
     // ==========================================
@@ -3791,113 +3882,4 @@
     // ==========================================
 
     // ==========================================
-    // LIVE SUPPORT
-    // Users can open a conversation by sending the first message.
-    // Only the primary admin can reply, and only after a user message exists.
-    // ==========================================
-
-    function normalizeSupportMessage(row) {
-      return {
-        id: row.id,
-        conversation_id: row.conversation_id,
-        sender_id: row.sender_id,
-        sender_role: row.sender_role,
-        message: row.message,
-        created_at: row.created_at
-      };
-    }
-
-    app.get("/api/support/messages", authenticateToken, asyncRoute(async (req, res) => {
-      let userId;
-      if (isPrimaryAdmin(req.user)) {
-        userId = req.query.user_id;
-        if (!userId) return sendError(res, 400, "user_id is required for Admin.");
-      } else {
-        userId = req.user.id;
-      }
-
-      const conversation = await pool.query(
-        `SELECT id, user_id, created_at, updated_at
-         FROM support_conversations WHERE user_id = $1`, [userId]
-      );
-      if (!conversation.rows.length) {
-        return res.json({ success: true, conversation: null, messages: [] });
-      }
-      const conv = conversation.rows[0];
-      const result = await pool.query(
-        `SELECT id, conversation_id, sender_id, sender_role, message, created_at
-         FROM support_messages WHERE conversation_id = $1
-         ORDER BY created_at ASC, id ASC`, [conv.id]
-      );
-      return res.json({ success: true, conversation: conv, messages: result.rows.map(normalizeSupportMessage) });
-    }));
-
-    app.post("/api/support/messages", authenticateToken, asyncRoute(async (req, res) => {
-      const message = typeof req.body.message === "string" ? req.body.message.trim() : "";
-      if (!message || message.length > 5000) {
-        return sendError(res, 400, "Message must contain 1 to 5000 characters.");
-      }
-
-      const adminSending = isPrimaryAdmin(req.user);
-      const targetUserId = adminSending ? req.body.user_id : req.user.id;
-      if (adminSending && !targetUserId) {
-        return sendError(res, 400, "user_id is required when Admin replies.");
-      }
-
-      const client = await pool.connect();
-      try {
-        await client.query("BEGIN");
-        let conversation;
-        if (adminSending) {
-          const found = await client.query(
-            `SELECT id, user_id FROM support_conversations
-             WHERE user_id = $1 FOR UPDATE`, [targetUserId]
-          );
-          if (!found.rows.length) {
-            await client.query("ROLLBACK");
-            return sendError(res, 404, "The user has not started a support conversation.");
-          }
-          conversation = found.rows[0];
-          const firstUserMessage = await client.query(
-            `SELECT id FROM support_messages
-             WHERE conversation_id = $1 AND sender_role = 'user' LIMIT 1`, [conversation.id]
-          );
-          if (!firstUserMessage.rows.length) {
-            await client.query("ROLLBACK");
-            return sendError(res, 403, "Admin can reply only after the user sends a message.");
-          }
-        } else {
-          const created = await client.query(
-            `INSERT INTO support_conversations (user_id) VALUES ($1)
-             ON CONFLICT (user_id) DO UPDATE SET updated_at = NOW()
-             RETURNING id, user_id`, [req.user.id]
-          );
-          conversation = created.rows[0];
-          await client.query(
-            `SELECT id FROM support_conversations WHERE id = $1 FOR UPDATE`, [conversation.id]
-          );
-        }
-
-        const inserted = await client.query(
-          `INSERT INTO support_messages
-             (conversation_id, sender_id, sender_role, message)
-           VALUES ($1, $2, $3, $4)
-           RETURNING id, conversation_id, sender_id, sender_role, message, created_at`,
-          [conversation.id, req.user.id, adminSending ? "admin" : "user", message]
-        );
-        await client.query(
-          `UPDATE support_conversations SET updated_at = NOW() WHERE id = $1`, [conversation.id]
-        );
-        await client.query("COMMIT");
-        return res.status(201).json({ success: true, message: normalizeSupportMessage(inserted.rows[0]) });
-      } catch (error) {
-        await client.query("ROLLBACK").catch(() => {});
-        throw error;
-      } finally {
-        client.release();
-      }
-    }));
-
-    app.get("/api/admin/support/conversations", authenticateToken, requireAdmin, asyncRoute(async (req, res) => {
-      const result = await pool.query(
-        
+    // LIVE SUP
