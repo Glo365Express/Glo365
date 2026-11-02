@@ -1603,18 +1603,9 @@ let publicRefreshTimer=null;
 let millionaireTimer=null;
 
 let liveEventIdentity="";
-let liveDismissedIdentity="";
 let liveFullscreenFallback=false;
 
 /* DAILY MILLIONAIRE DRAW CONFIGURATION */
-
-/*
- Starting draw number:
- 3679 on Bangladesh date 2026-11-03.
-
- The number increments by one for each Bangladesh calendar day.
- The displayed date is MM:DD.
-*/
 
 const MILLIONAIRE_BASE_NUMBER=3679;
 const MILLIONAIRE_BASE_DATE="2026-11-03";
@@ -2000,12 +1991,6 @@ function getMillionaireDrawNumber(dateParts){
  return String(drawNumber)+":"+month+":"+day;
 }
 
-/*
- Convert Bangladesh local date/time to a UTC timestamp.
- Bangladesh is UTC+6. The date parts are already obtained
- using Asia/Dhaka, so this conversion is deterministic.
-*/
-
 function getBangladeshTimestamp(dateParts,hour,minute,second=0){
 
  return Date.UTC(
@@ -2055,8 +2040,6 @@ function updateMillionaireCountdown(){
 
  const now=new Date();
  const dateParts=getBangladeshDateParts(now);
-
- /* Daily draw number: 3679:11:03, then increments daily. */
 
  setText(
   "millionaireDrawNumber",
@@ -2377,6 +2360,105 @@ function getVideoEmbed(url){
  }
 }
 
+/*
+ LIVE EVENT RESPONSE NORMALIZER
+
+ Supports common API response structures, for example:
+ { event: {...} }
+ { liveEvent: {...} }
+ { live_event: {...} }
+ { data: { event: {...} } }
+ { success: true, active: true, url: "..." }
+
+ The server remains the source of truth for Live status.
+*/
+
+function normalizeLiveEvent(response){
+
+ if(!response||typeof response!=="object")return null;
+
+ let event=null;
+
+ const candidates=[
+  response.event,
+  response.liveEvent,
+  response.live_event,
+  response.data&&response.data.event,
+  response.data&&response.data.liveEvent,
+  response.data&&response.data.live_event,
+  response.data,
+  response
+ ];
+
+ for(const candidate of candidates){
+
+  if(
+   candidate&&
+   typeof candidate==="object"&&
+   !Array.isArray(candidate)
+  ){
+
+   const hasLiveFields=
+    candidate.url!==undefined||
+    candidate.video_url!==undefined||
+    candidate.live_url!==undefined||
+    candidate.youtube_url!==undefined||
+    candidate.facebook_url!==undefined||
+    candidate.active!==undefined||
+    candidate.is_active!==undefined||
+    candidate.status!==undefined;
+
+   if(hasLiveFields){
+    event=candidate;
+    break;
+   }
+  }
+ }
+
+ if(!event)return null;
+
+ const rawActive=
+  event.active!==undefined?event.active:
+  event.is_active!==undefined?event.is_active:
+  event.enabled!==undefined?event.enabled:
+  event.status;
+
+ const status=String(rawActive??"").trim().toLowerCase();
+
+ const active=
+  rawActive===true||
+  rawActive===1||
+  status==="true"||
+  status==="1"||
+  status==="active"||
+  status==="live"||
+  status==="enabled"||
+  status==="on";
+
+ const url=String(
+  event.url||
+  event.video_url||
+  event.live_url||
+  event.youtube_url||
+  event.facebook_url||
+  ""
+ ).trim();
+
+ const title=String(
+  event.title||
+  event.name||
+  event.event_title||
+  "GLO 365 Live Event"
+ ).trim();
+
+ return {
+  ...event,
+  active,
+  url,
+  title
+ };
+}
+
 function getLiveIdentity(event){
 
  if(!event)return "";
@@ -2420,15 +2502,20 @@ function hideLiveUI(){
  clearLivePlayer();
 }
 
+/*
+ Only show the bubble when the admin has an active valid Live event.
+ Never automatically open the video popup.
+*/
+
 function syncLiveUI(){
 
  const event=currentLiveEvent;
  const bubble=document.getElementById("liveBubble");
+ const popup=document.getElementById("livePopup");
 
  if(!event||event.active!==true||!event.url){
 
   liveEventIdentity="";
-  liveDismissedIdentity="";
   hideLiveUI();
   return;
  }
@@ -2436,34 +2523,61 @@ function syncLiveUI(){
  const video=getVideoEmbed(event.url);
 
  if(!video){
+  liveEventIdentity="";
   hideLiveUI();
   return;
  }
 
  const identity=getLiveIdentity(event);
 
- if(identity!==liveEventIdentity){
-  liveEventIdentity=identity;
-  liveDismissedIdentity="";
-  hideLiveUI();
- }
+ /*
+ If Admin changes the Live event, close the old popup/player
+ and show the bubble for the new event.
+*/
 
- if(liveDismissedIdentity===identity){
-  bubble.classList.remove("show");
+ if(identity!==liveEventIdentity){
+
+  liveEventIdentity=identity;
+
+  if(popup.classList.contains("show")){
+   exitLiveFullscreen();
+   popup.classList.remove("show");
+   clearLivePlayer();
+  }
+
+  bubble.classList.add("show");
   return;
  }
 
- if(!document.getElementById("livePopup").classList.contains("show")){
+ /*
+ If the popup is already open, keep it open.
+ Otherwise keep the floating bubble visible.
+*/
+
+ if(!popup.classList.contains("show")){
   bubble.classList.add("show");
  }
 }
 
 async function loadLiveEvent(){
 
- const data=await apiRequest("/public/live-event");
+ try{
 
- currentLiveEvent=data.event||null;
- syncLiveUI();
+  const data=await apiRequest("/public/live-event");
+
+  currentLiveEvent=normalizeLiveEvent(data);
+
+  syncLiveUI();
+
+ }catch(error){
+
+  /*
+  If the API cannot be reached during refresh, do not assume
+  that Admin has disabled Live. Keep the last known state.
+  */
+
+  console.warn("Live event refresh failed:",error);
+ }
 }
 
 function openLiveEvent(){
@@ -2471,22 +2585,26 @@ function openLiveEvent(){
  const event=currentLiveEvent;
 
  if(!event||event.active!==true||!event.url){
+
   showLiveMessage(
    "Live Event is currently closed",
    "You can watch the next live event here.",
    "🔴"
   );
+
   return;
  }
 
  const video=getVideoEmbed(event.url);
 
  if(!video){
+
   showLiveMessage(
    "Invalid video link",
    "Admin has not configured a valid YouTube or Facebook video link.",
    "⚠️"
   );
+
   return;
  }
 
@@ -2502,6 +2620,7 @@ function openLiveEvent(){
  player.replaceChildren();
 
  const iframe=document.createElement("iframe");
+
  iframe.src=video.embed;
  iframe.title="GLO 365 Live Event";
  iframe.allow="autoplay; encrypted-media; picture-in-picture; fullscreen";
@@ -2516,6 +2635,13 @@ function openLiveEvent(){
  positionPopup();
 }
 
+/*
+ Minimize and Close now have the same visibility result:
+ close the video popup and restore the GLO LIVE bubble.
+
+ Neither action dismisses the Live event.
+*/
+
 function minimizeLivePopup(){
 
  exitLiveFullscreen();
@@ -2524,26 +2650,27 @@ function minimizeLivePopup(){
 
  clearLivePlayer();
 
- const event=currentLiveEvent;
-
  if(
-  event&&event.active===true&&
-  getLiveIdentity(event)!==liveDismissedIdentity
+  currentLiveEvent&&
+  currentLiveEvent.active===true&&
+  currentLiveEvent.url&&
+  getVideoEmbed(currentLiveEvent.url)
  ){
   document.getElementById("liveBubble").classList.add("show");
+ }else{
+  document.getElementById("liveBubble").classList.remove("show");
  }
 }
 
 function closeLivePopup(){
 
- const event=currentLiveEvent;
+ /*
+ Do not mark the event as dismissed.
+ Do not hide the bubble.
+ The user can reopen the same Live event whenever they want.
+ */
 
- if(event){
-  liveDismissedIdentity=getLiveIdentity(event);
- }
-
- exitLiveFullscreen();
- hideLiveUI();
+ minimizeLivePopup();
 }
 
 function positionPopup(){
@@ -2924,6 +3051,8 @@ document.addEventListener("keydown",event=>{
    popup.classList.remove("fullscreen-fallback");
    liveFullscreenFallback=false;
    positionPopup();
+  }else if(popup.classList.contains("show")){
+   closeLivePopup();
   }
  }
 });
