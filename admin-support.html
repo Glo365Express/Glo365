@@ -1,0 +1,246 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="theme-color" content="#087acb">
+<title>GLO 365 - Admin Live Support</title>
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:Arial,sans-serif;background:#f1f7fc;color:#172b45}
+.app{max-width:760px;margin:auto;min-height:100vh;padding-bottom:30px}
+header{background:linear-gradient(120deg,#066bb5,#087acb,#29b7f5);padding:18px 16px;display:flex;justify-content:space-between;align-items:center;gap:12px;box-shadow:0 5px 18px #087acb20}
+.logo{font-size:24px;font-weight:900;color:white}.logo span{color:#d9f5ff}
+.admin-label{font-size:11px;background:#fff;color:#087acb;padding:7px 10px;border-radius:20px;font-weight:900}
+.top{padding:18px 14px 8px}.top h2{font-size:22px;color:#17466d}.top p{font-size:12px;color:#778da0;margin-top:6px;line-height:1.6}
+.notice{display:none;margin:12px;padding:12px;border-radius:9px;font-size:13px;line-height:1.6;overflow-wrap:anywhere}
+.notice.show{display:block}.notice.error{background:#fff0f0;color:#a22}.notice.success{background:#e8f8ed;color:#147a36}
+.layout{display:grid;grid-template-columns:minmax(0, .9fr) minmax(0,1.4fr);gap:12px;padding:10px 12px}
+.panel{background:white;border:1px solid #dceaf4;border-radius:14px;box-shadow:0 3px 10px #087acb08;overflow:hidden;min-width:0}
+.panel-head{padding:14px;border-bottom:1px solid #e5eff6;display:flex;justify-content:space-between;align-items:center;gap:8px}
+.panel-head h3{font-size:15px;color:#17466d}
+button{border:0;border-radius:9px;padding:10px 12px;font-weight:bold;cursor:pointer}
+button:disabled{opacity:.55;cursor:not-allowed}
+.primary{background:#087acb;color:white}.secondary{background:#eaf4fc;color:#17699f}
+.list{max-height:65vh;overflow-y:auto}
+.conversation{display:block;width:100%;text-align:left;border:0;border-bottom:1px solid #edf3f8;border-radius:0;background:white;padding:13px}
+.conversation.active{background:#eaf6ff;border-left:4px solid #087acb}
+.conversation strong{display:block;font-size:13px;color:#17466d;overflow-wrap:anywhere}
+.conversation small{display:block;color:#8296a8;font-size:10px;margin-top:5px}
+.conversation .preview{font-size:11px;color:#607b91;margin-top:7px;line-height:1.45;overflow:hidden;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical}
+.empty{padding:22px 14px;text-align:center;color:#8296a8;font-size:12px;line-height:1.7}
+.chat{display:flex;flex-direction:column;min-height:560px}
+.chat-head{padding:13px 14px;border-bottom:1px solid #e5eff6}
+.chat-head strong{display:block;color:#17466d;font-size:14px;overflow-wrap:anywhere}
+.chat-head small{display:block;color:#8296a8;font-size:11px;margin-top:5px}
+.messages{padding:14px;display:flex;flex-direction:column;gap:10px;flex:1;min-height:320px;max-height:55vh;overflow-y:auto;background:#f8fbfe}
+.bubble{max-width:88%;padding:10px 12px;border-radius:12px;font-size:13px;line-height:1.55;overflow-wrap:anywhere;white-space:pre-wrap}
+.bubble.user{align-self:flex-start;background:white;border:1px solid #dceaf4;color:#29465e;border-bottom-left-radius:4px}
+.bubble.admin{align-self:flex-end;background:#087acb;color:white;border-bottom-right-radius:4px}
+.bubble small{display:block;font-size:9px;opacity:.72;margin-top:6px}
+.composer{padding:12px;border-top:1px solid #e5eff6;display:flex;gap:8px;align-items:flex-end}
+textarea{width:100%;min-height:48px;max-height:130px;resize:vertical;padding:12px;border:1px solid #d5e5f1;border-radius:10px;font:14px Arial;outline:none;color:#172b45}
+textarea:focus{border-color:#087acb}
+.send{min-width:82px;min-height:46px}
+.toolbar{display:flex;gap:8px;align-items:center}
+.hint{font-size:11px;color:#8296a8;line-height:1.6;padding:0 13px 12px}
+.back{display:none}
+footer{text-align:center;color:#8296a8;font-size:11px;padding:16px}
+@media(max-width:620px){
+ .layout{display:block}
+ .list-panel{margin-bottom:12px}
+ .list{max-height:34vh}
+ .chat{min-height:56vh}
+ .messages{max-height:48vh}
+ .back{display:inline-block}
+ .layout.chat-open .list-panel{display:none}
+ .layout:not(.chat-open) .chat-panel{display:none}
+}
+</style>
+</head>
+<body>
+<div class="app">
+<header><div class="logo">GLO <span>365</span></div><div class="admin-label">ADMIN LIVE SUPPORT</div></header>
+<div class="top">
+ <h2>Live Support</h2>
+ <p id="adminInfo">Checking administrator access...</p>
+</div>
+<div id="notice" class="notice"></div>
+<div class="layout" id="layout">
+ <section class="panel list-panel">
+  <div class="panel-head">
+   <h3>Support Conversations</h3>
+   <button class="secondary" id="refreshButton" type="button">Refresh</button>
+  </div>
+  <div class="list" id="conversationList"><div class="empty">Loading conversations...</div></div>
+ </section>
+ <section class="panel chat-panel">
+  <div class="chat">
+   <div class="chat-head">
+    <div class="toolbar">
+     <button class="secondary back" id="backButton" type="button">← Back</button>
+     <strong id="chatTitle">Select a conversation</strong>
+    </div>
+    <small id="chatSubTitle">Choose a user from the conversation list.</small>
+   </div>
+   <div class="messages" id="messages"><div class="empty">No conversation selected.</div></div>
+   <div class="composer">
+    <textarea id="replyText" maxlength="5000" placeholder="Write your reply..." disabled></textarea>
+    <button class="primary send" id="sendButton" type="button" disabled>Send</button>
+   </div>
+   <div class="hint">You can reply only after the user has sent at least one message. The server enforces this rule. Maximum 5,000 characters.</div>
+  </div>
+ </section>
+</div>
+<footer>GLO 365 Admin · Live Support</footer>
+</div>
+<script>
+"use strict";
+const API_BASE="https://glo365.onrender.com/api";
+const TOKEN_KEY="glo365_token";
+let currentAdmin=null;
+let conversations=[];
+let selectedUserId=null;
+let selectedConversation=null;
+let refreshTimer=null;
+let loading=false;
+let redirecting=false;
+
+function getToken(){try{return sessionStorage.getItem(TOKEN_KEY)||"";}catch(e){return "";}}
+function clearToken(){try{sessionStorage.removeItem(TOKEN_KEY);sessionStorage.removeItem("glo365_user");sessionStorage.removeItem("glo365_session");}catch(e){}}
+function goToLogin(){if(redirecting)return;redirecting=true;clearToken();location.replace("login.html");}
+function showNotice(message,type="error"){const el=document.getElementById("notice");el.textContent=message;el.className="notice show "+(type==="success"?"success":"error");}
+function clearNotice(){const el=document.getElementById("notice");el.textContent="";el.className="notice";}
+function unwrap(data){if(!data||typeof data!=="object")return {};return data.data&&typeof data.data==="object"?data.data:data;}
+async function api(path,options={}){
+ const token=getToken();
+ const headers={"Accept":"application/json",...(options.body?{"Content-Type":"application/json"}:{}),...(token?{"Authorization":"Bearer "+token}:{}),...(options.headers||{})};
+ let response;
+ try{response=await fetch(API_BASE+path,{method:options.method||"GET",headers,credentials:"include",cache:"no-store",body:options.body?JSON.stringify(options.body):undefined});}
+ catch(e){throw new Error("Cannot connect to the server. Check your internet connection.");}
+ const raw=await response.text();let data={};
+ try{data=raw?JSON.parse(raw):{};}catch(e){data={message:raw||"Invalid server response"};}
+ if(response.status===401){goToLogin();throw new Error("Session expired. Please log in again.");}
+ if(!response.ok)throw new Error(data.message||data.error||("Server request failed ("+response.status+")"));
+ if(data.success===false)throw new Error(data.message||data.error||"Request failed.");
+ return data;
+}
+function dateText(value){
+ if(!value)return "";
+ const date=new Date(value);
+ if(Number.isNaN(date.getTime()))return "";
+ return date.toLocaleString();
+}
+function escapeText(value){return String(value??"");}
+async function verifyAdmin(){
+ if(!getToken()){goToLogin();return false;}
+ try{
+  const data=unwrap(await api("/auth/me"));
+  const user=data.user||data.profile||data;
+  if(!user||String(user.role||"").toLowerCase()!=="admin"){
+   showNotice("Admin access only.");clearToken();location.replace("login.html");return false;
+  }
+  currentAdmin=user;
+  document.getElementById("adminInfo").textContent="Signed in as "+(user.username||user.full_name||"Admin")+". Only the primary administrator can manage support.";
+  return true;
+ }catch(error){if(!redirecting){document.getElementById("adminInfo").textContent="Administrator verification failed.";showNotice(error.message);}return false;}
+}
+function renderConversations(){
+ const list=document.getElementById("conversationList");
+ list.replaceChildren();
+ if(!conversations.length){const empty=document.createElement("div");empty.className="empty";empty.textContent="No support conversations yet. Conversations appear after users send their first message.";list.appendChild(empty);return;}
+ conversations.forEach(item=>{
+  const button=document.createElement("button");button.type="button";button.className="conversation"+(String(item.user_id)===String(selectedUserId)?" active":"");
+  const name=document.createElement("strong");name.textContent=item.username||("User #"+item.user_id);
+  const meta=document.createElement("small");meta.textContent="Updated: "+dateText(item.updated_at||item.created_at);
+  const preview=document.createElement("div");preview.className="preview";
+  preview.textContent=(item.last_sender_role==="admin"?"You: ":"User: ")+(item.last_message||"No messages");
+  button.append(name,meta,preview);
+  button.addEventListener("click",()=>selectConversation(item));
+  list.appendChild(button);
+ });
+}
+async function loadConversations(){
+ if(loading)return;loading=true;
+ const button=document.getElementById("refreshButton");button.disabled=true;
+ try{
+  const data=unwrap(await api("/admin/support/conversations"));
+  conversations=Array.isArray(data.conversations)?data.conversations:[];
+  renderConversations();
+  if(selectedUserId){
+   const stillExists=conversations.find(c=>String(c.user_id)===String(selectedUserId));
+   if(stillExists){selectedConversation=stillExists;await loadMessages(false);}
+   else{selectedUserId=null;selectedConversation=null;resetChat();}
+  }
+ }catch(error){showNotice("Could not load support conversations: "+error.message);}
+ finally{loading=false;button.disabled=false;}
+}
+function resetChat(){
+ document.getElementById("chatTitle").textContent="Select a conversation";
+ document.getElementById("chatSubTitle").textContent="Choose a user from the conversation list.";
+ document.getElementById("messages").replaceChildren();
+ const empty=document.createElement("div");empty.className="empty";empty.textContent="No conversation selected.";document.getElementById("messages").appendChild(empty);
+ document.getElementById("replyText").disabled=true;document.getElementById("sendButton").disabled=true;
+ document.getElementById("layout").classList.remove("chat-open");
+}
+async function selectConversation(item){
+ selectedConversation=item;selectedUserId=item.user_id;
+ renderConversations();
+ document.getElementById("layout").classList.add("chat-open");
+ await loadMessages(true);
+}
+async function loadMessages(showErrors=true){
+ if(!selectedUserId)return;
+ try{
+  const data=unwrap(await api("/support/messages?user_id="+encodeURIComponent(selectedUserId)));
+  const messages=Array.isArray(data.messages)?data.messages:[];
+  renderMessages(messages);
+  const name=selectedConversation?.username||("User #"+selectedUserId);
+  document.getElementById("chatTitle").textContent=name;
+  document.getElementById("chatSubTitle").textContent=(selectedConversation?.email||"Support conversation")+" · "+messages.length+" message(s)";
+  document.getElementById("replyText").disabled=false;
+  document.getElementById("sendButton").disabled=false;
+ }catch(error){if(showErrors)showNotice("Could not load this conversation: "+error.message);}
+}
+function renderMessages(messages){
+ const box=document.getElementById("messages");box.replaceChildren();
+ if(!messages.length){const empty=document.createElement("div");empty.className="empty";empty.textContent="The conversation has no messages yet.";box.appendChild(empty);return;}
+ messages.forEach(message=>{
+  const bubble=document.createElement("div");
+  bubble.className="bubble "+(message.sender_role==="admin"?"admin":"user");
+  const text=document.createElement("div");text.textContent=escapeText(message.message);
+  const time=document.createElement("small");time.textContent=(message.sender_role==="admin"?"Admin":"User")+" · "+dateText(message.created_at);
+  bubble.append(text,time);box.appendChild(bubble);
+ });
+ box.scrollTop=box.scrollHeight;
+}
+async function sendReply(){
+ if(!selectedUserId)return;
+ const field=document.getElementById("replyText");
+ const message=field.value.trim();
+ if(!message){showNotice("Please write a message first.");return;}
+ if(message.length>5000){showNotice("Message cannot exceed 5,000 characters.");return;}
+ const button=document.getElementById("sendButton");button.disabled=true;
+ try{
+  await api("/support/messages",{method:"POST",body:{user_id:selectedUserId,message}});
+  field.value="";clearNotice();
+  await loadMessages(false);
+  await loadConversations();
+ }catch(error){showNotice("Reply could not be sent: "+error.message);}
+ finally{button.disabled=false;field.focus();}
+}
+document.getElementById("sendButton").addEventListener("click",sendReply);
+document.getElementById("replyText").addEventListener("keydown",event=>{
+ if(event.key==="Enter"&&!event.shiftKey){event.preventDefault();sendReply();}
+});
+document.getElementById("refreshButton").addEventListener("click",async()=>{clearNotice();await loadConversations();if(selectedUserId)await loadMessages(false);});
+document.getElementById("backButton").addEventListener("click",()=>document.getElementById("layout").classList.remove("chat-open"));
+(async function init(){
+ if(!await verifyAdmin())return;
+ await loadConversations();
+ refreshTimer=setInterval(()=>{if(!document.hidden)loadConversations();},7000);
+})();
+window.addEventListener("beforeunload",()=>{if(refreshTimer)clearInterval(refreshTimer);});
+</script>
+</body>
+</html>
