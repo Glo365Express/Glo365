@@ -1,0 +1,1125 @@
+<!DOCTYPE html>
+<html lang="bn">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="theme-color" content="#2196e8">
+<title>GLO 365 - Daily Millionaire</title>
+
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+
+body{
+ font-family:Arial,sans-serif;
+ background:#f0f7fd;
+ color:#18334d;
+}
+
+.app{
+ max-width:520px;
+ min-height:100vh;
+ margin:auto;
+ background:#fff;
+ padding-bottom:25px;
+ box-shadow:0 0 25px #163c5c0b;
+}
+
+.header{
+ background:linear-gradient(120deg,#1687d5,#2196e8);
+ padding:17px 15px;
+ display:flex;
+ justify-content:space-between;
+ align-items:center;
+}
+
+.logo{
+ font-size:27px;
+ font-weight:900;
+ color:#fff;
+}
+.logo span{color:#d9f0ff}
+
+.balance{
+ background:#fff;
+ color:#167fc4;
+ padding:10px 14px;
+ border-radius:30px;
+ font-size:13px;
+ font-weight:bold;
+}
+
+.page-title{
+ background:#2196e8;
+ text-align:center;
+ padding:15px 10px;
+ font-size:19px;
+ font-weight:900;
+ color:#fff;
+}
+
+.subtitle{
+ text-align:center;
+ padding:12px 5px;
+ background:#eff8ff;
+ color:#167fc4;
+ font-size:13px;
+ font-weight:bold;
+}
+
+.rate-box{
+ margin:12px 11px;
+ padding:14px 10px;
+ text-align:center;
+ background:linear-gradient(145deg,#eff8ff,#d9efff);
+ border:1px solid #c9e4f7;
+ border-radius:12px;
+ color:#526f87;
+ font-size:13px;
+ line-height:1.8;
+}
+
+.rate-box strong{
+ color:#0874c5;
+ font-size:19px;
+}
+
+.lock-status{
+ display:none;
+ margin:12px 11px;
+ padding:14px 12px;
+ border:1px solid #f0b8b8;
+ border-radius:10px;
+ background:#fff0f0;
+ color:#b42332;
+ text-align:center;
+ font-size:13px;
+ font-weight:bold;
+ line-height:1.7;
+}
+
+.lock-status.locked,
+.lock-status.open{display:block}
+
+.lock-status strong{
+ display:block;
+ font-size:14px;
+ margin-bottom:3px;
+}
+
+.lock-status.open{
+ border-color:#b9e4ca;
+ background:#effbf3;
+ color:#187344;
+}
+
+.bet-area{
+ padding:8px 9px 0;
+}
+
+.column-heading,
+.bet-row{
+ display:grid;
+ grid-template-columns:25px minmax(0,1.15fr) minmax(0,.9fr) minmax(0,1fr) 20px;
+ gap:5px;
+}
+
+.column-heading{
+ padding:8px 0;
+ font-size:10px;
+ font-weight:bold;
+ color:#8195a8;
+ text-align:center;
+}
+
+.bet-row{
+ align-items:center;
+ margin-bottom:8px;
+}
+
+.serial{
+ text-align:center;
+ font-size:14px;
+ color:#526f87;
+}
+
+.bet-row input{
+ width:100%;
+ min-width:0;
+ height:49px;
+ border:1px solid #cbdfee;
+ background:#f7fbff;
+ border-radius:10px;
+ text-align:center;
+ font-size:14px;
+ color:#18334d;
+ outline:none;
+ padding:4px;
+}
+
+.bet-row input:focus{
+ border-color:#2196e8;
+ background:#fff;
+ box-shadow:0 0 0 3px #2196e817;
+}
+
+.bet-row input::placeholder{color:#9aabba}
+
+.bet-row input:disabled{
+ background:#edf0f3;
+ color:#8795a1;
+ cursor:not-allowed;
+ opacity:.7;
+}
+
+.prize-output{
+ width:100%;
+ min-width:0;
+ height:49px;
+ border:1px solid #cbdfee;
+ background:#eaf6ff;
+ border-radius:10px;
+ display:grid;
+ place-items:center;
+ text-align:center;
+ padding:3px;
+ font-size:13px;
+ font-weight:900;
+ color:#0874c5;
+ overflow:hidden;
+}
+
+.remove-btn{
+ border:0;
+ background:transparent;
+ color:#d34c5e;
+ font-size:20px;
+ font-weight:bold;
+ padding:3px 0;
+ cursor:pointer;
+}
+
+.remove-btn:disabled{
+ opacity:.3;
+ cursor:not-allowed;
+}
+
+.add-area{
+ display:flex;
+ justify-content:flex-end;
+ padding:5px 3px 17px;
+}
+
+.add-btn{
+ width:43px;
+ height:43px;
+ border-radius:50%;
+ background:#eff8ff;
+ color:#1687d5;
+ border:1px solid #cbdfee;
+ font-size:29px;
+ font-weight:bold;
+ display:grid;
+ place-items:center;
+ cursor:pointer;
+}
+
+.add-btn:disabled{
+ opacity:.4;
+ cursor:not-allowed;
+}
+
+.summary{
+ padding:5px 11px;
+}
+
+.summary-box{
+ background:#eff8ff;
+ border:1px solid #dcebf6;
+ border-radius:12px;
+ padding:16px 7px;
+ text-align:center;
+ font-size:14px;
+ margin-bottom:9px;
+ color:#526f87;
+}
+
+.summary-box strong{
+ font-weight:900;
+ color:#167fc4;
+}
+
+.summary-box.prize-summary{
+ background:#eaf6ff;
+ border-color:#b9ddf5;
+ color:#075da8;
+}
+
+.summary-box.prize-summary strong{
+ font-size:19px;
+ color:#0874c5;
+}
+
+.place-btn{
+ width:calc(100% - 22px);
+ margin:17px 11px 0;
+ padding:16px 8px;
+ background:linear-gradient(90deg,#1687d5,#2196e8);
+ border:0;
+ border-radius:10px;
+ color:#fff;
+ font-size:17px;
+ font-weight:900;
+ box-shadow:0 4px 12px #1687d530;
+ cursor:pointer;
+}
+
+.place-btn:active{transform:scale(.98)}
+.place-btn:disabled{
+ opacity:.6;
+ cursor:not-allowed;
+}
+
+.back-btn{
+ display:block;
+ margin:10px auto;
+ border:0;
+ background:transparent;
+ color:#167fc4;
+ padding:10px;
+ font-size:13px;
+ cursor:pointer;
+}
+
+.notice{
+ margin:10px 11px;
+ padding:12px;
+ background:#eff8ff;
+ border:1px solid #dcebf6;
+ border-radius:9px;
+ text-align:center;
+ color:#526f87;
+ font-size:11px;
+ line-height:1.7;
+}
+
+.notice strong{color:#167fc4}
+
+@media(max-width:380px){
+ .logo{font-size:24px}
+ .balance{font-size:11px;padding:9px}
+ .bet-row input{height:45px;font-size:12px}
+ .prize-output{height:45px;font-size:11px}
+ .column-heading{font-size:9px;gap:3px}
+ .bet-row{gap:3px}
+ .serial{font-size:12px}
+ .summary-box{font-size:13px}
+}
+</style>
+</head>
+
+<body>
+<div class="app">
+
+<header class="header">
+ <div class="logo">GLO <span>365</span></div>
+ <div class="balance">
+  <span id="balance">0.00</span> Points
+ </div>
+</header>
+
+<div class="page-title">💎 DAILY MILLIONAIRE</div>
+
+<div class="subtitle">
+ Enter 3 Digit Number &amp; Virtual Points
+</div>
+
+<div class="rate-box">
+ Daily Millionaire Prize Rate<br>
+ <strong>1 Point = 90 Points</strong><br>
+ Enter your Amount to calculate the Prize automatically.
+</div>
+
+<div id="lockStatus" class="lock-status">
+ <strong id="lockTitle">LOADING BETTING STATUS</strong>
+ <span id="lockMessage">Please wait…</span>
+</div>
+
+<section class="bet-area">
+
+ <div class="column-heading">
+  <span>#</span>
+  <span>NUMBER</span>
+  <span>AMOUNT</span>
+  <span>PRIZE</span>
+  <span></span>
+ </div>
+
+ <div id="betRows"></div>
+
+ <div class="add-area">
+  <button class="add-btn" id="addRow" type="button" title="Add more rows">+</button>
+ </div>
+
+</section>
+
+<section class="summary">
+
+ <div class="summary-box">
+  Total Amount =
+  <strong id="totalAmount">0.00</strong>
+  Points
+ </div>
+
+ <div class="summary-box prize-summary">
+  Total Prize =
+  <strong id="totalPrize">0.00</strong>
+  Points
+ </div>
+
+</section>
+
+<button class="place-btn" id="placeBet" type="button" disabled>
+ LOADING…
+</button>
+
+<button class="back-btn" id="backHome" type="button">
+ ← Back to Home
+</button>
+
+<div class="notice">
+ <strong>DEMO MODE ONLY</strong><br>
+ Virtual points are used for testing.<br>
+ No real-money transactions or cash payouts.
+</div>
+
+</div>
+
+<script>
+"use strict";
+
+/*
+ GLO 365 DAILY MILLIONAIRE FRONTEND
+
+ Backend:
+ https://glo365.onrender.com/api
+
+ Authentication:
+ Secure server cookie or sessionStorage Bearer token.
+
+ No application data is saved in localStorage.
+*/
+
+const API_BASE_URL="https://glo365.onrender.com/api";
+
+const MIN_ROWS=10;
+const MAX_ROWS=50;
+const LOCK_MINUTES=45;
+const PRIZE_RATE=90;
+
+let currentUser=null;
+let wallet=0;
+let bettingLocked=true;
+let lockReason="";
+let settingsLoaded=false;
+let submitting=false;
+
+const rowsContainer=document.getElementById("betRows");
+const addButton=document.getElementById("addRow");
+
+const totalElement=document.getElementById("totalAmount");
+const totalPrizeElement=document.getElementById("totalPrize");
+
+const balanceElement=document.getElementById("balance");
+const placeButton=document.getElementById("placeBet");
+
+const lockStatus=document.getElementById("lockStatus");
+const lockTitle=document.getElementById("lockTitle");
+const lockMessage=document.getElementById("lockMessage");
+
+
+/* AUTHENTICATION */
+
+function authHeaders(extra={}){
+ const headers={...extra};
+
+ try{
+  const token=sessionStorage.getItem("glo365_token");
+  if(token)headers.Authorization="Bearer "+token;
+ }catch(error){}
+
+ return headers;
+}
+
+
+async function apiRequest(path,options={}){
+ const response=await fetch(API_BASE_URL+path,{
+  ...options,
+  credentials:"include",
+  cache:"no-store",
+  headers:authHeaders({
+   ...(options.body?{"Content-Type":"application/json"}:{}),
+   ...(options.headers||{})
+  })
+ });
+
+ let data={};
+
+ try{
+  data=await response.json();
+ }catch(error){
+  throw new Error("Server returned an invalid response.");
+ }
+
+ if(!response.ok||data.success===false){
+
+  if(response.status===401){
+   throw new Error("Your login session has expired. Please login again.");
+  }
+
+  throw new Error(
+   data.message||
+   data.error||
+   "Request failed ("+response.status+")."
+  );
+ }
+
+ return data;
+}
+
+
+/* WALLET */
+
+function updateWallet(value){
+ const amount=Number(value);
+
+ wallet=Number.isFinite(amount)&&amount>=0?amount:0;
+
+ balanceElement.textContent=wallet.toFixed(2);
+}
+
+
+async function loadCurrentUser(){
+ const data=await apiRequest("/auth/me");
+
+ if(!data.user){
+  throw new Error("Could not load your account.");
+ }
+
+ currentUser=data.user;
+ updateWallet(currentUser.balance);
+}
+
+
+/* DRAW SETTINGS */
+
+function parseDrawDate(settings){
+ if(!settings||!settings.draw_at)return null;
+
+ const date=new Date(settings.draw_at);
+
+ return Number.isNaN(date.getTime())?null:date;
+}
+
+
+function showLock(title,message,open=false){
+
+ bettingLocked=!open;
+ lockReason=message||"";
+
+ lockStatus.className=open
+  ?"lock-status open"
+  :"lock-status locked";
+
+ lockTitle.textContent=title;
+ lockMessage.textContent=message;
+
+ applyBettingLock();
+}
+
+
+function updateLockFromSettings(data){
+
+ const draw=
+  data.drawSettings||
+  data.draw_settings||
+  null;
+
+ const drawDate=parseDrawDate(draw);
+
+ const lockMinutes=
+  Number(data.lock_minutes)||LOCK_MINUTES;
+
+ if(!drawDate){
+  showLock(
+   "BETTING LOCKED",
+   "Admin has not configured a valid draw schedule."
+  );
+  return;
+ }
+
+ const remaining=drawDate.getTime()-Date.now();
+
+ if(data.betting_locked===true||
+    remaining<=lockMinutes*60000){
+
+  if(remaining<=0){
+   showLock(
+    "BETTING CLOSED",
+    "The scheduled draw time has passed."
+   );
+  }else{
+   showLock(
+    "BETTING CLOSED",
+    "Betting closes "+lockMinutes+
+    " minutes before the draw. New entries are not accepted."
+   );
+  }
+
+  return;
+ }
+
+ const minutes=Math.floor(remaining/60000);
+ const hours=Math.floor(minutes/60);
+ const mins=minutes%60;
+
+ showLock(
+  "BETTING IS OPEN",
+  "Betting is available. It will close "+
+  lockMinutes+
+  " minutes before the draw. Time remaining: "+
+  hours+"h "+mins+"m.",
+  true
+ );
+}
+
+
+async function loadSettings(){
+
+ /*
+  এই endpoint Daily Millionaire-এর জন্য
+  backend-এ তৈরি করতে হবে।
+ */
+ const data=await apiRequest(
+  "/public/daily-millionaire-settings"
+ );
+
+ updateLockFromSettings(data);
+
+ settingsLoaded=true;
+
+ applyBettingLock();
+}
+
+
+async function refreshAccountAndSettings(){
+
+ try{
+
+  await Promise.all([
+   loadCurrentUser(),
+   loadSettings()
+  ]);
+
+ }catch(error){
+
+  settingsLoaded=false;
+
+  showLock(
+   "UNABLE TO LOAD",
+   error.message||"Could not connect to the server."
+  );
+
+  placeButton.disabled=true;
+  placeButton.textContent="UNAVAILABLE";
+
+  if(/login session|authentication|required|unauthorized/i.test(error.message)){
+   setTimeout(()=>{
+    location.replace("login.html");
+   },900);
+  }
+ }
+}
+
+
+/* ROW MANAGEMENT */
+
+function applyBettingLock(){
+
+ rowsContainer.querySelectorAll(".bet-row").forEach(row=>{
+
+  row.querySelectorAll("input").forEach(input=>{
+   input.disabled=bettingLocked||submitting;
+  });
+
+  const remove=row.querySelector(".remove-btn");
+
+  if(remove){
+   remove.disabled=bettingLocked||submitting;
+  }
+
+ });
+
+ const count=rowsContainer.querySelectorAll(".bet-row").length;
+
+ addButton.disabled=
+  bettingLocked||
+  submitting||
+  count>=MAX_ROWS;
+
+ placeButton.disabled=
+  bettingLocked||
+  submitting||
+  !settingsLoaded;
+
+ placeButton.textContent=
+  submitting
+   ?"SUBMITTING…"
+   :bettingLocked
+    ?"BETTING CLOSED"
+    :"PLACE DEMO BET";
+}
+
+
+function updateSerials(){
+
+ rowsContainer.querySelectorAll(".bet-row").forEach((row,index)=>{
+  row.querySelector(".serial").textContent=(index+1)+".";
+ });
+
+ updateAddButton();
+}
+
+
+function updateAddButton(){
+
+ const count=rowsContainer.querySelectorAll(".bet-row").length;
+
+ addButton.disabled=
+  bettingLocked||
+  submitting||
+  count>=MAX_ROWS;
+
+ addButton.title=
+  count>=MAX_ROWS
+   ?"Maximum 50 rows reached"
+   :"Add row ("+count+"/50)";
+}
+
+
+function addRow(force=false){
+
+ if(bettingLocked&&!force){
+  alert("Betting is currently closed.");
+  return;
+ }
+
+ const count=rowsContainer.querySelectorAll(".bet-row").length;
+
+ if(count>=MAX_ROWS){
+  alert("Maximum 50 rows allowed.");
+  return;
+ }
+
+ const row=document.createElement("div");
+ row.className="bet-row";
+
+ const serial=document.createElement("span");
+ serial.className="serial";
+
+ const number=document.createElement("input");
+
+ number.type="text";
+ number.inputMode="numeric";
+ number.maxLength=3;
+ number.placeholder="Number";
+ number.dataset.field="number";
+ number.autocomplete="off";
+
+ const amount=document.createElement("input");
+
+ amount.type="number";
+ amount.inputMode="decimal";
+ amount.min="0";
+ amount.step="0.01";
+ amount.placeholder="Amount";
+ amount.dataset.field="amount";
+
+ const prize=document.createElement("div");
+
+ prize.className="prize-output";
+ prize.dataset.field="prize";
+ prize.textContent="0.00";
+
+ const remove=document.createElement("button");
+
+ remove.type="button";
+ remove.className="remove-btn";
+ remove.textContent="×";
+ remove.title="Clear or remove row";
+
+ row.append(
+  serial,
+  number,
+  amount,
+  prize,
+  remove
+ );
+
+ rowsContainer.appendChild(row);
+
+
+ number.addEventListener("input",()=>{
+  if(bettingLocked||submitting)return;
+
+  number.value=number.value.replace(/\D/g,"").slice(0,3);
+ });
+
+
+ amount.addEventListener("input",()=>{
+  if(bettingLocked||submitting)return;
+
+  calculate();
+ });
+
+
+ number.addEventListener("input",calculate);
+
+
+ remove.addEventListener("click",()=>{
+
+  if(bettingLocked||submitting){
+   alert("Betting is currently closed.");
+   return;
+  }
+
+  const rowCount=
+   rowsContainer.querySelectorAll(".bet-row").length;
+
+  if(rowCount>MIN_ROWS){
+   row.remove();
+  }else{
+   number.value="";
+   amount.value="";
+  }
+
+  updateSerials();
+  calculate();
+ });
+
+
+ updateSerials();
+ calculate();
+ applyBettingLock();
+}
+
+
+/* GET ROWS */
+
+function getRows(){
+
+ const rows=[];
+
+ rowsContainer.querySelectorAll(".bet-row").forEach(row=>{
+
+  const number=
+   row.querySelector('[data-field="number"]').value.trim();
+
+  const amountValue=
+   row.querySelector('[data-field="amount"]').value;
+
+  if(number===""&&amountValue==="")return;
+
+  rows.push({
+   number:number,
+   amount:amountValue===""?0:Number(amountValue)
+  });
+
+ });
+
+ return rows;
+}
+
+
+/* CALCULATION */
+
+function calculate(){
+
+ let totalAmount=0;
+ let totalPrize=0;
+
+ rowsContainer.querySelectorAll(".bet-row").forEach(row=>{
+
+  const amountInput=
+   row.querySelector('[data-field="amount"]');
+
+  const prizeOutput=
+   row.querySelector('[data-field="prize"]');
+
+  const amountValue=amountInput.value;
+
+  const amount=
+   amountValue===""?0:Number(amountValue);
+
+  if(Number.isFinite(amount)&&amount>0){
+
+   const prize=amount*PRIZE_RATE;
+
+   totalAmount+=amount;
+   totalPrize+=prize;
+
+   prizeOutput.textContent=
+    prize.toLocaleString("en-US",{
+     minimumFractionDigits:2,
+     maximumFractionDigits:2
+    });
+
+  }else{
+   prizeOutput.textContent="0.00";
+  }
+
+ });
+
+ totalElement.textContent=
+  totalAmount.toLocaleString("en-US",{
+   minimumFractionDigits:2,
+   maximumFractionDigits:2
+  });
+
+ totalPrizeElement.textContent=
+  totalPrize.toLocaleString("en-US",{
+   minimumFractionDigits:2,
+   maximumFractionDigits:2
+  });
+
+ return{
+  totalAmount,
+  totalPrize
+ };
+}
+
+
+/* VALIDATION */
+
+function validateRows(rows){
+
+ if(!rows.length){
+  alert("Please enter at least one Number and Amount.");
+  return false;
+ }
+
+ for(let i=0;i<rows.length;i++){
+
+  const row=rows[i];
+
+  if(!/^\d{3}$/.test(row.number)){
+   alert(
+    "Row "+(i+1)+
+    ": Number must contain exactly three digits (000-999)."
+   );
+   return false;
+  }
+
+  if(
+   !Number.isFinite(row.amount)||
+   row.amount<=0||
+   Math.round(row.amount*100)!==row.amount*100
+  ){
+   alert(
+    "Row "+(i+1)+
+    ": Enter a valid Amount greater than 0."
+   );
+   return false;
+  }
+
+ }
+
+ return true;
+}
+
+
+/* SUBMIT BET */
+
+async function submitBet(){
+
+ if(submitting)return;
+
+ try{
+
+  await Promise.all([
+   loadCurrentUser(),
+   loadSettings()
+  ]);
+
+ }catch(error){
+
+  alert(error.message||"Could not verify your account.");
+  return;
+ }
+
+ if(bettingLocked){
+  alert(lockReason||"Betting is closed.");
+  return;
+ }
+
+ const rows=getRows();
+
+ if(!validateRows(rows))return;
+
+ const result=calculate();
+
+ if(result.totalAmount<=0){
+  alert("Please enter a valid Amount.");
+  return;
+ }
+
+ if(result.totalAmount>wallet){
+  alert("Insufficient demo points.");
+  return;
+ }
+
+ submitting=true;
+ applyBettingLock();
+
+ try{
+
+  /*
+   Daily Millionaire-এর backend route:
+   POST /api/demo/daily-millionaire/bets
+
+   Backend-এ amount, number, wallet debit এবং
+   draw cutoff অবশ্যই server-side যাচাই করতে হবে।
+  */
+
+  const response=await apiRequest(
+   "/demo/daily-millionaire/bets",
+   {
+    method:"POST",
+    body:JSON.stringify({
+     rows:rows,
+     prize_rate:PRIZE_RATE
+    })
+   }
+  );
+
+  if(response.balance!==undefined){
+   updateWallet(response.balance);
+  }else{
+   await loadCurrentUser();
+  }
+
+  alert(
+   "Daily Millionaire demo entry saved successfully!"+
+   "\nUsername: "+(currentUser.username||"")+
+   "\nBet Amount: "+result.totalAmount.toFixed(2)+
+   "\nTotal Prize: "+result.totalPrize.toFixed(2)+
+   "\nRemaining Points: "+wallet.toFixed(2)
+  );
+
+  resetRows();
+
+  await loadSettings();
+
+ }catch(error){
+
+  alert(
+   error.message||
+   "Could not submit Daily Millionaire entry."
+  );
+
+  try{
+   await loadCurrentUser();
+  }catch(_){}
+
+  try{
+   await loadSettings();
+  }catch(_){}
+
+ }finally{
+
+  submitting=false;
+  applyBettingLock();
+
+ }
+}
+
+
+/* RESET ROWS */
+
+function resetRows(){
+
+ rowsContainer.replaceChildren();
+
+ for(let i=0;i<MIN_ROWS;i++){
+  addRow(true);
+ }
+
+ calculate();
+ applyBettingLock();
+}
+
+
+/* EVENTS */
+
+addButton.addEventListener("click",()=>{
+
+ if(bettingLocked){
+  alert("Betting is currently closed.");
+  return;
+ }
+
+ addRow();
+});
+
+
+placeButton.addEventListener("click",submitBet);
+
+
+document.getElementById("backHome").addEventListener("click",()=>{
+ location.href="home.html";
+});
+
+
+window.addEventListener("focus",async()=>{
+ if(!submitting){
+  await refreshAccountAndSettings();
+ }
+});
+
+
+window.addEventListener("pageshow",async()=>{
+ if(!submitting){
+  await refreshAccountAndSettings();
+ }
+});
+
+
+/* SERVER SETTINGS REFRESH */
+
+setInterval(async()=>{
+
+ if(!submitting){
+
+  try{
+   await loadSettings();
+  }catch(error){
+
+   showLock(
+    "CONNECTION ISSUE",
+    "Could not refresh draw settings. Betting is temporarily disabled."
+   );
+
+  }
+
+ }
+
+},30000);
+
+
+/* START */
+
+resetRows();
+refreshAccountAndSettings();
+
+</script>
+</body>
+</html>
