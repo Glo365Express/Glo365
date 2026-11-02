@@ -156,7 +156,7 @@ nav button.active{color:#087acb}
 
 <div class="shortcuts">
  <button class="shortcut" onclick="location.href='mybets.html'">◷ My Bets</button>
- <button class="shortcut" onclick="location.href='results.html'">🏆 Live Results</button>
+ <button class="shortcut" onclick="location.href='support.html'">💬 Live Support</button>
 </div>
 
 <section class="draw-board">
@@ -414,15 +414,10 @@ function renderProfileAvatar(){
   };
   element.replaceChildren(img);
  });
-
 }
 
 /* AUTHENTICATION */
 async function loadCurrentUser(){
- /*
-  Do not redirect merely because sessionStorage has no token.
-  The browser may authenticate using the HttpOnly cookie.
- */
  const data=await apiRequest("/auth/me");
 
  if(!data||data.success!==true||!data.user){
@@ -449,10 +444,6 @@ async function logoutAndRedirect(){
   console.warn("Server logout request failed:",error);
  }
 
- /*
-  Only remove the optional legacy token.
-  No application data is stored in localStorage/sessionStorage.
- */
  try{sessionStorage.removeItem(TOKEN_KEY)}catch(error){}
 
  currentUser=null;
