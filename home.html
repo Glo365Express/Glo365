@@ -8,1159 +8,282 @@
 
 <style>
 *{box-sizing:border-box;margin:0;padding:0}
+body{font-family:Arial,sans-serif;background:#f1f7fc;color:#30343b}
+.app{max-width:520px;min-height:100vh;margin:auto;background:#fff;padding-bottom:90px;overflow:hidden}
 
-body{
- font-family:Arial,sans-serif;
- background:#f1f7fc;
- color:#30343b;
-}
-
-.app{
- max-width:520px;
- min-height:100vh;
- margin:auto;
- background:#fff;
- padding-bottom:90px;
- overflow:hidden;
-}
-
-header{
- background:linear-gradient(120deg,#0755a5,#1688df,#45b5f5);
- padding:13px 15px;
- display:flex;
- justify-content:space-between;
- align-items:center;
- box-shadow:0 5px 18px #1688df25;
-}
-
-.logo{
- font-size:32px;
- font-weight:900;
- letter-spacing:1px;
- color:#fff;
-}
-
+header{background:linear-gradient(120deg,#0755a5,#1688df,#45b5f5);padding:13px 15px;display:flex;justify-content:space-between;align-items:center;box-shadow:0 5px 18px #1688df25}
+.logo{font-size:32px;font-weight:900;letter-spacing:1px;color:#fff}
 .logo span{color:#d9f1ff}
-
-.account{
- display:flex;
- align-items:center;
- gap:8px;
-}
-
-.balance{
- background:#fff;
- color:#0874c5;
- padding:8px 11px;
- border-radius:30px;
- font-size:12px;
- font-weight:bold;
- cursor:pointer;
- border:0;
- white-space:nowrap;
- min-height:34px;
-}
-
+.account{display:flex;align-items:center;gap:8px}
+.balance{background:#fff;color:#0874c5;padding:8px 11px;border-radius:30px;font-size:12px;font-weight:bold;cursor:pointer;border:0;white-space:nowrap;min-height:34px}
 .balance:active,.profile:active{transform:scale(.96)}
-
-.profile{
- width:40px;
- height:40px;
- border-radius:50%;
- background:#0755a5;
- color:#fff;
- display:grid;
- place-items:center;
- cursor:pointer;
- border:2px solid #ffffff90;
- overflow:hidden;
- flex-shrink:0;
-}
-
-.support-header-icon{
- width:23px;
- height:23px;
- display:block;
-}
+.profile{width:40px;height:40px;border-radius:50%;background:#0755a5;color:#fff;display:grid;place-items:center;cursor:pointer;border:2px solid #ffffff90;overflow:hidden;flex-shrink:0}
+.support-header-icon{width:23px;height:23px;display:block}
 
 /* DRAW BOARD */
-
-.draw-board{
- margin:2px 8px 12px;
- display:grid;
- grid-template-columns:1.15fr .88fr 1.35fr;
- gap:7px;
- align-items:stretch;
-}
-
-.official-box{
- min-width:0;
- min-height:150px;
- border-radius:25px;
- overflow:hidden;
- background:linear-gradient(145deg,#0755a5,#1688df);
- display:flex;
- flex-direction:column;
- justify-content:space-between;
- text-decoration:none;
- color:#fff;
- text-align:center;
- border:1px solid #c6e3f8;
-}
-
-.official-art{
- flex:1;
- display:grid;
- place-items:center;
- background:radial-gradient(circle at 50% 45%,#a9ddff 0,#1688df 35%,#0755a5 78%);
- padding:8px;
-}
-
-.official-logo{
- width:100%;
- height:100%;
- max-width:105px;
- max-height:105px;
- filter:drop-shadow(0 4px 5px #062c6370);
-}
-
-.official-label{
- background:#0874c5;
- padding:10px 2px;
- font-size:clamp(15px,4vw,25px);
- font-weight:bold;
-}
-
-.days-box{
- min-width:0;
- border-radius:25px;
- background:#1688df;
- color:#fff;
- display:flex;
- flex-direction:column;
- justify-content:center;
- align-items:center;
- text-align:center;
- padding:8px 2px;
-}
-
-.days-number{
- font-size:clamp(35px,10vw,57px);
- font-weight:400;
- line-height:1.1;
-}
-
-.days-label{
- font-size:clamp(17px,5vw,28px);
- white-space:nowrap;
- margin-top:8px;
-}
-
-.draw-info{
- min-width:0;
- display:flex;
- flex-direction:column;
- gap:7px;
-}
-
-.draw-number{
- background:#fff;
- border-radius:30px;
- padding:10px 5px;
- text-align:center;
- color:#1976b9;
- font-size:clamp(13px,4vw,24px);
- white-space:nowrap;
- overflow:hidden;
- text-overflow:ellipsis;
- border:1px solid #d8eaf8;
-}
-
-.time-row{
- display:grid;
- grid-template-columns:1fr 1fr;
- gap:6px;
- flex:1;
-}
-
-.time-box{
- display:grid;
- grid-template-columns:1fr auto;
- align-items:center;
- overflow:hidden;
- border-radius:30px;
- background:#1688df;
- color:#fff;
- min-width:0;
-}
-
-.time-value{
- text-align:center;
- font-size:clamp(20px,6vw,37px);
- padding:8px 1px;
- font-variant-numeric:tabular-nums;
-}
-
-.time-label{
- background:#0874c5;
- height:100%;
- display:grid;
- place-items:center;
- padding:3px;
- font-size:clamp(11px,3.5vw,22px);
-}
-
-.draw-status{
- grid-column:1/-1;
- text-align:center;
- color:#0874c5;
- font-size:11px;
- font-weight:bold;
- padding:2px;
-}
+.draw-board{margin:2px 8px 12px;display:grid;grid-template-columns:1.15fr .88fr 1.35fr;gap:7px;align-items:stretch}
+.official-box{min-width:0;min-height:150px;border-radius:25px;overflow:hidden;background:linear-gradient(145deg,#0755a5,#1688df);display:flex;flex-direction:column;justify-content:space-between;text-decoration:none;color:#fff;text-align:center;border:1px solid #c6e3f8}
+.official-art{flex:1;display:grid;place-items:center;background:radial-gradient(circle at 50% 45%,#a9ddff 0,#1688df 35%,#0755a5 78%);padding:8px}
+.official-logo{width:100%;height:100%;max-width:105px;max-height:105px;filter:drop-shadow(0 4px 5px #062c6370)}
+.official-label{background:#0874c5;padding:10px 2px;font-size:clamp(15px,4vw,25px);font-weight:bold}
+.days-box{min-width:0;border-radius:25px;background:#1688df;color:#fff;display:flex;flex-direction:column;justify-content:center;align-items:center;text-align:center;padding:8px 2px}
+.days-number{font-size:clamp(35px,10vw,57px);font-weight:400;line-height:1.1}
+.days-label{font-size:clamp(17px,5vw,28px);white-space:nowrap;margin-top:8px}
+.draw-info{min-width:0;display:flex;flex-direction:column;gap:7px}
+.draw-number{background:#fff;border-radius:30px;padding:10px 5px;text-align:center;color:#1976b9;font-size:clamp(13px,4vw,24px);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;border:1px solid #d8eaf8}
+.time-row{display:grid;grid-template-columns:1fr 1fr;gap:6px;flex:1}
+.time-box{display:grid;grid-template-columns:1fr auto;align-items:center;overflow:hidden;border-radius:30px;background:#1688df;color:#fff;min-width:0}
+.time-value{text-align:center;font-size:clamp(20px,6vw,37px);padding:8px 1px;font-variant-numeric:tabular-nums}
+.time-label{background:#0874c5;height:100%;display:grid;place-items:center;padding:3px;font-size:clamp(11px,3.5vw,22px)}
+.draw-status{grid-column:1/-1;text-align:center;color:#0874c5;font-size:11px;font-weight:bold;padding:2px}
 
 /* PREVIOUS RESULTS */
-
-.results-heading{
- margin:0 8px 6px;
- color:#0874c5;
- font-size:14px;
- font-weight:900;
-}
-
-.results-board{
- margin:0 8px 9px;
- display:grid;
- grid-template-columns:repeat(3,minmax(0,1fr));
- gap:5px;
-}
-
-.result-card{
- min-width:0;
- background:#123c63;
- border:1px solid #0a2b4a;
- border-radius:10px;
- height:76px;
- display:flex;
- flex-direction:column;
- align-items:center;
- justify-content:center;
- position:relative;
- padding:5px 2px;
-}
-
-.result-rank{
- position:absolute;
- left:5px;
- top:5px;
- width:21px;
- height:21px;
- border-radius:7px;
- background:#1688df;
- color:#fff;
- display:grid;
- place-items:center;
- font-size:12px;
- font-weight:bold;
-}
-
-.result-number{
- width:100%;
- color:#fff;
- font-size:clamp(13px,3.5vw,18px);
- font-weight:700;
- text-align:center;
- white-space:nowrap;
- overflow:hidden;
- text-overflow:clip;
- padding:0 1px;
- margin-top:10px;
- line-height:1.2;
-}
-
-.result-caption{
- color:#a9dcff;
- font-size:8px;
- font-weight:bold;
- margin-top:5px;
- text-transform:uppercase;
-}
+.results-heading{margin:0 8px 6px;color:#0874c5;font-size:14px;font-weight:900}
+.results-board{margin:0 8px 9px;display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:5px}
+.result-card{min-width:0;background:#123c63;border:1px solid #0a2b4a;border-radius:10px;height:76px;display:flex;flex-direction:column;align-items:center;justify-content:center;position:relative;padding:5px 2px}
+.result-rank{position:absolute;left:5px;top:5px;width:21px;height:21px;border-radius:7px;background:#1688df;color:#fff;display:grid;place-items:center;font-size:12px;font-weight:bold}
+.result-number{width:100%;color:#fff;font-size:clamp(13px,3.5vw,18px);font-weight:700;text-align:center;white-space:nowrap;overflow:hidden;text-overflow:clip;padding:0 1px;margin-top:10px;line-height:1.2}
+.result-caption{color:#a9dcff;font-size:8px;font-weight:bold;margin-top:5px;text-transform:uppercase}
 
 /* ADMIN NOTICE */
-
-.notice-wrap{
- margin:0 12px 12px;
- display:none;
- overflow:hidden;
- min-height:43px;
- align-items:center;
- background:#fff;
- border-top:1px solid #d9eaf8;
- border-bottom:1px solid #d9eaf8;
- border-radius:5px;
-}
-
+.notice-wrap{margin:0 12px 12px;display:none;overflow:hidden;min-height:43px;align-items:center;background:#fff;border-top:1px solid #d9eaf8;border-bottom:1px solid #d9eaf8;border-radius:5px}
 .notice-wrap.show{display:flex}
-
-.notice-icon{
- flex-shrink:0;
- width:34px;
- height:34px;
- margin-left:7px;
- border-radius:50%;
- background:#eaf5ff;
- color:#1976c9;
- display:grid;
- place-items:center;
- font-size:18px;
- z-index:2;
-}
-
-.notice-window{
- flex:1;
- min-width:0;
- overflow:hidden;
- position:relative;
-}
-
-.notice-track{
- display:flex;
- align-items:center;
- width:max-content;
- white-space:nowrap;
- animation:noticeMove 22s linear infinite;
-}
-
-.notice-track span{
- display:inline-block;
- flex:0 0 auto;
- padding:12px 25px;
- color:#1976c9;
- font-size:13px;
- font-weight:bold;
- white-space:nowrap;
-}
-
+.notice-icon{flex-shrink:0;width:34px;height:34px;margin-left:7px;border-radius:50%;background:#eaf5ff;color:#1976c9;display:grid;place-items:center;font-size:18px;z-index:2}
+.notice-window{flex:1;min-width:0;overflow:hidden;position:relative}
+.notice-track{display:flex;align-items:center;width:max-content;white-space:nowrap;animation:noticeMove 22s linear infinite}
+.notice-track span{display:inline-block;flex:0 0 auto;padding:12px 25px;color:#1976c9;font-size:13px;font-weight:bold;white-space:nowrap}
 .notice-wrap:hover .notice-track{animation-play-state:paused}
-
-@keyframes noticeMove{
- 0%{transform:translateX(0)}
- 100%{transform:translateX(-50%)}
-}
+@keyframes noticeMove{0%{transform:translateX(0)}100%{transform:translateX(-50%)}}
 
 /* EVENT */
+.event{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:7px;margin:0 12px 15px;align-items:stretch}
+.event>div,.event>a{min-width:0;width:100%;text-align:center;background:linear-gradient(145deg,#f5fbff,#e5f4ff);border:1px solid #cfe6f8;border-radius:22px;padding:10px 5px}
+.live-event{display:flex;justify-content:center;align-items:center;gap:6px;cursor:pointer;font-weight:bold;color:#075da8;white-space:nowrap;font-size:clamp(11px,3.4vw,16px)}
+.live-dot{color:#ed263d;font-size:14px;flex-shrink:0}
+.platform-logos{display:flex;align-items:center;gap:4px;flex-shrink:0}
+.platform-logo{width:17px;height:17px;display:inline-flex;align-items:center;justify-content:center;flex-shrink:0}
+.platform-logo svg{width:100%;height:100%;display:block}
 
-.event{
- display:grid;
- grid-template-columns:minmax(0,1fr) minmax(0,1fr);
- gap:7px;
- margin:0 12px 15px;
- align-items:stretch;
-}
-
-.event>div,
-.event> a{
- min-width:0;
- width:100%;
- text-align:center;
- background:linear-gradient(145deg,#f5fbff,#e5f4ff);
- border:1px solid #cfe6f8;
- border-radius:22px;
- padding:10px 5px;
-}
-
-.live-event{
- display:flex;
- justify-content:center;
- align-items:center;
- gap:6px;
- cursor:pointer;
- font-weight:bold;
- color:#075da8;
- white-space:nowrap;
- font-size:clamp(11px,3.4vw,16px);
-}
-
-.live-dot{
- color:#ed263d;
- font-size:14px;
- flex-shrink:0;
-}
-
-.platform-logos{
- display:flex;
- align-items:center;
- gap:4px;
- flex-shrink:0;
-}
-
-.platform-logo{
- width:17px;
- height:17px;
- display:inline-flex;
- align-items:center;
- justify-content:center;
- flex-shrink:0;
-}
-
-.platform-logo svg{
- width:100%;
- height:100%;
- display:block;
-}
-
-/* DAILY MILLIONAIRE INFORMATION CARD */
-
+/* DAILY MILLIONAIRE COUNTDOWN CARD */
 .event .next-date{
- color:#0874c5;
- font-weight:900;
- font-size:11px;
  display:flex;
  flex-direction:column;
  align-items:center;
  justify-content:center;
- gap:5px;
- white-space:normal;
- overflow-wrap:anywhere;
- line-height:1.3;
+ gap:7px;
  min-width:0;
  cursor:default;
  user-select:none;
 }
-
-.next-date small{
- font-size:10px;
+.millionaire-title{
  color:#075da8;
+ font-size:clamp(11px,3.2vw,15px);
  font-weight:900;
- letter-spacing:.4px;
+ letter-spacing:.3px;
+ white-space:nowrap;
 }
-
-.next-date .millionaire-time{
- font-size:12px;
- color:#0874c5;
- font-weight:900;
+.millionaire-clock{
+ width:100%;
+ display:flex;
+ align-items:stretch;
+ justify-content:center;
+ gap:4px;
+}
+.millionaire-unit{
+ display:flex;
+ flex-direction:column;
+ justify-content:center;
+ align-items:center;
+ min-width:0;
+ background:#1688df;
+ color:#fff;
+ border-radius:13px;
+ padding:7px 3px;
+ box-shadow:inset -5px 0 0 #0874c5;
+}
+.millionaire-unit.hours{flex:1.2}
+.millionaire-unit.minutes{flex:1}
+.millionaire-unit.seconds{flex:.82}
+.millionaire-unit strong{
+ font-size:clamp(18px,5vw,29px);
+ line-height:1.15;
+ font-weight:500;
  font-variant-numeric:tabular-nums;
 }
-
-.next-date .millionaire-result{
- font-size:10px;
- color:#123c63;
- font-weight:800;
+.millionaire-unit span{
+ font-size:clamp(9px,2.5vw,12px);
+ margin-top:4px;
+ font-weight:700;
+}
+.millionaire-status{
+ color:#0874c5;
+ font-size:clamp(9px,2.7vw,12px);
+ font-weight:900;
+ text-align:center;
+ white-space:nowrap;
 }
 
 /* GAME CARDS */
-
-.cards{
- display:grid;
- grid-template-columns:repeat(2,minmax(0,1fr));
- gap:13px;
- padding:0 12px;
-}
-
-.game-card{
- height:174px;
- border-radius:23px;
- position:relative;
- overflow:hidden;
- display:flex;
- flex-direction:column;
- align-items:center;
- justify-content:center;
- text-decoration:none;
- isolation:isolate;
- transition:transform .2s;
- border:1px solid #ffffffc9;
- box-shadow:0 8px 18px #17466d15;
-}
-
+.cards{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:13px;padding:0 12px}
+.game-card{height:174px;border-radius:23px;position:relative;overflow:hidden;display:flex;flex-direction:column;align-items:center;justify-content:center;text-decoration:none;isolation:isolate;transition:transform .2s;border:1px solid #ffffffc9;box-shadow:0 8px 18px #17466d15}
 .game-card:active{transform:scale(.965)}
-
-.game-card::before{
- content:"";
- position:absolute;
- width:220px;
- height:100px;
- border:2px solid #ffffff65;
- border-radius:50%;
- transform:rotate(-23deg);
- bottom:15px;
- left:-65px;
- z-index:-1;
-}
-
-.game-card::after{
- content:"";
- position:absolute;
- width:150px;
- height:150px;
- border-radius:50%;
- background:#ffffff55;
- filter:blur(35px);
- top:-65px;
- right:-40px;
- z-index:-1;
-}
-
-.card-glow{
- position:absolute;
- width:90px;
- height:90px;
- border-radius:50%;
- background:#ffffff45;
- filter:blur(20px);
- bottom:-35px;
- right:-25px;
- z-index:-1;
-}
-
-.card-crown{
- font-size:27px;
- line-height:1;
- margin-bottom:4px;
-}
-
-.balls{
- display:flex;
- justify-content:center;
- align-items:center;
- gap:5px;
- height:48px;
-}
-
-.ball{
- width:39px;
- height:39px;
- border-radius:50%;
- background:radial-gradient(circle at 32% 25%,#fff 0%,#fff 25%,#e8edf3 62%,#a9b5c2 100%);
- border:3px solid var(--ball-color);
- box-shadow:0 4px 7px #00000035,inset 0 -3px 5px #00000020,0 0 0 3px #ffffff70;
- display:grid;
- place-items:center;
- font-size:21px;
- font-weight:900;
- color:#26384a;
-}
-
-.game-card h2{
- font-size:26px;
- line-height:1;
- font-weight:1000;
- letter-spacing:1.5px;
- text-align:center;
- margin:6px 0 11px;
-}
-
-.play{
- width:84%;
- padding:7px 10px 7px 15px;
- border-radius:30px;
- background:#ffffffdf;
- display:flex;
- justify-content:space-between;
- align-items:center;
- font-size:12px;
- font-weight:900;
- letter-spacing:.7px;
-}
-
-.play-arrow{
- width:30px;
- height:30px;
- border-radius:50%;
- background:var(--accent);
- color:white;
- display:grid;
- place-items:center;
- font-size:19px;
-}
-
-.single{
- --ball-color:#1688df;
- --accent:#087acb;
- background:linear-gradient(145deg,#eaf8ff,#c4eaff,#a9dcff);
- color:#075c9b;
-}
-
-.two{
- --ball-color:#0877ec;
- --accent:#0968db;
- background:linear-gradient(145deg,#e5f5ff,#b6e4ff,#91d2ff);
- color:#0755b5;
-}
-
-.three{
- --ball-color:#e3294b;
- --accent:#d71943;
- background:linear-gradient(145deg,#fff0f3,#ffd0d9,#ffb2c2);
- color:#a90024;
-}
-
-.six{
- --ball-color:#06a84c;
- --accent:#079a49;
- background:linear-gradient(145deg,#eafff0,#c3f8d3,#9cebb8);
- color:#087638;
-}
-
+.game-card::before{content:"";position:absolute;width:220px;height:100px;border:2px solid #ffffff65;border-radius:50%;transform:rotate(-23deg);bottom:15px;left:-65px;z-index:-1}
+.game-card::after{content:"";position:absolute;width:150px;height:150px;border-radius:50%;background:#ffffff55;filter:blur(35px);top:-65px;right:-40px;z-index:-1}
+.card-glow{position:absolute;width:90px;height:90px;border-radius:50%;background:#ffffff45;filter:blur(20px);bottom:-35px;right:-25px;z-index:-1}
+.card-crown{font-size:27px;line-height:1;margin-bottom:4px}
+.balls{display:flex;justify-content:center;align-items:center;gap:5px;height:48px}
+.ball{width:39px;height:39px;border-radius:50%;background:radial-gradient(circle at 32% 25%,#fff 0%,#fff 25%,#e8edf3 62%,#a9b5c2 100%);border:3px solid var(--ball-color);box-shadow:0 4px 7px #00000035,inset 0 -3px 5px #00000020,0 0 0 3px #ffffff70;display:grid;place-items:center;font-size:21px;font-weight:900;color:#26384a}
+.game-card h2{font-size:26px;line-height:1;font-weight:1000;letter-spacing:1.5px;text-align:center;margin:6px 0 11px}
+.play{width:84%;padding:7px 10px 7px 15px;border-radius:30px;background:#ffffffdf;display:flex;justify-content:space-between;align-items:center;font-size:12px;font-weight:900;letter-spacing:.7px}
+.play-arrow{width:30px;height:30px;border-radius:50%;background:var(--accent);color:white;display:grid;place-items:center;font-size:19px}
+.single{--ball-color:#1688df;--accent:#087acb;background:linear-gradient(145deg,#eaf8ff,#c4eaff,#a9dcff);color:#075c9b}
+.two{--ball-color:#0877ec;--accent:#0968db;background:linear-gradient(145deg,#e5f5ff,#b6e4ff,#91d2ff);color:#0755b5}
+.three{--ball-color:#e3294b;--accent:#d71943;background:linear-gradient(145deg,#fff0f3,#ffd0d9,#ffb2c2);color:#a90024}
+.six{--ball-color:#06a84c;--accent:#079a49;background:linear-gradient(145deg,#eafff0,#c3f8d3,#9cebb8);color:#087638}
 .single .ball{width:46px;height:46px;font-size:26px}
 .two .ball{width:44px;height:44px}
 .three .ball{width:35px;height:35px;font-size:19px}
 .six .ball{width:28px;height:28px;font-size:14px;border-width:2px}
-
-/* DIVIDER */
-
-.game-divider{
- grid-column:1/-1;
- width:100%;
- height:3px;
- border-radius:10px;
- background:linear-gradient(90deg,#e3294b 0%,#d71943 30%,#06a84c 70%,#079a49 100%);
- margin:2px 0 1px;
- box-shadow:0 1px 4px #00000012;
-}
-
-/* DAILY MILLIONAIRE CARD */
-
-.millionaire{
- grid-column:1 / -1;
- width:100%;
- max-width:310px;
- justify-self:center;
- margin-left:auto;
- margin-right:auto;
- height:150px;
- padding:3px;
- background:linear-gradient(145deg,#eaf8ff,#c4eaff,#a9dcff);
- border-radius:23px;
- display:flex;
- align-items:center;
- justify-content:center;
- overflow:hidden;
-}
-
-.millionaire::before,
-.millionaire::after{
- display:none;
-}
-
-.millionaire .card-glow{
- display:none;
-}
-
-.millionaire-logo{
- display:block;
- width:100%;
- height:100%;
- max-width:100%;
- max-height:100%;
- object-fit:contain;
- flex-shrink:0;
-}
+.game-divider{grid-column:1/-1;width:100%;height:3px;border-radius:10px;background:linear-gradient(90deg,#e3294b 0%,#d71943 30%,#06a84c 70%,#079a49 100%);margin:2px 0 1px}
+.millionaire{grid-column:1/-1;width:100%;max-width:310px;justify-self:center;margin-left:auto;margin-right:auto;height:150px;padding:3px;background:linear-gradient(145deg,#eaf8ff,#c4eaff,#a9dcff);border-radius:23px;display:flex;align-items:center;justify-content:center;overflow:hidden}
+.millionaire::before,.millionaire::after{display:none}
+.millionaire .card-glow{display:none}
+.millionaire-logo{display:block;width:100%;height:100%;max-width:100%;max-height:100%;object-fit:contain;flex-shrink:0}
 
 /* BOTTOM NAVIGATION */
-
-nav{
- position:fixed;
- bottom:0;
- left:50%;
- transform:translateX(-50%);
- width:100%;
- max-width:520px;
- background:#fff;
- border-top:1px solid #dcebf6;
- display:flex;
- justify-content:space-around;
- padding:11px 4px 16px;
- z-index:5;
- box-shadow:0 -3px 12px #00000008;
-}
-
-nav button{
- flex:1;
- border:0;
- background:none;
- color:#8295a5;
- font-size:11px;
- display:flex;
- flex-direction:column;
- align-items:center;
- gap:5px;
- cursor:pointer;
-}
-
+nav{position:fixed;bottom:0;left:50%;transform:translateX(-50%);width:100%;max-width:520px;background:#fff;border-top:1px solid #dcebf6;display:flex;justify-content:space-around;padding:11px 4px 16px;z-index:5;box-shadow:0 -3px 12px #00000008}
+nav button{flex:1;border:0;background:none;color:#8295a5;font-size:11px;display:flex;flex-direction:column;align-items:center;gap:5px;cursor:pointer}
 nav button strong{font-size:23px}
 nav button.active{color:#087acb}
-
-.empty{
- text-align:center;
- color:#999;
- padding:22px;
- font-size:13px;
-}
-
-.nav-profile-avatar{
- width:25px;
- height:25px;
- border-radius:50%;
- overflow:hidden;
- display:grid;
- place-items:center;
- border:1.5px solid #1688df;
- font-size:19px;
- line-height:1;
-}
-
-.nav-profile-avatar img{
- width:100%;
- height:100%;
- object-fit:cover;
- display:block;
- border-radius:50%;
-}
+.empty{text-align:center;color:#999;padding:22px;font-size:13px}
+.nav-profile-avatar{width:25px;height:25px;border-radius:50%;overflow:hidden;display:grid;place-items:center;border:1.5px solid #1688df;font-size:19px;line-height:1}
+.nav-profile-avatar img{width:100%;height:100%;object-fit:cover;display:block;border-radius:50%}
 
 /* MODALS */
-
-.points-modal,.live-modal{
- display:none;
- position:fixed;
- inset:0;
- background:#071d35b8;
- z-index:20;
- padding:15px;
- align-items:center;
- justify-content:center;
-}
-
+.points-modal,.live-modal{display:none;position:fixed;inset:0;background:#071d35b8;z-index:20;padding:15px;align-items:center;justify-content:center}
 .points-modal.show,.live-modal.show{display:flex}
-
-.points-content{
- width:100%;
- max-width:460px;
- max-height:85vh;
- overflow-y:auto;
- background:white;
- border:1px solid #cfe6f8;
- border-radius:16px;
- padding:18px;
-}
-
-.points-header{
- display:flex;
- justify-content:space-between;
- align-items:center;
- margin-bottom:15px;
-}
-
-.points-header h3{
- font-size:18px;
- color:#075da8;
-}
-
-.close-btn{
- border:0;
- background:#eaf5ff;
- color:#075da8;
- padding:8px 12px;
- border-radius:8px;
- font-weight:bold;
- cursor:pointer;
-}
-
-.points-total{
- background:linear-gradient(120deg,#0755a5,#1688df);
- color:#fff;
- padding:18px;
- border-radius:12px;
- margin-bottom:15px;
-}
-
+.points-content{width:100%;max-width:460px;max-height:85vh;overflow-y:auto;background:white;border:1px solid #cfe6f8;border-radius:16px;padding:18px}
+.points-header{display:flex;justify-content:space-between;align-items:center;margin-bottom:15px}
+.points-header h3{font-size:18px;color:#075da8}
+.close-btn{border:0;background:#eaf5ff;color:#075da8;padding:8px 12px;border-radius:8px;font-weight:bold;cursor:pointer}
+.points-total{background:linear-gradient(120deg,#0755a5,#1688df);color:#fff;padding:18px;border-radius:12px;margin-bottom:15px}
 .points-total small{color:#e5f5ff}
-
-.points-total strong{
- display:block;
- font-size:29px;
- margin-top:6px;
-}
-
+.points-total strong{display:block;font-size:29px;margin-top:6px}
 .points-content h4{color:#075da8}
-
-.point-entry{
- border:1px solid #dcebf6;
- background:#f8fcff;
- border-radius:10px;
- padding:12px;
- margin-top:9px;
- font-size:13px;
- line-height:1.7;
- color:#555;
-}
-
-.point-entry .amount{
- color:#17833c;
- font-weight:bold;
- font-size:16px;
-}
-
+.point-entry{border:1px solid #dcebf6;background:#f8fcff;border-radius:10px;padding:12px;margin-top:9px;font-size:13px;line-height:1.7;color:#555}
+.point-entry .amount{color:#17833c;font-weight:bold;font-size:16px}
 .point-entry .debit{color:#d14343}
-
-.point-entry small{
- color:#999;
- display:block;
-}
-
-.live-box{
- width:100%;
- max-width:480px;
- max-height:92vh;
- overflow-y:auto;
- background:white;
- border:1px solid #cfe6f8;
- border-radius:17px;
- padding:16px;
-}
-
-.live-heading{
- display:flex;
- justify-content:space-between;
- align-items:center;
- gap:10px;
- margin-bottom:15px;
-}
-
-.live-heading h3{
- font-size:18px;
- color:#075da8;
-}
-
-.live-player{
- width:100%;
- aspect-ratio:16/9;
- background:#071a2d;
- border-radius:12px;
- overflow:hidden;
-}
-
-.live-player iframe{
- width:100%;
- height:100%;
- border:0;
- display:block;
-}
-
-.live-message-box{
- width:100%;
- max-width:390px;
- background:#fff;
- border:1px solid #cfe6f8;
- border-radius:20px;
- padding:25px 20px;
- text-align:center;
- box-shadow:0 15px 45px #0004;
- animation:livePopup .25s ease;
-}
-
-@keyframes livePopup{
- from{opacity:0;transform:scale(.88)}
- to{opacity:1;transform:scale(1)}
-}
-
-.live-message-icon{
- width:70px;
- height:70px;
- border-radius:50%;
- background:#eaf5ff;
- display:grid;
- place-items:center;
- font-size:32px;
- margin:0 auto 15px;
-}
-
-.live-message-box h3{
- font-size:20px;
- margin-bottom:10px;
- color:#075da8;
-}
-
-.live-message-box p{
- color:#718697;
- font-size:14px;
- line-height:1.7;
- margin-bottom:18px;
-}
-
-.live-message-logos{
- display:flex;
- justify-content:center;
- align-items:center;
- gap:12px;
- margin-bottom:20px;
-}
-
-.live-message-logos .platform-logo{
- width:27px;
- height:27px;
-}
-
-.live-message-button{
- width:100%;
- border:0;
- border-radius:30px;
- padding:13px;
- background:#1688df;
- color:white;
- font-size:15px;
- font-weight:bold;
- cursor:pointer;
-}
+.point-entry small{color:#999;display:block}
+.live-box{width:100%;max-width:480px;max-height:92vh;overflow-y:auto;background:white;border:1px solid #cfe6f8;border-radius:17px;padding:16px}
+.live-heading{display:flex;justify-content:space-between;align-items:center;gap:10px;margin-bottom:15px}
+.live-heading h3{font-size:18px;color:#075da8}
+.live-player{width:100%;aspect-ratio:16/9;background:#071a2d;border-radius:12px;overflow:hidden}
+.live-player iframe{width:100%;height:100%;border:0;display:block}
+.live-message-box{width:100%;max-width:390px;background:#fff;border:1px solid #cfe6f8;border-radius:20px;padding:25px 20px;text-align:center;box-shadow:0 15px 45px #0004;animation:livePopup .25s ease}
+@keyframes livePopup{from{opacity:0;transform:scale(.88)}to{opacity:1;transform:scale(1)}}
+.live-message-icon{width:70px;height:70px;border-radius:50%;background:#eaf5ff;display:grid;place-items:center;font-size:32px;margin:0 auto 15px}
+.live-message-box h3{font-size:20px;margin-bottom:10px;color:#075da8}
+.live-message-box p{color:#718697;font-size:14px;line-height:1.7;margin-bottom:18px}
+.live-message-logos{display:flex;justify-content:center;align-items:center;gap:12px;margin-bottom:20px}
+.live-message-logos .platform-logo{width:27px;height:27px}
+.live-message-button{width:100%;border:0;border-radius:30px;padding:13px;background:#1688df;color:white;font-size:15px;font-weight:bold;cursor:pointer}
 
 /* MOBILE RESPONSIVE */
-
 @media(max-width:380px){
-
  .logo{font-size:26px}
  .balance{font-size:11px;padding:7px 9px;min-height:32px}
  .profile{width:36px;height:36px}
-
- .game-card{
-  height:158px;
-  border-radius:19px;
- }
-
+ .game-card{height:158px;border-radius:19px}
  .game-card h2{font-size:21px}
-
  .ball{width:34px;height:34px}
  .single .ball{width:41px;height:41px}
  .two .ball{width:37px;height:37px}
  .three .ball{width:29px;height:29px}
  .six .ball{width:23px;height:23px;font-size:12px}
-
- .millionaire{
-  width:100%;
-  max-width:310px;
-  height:158px;
-  padding:7px;
-  justify-self:center;
-  margin-left:auto;
-  margin-right:auto;
- }
-
- .millionaire-logo{
-  width:100%;
-  height:100%;
-  object-fit:contain;
- }
-
- .play{
-  width:89%;
-  padding:6px 8px 6px 12px;
-  font-size:10px;
- }
-
+ .millionaire{width:100%;max-width:310px;height:158px;padding:7px;justify-self:center;margin-left:auto;margin-right:auto}
+ .millionaire-logo{width:100%;height:100%;object-fit:contain}
+ .play{width:89%;padding:6px 8px 6px 12px;font-size:10px}
  .platform-logo{width:17px;height:17px}
-
- .draw-board{
-  gap:4px;
-  margin-left:5px;
-  margin-right:5px;
- }
-
- .official-box{
-  min-height:125px;
-  border-radius:18px;
- }
-
- .official-logo{
-  max-width:85px;
-  max-height:85px;
- }
-
+ .draw-board{gap:4px;margin-left:5px;margin-right:5px}
+ .official-box{min-height:125px;border-radius:18px}
+ .official-logo{max-width:85px;max-height:85px}
  .days-box{border-radius:18px}
-
- .draw-number{
-  font-size:12px;
-  padding:9px 2px;
- }
-
+ .draw-number{font-size:12px;padding:9px 2px}
  .time-row{gap:3px}
  .time-box{border-radius:18px}
  .time-value{font-size:19px}
  .time-label{font-size:10px}
-
- .result-card{
-  height:68px;
-  padding:4px 1px;
- }
-
- .result-rank{
-  width:19px;
-  height:19px;
-  font-size:11px;
-  left:4px;
-  top:4px;
- }
-
- .result-number{
-  font-size:13px;
-  margin-top:9px;
- }
-
- .result-caption{
-  font-size:7px;
-  margin-top:4px;
- }
-
+ .result-card{height:68px;padding:4px 1px}
+ .result-rank{width:19px;height:19px;font-size:11px;left:4px;top:4px}
+ .result-number{font-size:13px;margin-top:9px}
+ .result-caption{font-size:7px;margin-top:4px}
  .results-heading{font-size:13px}
-
- .event{
-  gap:5px;
-  margin-left:8px;
-  margin-right:8px;
- }
-
- .event>div,
- .event>a{padding:9px 4px}
-
- .event .next-date{gap:4px}
- .next-date small{font-size:9px}
- .next-date .millionaire-time{font-size:11px}
- .next-date .millionaire-result{font-size:9px}
-
+ .event{gap:5px;margin-left:8px;margin-right:8px}
+ .event>div,.event>a{padding:9px 4px}
  .live-event{gap:3px}
-
- .notice-wrap{
-  margin-left:8px;
-  margin-right:8px;
- }
-
- .notice-track span{
-  font-size:12px;
-  padding:11px 20px;
- }
+ .notice-wrap{margin-left:8px;margin-right:8px}
+ .notice-track span{font-size:12px;padding:11px 20px}
+ .millionaire-clock{gap:3px}
+ .millionaire-unit{padding:7px 2px;border-radius:11px}
+ .millionaire-unit strong{font-size:clamp(16px,5vw,23px)}
+ .millionaire-unit span{font-size:9px}
+ .millionaire-title{font-size:10px}
+ .millionaire-status{font-size:9px}
 }
-
 @media(max-width:340px){
-
  .draw-board{grid-template-columns:1fr .75fr 1.2fr}
  .official-label{font-size:14px}
  .result-number{font-size:12px}
- .next-date small{font-size:8px}
- .next-date .millionaire-time{font-size:10px}
- .next-date .millionaire-result{font-size:8px}
  .live-event{font-size:10px}
-
+ .millionaire-unit strong{font-size:15px}
+ .millionaire-unit span{font-size:8px}
+ .millionaire-title{font-size:9px}
+ .millionaire-status{font-size:8px}
 }
 </style>
 </head>
 
 <body>
-
 <div class="app">
 
 <header>
  <div class="logo">GLO <span>365</span></div>
-
  <div class="account">
-
-  <button class="balance" id="balance" type="button"
-   onclick="openPoints()" title="Show or hide points">Loading...</button>
-
-  <button class="profile" id="homeSupportButton"
-   onclick="location.href='support.html'"
-   title="Live Support"
-   aria-label="Open Live Support"
-   type="button">
-
-   <svg class="support-header-icon"
-        viewBox="0 0 24 24"
-        fill="none"
-        xmlns="http://www.w3.org/2000/svg"
-        aria-hidden="true">
-
-    <path d="M4 5.8C4 4.81 4.81 4 5.8 4H18.2C19.19 4 20 4.81 20 5.8V14.2C20 15.19 19.19 16 18.2 16H10L5 20V16.8C4.39 16.49 4 15.88 4 15.2V5.8Z"
-          stroke="white"
-          stroke-width="1.8"
-          stroke-linecap="round"
-          stroke-linejoin="round"/>
-
-    <path d="M8 9H16M8 12H13"
-          stroke="white"
-          stroke-width="1.8"
-          stroke-linecap="round"/>
-
+  <button class="balance" id="balance" type="button" onclick="openPoints()" title="Show or hide points">Loading...</button>
+  <button class="profile" id="homeSupportButton" onclick="location.href='support.html'" title="Live Support" aria-label="Open Live Support" type="button">
+   <svg class="support-header-icon" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+    <path d="M4 5.8C4 4.81 4.81 4 5.8 4H18.2C19.19 4 20 4.81 20 5.8V14.2C20 15.19 19.19 16 18.2 16H10L5 20V16.8C4.39 16.49 4 15.88 4 15.2V5.8Z" stroke="white" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/>
+    <path d="M8 9H16M8 12H13" stroke="white" stroke-width="1.8" stroke-linecap="round"/>
    </svg>
-
   </button>
-
  </div>
 </header>
 
 <section class="draw-board">
-
  <a class="official-box" href="index.html">
   <div class="official-art">
-
-   <svg class="official-logo" viewBox="0 0 200 200"
-    xmlns="http://www.w3.org/2000/svg">
-
+   <svg class="official-logo" viewBox="0 0 200 200" xmlns="http://www.w3.org/2000/svg">
     <defs>
-     <linearGradient id="silver" x1="0" y1="0" x2="1" y2="1">
-      <stop offset="0%" stop-color="#ffffff"/>
-      <stop offset="45%" stop-color="#a9d9ff"/>
-      <stop offset="100%" stop-color="#ffffff"/>
-     </linearGradient>
-
-     <linearGradient id="darkBlue" x1="0" y1="0" x2="0" y2="1">
-      <stop offset="0%" stop-color="#174b83"/>
-      <stop offset="100%" stop-color="#062c63"/>
-     </linearGradient>
+     <linearGradient id="silver" x1="0" y1="0" x2="1" y2="1"><stop offset="0%" stop-color="#ffffff"/><stop offset="45%" stop-color="#a9d9ff"/><stop offset="100%" stop-color="#ffffff"/></linearGradient>
+     <linearGradient id="darkBlue" x1="0" y1="0" x2="0" y2="1"><stop offset="0%" stop-color="#174b83"/><stop offset="100%" stop-color="#062c63"/></linearGradient>
     </defs>
-
-    <path d="M100 5 L119 29 L143 19 L151 49 L181 48 L171 78 L195 100 L171 122 L181 152 L151 151 L143 181 L119 171 L100 195 L81 171 L57 181 L49 151 L19 152 L29 122 L5 100 L29 78 L19 48 L49 49 L57 19 L81 29 Z"
-     fill="url(#darkBlue)" stroke="url(#silver)" stroke-width="2.5"/>
-
-    <path d="M100 12 L100 188 M12 100 L188 100 M38 38 L162 162 M162 38 L38 162"
-     stroke="#a9d9ff" stroke-width="1" opacity=".5"/>
-
+    <path d="M100 5 L119 29 L143 19 L151 49 L181 48 L171 78 L195 100 L171 122 L181 152 L151 151 L143 181 L119 171 L100 195 L81 171 L57 181 L49 151 L19 152 L29 122 L5 100 L29 78 L19 48 L49 49 L57 19 L81 29 Z" fill="url(#darkBlue)" stroke="url(#silver)" stroke-width="2.5"/>
+    <path d="M100 12 L100 188 M12 100 L188 100 M38 38 L162 162 M162 38 L38 162" stroke="#a9d9ff" stroke-width="1" opacity=".5"/>
     <circle cx="100" cy="100" r="69" fill="#0b4f91" stroke="url(#silver)" stroke-width="4"/>
     <circle cx="100" cy="100" r="63" fill="none" stroke="#d8edff" stroke-width="1.5" stroke-dasharray="3 3"/>
     <circle cx="100" cy="100" r="56" fill="none" stroke="url(#silver)" stroke-width="3"/>
     <circle cx="100" cy="100" r="51" fill="none" stroke="#c9e7ff" stroke-width="1.5"/>
-
     <circle cx="100" cy="94" r="31" fill="#145a9e" stroke="url(#silver)" stroke-width="3"/>
     <circle cx="100" cy="94" r="26" fill="none" stroke="#d8edff" stroke-width="1.5"/>
-
-    <g stroke="#d9efff" stroke-width="2" fill="none">
-     <path d="M100 68 V120"/>
-     <path d="M74 94 H126"/>
-     <path d="M82 76 L118 112"/>
-     <path d="M118 76 L82 112"/>
-     <path d="M87 70 L113 118"/>
-     <path d="M113 70 L87 118"/>
-    </g>
-
+    <g stroke="#d9efff" stroke-width="2" fill="none"><path d="M100 68 V120"/><path d="M74 94 H126"/><path d="M82 76 L118 112"/><path d="M118 76 L82 112"/><path d="M87 70 L113 118"/><path d="M113 70 L87 118"/></g>
     <circle cx="100" cy="94" r="7" fill="#d8edff" stroke="#ffffff" stroke-width="2"/>
     <circle cx="100" cy="94" r="3" fill="#145a9e"/>
-
-    <g fill="#bce4ff" stroke="#ffffff" stroke-width="1">
-     <circle cx="100" cy="72" r="3"/>
-     <circle cx="100" cy="116" r="3"/>
-     <circle cx="78" cy="94" r="3"/>
-     <circle cx="122" cy="94" r="3"/>
-     <circle cx="84" cy="78" r="2.5"/>
-     <circle cx="116" cy="78" r="2.5"/>
-     <circle cx="84" cy="110" r="2.5"/>
-     <circle cx="116" cy="110" r="2.5"/>
-    </g>
-
-    <path d="M94 125 L87 139 H113 L106 125"
-     fill="none" stroke="url(#silver)" stroke-width="4" stroke-linejoin="round"/>
-
+    <g fill="#bce4ff" stroke="#ffffff" stroke-width="1"><circle cx="100" cy="72" r="3"/><circle cx="100" cy="116" r="3"/><circle cx="78" cy="94" r="3"/><circle cx="122" cy="94" r="3"/><circle cx="84" cy="78" r="2.5"/><circle cx="116" cy="78" r="2.5"/><circle cx="84" cy="110" r="2.5"/><circle cx="116" cy="110" r="2.5"/></g>
+    <path d="M94 125 L87 139 H113 L106 125" fill="none" stroke="url(#silver)" stroke-width="4" stroke-linejoin="round"/>
     <path d="M78 141 H122" stroke="url(#silver)" stroke-width="4" stroke-linecap="round"/>
     <path d="M85 146 H115" stroke="#c7e7ff" stroke-width="2" stroke-linecap="round"/>
-
    </svg>
   </div>
-
   <div class="official-label">Official Site</div>
  </a>
 
@@ -1170,398 +293,157 @@ nav button.active{color:#087acb}
  </div>
 
  <div class="draw-info">
-
   <div class="draw-number" id="drawNumber">Draw #: --</div>
-
   <div class="time-row">
-   <div class="time-box">
-    <span class="time-value" id="countHours">--</span>
-    <span class="time-label">HR</span>
-   </div>
-
-   <div class="time-box">
-    <span class="time-value" id="countMinutes">--</span>
-    <span class="time-label">MIN</span>
-   </div>
+   <div class="time-box"><span class="time-value" id="countHours">--</span><span class="time-label">HR</span></div>
+   <div class="time-box"><span class="time-value" id="countMinutes">--</span><span class="time-label">MIN</span></div>
   </div>
-
   <div class="draw-status" id="drawScheduleStatus">Loading schedule...</div>
-
  </div>
 </section>
 
 <div class="results-heading">🏆 PREVIOUS DRAW RESULTS</div>
-
 <section class="results-board">
- <div class="result-card">
-  <span class="result-rank">1</span>
-  <div class="result-number" id="resultFirst">--</div>
-  <div class="result-caption">First Prize</div>
- </div>
-
- <div class="result-card">
-  <span class="result-rank">2</span>
-  <div class="result-number" id="resultSecond">--</div>
-  <div class="result-caption">Last Two</div>
- </div>
-
- <div class="result-card">
-  <span class="result-rank">3</span>
-  <div class="result-number" id="resultThird">--</div>
-  <div class="result-caption">Front Three</div>
- </div>
+ <div class="result-card"><span class="result-rank">1</span><div class="result-number" id="resultFirst">--</div><div class="result-caption">First Prize</div></div>
+ <div class="result-card"><span class="result-rank">2</span><div class="result-number" id="resultSecond">--</div><div class="result-caption">Last Two</div></div>
+ <div class="result-card"><span class="result-rank">3</span><div class="result-number" id="resultThird">--</div><div class="result-caption">Front Three</div></div>
 </section>
 
 <section class="notice-wrap" id="noticeWrap">
  <div class="notice-icon">📢</div>
- <div class="notice-window">
-  <div class="notice-track" id="noticeTrack"></div>
- </div>
+ <div class="notice-window"><div class="notice-track" id="noticeTrack"></div></div>
 </section>
 
 <div class="event">
-
  <div class="live-event" onclick="openLiveEvent()">
-  <span class="live-dot">🔴</span>
-  <span>Live</span>
-
+  <span class="live-dot">🔴</span><span>Live</span>
   <span class="platform-logos">
-
-   <span class="platform-logo">
-    <svg viewBox="0 0 24 24">
-     <rect x="1" y="4" width="22" height="16" rx="5" fill="#FF0033"/>
-     <path d="M10 8L16 12L10 16Z" fill="#fff"/>
-    </svg>
-   </span>
-
-   <span class="platform-logo">
-    <svg viewBox="0 0 24 24">
-     <circle cx="12" cy="12" r="11" fill="#1877F2"/>
-     <path d="M13.5 20V13.1H16L16.4 10.2H13.5V8.4C13.5 7.6 13.8 7.1 14.9 7.1H16.5V4.5C16.2 4.5 15.2 4.4 14.2 4.4C11.7 4.4 10.1 5.9 10.1 8.1V10.2H7.7V13.1H10.1V20Z"
-      fill="#fff"/>
-    </svg>
-   </span>
-
+   <span class="platform-logo"><svg viewBox="0 0 24 24"><rect x="1" y="4" width="22" height="16" rx="5" fill="#FF0033"/><path d="M10 8L16 12L10 16Z" fill="#fff"/></svg></span>
+   <span class="platform-logo"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="11" fill="#1877F2"/><path d="M13.5 20V13.1H16L16.4 10.2H13.5V8.4C13.5 7.6 13.8 7.1 14.9 7.1H16.5V4.5C16.2 4.5 15.2 4.4 14.2 4.4C11.7 4.4 10.1 5.9 10.1 8.1V10.2H7.7V13.1H10.1V20Z" fill="#fff"/></svg></span>
   </span>
  </div>
 
- <!-- DAILY MILLIONAIRE INFORMATION CARD: DISPLAY ONLY -->
-
- <div class="next-date" id="dailyMillionaireInfo"
-      role="status" aria-live="polite"
-      aria-label="Daily Millionaire countdown and latest result">
-
-  <small>💎 DAILY MILLIONAIRE</small>
-
-  <strong class="millionaire-time" id="millionaireNextDraw">
-   Next Draw In: Loading...
-  </strong>
-
-  <strong class="millionaire-result" id="millionaireLatestResult">
-   Latest Result: Not announced
-  </strong>
-
+ <!-- DAILY MILLIONAIRE: COUNTDOWN ONLY, NOT CLICKABLE -->
+ <div class="next-date" id="dailyMillionaireInfo" role="status" aria-live="polite" aria-label="Daily Millionaire countdown">
+  <div class="millionaire-title">💎 DAILY MILLIONAIRE</div>
+  <div class="millionaire-clock">
+   <div class="millionaire-unit hours">
+    <strong id="millionaireHours">--</strong>
+    <span>HR</span>
+   </div>
+   <div class="millionaire-unit minutes">
+    <strong id="millionaireMinutes">--</strong>
+    <span>MIN</span>
+   </div>
+   <div class="millionaire-unit seconds">
+    <strong id="millionaireSeconds">--</strong>
+    <span>SEC</span>
+   </div>
+  </div>
+  <div class="millionaire-status">NEXT DRAW SCHEDULED</div>
  </div>
-
 </div>
 
-<!-- GAME CARDS -->
-
 <section class="cards">
-
  <a class="game-card single" href="single.html">
-  <span class="card-glow"></span>
-  <div class="card-crown">👑</div>
-  <div class="balls">
-   <div class="ball">7</div>
-  </div>
-  <h2>SINGLE</h2>
-  <div class="play">PLAY NOW <span class="play-arrow">➜</span></div>
+  <span class="card-glow"></span><div class="card-crown">👑</div>
+  <div class="balls"><div class="ball">7</div></div>
+  <h2>SINGLE</h2><div class="play">PLAY NOW <span class="play-arrow">➜</span></div>
  </a>
 
  <a class="game-card two" href="2D.html">
-  <span class="card-glow"></span>
-  <div class="card-crown">👑</div>
-  <div class="balls">
-   <div class="ball">2</div>
-   <div class="ball">8</div>
-  </div>
-  <h2>2D</h2>
-  <div class="play">PLAY NOW <span class="play-arrow">➜</span></div>
+  <span class="card-glow"></span><div class="card-crown">👑</div>
+  <div class="balls"><div class="ball">2</div><div class="ball">8</div></div>
+  <h2>2D</h2><div class="play">PLAY NOW <span class="play-arrow">➜</span></div>
  </a>
 
  <a class="game-card three" href="3up.html">
-  <span class="card-glow"></span>
-  <div class="card-crown">👑</div>
-  <div class="balls">
-   <div class="ball">1</div>
-   <div class="ball">3</div>
-   <div class="ball">6</div>
-  </div>
-  <h2>3 UP</h2>
-  <div class="play">PLAY NOW <span class="play-arrow">➜</span></div>
+  <span class="card-glow"></span><div class="card-crown">👑</div>
+  <div class="balls"><div class="ball">1</div><div class="ball">3</div><div class="ball">6</div></div>
+  <h2>3 UP</h2><div class="play">PLAY NOW <span class="play-arrow">➜</span></div>
  </a>
 
  <a class="game-card six" href="6up.html">
-  <span class="card-glow"></span>
-  <div class="card-crown">👑</div>
-  <div class="balls">
-   <div class="ball">1</div>
-   <div class="ball">2</div>
-   <div class="ball">3</div>
-   <div class="ball">4</div>
-   <div class="ball">5</div>
-   <div class="ball">6</div>
-  </div>
-  <h2>6 UP</h2>
-  <div class="play">PLAY NOW <span class="play-arrow">➜</span></div>
+  <span class="card-glow"></span><div class="card-crown">👑</div>
+  <div class="balls"><div class="ball">1</div><div class="ball">2</div><div class="ball">3</div><div class="ball">4</div><div class="ball">5</div><div class="ball">6</div></div>
+  <h2>6 UP</h2><div class="play">PLAY NOW <span class="play-arrow">➜</span></div>
  </a>
 
  <div class="game-divider" aria-hidden="true"></div>
 
- <!-- DAILY MILLIONAIRE LOGO CARD -->
-
- <a class="game-card millionaire" href="daily-millionaire.html"
-    aria-label="Open Daily Millionaire">
-
-  <svg class="millionaire-logo"
-       viewBox="0 0 600 300"
-       xmlns="http://www.w3.org/2000/svg"
-       role="img"
-       aria-label="Daily Millionaire Global Lottery">
-
+ <a class="game-card millionaire" href="daily-millionaire.html" aria-label="Open Daily Millionaire">
+  <svg class="millionaire-logo" viewBox="0 0 600 300" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Daily Millionaire Global Lottery">
    <defs>
-
-    <linearGradient id="mlBlue" x1="0" y1="0" x2="0" y2="1">
-     <stop offset="0" stop-color="#43c7ff"/>
-     <stop offset="1" stop-color="#073bba"/>
-    </linearGradient>
-
-    <linearGradient id="mlGold" x1="0" y1="0" x2="0" y2="1">
-     <stop offset="0" stop-color="#fff77a"/>
-     <stop offset=".45" stop-color="#ffbd18"/>
-     <stop offset="1" stop-color="#e95b00"/>
-    </linearGradient>
-
-    <linearGradient id="mlRed" x1="0" y1="0" x2="0" y2="1">
-     <stop offset="0" stop-color="#ff5141"/>
-     <stop offset="1" stop-color="#a90020"/>
-    </linearGradient>
-
-    <filter id="mlShadow" x="-30%" y="-30%" width="160%" height="170%">
-     <feGaussianBlur in="SourceAlpha" stdDeviation="5"/>
-     <feOffset dy="5"/>
-     <feComponentTransfer>
-      <feFuncA type="linear" slope=".6"/>
-     </feComponentTransfer>
-     <feMerge>
-      <feMergeNode/>
-      <feMergeNode in="SourceGraphic"/>
-     </feMerge>
-    </filter>
-
+    <linearGradient id="mlBlue" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#43c7ff"/><stop offset="1" stop-color="#073bba"/></linearGradient>
+    <linearGradient id="mlGold" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#fff77a"/><stop offset=".45" stop-color="#ffbd18"/><stop offset="1" stop-color="#e95b00"/></linearGradient>
+    <linearGradient id="mlRed" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#ff5141"/><stop offset="1" stop-color="#a90020"/></linearGradient>
+    <filter id="mlShadow" x="-30%" y="-30%" width="160%" height="170%"><feGaussianBlur in="SourceAlpha" stdDeviation="5"/><feOffset dy="5"/><feComponentTransfer><feFuncA type="linear" slope=".6"/></feComponentTransfer><feMerge><feMergeNode/><feMergeNode in="SourceGraphic"/></feMerge></filter>
    </defs>
-
-   <rect x="5" y="5" width="590" height="290"
-         rx="30" fill="#071b52"
-         stroke="#f7b51b" stroke-width="5"/>
-
-   <circle cx="300" cy="120" r="105"
-           fill="url(#mlBlue)"
-           stroke="#ffd54b" stroke-width="7"/>
-
-   <path d="M205 120 Q300 35 395 120 Q300 205 205 120"
-         fill="none" stroke="#9deaff" stroke-width="4"/>
-
-   <path d="M300 16 Q235 120 300 224 M300 16 Q365 120 300 224"
-         fill="none" stroke="#9deaff" stroke-width="4"/>
-
-   <path d="M200 120 H400 M225 75 Q300 105 375 75 M225 165 Q300 135 375 165"
-         fill="none" stroke="#9deaff" stroke-width="3"/>
-
+   <rect x="5" y="5" width="590" height="290" rx="30" fill="#071b52" stroke="#f7b51b" stroke-width="5"/>
+   <circle cx="300" cy="120" r="105" fill="url(#mlBlue)" stroke="#ffd54b" stroke-width="7"/>
+   <path d="M205 120 Q300 35 395 120 Q300 205 205 120" fill="none" stroke="#9deaff" stroke-width="4"/>
+   <path d="M300 16 Q235 120 300 224 M300 16 Q365 120 300 224" fill="none" stroke="#9deaff" stroke-width="4"/>
+   <path d="M200 120 H400 M225 75 Q300 105 375 75 M225 165 Q300 135 375 165" fill="none" stroke="#9deaff" stroke-width="3"/>
    <g filter="url(#mlShadow)">
-
-    <circle cx="100" cy="72" r="39"
-            fill="#ed263b" stroke="#ffd34e" stroke-width="6"/>
-
-    <circle cx="100" cy="72" r="27" fill="#fff"/>
-
-    <text x="100" y="84"
-          text-anchor="middle"
-          font-size="39"
-          font-weight="900"
-          fill="#152a58">7</text>
-
-    <circle cx="493" cy="62" r="34"
-            fill="#14a94d" stroke="#ffd34e" stroke-width="6"/>
-
-    <circle cx="493" cy="62" r="23" fill="#fff"/>
-
-    <text x="493" y="73"
-          text-anchor="middle"
-          font-size="32"
-          font-weight="900"
-          fill="#152a58">5</text>
-
+    <circle cx="100" cy="72" r="39" fill="#ed263b" stroke="#ffd34e" stroke-width="6"/><circle cx="100" cy="72" r="27" fill="#fff"/>
+    <text x="100" y="84" text-anchor="middle" font-size="39" font-weight="900" fill="#152a58">7</text>
+    <circle cx="493" cy="62" r="34" fill="#14a94d" stroke="#ffd34e" stroke-width="6"/><circle cx="493" cy="62" r="23" fill="#fff"/>
+    <text x="493" y="73" text-anchor="middle" font-size="32" font-weight="900" fill="#152a58">5</text>
    </g>
-
-   <text x="300" y="105"
-         text-anchor="middle"
-         font-size="65"
-         font-weight="1000"
-         font-style="italic"
-         fill="#fff"
-         stroke="#12316c"
-         stroke-width="3"
-         paint-order="stroke">Daily</text>
-
-   <text x="300" y="177"
-         text-anchor="middle"
-         font-size="75"
-         font-weight="1000"
-         font-style="italic"
-         fill="url(#mlGold)"
-         stroke="#762600"
-         stroke-width="8"
-         paint-order="stroke"
-         filter="url(#mlShadow)">Millionaire</text>
-
-   <path d="M45 190 Q300 235 555 190 L535 260 Q300 285 65 260 Z"
-         fill="url(#mlRed)"
-         stroke="#ffb82d"
-         stroke-width="6"/>
-
-   <text x="300" y="236"
-         text-anchor="middle"
-         font-size="25"
-         font-weight="900"
-         font-style="italic"
-         fill="#fff">Play Today... Win Tomorrow...</text>
-
-   <path d="M150 270 H450"
-         stroke="#ffcf42"
-         stroke-width="4"/>
-
-   <text x="300" y="289"
-         text-anchor="middle"
-         font-size="17"
-         font-weight="900"
-         letter-spacing="6"
-         fill="#d8efff">GLOBAL LOTTERY</text>
-
+   <text x="300" y="105" text-anchor="middle" font-size="65" font-weight="1000" font-style="italic" fill="#fff" stroke="#12316c" stroke-width="3" paint-order="stroke">Daily</text>
+   <text x="300" y="177" text-anchor="middle" font-size="75" font-weight="1000" font-style="italic" fill="url(#mlGold)" stroke="#762600" stroke-width="8" paint-order="stroke" filter="url(#mlShadow)">Millionaire</text>
+   <path d="M45 190 Q300 235 555 190 L535 260 Q300 285 65 260 Z" fill="url(#mlRed)" stroke="#ffb82d" stroke-width="6"/>
+   <text x="300" y="236" text-anchor="middle" font-size="25" font-weight="900" font-style="italic" fill="#fff">Play Today... Win Tomorrow...</text>
+   <path d="M150 270 H450" stroke="#ffcf42" stroke-width="4"/>
+   <text x="300" y="289" text-anchor="middle" font-size="17" font-weight="900" letter-spacing="6" fill="#d8efff">GLOBAL LOTTERY</text>
   </svg>
-
  </a>
-
 </section>
 
-<!-- BOTTOM NAVIGATION -->
-
 <nav>
- <button class="active" onclick="location.href='home.html'">
-  <strong>🏠</strong>Home
- </button>
-
- <button onclick="location.href='mybets.html'">
-  <strong>🎯</strong>My Bets
- </button>
-
- <button onclick="location.href='results.html'">
-  <strong>🏆</strong>Results
- </button>
-
- <button onclick="location.href='profile.html'">
-  <strong class="nav-profile-avatar" id="navProfileAvatar">♙</strong>Profile
- </button>
+ <button class="active" onclick="location.href='home.html'"><strong>🏠</strong>Home</button>
+ <button onclick="location.href='mybets.html'"><strong>🎯</strong>My Bets</button>
+ <button onclick="location.href='results.html'"><strong>🏆</strong>Results</button>
+ <button onclick="location.href='profile.html'"><strong class="nav-profile-avatar" id="navProfileAvatar">♙</strong>Profile</button>
 </nav>
-
 </div>
 
 <!-- POINTS MODAL -->
-
 <div class="points-modal" id="pointsModal">
  <div class="points-content">
-
-  <div class="points-header">
-   <h3>💰 My Points</h3>
-   <button class="close-btn" onclick="closePoints()">✕</button>
-  </div>
-
-  <div class="points-total">
-   <small>My Available Points</small>
-   <strong id="modalPoints">0</strong>
-  </div>
-
+  <div class="points-header"><h3>💰 My Points</h3><button class="close-btn" onclick="closePoints()">✕</button></div>
+  <div class="points-total"><small>My Available Points</small><strong id="modalPoints">0</strong></div>
   <h4 style="margin-bottom:10px">Point History</h4>
   <div id="myPointHistory"></div>
-
  </div>
 </div>
 
 <!-- LIVE EVENT MODAL -->
-
 <div class="live-modal" id="liveModal">
  <div class="live-box">
-
-  <div class="live-heading">
-   <h3 id="liveTitle">🔴 GLO 365 Live Event</h3>
-   <button class="close-btn" onclick="closeLiveModal()">✕</button>
-  </div>
-
+  <div class="live-heading"><h3 id="liveTitle">🔴 GLO 365 Live Event</h3><button class="close-btn" onclick="closeLiveModal()">✕</button></div>
   <div class="live-player" id="livePlayer"></div>
-
  </div>
 </div>
 
 <!-- LIVE MESSAGE MODAL -->
-
 <div class="live-modal" id="liveMessageModal">
  <div class="live-message-box">
-
   <div class="live-message-icon" id="liveMessageIcon">🔴</div>
-
   <h3 id="liveMessageTitle">Live Event is currently closed</h3>
-
   <p id="liveMessageText">You can watch the next live event here.</p>
-
   <div class="live-message-logos">
-
-   <span class="platform-logo">
-    <svg viewBox="0 0 24 24">
-     <rect x="1" y="4" width="22" height="16" rx="5" fill="#FF0033"/>
-     <path d="M10 8L16 12L10 16Z" fill="#fff"/>
-    </svg>
-   </span>
-
-   <span class="platform-logo">
-    <svg viewBox="0 0 24 24">
-     <circle cx="12" cy="12" r="11" fill="#1877F2"/>
-     <path d="M13.5 20V13.1H16L16.4 10.2H13.5V8.4C13.5 7.6 13.8 7.1 14.9 7.1H16.5V4.5C16.2 4.5 15.2 4.4 14.2 4.4C11.7 4.4 10.1 5.9 10.1 8.1V10.2H7.7V13.1H10.1V20Z"
-      fill="#fff"/>
-    </svg>
-   </span>
-
+   <span class="platform-logo"><svg viewBox="0 0 24 24"><rect x="1" y="4" width="22" height="16" rx="5" fill="#FF0033"/><path d="M10 8L16 12L10 16Z" fill="#fff"/></svg></span>
+   <span class="platform-logo"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="11" fill="#1877F2"/><path d="M13.5 20V13.1H16L16.4 10.2H13.5V8.4C13.5 7.6 13.8 7.1 14.9 7.1H16.5V4.5C16.2 4.5 15.2 4.4 14.2 4.4C11.7 4.4 10.1 5.9 10.1 8.1V10.2H7.7V13.1H10.1V20Z" fill="#fff"/></svg></span>
   </div>
-
   <button class="live-message-button" onclick="closeLiveMessage()">OK</button>
-
  </div>
 </div>
 
 <script>
 "use strict";
 
-/* SERVER CONFIGURATION */
-
 const API_BASE_URL="https://glo365.onrender.com/api";
-
-/*
- Authentication:
- - HttpOnly cookie is the preferred method.
- - An optional sessionStorage token is supported for older server setups.
- - No user profile or application data is saved in browser storage.
-*/
-
 const TOKEN_KEY="glo365_token";
 
 let currentUser=null;
@@ -1581,27 +463,18 @@ let countdownTimer=null;
 let publicRefreshTimer=null;
 let millionaireCountdownTimer=null;
 
-/* API */
-
 function getToken(){
- try{
-  return sessionStorage.getItem(TOKEN_KEY)||"";
- }catch(error){
-  return "";
-}
-
+ try{return sessionStorage.getItem(TOKEN_KEY)||""}
+ catch(error){return ""}
 }
 
 async function apiRequest(path,options={}){
-
  const token=getToken();
-
  const headers={
   "Accept":"application/json",
   ...(options.body?{"Content-Type":"application/json"}:{}),
   ...(token?{"Authorization":"Bearer "+token}:{})
  };
-
  const response=await fetch(API_BASE_URL+path,{
   method:options.method||"GET",
   headers,
@@ -1609,19 +482,13 @@ async function apiRequest(path,options={}){
   cache:"no-store",
   body:options.body?JSON.stringify(options.body):undefined
  });
-
  let data={};
-
- try{
-  data=await response.json();
- }catch(error){}
-
+ try{data=await response.json()}catch(error){}
  if(!response.ok){
   const error=new Error(data.message||data.error||"Request failed ("+response.status+")");
   error.status=response.status;
   throw error;
  }
-
  return data;
 }
 
@@ -1629,12 +496,10 @@ function setText(id,value){
  const element=document.getElementById(id);
  if(element)element.textContent=value;
 }
-
 function formatPoints(value){
  const number=Number(value||0);
  return Number.isFinite(number)?number.toLocaleString("en-US"):"0";
 }
-
 function getCurrentPoints(){
  if(currentWallet&&currentWallet.balance!==undefined)return Number(currentWallet.balance)||0;
  if(currentUser&&currentUser.balance!==undefined)return Number(currentUser.balance)||0;
@@ -1642,1062 +507,383 @@ function getCurrentPoints(){
 }
 
 /* POINTS */
-
 function updatePointsVisibility(){
-
  const button=document.getElementById("balance");
-
  if(!button)return;
-
- if(!currentUser){
-  button.textContent="Login Required";
-  return;
- }
-
- button.textContent=pointsVisible
-  ?"👁️ "+formatPoints(getCurrentPoints())+" Points"
-  :"🙈 •••••• Points";
-
+ if(!currentUser){button.textContent="Login Required";return}
+ button.textContent=pointsVisible?"👁️ "+formatPoints(getCurrentPoints())+" Points":"🙈 •••••• Points";
  button.title=pointsVisible?"Tap to hide points":"Tap to show points";
-
- button.setAttribute(
-  "aria-label",
-  pointsVisible?"Hide points":"Show points"
- );
-
- setText(
-  "modalPoints",
-  pointsVisible?formatPoints(getCurrentPoints()):"••••••"
- );
+ button.setAttribute("aria-label",pointsVisible?"Hide points":"Show points");
+ setText("modalPoints",pointsVisible?formatPoints(getCurrentPoints()):"••••••");
 }
-
 function togglePointsVisibility(){
  pointsVisible=!pointsVisible;
  updatePointsVisibility();
  renderPointHistory();
 }
-
-function updateBalance(){
- updatePointsVisibility();
-}
-
+function updateBalance(){updatePointsVisibility()}
 async function openPoints(){
-
- if(!currentUser){
-  alert("Please log in to your account.");
-  location.href="login.html";
-  return;
- }
-
+ if(!currentUser){alert("Please log in to your account.");location.href="login.html";return}
  renderPointHistory();
-
  document.getElementById("pointsModal").classList.add("show");
 }
-
-function closePoints(){
- document.getElementById("pointsModal").classList.remove("show");
-}
+function closePoints(){document.getElementById("pointsModal").classList.remove("show")}
 
 /* PROFILE AVATAR */
-
 function safeImageUrl(value){
-
  if(typeof value!=="string"||!value.trim())return "";
-
  try{
-
   const url=new URL(value,location.href);
-
   if(url.protocol!=="https:"&&url.origin!==location.origin)return "";
-
   return url.href;
-
- }catch(error){
-  return "";
- }
+ }catch(error){return ""}
 }
-
 function renderProfileAvatar(){
-
- const avatar=safeImageUrl(
-  (currentProfile&&currentProfile.avatar)||
-  (currentUser&&currentUser.avatar)||""
- );
-
+ const avatar=safeImageUrl((currentProfile&&currentProfile.avatar)||(currentUser&&currentUser.avatar)||"");
  const element=document.getElementById("navProfileAvatar");
-
  if(!element)return;
-
- if(!avatar){
-  element.replaceChildren();
-  element.textContent="♙";
-  return;
- }
-
+ if(!avatar){element.replaceChildren();element.textContent="♙";return}
  const img=document.createElement("img");
-
  img.alt="My Profile Avatar";
  img.src=avatar;
-
- img.onerror=function(){
-  this.onerror=null;
-  element.replaceChildren();
-  element.textContent="♙";
- };
-
+ img.onerror=function(){this.onerror=null;element.replaceChildren();element.textContent="♙"};
  element.replaceChildren(img);
 }
 
 /* AUTHENTICATION */
-
 async function loadCurrentUser(){
-
  const data=await apiRequest("/auth/me");
-
  if(!data||data.success!==true||!data.user){
   const error=new Error("Unable to verify your account.");
   error.status=401;
   throw error;
  }
-
  currentUser=data.user;
-
  if(currentUser.status&&String(currentUser.status).toLowerCase()!=="active"){
   alert("Your account is not active. Please contact the administrator.");
   await logoutAndRedirect();
   throw new Error("Account is not active.");
  }
-
  return currentUser;
 }
-
 async function logoutAndRedirect(){
-
- try{
-  await apiRequest("/auth/logout",{method:"POST"});
- }catch(error){
-  console.warn("Server logout request failed:",error);
- }
-
- try{
-  sessionStorage.removeItem(TOKEN_KEY);
- }catch(error){}
-
- currentUser=null;
- currentWallet=null;
- currentProfile=null;
- currentTransactions=[];
-
+ try{await apiRequest("/auth/logout",{method:"POST"})}
+ catch(error){console.warn("Server logout request failed:",error)}
+ try{sessionStorage.removeItem(TOKEN_KEY)}catch(error){}
+ currentUser=null;currentWallet=null;currentProfile=null;currentTransactions=[];
  location.replace("login.html");
 }
 
 /* WALLET */
-
 async function loadWallet(){
-
  const data=await apiRequest("/wallet");
-
- if(data.success){
-  currentWallet=data;
-  updateBalance();
- }
+ if(data.success){currentWallet=data;updateBalance()}
 }
-
 async function loadTransactions(){
-
  const data=await apiRequest("/wallet/transactions");
-
- currentTransactions=Array.isArray(data.transactions)
-  ?data.transactions:[];
-
+ currentTransactions=Array.isArray(data.transactions)?data.transactions:[];
  renderPointHistory();
 }
-
 function renderPointHistory(){
-
  const container=document.getElementById("myPointHistory");
-
  if(!container)return;
-
  container.replaceChildren();
-
- setText(
-  "modalPoints",
-  pointsVisible?formatPoints(getCurrentPoints()):"••••••"
- );
-
+ setText("modalPoints",pointsVisible?formatPoints(getCurrentPoints()):"••••••");
  if(!currentTransactions.length){
-
   const empty=document.createElement("div");
-
-  empty.className="empty";
-  empty.textContent="No transaction history yet.";
-
-  container.appendChild(empty);
-
-  return;
+  empty.className="empty";empty.textContent="No transaction history yet.";
+  container.appendChild(empty);return;
  }
-
  currentTransactions.forEach(item=>{
-
-  const card=document.createElement("div");
-  card.className="point-entry";
-
-  const amount=document.createElement("div");
-  amount.className="amount";
-
+  const card=document.createElement("div");card.className="point-entry";
+  const amount=document.createElement("div");amount.className="amount";
   const type=String(item.type||"").toLowerCase();
-
-  const isDebit=[
-   "debit",
-   "bet",
-   "withdrawal",
-   "deduction"
-  ].includes(type);
-
+  const isDebit=["debit","bet","withdrawal","deduction"].includes(type);
   if(isDebit)amount.classList.add("debit");
-
   const value=Number(item.amount||0);
-
-  amount.textContent=pointsVisible
-   ?(isDebit?"-":"+")+formatPoints(value)+" Points"
-   :"•••••• Points";
-
-  const reason=document.createElement("div");
-
-  reason.textContent="Description: "+
-   (item.description||item.type||"Transaction");
-
-  const reference=document.createElement("div");
-
-  reference.textContent="Reference: "+
-   (item.reference||"—");
-
+  amount.textContent=pointsVisible?(isDebit?"-":"+")+formatPoints(value)+" Points":"•••••• Points";
+  const reason=document.createElement("div");reason.textContent="Description: "+(item.description||item.type||"Transaction");
+  const reference=document.createElement("div");reference.textContent="Reference: "+(item.reference||"—");
   const date=document.createElement("small");
-
   const parsed=new Date(item.created_at);
-
-  date.textContent="Date: "+
-   (Number.isNaN(parsed.getTime())?"—":parsed.toLocaleString());
-
+  date.textContent="Date: "+(Number.isNaN(parsed.getTime())?"—":parsed.toLocaleString());
   card.append(amount,reason,reference,date);
-
   container.appendChild(card);
-
  });
 }
 
 /* PROFILE */
-
 async function loadProfile(){
-
  const data=await apiRequest("/profile");
-
- if(data.success){
-  currentProfile=data.profile||{};
-  renderProfileAvatar();
- }
+ if(data.success){currentProfile=data.profile||{};renderProfileAvatar()}
 }
 
 /* DRAW SETTINGS */
-
 function parseDrawDate(value){
-
  if(!value)return null;
-
  const date=new Date(value);
-
  return Number.isNaN(date.getTime())?null:date;
 }
-
 async function loadDrawSettings(){
-
  const data=await apiRequest("/public/draw-settings");
-
  if(!data.success)throw new Error("Unable to load draw schedule.");
-
  currentDrawSettings=data.drawSettings||data.settings||null;
-
  updateCountdown();
 }
-
 function updateCountdown(){
-
  const settings=currentDrawSettings||{};
-
  const drawNumber=String(settings.draw_number||"").trim();
-
  const next=parseDrawDate(settings.draw_at);
-
  setText("drawNumber","Draw #: "+(drawNumber||"--"));
-
  if(!next){
-
-  setText("countDays","--");
-  setText("countHours","--");
-  setText("countMinutes","--");
-
-  setText(
-   "drawScheduleStatus",
-   "Admin has not scheduled a draw."
-  );
-
+  setText("countDays","--");setText("countHours","--");setText("countMinutes","--");
+  setText("drawScheduleStatus","Admin has not scheduled a draw.");
   return;
  }
-
  const remaining=next.getTime()-Date.now();
-
  if(remaining<=0){
-
-  setText("countDays","0");
-  setText("countHours","00");
-  setText("countMinutes","00");
-  setText("drawScheduleStatus","DRAW TIME REACHED");
-
-  return;
+  setText("countDays","0");setText("countHours","00");setText("countMinutes","00");
+  setText("drawScheduleStatus","DRAW TIME REACHED");return;
  }
-
  const total=Math.floor(remaining/1000);
-
  setText("countDays",Math.floor(total/86400));
-
- setText(
-  "countHours",
-  String(Math.floor(total%86400/3600)).padStart(2,"0")
- );
-
- setText(
-  "countMinutes",
-  String(Math.floor(total%3600/60)).padStart(2,"0")
- );
-
- setText(
-  "drawScheduleStatus",
-  settings.betting_locked===true
-   ?"BETTING CLOSED"
-   :"NEXT DRAW SCHEDULED"
- );
+ setText("countHours",String(Math.floor(total%86400/3600)).padStart(2,"0"));
+ setText("countMinutes",String(Math.floor(total%3600/60)).padStart(2,"0"));
+ setText("drawScheduleStatus",settings.betting_locked===true?"BETTING CLOSED":"NEXT DRAW SCHEDULED");
 }
 
 /* RESULTS */
-
 function parseResultObject(value){
-
- if(typeof value==="string"){
-  try{
-   return JSON.parse(value);
-  }catch(error){
-   return value;
-  }
- }
-
+ if(typeof value==="string"){try{return JSON.parse(value)}catch(error){return value}}
  return value;
 }
-
 function findResultValue(object,keys){
-
  if(!object||typeof object!=="object")return "--";
-
  for(const key of keys){
-
   const value=object[key];
-
   if(value!==undefined&&value!==null&&String(value).trim()!==""){
-
-   if(typeof value==="object"){
-    return value.number??value.result??value.value??"--";
-   }
-
+   if(typeof value==="object")return value.number??value.result??value.value??"--";
    return value;
   }
  }
-
  return "--";
 }
-
 function extractPrizeNumbers(row){
-
- const result=parseResultObject(
-  row&&row.result!==undefined?row.result:row
- );
-
- const nested=result&&typeof result==="object"
-  ?(result.numbers||result.prizes||result.winners||result)
-  :result;
-
- const firstKeys=[
-  "first",
-  "firstPrize",
-  "first_prize",
-  "prize1",
-  "number1",
-  "result1",
-  "first_prize_number",
-  "firstPrizeNumber",
-  "1st"
- ];
-
- const lastTwoKeys=[
-  "lastTwo",
-  "last_two",
-  "last_2",
-  "last_two_digits",
-  "lastTwoDigits",
-  "two_digit",
-  "2d"
- ];
-
- const frontThreeKeys=[
-  "frontThree",
-  "front_three",
-  "front_3",
-  "front_three_digits",
-  "frontThreeDigits",
-  "three_digit",
-  "3up"
- ];
-
- if(Array.isArray(nested)){
-
-  return [
-   nested[0]??"--",
-   nested[1]??"--",
-   nested[2]??"--"
-  ];
- }
-
- if(nested&&typeof nested==="object"){
-
-  return [
-   findResultValue(nested,firstKeys),
-   findResultValue(nested,lastTwoKeys),
-   findResultValue(nested,frontThreeKeys)
-  ];
- }
-
- return [nested??"--","--","--"];
+ const result=parseResultObject(row&&row.result!==undefined?row.result:row);
+ const nested=result&&typeof result==="object"?(result.numbers||result.prizes||result.winners||result):result;
+ const firstKeys=["first","firstPrize","first_prize","prize1","number1","result1","first_prize_number","firstPrizeNumber","1st"];
+ const lastTwoKeys=["lastTwo","last_two","last_2","last_two_digits","lastTwoDigits","two_digit","2d"];
+ const frontThreeKeys=["frontThree","front_three","front_3","front_three_digits","frontThreeDigits","three_digit","3up"];
+ if(Array.isArray(nested))return[nested[0]??"--",nested[1]??"--",nested[2]??"--"];
+ if(nested&&typeof nested==="object")return[findResultValue(nested,firstKeys),findResultValue(nested,lastTwoKeys),findResultValue(nested,frontThreeKeys)];
+ return[nested??"--","--","--"];
 }
-
 async function loadResults(){
-
  const data=await apiRequest("/results");
-
  currentResults=Array.isArray(data.results)?data.results:[];
-
  updateResults();
 }
-
 function updateResults(){
-
- const ids=[
-  "resultFirst",
-  "resultSecond",
-  "resultThird"
- ];
-
- if(!currentResults.length){
-
-  ids.forEach(id=>setText(id,"--"));
-
-  return;
- }
-
- const latest=currentResults[0];
-
- const values=extractPrizeNumbers(latest);
-
- ids.forEach((id,index)=>{
-  setText(id,String(values[index]??"--"));
- });
+ const ids=["resultFirst","resultSecond","resultThird"];
+ if(!currentResults.length){ids.forEach(id=>setText(id,"--"));return}
+ const values=extractPrizeNumbers(currentResults[0]);
+ ids.forEach((id,index)=>setText(id,String(values[index]??"--")));
 }
 
-/* DAILY MILLIONAIRE COUNTDOWN AND RESULT */
-
-/*
- Daily draw time:
- Every day at 12:15 AM Bangladesh time (Asia/Dhaka).
- This time is fixed in this page and is not loaded from Admin settings.
- Admin only controls the published latest result.
+/* DAILY MILLIONAIRE COUNTDOWN
+   Fixed daily draw: 12:15 AM Bangladesh time.
+   The display uses three separate cards. No result is shown here.
 */
-
 const MILLIONAIRE_TIME_ZONE="Asia/Dhaka";
 const MILLIONAIRE_DRAW_HOUR=0;
 const MILLIONAIRE_DRAW_MINUTE=15;
 const BANGLADESH_UTC_OFFSET_MINUTES=360;
 
 function getBangladeshDateParts(date=new Date()){
-
  const parts=new Intl.DateTimeFormat("en-GB",{
-  timeZone:MILLIONAIRE_TIME_ZONE,
-  year:"numeric",
-  month:"2-digit",
-  day:"2-digit"
+  timeZone:MILLIONAIRE_TIME_ZONE,year:"numeric",month:"2-digit",day:"2-digit"
  }).formatToParts(date);
-
  const values={};
-
- parts.forEach(part=>{
-  values[part.type]=part.value;
- });
-
- return {
-  year:Number(values.year),
-  month:Number(values.month),
-  day:Number(values.day)
- };
+ parts.forEach(part=>{values[part.type]=part.value});
+ return{year:Number(values.year),month:Number(values.month),day:Number(values.day)};
 }
-
 function getNextMillionaireDraw(){
-
  const now=new Date();
-
  const bd=getBangladeshDateParts(now);
-
- /*
-  Bangladesh time is UTC+6.
-  00:15 Bangladesh time = 18:15 UTC on the previous UTC date.
-  Date.UTC is used so the countdown does not depend on the visitor's
-  device timezone.
- */
-
  let targetUtc=Date.UTC(
-  bd.year,
-  bd.month-1,
-  bd.day,
-  MILLIONAIRE_DRAW_HOUR,
-  MILLIONAIRE_DRAW_MINUTE
+  bd.year,bd.month-1,bd.day,
+  MILLIONAIRE_DRAW_HOUR,MILLIONAIRE_DRAW_MINUTE
  )-(BANGLADESH_UTC_OFFSET_MINUTES*60*1000);
-
- if(targetUtc<=now.getTime()){
-  targetUtc+=24*60*60*1000;
- }
-
+ if(targetUtc<=now.getTime())targetUtc+=24*60*60*1000;
  return targetUtc;
 }
-
 function updateMillionaireCountdown(){
-
  const target=getNextMillionaireDraw();
-
  const remaining=Math.max(0,target-Date.now());
-
  const totalSeconds=Math.floor(remaining/1000);
-
  const hours=Math.floor(totalSeconds/3600);
  const minutes=Math.floor((totalSeconds%3600)/60);
  const seconds=totalSeconds%60;
-
- const formattedHours=String(hours).padStart(2,"0");
- const formattedMinutes=String(minutes).padStart(2,"0");
- const formattedSeconds=String(seconds).padStart(2,"0");
-
- setText(
-  "millionaireNextDraw",
-  "Next Draw In: "+formattedHours+":"+formattedMinutes+":"+formattedSeconds
- );
+ setText("millionaireHours",String(hours).padStart(2,"0"));
+ setText("millionaireMinutes",String(minutes).padStart(2,"0"));
+ setText("millionaireSeconds",String(seconds).padStart(2,"0"));
 }
 
-function getFirstAvailableValue(object,keys){
-
- if(!object||typeof object!=="object")return null;
-
- for(const key of keys){
-
-  const value=object[key];
-
-  if(value!==undefined&&value!==null&&String(value).trim()!==""){
-   return value;
-  }
- }
-
- return null;
-}
-
-function getMillionaireResult(data){
-
- if(!data)return "Not announced";
-
- let result=getFirstAvailableValue(data,[
-  "latest_result",
-  "latestResult",
-  "winning_number",
-  "winningNumber",
-  "result",
-  "number",
-  "value"
- ]);
-
- if(result===null&&Array.isArray(data.results)&&data.results.length){
-  result=data.results[0];
- }
-
- if(result===null&&data.latest&&typeof data.latest==="object"){
-  result=getFirstAvailableValue(data.latest,[
-   "result",
-   "number",
-   "winning_number",
-   "value"
-  ]);
- }
-
- if(result&&typeof result==="object"){
-
-  result=getFirstAvailableValue(result,[
-   "result",
-   "number",
-   "winning_number",
-   "winningNumber",
-   "value",
-   "first_prize"
-  ]);
- }
-
- if(result===null)return "Not announced";
-
- return String(result);
-}
-
-function renderDailyMillionaire(){
-
- const data=currentDailyMillionaire||{};
-
- const latestResult=getMillionaireResult(data);
-
- updateMillionaireCountdown();
-
- setText(
-  "millionaireLatestResult",
-  "Latest Result: "+latestResult
- );
-}
-
-async function loadDailyMillionaire(){
-
- try{
-
-  const data=await apiRequest("/public/daily-millionaire");
-
-  if(!data||data.success===false){
-   throw new Error("Daily Millionaire result is unavailable.");
-  }
-
-  currentDailyMillionaire=
-   data.dailyMillionaire||
-   data.millionaire||
-   data.data||
-   data;
-
-  renderDailyMillionaire();
-
- }catch(error){
-
-  console.warn("Daily Millionaire result unavailable:",error);
-
-  /*
-   If the endpoint is not available yet, keep the countdown working.
-   The result will show Not announced until Admin publishes a result
-   through the connected backend endpoint.
-  */
-
-  if(!currentDailyMillionaire){
-   currentDailyMillionaire={};
-  }
-
-  renderDailyMillionaire();
-
- }
-}
+/* MILLIONAIRE RESULT API IS NOT CALLED ON HOME.
+   The Home information card intentionally contains countdown only.
+*/
 
 /* ADMIN NOTICE */
-
 function getNoticeText(data){
-
  if(!data)return "";
-
  if(typeof data==="string")return data.trim();
-
- if(typeof data==="object"){
-
-  return String(
-   data.text||
-   data.message||
-   data.content||
-   data.notice||
-   ""
-  ).trim();
-
- }
-
+ if(typeof data==="object")return String(data.text||data.message||data.content||data.notice||"").trim();
  return "";
 }
-
 async function loadAdminMessage(){
-
  const data=await apiRequest("/public/admin-message");
-
  currentAdminMessage=data.message||null;
-
  renderHomeMessages();
 }
-
 function renderHomeMessages(){
-
  const wrap=document.getElementById("noticeWrap");
-
  const track=document.getElementById("noticeTrack");
-
  track.replaceChildren();
-
  const message=getNoticeText(currentAdminMessage);
-
- if(!message){
-
-  wrap.classList.remove("show");
-
-  return;
- }
-
+ if(!message){wrap.classList.remove("show");return}
  wrap.classList.add("show");
-
  const text="📢 GLO 365 NOTICE: "+message;
-
- const first=document.createElement("span");
- first.textContent=text;
-
- const second=document.createElement("span");
- second.textContent=text;
-
+ const first=document.createElement("span");first.textContent=text;
+ const second=document.createElement("span");second.textContent=text;
  track.append(first,second);
 }
 
 /* LIVE EVENT */
-
 async function loadLiveEvent(){
-
  const data=await apiRequest("/public/live-event");
-
  currentLiveEvent=data.event||null;
 }
-
 function showLiveMessage(title,message,icon){
-
- setText("liveMessageTitle",title);
- setText("liveMessageText",message);
- setText("liveMessageIcon",icon||"🔴");
-
+ setText("liveMessageTitle",title);setText("liveMessageText",message);setText("liveMessageIcon",icon||"🔴");
  document.getElementById("liveMessageModal").classList.add("show");
 }
-
-function closeLiveMessage(){
-
- document.getElementById("liveMessageModal").classList.remove("show");
-}
-
+function closeLiveMessage(){document.getElementById("liveMessageModal").classList.remove("show")}
 document.getElementById("liveMessageModal").addEventListener("click",function(event){
-
  if(event.target===this)closeLiveMessage();
-
 });
-
 function getVideoEmbed(url){
-
  try{
-
   const parsed=new URL(url);
-
   if(parsed.protocol!=="https:")return null;
-
   const host=parsed.hostname.toLowerCase();
-
-  if([
-   "youtube.com",
-   "www.youtube.com",
-   "m.youtube.com",
-   "youtu.be",
-   "www.youtu.be"
-  ].includes(host)){
-
+  if(["youtube.com","www.youtube.com","m.youtube.com","youtu.be","www.youtu.be"].includes(host)){
    let id="";
-
-   if(host.includes("youtu.be")){
-
-    id=parsed.pathname.split("/").filter(Boolean)[0]||"";
-
-   }else if(parsed.searchParams.get("v")){
-
-    id=parsed.searchParams.get("v");
-
-   }else{
-
+   if(host.includes("youtu.be"))id=parsed.pathname.split("/").filter(Boolean)[0]||"";
+   else if(parsed.searchParams.get("v"))id=parsed.searchParams.get("v");
+   else{
     const parts=parsed.pathname.split("/").filter(Boolean);
-
-    if(parts.length>=2&&["live","embed","shorts"].includes(parts[0])){
-     id=parts[1];
-    }
+    if(parts.length>=2&&["live","embed","shorts"].includes(parts[0]))id=parts[1];
    }
-
    if(!/^[a-zA-Z0-9_-]{6,20}$/.test(id))return null;
-
-   return {
-    embed:"https://www.youtube-nocookie.com/embed/"+id+"?autoplay=1&playsinline=1&rel=0"
-   };
+   return{embed:"https://www.youtube-nocookie.com/embed/"+id+"?autoplay=1&playsinline=1&rel=0"};
   }
-
-  if([
-   "facebook.com",
-   "www.facebook.com",
-   "m.facebook.com",
-   "fb.watch"
-  ].includes(host)){
-
-   return {
-    embed:"https://www.facebook.com/plugins/video.php?href="+
-     encodeURIComponent(parsed.href)+
-     "&show_text=false&width=500"
-   };
+  if(["facebook.com","www.facebook.com","m.facebook.com","fb.watch"].includes(host)){
+   return{embed:"https://www.facebook.com/plugins/video.php?href="+encodeURIComponent(parsed.href)+"&show_text=false&width=500"};
   }
-
   return null;
-
- }catch(error){
-
-  return null;
-
- }
+ }catch(error){return null}
 }
-
 function openLiveEvent(){
-
  const event=currentLiveEvent;
-
  if(!event||event.active!==true||!event.url){
-
-  showLiveMessage(
-   "Live Event is currently closed",
-   "You can watch the next live event here.",
-   "🔴"
-  );
-
-  return;
+  showLiveMessage("Live Event is currently closed","You can watch the next live event here.","🔴");return;
  }
-
  const video=getVideoEmbed(event.url);
-
  if(!video){
-
-  showLiveMessage(
-   "Invalid video link",
-   "Admin has not configured a valid YouTube or Facebook video link.",
-   "⚠️"
-  );
-
-  return;
+  showLiveMessage("Invalid video link","Admin has not configured a valid YouTube or Facebook video link.","⚠️");return;
  }
-
- setText(
-  "liveTitle",
-  "🔴 "+(event.title||"GLO 365 Live Event")
- );
-
+ setText("liveTitle","🔴 "+(event.title||"GLO 365 Live Event"));
  const player=document.getElementById("livePlayer");
-
  player.replaceChildren();
-
  const iframe=document.createElement("iframe");
-
- iframe.src=video.embed;
- iframe.title="GLO 365 Live Event";
+ iframe.src=video.embed;iframe.title="GLO 365 Live Event";
  iframe.allow="autoplay; encrypted-media; picture-in-picture; fullscreen";
- iframe.allowFullscreen=true;
- iframe.referrerPolicy="strict-origin-when-cross-origin";
-
+ iframe.allowFullscreen=true;iframe.referrerPolicy="strict-origin-when-cross-origin";
  player.appendChild(iframe);
-
  document.getElementById("liveModal").classList.add("show");
 }
-
 function closeLiveModal(){
-
  document.getElementById("livePlayer").replaceChildren();
-
  document.getElementById("liveModal").classList.remove("show");
 }
-
 document.getElementById("liveModal").addEventListener("click",function(event){
-
  if(event.target===this)closeLiveModal();
-
 });
 
 /* HOME INITIALIZATION */
-
 async function loadHome(){
-
  if(homeLoading)return;
-
  homeLoading=true;
-
  try{
-
   await loadCurrentUser();
-
   const tasks=[
-   loadWallet(),
-   loadProfile(),
-   loadTransactions(),
-   loadDrawSettings(),
-   loadResults(),
-   loadAdminMessage(),
-   loadLiveEvent(),
-   loadDailyMillionaire()
+   loadWallet(),loadProfile(),loadTransactions(),loadDrawSettings(),
+   loadResults(),loadAdminMessage(),loadLiveEvent()
   ];
-
   const results=await Promise.allSettled(tasks);
-
   results.forEach((result,index)=>{
-
-   if(result.status==="rejected"){
-
-    console.error(
-     "Home data request "+index+" failed:",
-     result.reason
-    );
-
-   }
-
+   if(result.status==="rejected")console.error("Home data request "+index+" failed:",result.reason);
   });
-
-  updateBalance();
-  renderProfileAvatar();
-  renderPointHistory();
-  updateCountdown();
-  updateResults();
-  renderDailyMillionaire();
-
+  updateBalance();renderProfileAvatar();renderPointHistory();updateCountdown();updateResults();
   homeLoaded=true;
-
  }catch(error){
-
   console.error("Home initialization failed:",error);
-
-  if(error.status===401){
-
-   await logoutAndRedirect();
-
-   return;
-  }
-
+  if(error.status===401){await logoutAndRedirect();return}
   if(error.status===403){
-
    alert("Access denied. Please contact the administrator.");
-
-   await logoutAndRedirect();
-
-   return;
+   await logoutAndRedirect();return;
   }
-
   if(!currentUser){
-
    setText("balance","Login Required");
-
-   setText(
-    "drawScheduleStatus",
-    "Unable to connect. Please refresh."
-   );
-
+   setText("drawScheduleStatus","Unable to connect. Please refresh.");
   }
-
- }finally{
-
-  homeLoading=false;
-
- }
+ }finally{homeLoading=false}
 }
 
-/* REFRESH PUBLIC DATA WITHOUT RELOADING AUTH OR PROFILE */
-
+/* REFRESH PUBLIC DATA */
 async function refreshPublicData(){
-
  if(refreshRunning||!currentUser||document.hidden)return;
-
  refreshRunning=true;
-
  try{
-
-  const tasks=[
-   loadDrawSettings(),
-   loadResults(),
-   loadAdminMessage(),
-   loadLiveEvent(),
-   loadDailyMillionaire()
-  ];
-
+  const tasks=[loadDrawSettings(),loadResults(),loadAdminMessage(),loadLiveEvent()];
   await Promise.allSettled(tasks);
-
- }finally{
-
-  refreshRunning=false;
-
- }
+ }finally{refreshRunning=false}
 }
 
 /* PAGE EVENTS */
-
 document.addEventListener("visibilitychange",()=>{
-
  if(!document.hidden&&homeLoaded){
   refreshPublicData();
   updateMillionaireCountdown();
  }
-
 });
-
 window.addEventListener("focus",()=>{
-
  if(homeLoaded)refreshPublicData();
-
  updateMillionaireCountdown();
-
 });
-
 document.addEventListener("keydown",event=>{
-
- if(event.key==="Escape"){
-
-  closePoints();
-  closeLiveModal();
-  closeLiveMessage();
-
- }
-
+ if(event.key==="Escape"){closePoints();closeLiveModal();closeLiveMessage()}
 });
 
 /* START */
-
 pointsVisible=true;
-
 loadHome();
-
 countdownTimer=setInterval(updateCountdown,1000);
-
-/* Daily Millionaire countdown refreshes every second independently. */
-
 updateMillionaireCountdown();
-
-millionaireCountdownTimer=setInterval(
- updateMillionaireCountdown,
- 1000
-);
-
+millionaireCountdownTimer=setInterval(updateMillionaireCountdown,1000);
 publicRefreshTimer=setInterval(()=>{
-
- if(homeLoaded&&!document.hidden){
-  refreshPublicData();
- }
-
+ if(homeLoaded&&!document.hidden)refreshPublicData();
 },60000);
-
 </script>
-
 </body>
 </html>
