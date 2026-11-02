@@ -1,33 +1,1591 @@
+
 <!DOCTYPE html>
-<html lang="bn"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta name="theme-color" content="#0b1020"><title>GLO 365 - Withdrawal Management</title>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="theme-color" content="#0b1020">
+<title>GLO 365 - Withdrawal Management</title>
+
 <style>
-*{box-sizing:border-box;margin:0;padding:0}:root{--bg:#080d19;--panel:#111a2d;--panel2:#16223a;--border:#263653;--gold:#f5bd45;--gold2:#ffda79;--text:#f5f7fc;--muted:#8e9bb2;--green:#38d996;--red:#ff6b78;--blue:#66a9ff}body{font-family:Arial,sans-serif;background:var(--bg);color:var(--text);min-height:100vh}.layout{display:flex;min-height:100vh}.sidebar{width:245px;background:#0c1425;border-right:1px solid var(--border);padding:24px 15px;display:flex;flex-direction:column;flex-shrink:0}.brand{display:flex;align-items:center;gap:11px;padding:5px 9px 28px;border-bottom:1px solid var(--border)}.brand-icon{width:43px;height:43px;display:grid;place-items:center;border-radius:13px;background:linear-gradient(135deg,#ffe18a,#d99a16);color:#17120a;font-size:19px;font-weight:900}.brand h2{font-size:22px;letter-spacing:1px}.brand h2 span{color:var(--gold)}.brand small{display:block;color:var(--muted);font-size:10px;margin-top:4px;letter-spacing:2px}.nav-title{color:#66758f;font-size:10px;font-weight:800;letter-spacing:2px;padding:25px 12px 11px}.nav-link{display:flex;align-items:center;gap:12px;padding:13px 12px;margin:3px 0;border-radius:10px;color:#a8b5ca;font-size:13px;text-decoration:none}.nav-link:hover,.nav-link.active{background:#f5bd4515;color:var(--gold2)}.nav-link.active{border:1px solid #f5bd4530}.nav-icon{width:23px;text-align:center;font-size:17px}.sidebar-bottom{margin-top:auto;padding-top:20px}.admin-box{background:#16233a;border:1px solid var(--border);border-radius:12px;padding:13px;display:flex;align-items:center;gap:10px}.admin-avatar{width:36px;height:36px;display:grid;place-items:center;background:#f5bd4520;color:var(--gold);border-radius:50%;font-weight:900}.admin-info strong{display:block;font-size:12px}.admin-info small{display:block;color:var(--muted);font-size:10px;margin-top:4px}.main{flex:1;min-width:0;padding:25px;max-width:1600px;margin:auto}.topbar{display:flex;justify-content:space-between;align-items:center;gap:15px;flex-wrap:wrap;margin-bottom:27px}.page-heading h1{font-size:25px}.page-heading p{color:var(--muted);font-size:12px;margin-top:7px}.top-actions{display:flex;gap:9px;flex-wrap:wrap}.btn{padding:11px 15px;border-radius:9px;font-size:12px;font-weight:800;display:inline-flex;align-items:center;justify-content:center;gap:7px;text-decoration:none}.btn-back{background:#1a2942;color:#d9e3f3;border:1px solid var(--border)}.btn-logout{background:#381d2b;color:#ff9aa4;border:1px solid #6a2c40}.hero{background:radial-gradient(circle at 85% 10%,#f5bd4520,transparent 32%),linear-gradient(120deg,#182640,#111a2d 70%);border:1px solid #34425b;border-radius:18px;padding:24px;margin-bottom:22px;position:relative;overflow:hidden}.hero-label{display:inline-flex;color:var(--gold2);background:#f5bd4517;border:1px solid #f5bd4535;padding:7px 11px;border-radius:30px;font-size:10px;font-weight:800;letter-spacing:1px}.hero h2{font-size:23px;margin:16px 0 8px}.hero p{color:#aab7cb;font-size:12px;line-height:1.7;max-width:650px}.stats{display:grid;grid-template-columns:repeat(4,1fr);gap:15px;margin-bottom:22px}.stat-card,.content-card{background:var(--panel);border:1px solid var(--border);border-radius:15px}.stat-card{padding:18px}.stat-card small{color:var(--muted);font-size:11px}.stat-card h3{font-size:29px;margin-top:17px}.stat-card p{color:#75849e;font-size:10px;margin-top:6px}.content-card{overflow:hidden}.card-header{padding:19px 20px;display:flex;justify-content:space-between;align-items:center;gap:12px;flex-wrap:wrap;border-bottom:1px solid var(--border)}.card-title h2{font-size:17px}.card-title p{color:var(--muted);font-size:11px;margin-top:6px}.live-tag{color:var(--green);background:#38d99614;border:1px solid #38d99630;padding:7px 10px;border-radius:30px;font-size:10px;font-weight:800}.notice{margin:16px 20px;padding:13px 15px;background:#f5bd4510;border:1px solid #f5bd4530;border-radius:10px;color:#e9c978;font-size:11px;line-height:1.7}.toolbar{display:flex;align-items:center;gap:10px;flex-wrap:wrap;padding:0 20px 17px}.search-wrap{flex:1;min-width:210px}.toolbar input,.toolbar select{width:100%;background:#0b1425;border:1px solid var(--border);color:white;border-radius:9px;padding:12px 13px;font-size:12px;outline:none}.toolbar select{width:160px}.toolbar input:focus,.toolbar select:focus{border-color:var(--gold)}.refresh-btn{padding:12px 15px;background:#1c2b45;color:var(--gold2);border:1px solid var(--border);border-radius:9px;font-size:12px;font-weight:800}.message{display:none;margin:0 20px 15px;padding:12px 14px;border-radius:9px;font-size:12px;line-height:1.5}.message.success{display:block;background:#38d99616;color:#53e5a7;border:1px solid #38d99635}.message.error{display:block;background:#ff6b7816;color:#ff929b;border:1px solid #ff6b7835}.table-wrap{overflow-x:auto}table{width:100%;border-collapse:collapse;min-width:850px}thead{background:#0d1729}th{color:#8f9db5;font-size:10px;text-align:left;letter-spacing:.8px;padding:15px 14px}td{padding:15px 14px;border-top:1px solid #26344d;font-size:12px;color:#dce4f1;vertical-align:middle}tbody tr:hover{background:#ffffff05}.user-cell{display:flex;align-items:center;gap:9px}.user-avatar{width:32px;height:32px;border-radius:10px;display:grid;place-items:center;background:#f5bd4517;color:var(--gold);font-weight:900}.user-name{font-weight:800;color:white}.amount{color:var(--gold2);font-weight:900;font-size:14px}.method{display:inline-block;padding:6px 9px;background:#1a2942;border:1px solid #30415e;border-radius:7px;font-size:10px}.account{color:#aebbd0;font-family:monospace;overflow-wrap:anywhere}.status{display:inline-flex;align-items:center;gap:6px;padding:6px 9px;border-radius:30px;font-size:10px;font-weight:900}.status:before{content:"";width:6px;height:6px;border-radius:50%;background:currentColor}.pending{background:#f5bd4518;color:#f5c75e}.approved{background:#38d99618;color:#38d996}.rejected{background:#ff6b7818;color:#ff7d88}.action-buttons{display:flex;gap:6px;flex-wrap:wrap}.action-buttons button{padding:8px 10px;border-radius:7px;font-size:10px;font-weight:900}.approve{background:#38d99618;color:#42e0a0;border:1px solid #38d99635}.reject{background:#ff6b7818;color:#ff8290;border:1px solid #ff6b7835}.reviewed{color:#77869f;font-size:10px}.empty{text-align:center;padding:35px 15px;color:#8392aa;font-size:12px}.mobile-list{display:none;padding:0 15px 15px}.request-card{background:#0d1729;border:1px solid var(--border);border-radius:13px;padding:15px;margin-bottom:12px}.request-card-head{display:flex;justify-content:space-between;align-items:center;gap:10px;margin-bottom:13px}.request-card p{display:flex;justify-content:space-between;gap:12px;border-top:1px solid #25334b;padding:10px 0;font-size:11px;color:var(--muted)}.request-card p strong{color:#e1e8f3;text-align:right;overflow-wrap:anywhere}.request-card .action-buttons{margin-top:12px}.request-card .action-buttons button{flex:1;padding:11px}.footer{padding:18px 5px;text-align:center;color:#66758e;font-size:10px}.modal{display:none;position:fixed;inset:0;z-index:10;background:#0009;padding:15px;align-items:center;justify-content:center}.modal-box{width:100%;max-width:410px;background:#111a2d;border:1px solid var(--border);border-radius:15px;padding:20px}.modal-box h3{font-size:18px;color:var(--gold2);margin-bottom:9px}.modal-box p{font-size:12px;color:var(--muted);line-height:1.6;margin-bottom:13px}.modal-box textarea{width:100%;min-height:90px;background:#0b1425;border:1px solid var(--border);border-radius:9px;color:white;padding:12px;resize:vertical}.modal-actions{display:flex;gap:9px;margin-top:14px}.modal-actions button{flex:1;padding:12px;border-radius:9px;font-weight:800}.confirm{background:#38d996;color:#071b14}.cancel{background:#263653;color:white}@media(max-width:1050px){.sidebar{width:210px}.stats{grid-template-columns:repeat(2,1fr)}}@media(max-width:750px){.layout{display:block}.sidebar{width:100%;padding:12px 14px;border-right:0;border-bottom:1px solid var(--border)}.brand{padding:0;border:0}.brand-icon{width:37px;height:37px}.brand h2{font-size:19px}.sidebar .nav-title,.sidebar-bottom{display:none}.sidebar nav{display:flex;gap:7px;overflow-x:auto;margin-top:12px;padding-bottom:2px}.nav-link{white-space:nowrap;margin:0;padding:9px 11px;font-size:11px}.nav-icon{font-size:14px;width:auto}.main{padding:17px 12px}.page-heading h1{font-size:21px}.hero{padding:20px}.hero h2{font-size:20px}.desktop-list{display:none}.mobile-list{display:block}.card-header{padding:16px}.notice{margin:14px 15px}.toolbar{padding:0 15px 15px}.message{margin:0 15px 14px}}@media(max-width:450px){.stats{gap:9px}.stat-card{padding:13px}.stat-card h3{font-size:23px}.toolbar select,.search-wrap{width:100%;min-width:100%}.top-actions{width:100%}.top-actions .btn{flex:1}}
-</style></head><body><div class="layout"><aside class="sidebar"><div class="brand"><div class="brand-icon">G</div><div><h2>GLO <span>365</span></h2><small>ADMIN CONTROL PANEL</small></div></div><div class="nav-title">MAIN MENU</div><nav><a href="admin.html" class="nav-link"><span class="nav-icon">▦</span>Dashboard</a><a href="admin-users.html" class="nav-link"><span class="nav-icon">👥</span>User Management</a><a href="admin-affiliates.html" class="nav-link"><span class="nav-icon">🤝</span>Affiliates</a><a href="admin-withdrawals.html" class="nav-link active"><span class="nav-icon">💸</span>Withdrawals</a><a href="admin-results.html" class="nav-link"><span class="nav-icon">🏆</span>Results</a><a href="admin-winners.html" class="nav-link"><span class="nav-icon">🎖️</span>Winners</a><a href="admin-terms.html" class="nav-link"><span class="nav-icon">📄</span>Terms & Conditions</a></nav><div class="sidebar-bottom"><div class="admin-box"><div class="admin-avatar">A</div><div class="admin-info"><strong id="adminName">Administrator</strong><small>SUPER ADMIN</small></div></div></div></aside>
-<main class="main"><header class="topbar"><div class="page-heading"><h1>Withdrawal Management</h1><p>Manage, review and monitor all withdrawal requests.</p></div><div class="top-actions"><a class="btn btn-back" href="admin.html">← Dashboard</a><button class="btn btn-logout" id="logoutBtn">Logout ↗</button></div></header>
-<section class="hero"><span class="hero-label">● WITHDRAWAL CONTROL CENTER</span><h2>Manage Withdrawals</h2><p>এখানে ইউজারদের জমা দেওয়া Withdrawal Request যাচাই করুন। Pending Request Approve অথবা Reject করে Status পরিচালনা করতে পারবেন।</p></section>
-<section class="stats"><div class="stat-card"><small>Total Requests</small><h3 id="totalCount">0</h3><p>ALL WITHDRAWAL REQUESTS</p></div><div class="stat-card"><small>Pending Requests</small><h3 id="pendingCount">0</h3><p>WAITING FOR REVIEW</p></div><div class="stat-card"><small>Approved Requests</small><h3 id="approvedCount">0</h3><p>APPROVED IN DEMO SYSTEM</p></div><div class="stat-card"><small>Rejected Requests</small><h3 id="rejectedCount">0</h3><p>REJECTED IN SYSTEM</p></div></section>
-<section class="content-card"><div class="card-header"><div class="card-title"><h2>💳 Withdrawal Requests</h2><p>Review and manage submitted requests.</p></div><span class="live-tag">● SERVER CONNECTED</span></div><div class="notice">⚠️ <strong>DEMO MODE:</strong> Approve করলে শুধু Request-এর Status পরিবর্তন হবে। কোনো বাস্তব টাকা পাঠানো হবে না এবং কোনো Payment স্বয়ংক্রিয়ভাবে সম্পন্ন হবে না।</div><div id="message" class="message"></div><div class="toolbar"><div class="search-wrap"><input type="search" id="searchInput" placeholder="Search username or account..."></div><select id="statusFilter"><option value="all">All Status</option><option value="pending">Pending</option><option value="approved">Approved</option><option value="rejected">Rejected</option></select><button class="refresh-btn" id="refreshBtn">↻ Refresh</button></div><div class="desktop-list table-wrap"><table><thead><tr><th>USER</th><th>AMOUNT</th><th>METHOD</th><th>ACCOUNT</th><th>REQUEST DATE</th><th>STATUS</th><th>ACTION</th></tr></thead><tbody id="withdrawTable"></tbody></table></div><div id="mobileList" class="mobile-list"></div></section><footer class="footer">GLO 365 ADMIN PANEL · WITHDRAWAL MANAGEMENT</footer></main></div>
-<div class="modal" id="rejectModal"><div class="modal-box"><h3>Reject Withdrawal</h3><p id="rejectInfo">এই Withdrawal Request Reject করতে চান?</p><textarea id="rejectReason" maxlength="200" placeholder="Rejection reason (optional)"></textarea><div class="modal-actions"><button class="cancel" id="cancelReject">Cancel</button><button class="confirm" id="confirmReject">Confirm Reject</button></div></div></div>
+*{box-sizing:border-box;margin:0;padding:0}
+
+:root{
+  --bg:#080d19;
+  --panel:#111a2d;
+  --panel2:#16223a;
+  --border:#263653;
+  --gold:#f5bd45;
+  --gold2:#ffda79;
+  --text:#f5f7fc;
+  --muted:#8e9bb2;
+  --green:#38d996;
+  --red:#ff6b78;
+}
+
+body{
+  font-family:Arial,sans-serif;
+  background:var(--bg);
+  color:var(--text);
+  min-height:100vh;
+}
+
+.layout{display:flex;min-height:100vh}
+
+.sidebar{
+  width:245px;
+  background:#0c1425;
+  border-right:1px solid var(--border);
+  padding:24px 15px;
+  display:flex;
+  flex-direction:column;
+  flex-shrink:0;
+}
+
+.brand{
+  display:flex;
+  align-items:center;
+  gap:11px;
+  padding:5px 9px 28px;
+  border-bottom:1px solid var(--border);
+}
+
+.brand-icon{
+  width:43px;
+  height:43px;
+  display:grid;
+  place-items:center;
+  border-radius:13px;
+  background:linear-gradient(135deg,#ffe18a,#d99a16);
+  color:#17120a;
+  font-size:19px;
+  font-weight:900;
+}
+
+.brand h2{font-size:22px;letter-spacing:1px}
+.brand h2 span{color:var(--gold)}
+
+.brand small{
+  display:block;
+  color:var(--muted);
+  font-size:10px;
+  margin-top:4px;
+  letter-spacing:2px;
+}
+
+.nav-title{
+  color:#66758f;
+  font-size:10px;
+  font-weight:800;
+  letter-spacing:2px;
+  padding:25px 12px 11px;
+}
+
+.nav-link{
+  display:flex;
+  align-items:center;
+  gap:12px;
+  padding:13px 12px;
+  margin:3px 0;
+  border-radius:10px;
+  color:#a8b5ca;
+  font-size:13px;
+  text-decoration:none;
+}
+
+.nav-link:hover,.nav-link.active{
+  background:#f5bd4515;
+  color:var(--gold2);
+}
+
+.nav-link.active{border:1px solid #f5bd4530}
+.nav-icon{width:23px;text-align:center;font-size:17px}
+
+.sidebar-bottom{margin-top:auto;padding-top:20px}
+
+.admin-box{
+  background:#16233a;
+  border:1px solid var(--border);
+  border-radius:12px;
+  padding:13px;
+  display:flex;
+  align-items:center;
+  gap:10px;
+}
+
+.admin-avatar{
+  width:36px;
+  height:36px;
+  display:grid;
+  place-items:center;
+  background:#f5bd4520;
+  color:var(--gold);
+  border-radius:50%;
+  font-weight:900;
+}
+
+.admin-info strong{display:block;font-size:12px}
+.admin-info small{
+  display:block;
+  color:var(--muted);
+  font-size:10px;
+  margin-top:4px;
+}
+
+.main{
+  flex:1;
+  min-width:0;
+  padding:25px;
+  max-width:1600px;
+  margin:auto;
+}
+
+.topbar{
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+  gap:15px;
+  flex-wrap:wrap;
+  margin-bottom:27px;
+}
+
+.page-heading h1{font-size:25px}
+.page-heading p{
+  color:var(--muted);
+  font-size:12px;
+  margin-top:7px;
+}
+
+.top-actions{display:flex;gap:9px;flex-wrap:wrap}
+
+.btn{
+  padding:11px 15px;
+  border-radius:9px;
+  font-size:12px;
+  font-weight:800;
+  display:inline-flex;
+  align-items:center;
+  justify-content:center;
+  gap:7px;
+  text-decoration:none;
+  cursor:pointer;
+}
+
+.btn-back{
+  background:#1a2942;
+  color:#d9e3f3;
+  border:1px solid var(--border);
+}
+
+.btn-logout{
+  background:#381d2b;
+  color:#ff9aa4;
+  border:1px solid #6a2c40;
+}
+
+.hero{
+  background:
+    radial-gradient(circle at 85% 10%,#f5bd4520,transparent 32%),
+    linear-gradient(120deg,#182640,#111a2d 70%);
+  border:1px solid #34425b;
+  border-radius:18px;
+  padding:24px;
+  margin-bottom:22px;
+}
+
+.hero-label{
+  display:inline-flex;
+  color:var(--gold2);
+  background:#f5bd4517;
+  border:1px solid #f5bd4535;
+  padding:7px 11px;
+  border-radius:30px;
+  font-size:10px;
+  font-weight:800;
+  letter-spacing:1px;
+}
+
+.hero h2{font-size:23px;margin:16px 0 8px}
+.hero p{
+  color:#aab7cb;
+  font-size:12px;
+  line-height:1.7;
+  max-width:650px;
+}
+
+.stats{
+  display:grid;
+  grid-template-columns:repeat(4,1fr);
+  gap:15px;
+  margin-bottom:22px;
+}
+
+.stat-card,.content-card{
+  background:var(--panel);
+  border:1px solid var(--border);
+  border-radius:15px;
+}
+
+.stat-card{padding:18px}
+.stat-card small{color:var(--muted);font-size:11px}
+.stat-card h3{font-size:29px;margin-top:17px}
+.stat-card p{color:#75849e;font-size:10px;margin-top:6px}
+
+.content-card{overflow:hidden}
+
+.card-header{
+  padding:19px 20px;
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+  gap:12px;
+  flex-wrap:wrap;
+  border-bottom:1px solid var(--border);
+}
+
+.card-title h2{font-size:17px}
+.card-title p{
+  color:var(--muted);
+  font-size:11px;
+  margin-top:6px;
+}
+
+.live-tag{
+  color:var(--green);
+  background:#38d99614;
+  border:1px solid #38d99630;
+  padding:7px 10px;
+  border-radius:30px;
+  font-size:10px;
+  font-weight:800;
+}
+
+.notice{
+  margin:16px 20px;
+  padding:13px 15px;
+  background:#f5bd4510;
+  border:1px solid #f5bd4530;
+  border-radius:10px;
+  color:#e9c978;
+  font-size:11px;
+  line-height:1.7;
+}
+
+.toolbar{
+  display:flex;
+  align-items:center;
+  gap:10px;
+  flex-wrap:wrap;
+  padding:0 20px 17px;
+}
+
+.search-wrap{flex:1;min-width:210px}
+
+.toolbar input,.toolbar select{
+  width:100%;
+  background:#0b1425;
+  border:1px solid var(--border);
+  color:white;
+  border-radius:9px;
+  padding:12px 13px;
+  font-size:12px;
+  outline:none;
+}
+
+.toolbar select{width:160px}
+.toolbar input:focus,.toolbar select:focus{border-color:var(--gold)}
+
+.refresh-btn{
+  padding:12px 15px;
+  background:#1c2b45;
+  color:var(--gold2);
+  border:1px solid var(--border);
+  border-radius:9px;
+  font-size:12px;
+  font-weight:800;
+  cursor:pointer;
+}
+
+button:disabled{opacity:.55;cursor:not-allowed}
+
+.message{
+  display:none;
+  margin:0 20px 15px;
+  padding:12px 14px;
+  border-radius:9px;
+  font-size:12px;
+  line-height:1.5;
+  overflow-wrap:anywhere;
+}
+
+.message.success{
+  display:block;
+  background:#38d99616;
+  color:#53e5a7;
+  border:1px solid #38d99635;
+}
+
+.message.error{
+  display:block;
+  background:#ff6b7816;
+  color:#ff929b;
+  border:1px solid #ff6b7835;
+}
+
+.table-wrap{overflow-x:auto}
+table{width:100%;border-collapse:collapse;min-width:850px}
+thead{background:#0d1729}
+
+th{
+  color:#8f9db5;
+  font-size:10px;
+  text-align:left;
+  letter-spacing:.8px;
+  padding:15px 14px;
+}
+
+td{
+  padding:15px 14px;
+  border-top:1px solid #26344d;
+  font-size:12px;
+  color:#dce4f1;
+  vertical-align:middle;
+}
+
+tbody tr:hover{background:#ffffff05}
+
+.user-cell{display:flex;align-items:center;gap:9px}
+
+.user-avatar{
+  width:32px;
+  height:32px;
+  border-radius:10px;
+  display:grid;
+  place-items:center;
+  background:#f5bd4517;
+  color:var(--gold);
+  font-weight:900;
+  flex-shrink:0;
+}
+
+.user-name{font-weight:800;color:white}
+.amount{color:var(--gold2);font-weight:900;font-size:14px}
+
+.method{
+  display:inline-block;
+  padding:6px 9px;
+  background:#1a2942;
+  border:1px solid #30415e;
+  border-radius:7px;
+  font-size:10px;
+}
+
+.account{
+  color:#aebbd0;
+  font-family:monospace;
+  overflow-wrap:anywhere;
+}
+
+.status{
+  display:inline-flex;
+  align-items:center;
+  gap:6px;
+  padding:6px 9px;
+  border-radius:30px;
+  font-size:10px;
+  font-weight:900;
+  white-space:nowrap;
+}
+
+.status:before{
+  content:"";
+  width:6px;
+  height:6px;
+  border-radius:50%;
+  background:currentColor;
+}
+
+.pending{background:#f5bd4518;color:#f5c75e}
+.approved{background:#38d99618;color:#38d996}
+.rejected{background:#ff6b7818;color:#ff7d88}
+.unknown{background:#8e9bb218;color:#b4c0d4}
+
+.action-buttons{display:flex;gap:6px;flex-wrap:wrap}
+
+.action-buttons button{
+  padding:8px 10px;
+  border-radius:7px;
+  font-size:10px;
+  font-weight:900;
+  cursor:pointer;
+}
+
+.approve{
+  background:#38d99618;
+  color:#42e0a0;
+  border:1px solid #38d99635;
+}
+
+.reject{
+  background:#ff6b7818;
+  color:#ff8290;
+  border:1px solid #ff6b7835;
+}
+
+.reviewed{color:#77869f;font-size:10px}
+.empty{text-align:center;padding:35px 15px;color:#8392aa;font-size:12px}
+
+.mobile-list{display:none;padding:0 15px 15px}
+
+.request-card{
+  background:#0d1729;
+  border:1px solid var(--border);
+  border-radius:13px;
+  padding:15px;
+  margin-bottom:12px;
+}
+
+.request-card-head{
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+  gap:10px;
+  margin-bottom:13px;
+}
+
+.request-card p{
+  display:flex;
+  justify-content:space-between;
+  gap:12px;
+  border-top:1px solid #25334b;
+  padding:10px 0;
+  font-size:11px;
+  color:var(--muted);
+}
+
+.request-card p strong{
+  color:#e1e8f3;
+  text-align:right;
+  overflow-wrap:anywhere;
+}
+
+.request-card .action-buttons{margin-top:12px}
+.request-card .action-buttons button{flex:1;padding:11px}
+
+.footer{
+  padding:18px 5px;
+  text-align:center;
+  color:#66758e;
+  font-size:10px;
+}
+
+.modal{
+  display:none;
+  position:fixed;
+  inset:0;
+  z-index:10;
+  background:#0009;
+  padding:15px;
+  align-items:center;
+  justify-content:center;
+}
+
+.modal.show{display:flex}
+
+.modal-box{
+  width:100%;
+  max-width:410px;
+  background:#111a2d;
+  border:1px solid var(--border);
+  border-radius:15px;
+  padding:20px;
+}
+
+.modal-box h3{
+  font-size:18px;
+  color:var(--gold2);
+  margin-bottom:9px;
+}
+
+.modal-box p{
+  font-size:12px;
+  color:var(--muted);
+  line-height:1.6;
+  margin-bottom:13px;
+}
+
+.modal-box textarea{
+  width:100%;
+  min-height:90px;
+  background:#0b1425;
+  border:1px solid var(--border);
+  border-radius:9px;
+  color:white;
+  padding:12px;
+  resize:vertical;
+  font-family:Arial,sans-serif;
+}
+
+.modal-actions{display:flex;gap:9px;margin-top:14px}
+
+.modal-actions button{
+  flex:1;
+  padding:12px;
+  border-radius:9px;
+  font-weight:800;
+  cursor:pointer;
+}
+
+.confirm{background:#38d996;color:#071b14;border:0}
+.cancel{background:#263653;color:white;border:0}
+
+@media(max-width:1050px){
+  .sidebar{width:210px}
+  .stats{grid-template-columns:repeat(2,1fr)}
+}
+
+@media(max-width:750px){
+  .layout{display:block}
+  .sidebar{
+    width:100%;
+    padding:12px 14px;
+    border-right:0;
+    border-bottom:1px solid var(--border);
+  }
+  .brand{padding:0;border:0}
+  .brand-icon{width:37px;height:37px}
+  .brand h2{font-size:19px}
+  .sidebar .nav-title,.sidebar-bottom{display:none}
+  .sidebar nav{
+    display:flex;
+    gap:7px;
+    overflow-x:auto;
+    margin-top:12px;
+    padding-bottom:2px;
+  }
+  .nav-link{
+    white-space:nowrap;
+    margin:0;
+    padding:9px 11px;
+    font-size:11px;
+  }
+  .nav-icon{font-size:14px;width:auto}
+  .main{padding:17px 12px}
+  .page-heading h1{font-size:21px}
+  .hero{padding:20px}
+  .hero h2{font-size:20px}
+  .desktop-list{display:none}
+  .mobile-list{display:block}
+  .card-header{padding:16px}
+  .notice{margin:14px 15px}
+  .toolbar{padding:0 15px 15px}
+  .message{margin:0 15px 14px}
+}
+
+@media(max-width:450px){
+  .stats{gap:9px}
+  .stat-card{padding:13px}
+  .stat-card h3{font-size:23px}
+  .toolbar select,.search-wrap{width:100%;min-width:100%}
+  .top-actions{width:100%}
+  .top-actions .btn{flex:1}
+}
+</style>
+</head>
+
+<body>
+
+<div class="layout">
+
+<aside class="sidebar">
+
+  <div class="brand">
+    <div class="brand-icon">G</div>
+    <div>
+      <h2>GLO <span>365</span></h2>
+      <small>ADMIN CONTROL PANEL</small>
+    </div>
+  </div>
+
+  <div class="nav-title">MAIN MENU</div>
+
+  <nav>
+    <a href="admin.html" class="nav-link">
+      <span class="nav-icon">▦</span>Dashboard
+    </a>
+    <a href="admin-users.html" class="nav-link">
+      <span class="nav-icon">👥</span>User Management
+    </a>
+    <a href="admin-affiliates.html" class="nav-link">
+      <span class="nav-icon">🤝</span>Affiliates
+    </a>
+    <a href="admin-withdrawals.html" class="nav-link active">
+      <span class="nav-icon">💸</span>Withdrawals
+    </a>
+    <a href="admin-results.html" class="nav-link">
+      <span class="nav-icon">🏆</span>Results
+    </a>
+    <a href="admin-winners.html" class="nav-link">
+      <span class="nav-icon">🎖️</span>Winners
+    </a>
+    <a href="admin-terms.html" class="nav-link">
+      <span class="nav-icon">📄</span>Terms & Conditions
+    </a>
+  </nav>
+
+  <div class="sidebar-bottom">
+    <div class="admin-box">
+      <div class="admin-avatar">A</div>
+      <div class="admin-info">
+        <strong id="adminName">Administrator</strong>
+        <small>PRIMARY ADMIN</small>
+      </div>
+    </div>
+  </div>
+
+</aside>
+
+<main class="main">
+
+  <header class="topbar">
+    <div class="page-heading">
+      <h1>Withdrawal Management</h1>
+      <p>Manage, review and monitor all withdrawal requests.</p>
+    </div>
+
+    <div class="top-actions">
+      <a class="btn btn-back" href="admin.html">← Dashboard</a>
+      <button class="btn btn-logout" id="logoutBtn">Logout ↗</button>
+    </div>
+  </header>
+
+  <section class="hero">
+    <span class="hero-label">● WITHDRAWAL CONTROL CENTER</span>
+    <h2>Manage Withdrawals</h2>
+    <p>
+      Review user withdrawal requests, approve pending requests
+      or reject them with a reason. All records are managed
+      through the GLO 365 backend.
+    </p>
+  </section>
+
+  <section class="stats">
+
+    <div class="stat-card">
+      <small>Total Requests</small>
+      <h3 id="totalCount">—</h3>
+      <p>ALL WITHDRAWAL REQUESTS</p>
+    </div>
+
+    <div class="stat-card">
+      <small>Pending Requests</small>
+      <h3 id="pendingCount">—</h3>
+      <p>WAITING FOR REVIEW</p>
+    </div>
+
+    <div class="stat-card">
+      <small>Approved Requests</small>
+      <h3 id="approvedCount">—</h3>
+      <p>APPROVED IN DEMO SYSTEM</p>
+    </div>
+
+    <div class="stat-card">
+      <small>Rejected Requests</small>
+      <h3 id="rejectedCount">—</h3>
+      <p>REJECTED IN SYSTEM</p>
+    </div>
+
+  </section>
+
+  <section class="content-card">
+
+    <div class="card-header">
+      <div class="card-title">
+        <h2>💳 Withdrawal Requests</h2>
+        <p>Review and manage submitted requests.</p>
+      </div>
+      <span class="live-tag">● SERVER CONNECTED</span>
+    </div>
+
+    <div class="notice">
+      ⚠️ <strong>DEMO MODE:</strong>
+      Approving a request changes its status in the demo system.
+      No real payment is sent. Rejection reasons are stored
+      through the backend.
+    </div>
+
+    <div id="message" class="message" role="status" aria-live="polite"></div>
+
+    <div class="toolbar">
+
+      <div class="search-wrap">
+        <input
+          type="search"
+          id="searchInput"
+          placeholder="Search username, account or request ID..."
+          autocomplete="off">
+      </div>
+
+      <select id="statusFilter">
+        <option value="all">All Status</option>
+        <option value="pending">Pending</option>
+        <option value="approved">Approved</option>
+        <option value="rejected">Rejected</option>
+      </select>
+
+      <button class="refresh-btn" id="refreshBtn" type="button">
+        ↻ Refresh
+      </button>
+
+    </div>
+
+    <div class="desktop-list table-wrap">
+      <table>
+        <thead>
+          <tr>
+            <th>USER</th>
+            <th>AMOUNT</th>
+            <th>METHOD</th>
+            <th>ACCOUNT</th>
+            <th>REQUEST DATE</th>
+            <th>STATUS</th>
+            <th>ACTION</th>
+          </tr>
+        </thead>
+
+        <tbody id="withdrawTable">
+          <tr>
+            <td colspan="7" class="empty">Checking administrator access...</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+    <div id="mobileList" class="mobile-list">
+      <div class="empty">Checking administrator access...</div>
+    </div>
+
+  </section>
+
+  <footer class="footer">
+    GLO 365 ADMIN PANEL · WITHDRAWAL MANAGEMENT
+  </footer>
+
+</main>
+</div>
+
+<!-- REJECTION MODAL -->
+
+<div class="modal" id="rejectModal">
+  <div class="modal-box">
+
+    <h3>Reject Withdrawal</h3>
+
+    <p id="rejectInfo">
+      Do you want to reject this withdrawal request?
+    </p>
+
+    <textarea
+      id="rejectReason"
+      maxlength="200"
+      placeholder="Rejection reason (optional)"></textarea>
+
+    <div class="modal-actions">
+      <button class="cancel" id="cancelReject" type="button">
+        Cancel
+      </button>
+
+      <button class="confirm" id="confirmReject" type="button">
+        Confirm Reject
+      </button>
+    </div>
+
+  </div>
+</div>
+
 <script>
 "use strict";
+
 const API_BASE_URL="https://glo365.onrender.com/api";
 const TOKEN_KEY="glo365_token";
-let requests=[];let selectedId=null;let messageTimer=null;
-function token(){return sessionStorage.getItem(TOKEN_KEY)||""}
-async function api(path,options={}){const headers={...(options.headers||{})};if(token())headers.Authorization="Bearer "+token();if(options.body)headers["Content-Type"]="application/json";const response=await fetch(API_BASE_URL+path,{...options,headers,credentials:"include"});let data={};try{data=await response.json()}catch{}if(response.status===401||response.status===403){if(response.status===401){sessionStorage.removeItem(TOKEN_KEY);location.href="login.html"}}if(!response.ok||data.success===false)throw new Error(data.message||"Request failed ("+response.status+")");return data}
-function showMessage(text,type="success"){const el=document.getElementById("message");el.textContent=text;el.className="message "+type;clearTimeout(messageTimer);messageTimer=setTimeout(()=>{el.className="message"},5000)}
-function statusOf(r){const s=String(r.status||"pending").toLowerCase();return ["approved","rejected"].includes(s)?s:"pending"}
-function fmtDate(v){const d=new Date(v);return Number.isNaN(d.getTime())?"—":d.toLocaleString("en-GB")}
-function makeStatus(s){const el=document.createElement("span");el.className="status "+statusOf({status:s});el.textContent=statusOf({status:s}).toUpperCase();return el}
-function makeActions(r){const box=document.createElement("div");box.className="action-buttons";if(statusOf(r)!=="pending"){const done=document.createElement("span");done.className="reviewed";done.textContent="✓ Reviewed";box.append(done);return box}const a=document.createElement("button");a.className="approve";a.textContent="✓ Approve";a.onclick=()=>review(r.id,"approved");const b=document.createElement("button");b.className="reject";b.textContent="✕ Reject";b.onclick=()=>openReject(r);box.append(a,b);return box}
-function addCell(row,value,cls=""){const td=document.createElement("td");td.textContent=String(value??"—");if(cls)td.className=cls;row.append(td);return td}
-function render(){const tbody=document.getElementById("withdrawTable"),mobile=document.getElementById("mobileList");tbody.replaceChildren();mobile.replaceChildren();const search=document.getElementById("searchInput").value.trim().toLowerCase();const status=document.getElementById("statusFilter").value;const list=requests.filter(r=>(!status||status==="all"||statusOf(r)===status)&&(!search||[r.username,r.account,r.method,r.id].some(v=>String(v??"").toLowerCase().includes(search))));if(!list.length){const tr=document.createElement("tr"),td=document.createElement("td");td.colSpan=7;td.className="empty";td.textContent="কোনো Withdrawal Request পাওয়া যায়নি।";tr.append(td);tbody.append(tr);const e=document.createElement("div");e.className="empty";e.textContent=td.textContent;mobile.append(e);return}list.forEach(r=>{const tr=document.createElement("tr"),user=document.createElement("td"),wrap=document.createElement("div"),avatar=document.createElement("div"),name=document.createElement("span");wrap.className="user-cell";avatar.className="user-avatar";avatar.textContent=String(r.username||"?").charAt(0).toUpperCase();name.className="user-name";name.textContent=r.username||"Unknown";wrap.append(avatar,name);user.append(wrap);tr.append(user);addCell(tr,Number(r.amount||0).toFixed(2),"amount");const method=addCell(tr,r.method," ");const badge=document.createElement("span");badge.className="method";badge.textContent=r.method||"—";method.replaceChildren(badge);addCell(tr,r.account,"account");addCell(tr,fmtDate(r.created_at));const st=tr.insertCell();st.append(makeStatus(r.status));const ac=tr.insertCell();ac.append(makeActions(r));tbody.append(tr);
-const card=document.createElement("div");card.className="request-card";const head=document.createElement("div");head.className="request-card-head";const title=document.createElement("strong");title.textContent="@"+(r.username||"Unknown");head.append(title,makeStatus(r.status));card.append(head);[["Request ID",r.id],["Amount",Number(r.amount||0).toFixed(2)], ["Method",r.method],["Account",r.account],["Request Date",fmtDate(r.created_at)],["Reviewed At",r.reviewed_at?fmtDate(r.reviewed_at):"—"],["Reviewed By",r.reviewed_by||"—"],...(r.rejection_reason?[["Rejection Reason",r.rejection_reason]]:[])].forEach(([label,value])=>{const p=document.createElement("p"),l=document.createElement("span"),v=document.createElement("strong");l.textContent=label;v.textContent=String(value??"—");p.append(l,v);card.append(p)});card.append(makeActions(r));mobile.append(card)});}
-async function refreshData(){const btn=document.getElementById("refreshBtn");btn.disabled=true;btn.textContent="Loading...";try{const q=new URLSearchParams({status:document.getElementById("statusFilter").value,search:document.getElementById("searchInput").value.trim()});const data=await api("/admin/withdrawals?"+q.toString());requests=Array.isArray(data.requests)?data.requests:[];const s=data.stats||{};document.getElementById("totalCount").textContent=s.total??0;document.getElementById("pendingCount").textContent=s.pending??0;document.getElementById("approvedCount").textContent=s.approved??0;document.getElementById("rejectedCount").textContent=s.rejected??0;render()}catch(e){showMessage(e.message,"error")}finally{btn.disabled=false;btn.textContent="↻ Refresh"}}
-async function review(id,action){const r=requests.find(x=>String(x.id)===String(id));if(!r||statusOf(r)!=="pending"){showMessage("এই Request ইতিমধ্যে Review করা হয়েছে।","error");return}if(action==="approved"){if(!confirm("এই Withdrawal Request Approve করবেন? Demo mode-এ কোনো বাস্তব টাকা পাঠানো হবে না।"))return;try{await api("/admin/withdrawals/"+id+"/approve",{method:"POST",body:JSON.stringify({})});showMessage("Request approved in demo system. No real payment was sent.");await refreshData()}catch(e){showMessage(e.message,"error")}return}openReject(r)}
-function openReject(r){selectedId=r.id;document.getElementById("rejectInfo").textContent="User: "+(r.username||"Unknown")+" · "+r.amount+" · "+(r.method||"");document.getElementById("rejectReason").value="";document.getElementById("rejectModal").style.display="flex"}
-function closeReject(){document.getElementById("rejectModal").style.display="none";selectedId=null}
-document.getElementById("confirmReject").onclick=async()=>{if(selectedId===null)return;const btn=document.getElementById("confirmReject");btn.disabled=true;try{await api("/admin/withdrawals/"+selectedId+"/reject",{method:"POST",body:JSON.stringify({reason:document.getElementById("rejectReason").value.trim()||"Rejected by admin"})});closeReject();showMessage("Withdrawal request rejected.");await refreshData()}catch(e){showMessage(e.message,"error")}finally{btn.disabled=false}};
-document.getElementById("cancelReject").onclick=closeReject;document.getElementById("rejectModal").addEventListener("click",e=>{if(e.target===e.currentTarget)closeReject()});document.getElementById("refreshBtn").onclick=refreshData;document.getElementById("searchInput").addEventListener("input",()=>refreshData());document.getElementById("statusFilter").addEventListener("change",refreshData);document.getElementById("logoutBtn").onclick=async()=>{if(!confirm("আপনি কি Logout করতে চান?"))return;try{await api("/auth/logout",{method:"POST",body:JSON.stringify({})})}catch{}sessionStorage.removeItem(TOKEN_KEY);location.href="login.html"};
-(async()=>{if(!token()){location.href="login.html";return}try{const me=await api("/auth/me");if(!me.user||me.user.role!=="admin"){showMessage("Primary Admin access required.","error");return}document.getElementById("adminName").textContent=me.user.username||"Administrator";await refreshData()}catch(e){showMessage(e.message,"error")}})();
-</script></body></html>
+const PRIMARY_ADMIN_USERNAME="adminglo365";
+
+let requests=[];
+let selectedId=null;
+let messageTimer=null;
+let searchTimer=null;
+let refreshBusy=false;
+let authorized=false;
+let loggingOut=false;
+let reviewBusyId=null;
+
+const $=id=>document.getElementById(id);
+
+function getToken(){
+  try{
+    return sessionStorage.getItem(TOKEN_KEY)||"";
+  }catch(error){
+    return "";
+  }
+}
+
+function clearSession(){
+  try{
+    sessionStorage.removeItem(TOKEN_KEY);
+    sessionStorage.removeItem("glo365_user");
+    sessionStorage.removeItem("glo365_session");
+  }catch(error){}
+}
+
+function redirectLogin(){
+  if(loggingOut)return;
+  loggingOut=true;
+  clearSession();
+  location.replace("login.html");
+}
+
+async function api(path,options={}){
+
+  const currentToken=getToken();
+
+  if(!currentToken){
+    redirectLogin();
+    throw new Error("Please login again.");
+  }
+
+  const headers={
+    "Accept":"application/json",
+    ...(options.headers||{})
+  };
+
+  headers.Authorization="Bearer "+currentToken;
+
+  if(options.body!==undefined){
+    headers["Content-Type"]="application/json";
+  }
+
+  let response;
+
+  try{
+    response=await fetch(API_BASE_URL+path,{
+      method:options.method||"GET",
+      headers,
+      credentials:"include",
+      cache:"no-store",
+      body:options.body!==undefined
+        ?JSON.stringify(options.body)
+        :undefined
+    });
+  }catch(error){
+    throw new Error(
+      "Cannot connect to GLO 365 server. Check your internet connection."
+    );
+  }
+
+  let data={};
+
+  try{
+    data=await response.json();
+  }catch(error){
+    data={};
+  }
+
+  if(response.status===401){
+    redirectLogin();
+    throw new Error("Session expired. Please login again.");
+  }
+
+  if(response.status===403){
+    throw new Error(
+      data.message||"Primary Admin access required."
+    );
+  }
+
+  if(!response.ok||data.success===false){
+    throw new Error(
+      data.message||
+      data.error||
+      ("Request failed ("+response.status+")")
+    );
+  }
+
+  return data;
+}
+
+function unwrap(data){
+  if(!data||typeof data!=="object")return {};
+  return data.data&&typeof data.data==="object"
+    ?data.data
+    :data;
+}
+
+function showMessage(text,type="success"){
+  const el=$("message");
+  el.textContent=String(text||"");
+  el.className="message "+type;
+
+  clearTimeout(messageTimer);
+
+  messageTimer=setTimeout(()=>{
+    el.className="message";
+  },6000);
+}
+
+function clearMessage(){
+  clearTimeout(messageTimer);
+  $("message").className="message";
+  $("message").textContent="";
+}
+
+function statusOf(request){
+  const status=String(request.status||"").toLowerCase();
+
+  if(["approved","rejected","pending"].includes(status)){
+    return status;
+  }
+
+  return "unknown";
+}
+
+function fmtDate(value){
+  if(!value)return "—";
+
+  const d=new Date(value);
+
+  if(Number.isNaN(d.getTime()))return "—";
+
+  return d.toLocaleString("en-GB");
+}
+
+function formatAmount(value){
+  const amount=Number(value);
+
+  return (
+    Number.isFinite(amount)&&amount>=0
+      ?amount
+      :0
+  ).toLocaleString("en-US",{
+    minimumFractionDigits:2,
+    maximumFractionDigits:2
+  });
+}
+
+function makeStatus(status){
+  const normalized=statusOf({status});
+  const el=document.createElement("span");
+
+  el.className="status "+normalized;
+  el.textContent=normalized.toUpperCase();
+
+  return el;
+}
+
+function addCell(row,value,className=""){
+  const td=document.createElement("td");
+
+  td.textContent=String(
+    value===null||value===undefined||value===""
+      ?"—"
+      :value
+  );
+
+  if(className)td.className=className;
+
+  row.append(td);
+  return td;
+}
+
+async function verifyAdmin(){
+
+  if(!getToken()){
+    redirectLogin();
+    return false;
+  }
+
+  const response=await api("/auth/me");
+  const data=unwrap(response);
+
+  const user=data.user||data.profile||data;
+
+  if(
+    !user||
+    String(user.role||"").toLowerCase()!=="admin"||
+    String(user.username||"").toLowerCase()!==PRIMARY_ADMIN_USERNAME
+  ){
+
+    clearSession();
+
+    showMessage(
+      "Only the Primary Admin adminglo365 can manage withdrawals.",
+      "error"
+    );
+
+    setTimeout(()=>{
+      location.replace("login.html");
+    },1800);
+
+    return false;
+  }
+
+  authorized=true;
+  $("adminName").textContent=user.username;
+
+  return true;
+}
+
+function makeActions(request){
+
+  const box=document.createElement("div");
+  box.className="action-buttons";
+
+  if(statusOf(request)!=="pending"){
+
+    const done=document.createElement("span");
+    done.className="reviewed";
+
+    done.textContent=
+      statusOf(request)==="unknown"
+        ?"Review unavailable"
+        :"✓ Reviewed";
+
+    box.append(done);
+    return box;
+  }
+
+  const approveButton=document.createElement("button");
+
+  approveButton.type="button";
+  approveButton.className="approve";
+  approveButton.textContent="✓ Approve";
+  approveButton.disabled=
+    String(reviewBusyId)===String(request.id);
+
+  approveButton.addEventListener("click",()=>{
+    review(request.id,"approved");
+  });
+
+  const rejectButton=document.createElement("button");
+
+  rejectButton.type="button";
+  rejectButton.className="reject";
+  rejectButton.textContent="✕ Reject";
+  rejectButton.disabled=
+    String(reviewBusyId)===String(request.id);
+
+  rejectButton.addEventListener("click",()=>{
+    openReject(request);
+  });
+
+  box.append(approveButton,rejectButton);
+
+  return box;
+}
+
+function render(){
+
+  const tbody=$("withdrawTable");
+  const mobile=$("mobileList");
+
+  tbody.replaceChildren();
+  mobile.replaceChildren();
+
+  const search=$("searchInput").value.trim().toLowerCase();
+  const status=$("statusFilter").value;
+
+  const list=requests.filter(request=>{
+
+    const matchesStatus=
+      status==="all"||statusOf(request)===status;
+
+    const searchable=[
+      request.username,
+      request.account,
+      request.method,
+      request.id
+    ].some(value=>
+      String(value??"").toLowerCase().includes(search)
+    );
+
+    return matchesStatus&&(!search||searchable);
+  });
+
+  if(!list.length){
+
+    const tr=document.createElement("tr");
+    const td=document.createElement("td");
+
+    td.colSpan=7;
+    td.className="empty";
+    td.textContent="No withdrawal requests found.";
+
+    tr.append(td);
+    tbody.append(tr);
+
+    const empty=document.createElement("div");
+    empty.className="empty";
+    empty.textContent=td.textContent;
+
+    mobile.append(empty);
+
+    return;
+  }
+
+  list.forEach(request=>{
+
+    const tr=document.createElement("tr");
+
+    const userCell=document.createElement("td");
+    const userWrap=document.createElement("div");
+    const avatar=document.createElement("div");
+    const name=document.createElement("span");
+
+    userWrap.className="user-cell";
+    avatar.className="user-avatar";
+
+    avatar.textContent=
+      String(request.username||"?").charAt(0).toUpperCase();
+
+    name.className="user-name";
+    name.textContent=request.username||"Unknown";
+
+    userWrap.append(avatar,name);
+    userCell.append(userWrap);
+    tr.append(userCell);
+
+    addCell(tr,formatAmount(request.amount),"amount");
+
+    const methodCell=addCell(tr,"");
+    const methodBadge=document.createElement("span");
+
+    methodBadge.className="method";
+    methodBadge.textContent=request.method||"—";
+
+    methodCell.append(methodBadge);
+
+    addCell(tr,request.account,"account");
+    addCell(tr,fmtDate(request.created_at));
+
+    const statusCell=document.createElement("td");
+    statusCell.append(makeStatus(request.status));
+    tr.append(statusCell);
+
+    const actionCell=document.createElement("td");
+    actionCell.append(makeActions(request));
+    tr.append(actionCell);
+
+    tbody.append(tr);
+
+    const card=document.createElement("div");
+    card.className="request-card";
+
+    const head=document.createElement("div");
+    head.className="request-card-head";
+
+    const title=document.createElement("strong");
+    title.textContent="@"+(request.username||"Unknown");
+
+    head.append(title,makeStatus(request.status));
+    card.append(head);
+
+    const details=[
+      ["Request ID",request.id],
+      ["Amount",formatAmount(request.amount)+" DEMO Points"],
+      ["Method",request.method],
+      ["Account",request.account],
+      ["Request Date",fmtDate(request.created_at)],
+      ["Reviewed At",request.reviewed_at?fmtDate(request.reviewed_at):"—"],
+      ["Reviewed By",request.reviewed_by||"—"]
+    ];
+
+    if(request.rejection_reason){
+      details.push(["Rejection Reason",request.rejection_reason]);
+    }
+
+    details.forEach(([label,value])=>{
+
+      const p=document.createElement("p");
+      const l=document.createElement("span");
+      const v=document.createElement("strong");
+
+      l.textContent=label;
+      v.textContent=String(value??"—");
+
+      p.append(l,v);
+      card.append(p);
+    });
+
+    card.append(makeActions(request));
+    mobile.append(card);
+  });
+}
+
+async function refreshData(){
+
+  if(!authorized||refreshBusy)return;
+
+  refreshBusy=true;
+
+  const btn=$("refreshBtn");
+
+  btn.disabled=true;
+  btn.textContent="Loading...";
+
+  try{
+
+    const params=new URLSearchParams({
+      status:$("statusFilter").value,
+      search:$("searchInput").value.trim()
+    });
+
+    const data=await api(
+      "/admin/withdrawals?"+params.toString()
+    );
+
+    requests=Array.isArray(data.requests)
+      ?data.requests
+      :[];
+
+    const stats=data.stats||{};
+
+    $("totalCount").textContent=
+      Number(stats.total||0).toLocaleString("en-US");
+
+    $("pendingCount").textContent=
+      Number(stats.pending||0).toLocaleString("en-US");
+
+    $("approvedCount").textContent=
+      Number(stats.approved||0).toLocaleString("en-US");
+
+    $("rejectedCount").textContent=
+      Number(stats.rejected||0).toLocaleString("en-US");
+
+    render();
+
+  }catch(error){
+
+    showMessage(error.message,"error");
+    tbodyError(error.message);
+
+  }finally{
+
+    refreshBusy=false;
+    btn.disabled=false;
+    btn.textContent="↻ Refresh";
+  }
+}
+
+function tbodyError(message){
+
+  const tbody=$("withdrawTable");
+  const mobile=$("mobileList");
+
+  tbody.replaceChildren();
+  mobile.replaceChildren();
+
+  const tr=document.createElement("tr");
+  const td=document.createElement("td");
+
+  td.colSpan=7;
+  td.className="empty";
+  td.textContent="Could not load requests: "+message;
+
+  tr.append(td);
+  tbody.append(tr);
+
+  const empty=document.createElement("div");
+  empty.className="empty";
+  empty.textContent=td.textContent;
+
+  mobile.append(empty);
+}
+
+async function review(id,action){
+
+  if(!authorized)return;
+
+  if(reviewBusyId!==null){
+    showMessage(
+      "Another request is currently being processed.",
+      "error"
+    );
+    return;
+  }
+
+  const request=requests.find(
+    item=>String(item.id)===String(id)
+  );
+
+  if(!request){
+    showMessage("Withdrawal Request not found.","error");
+    return;
+  }
+
+  if(statusOf(request)!=="pending"){
+    showMessage(
+      "This request has already been reviewed.",
+      "error"
+    );
+
+    await refreshData();
+    return;
+  }
+
+  if(action!=="approved")return;
+
+  const confirmed=confirm(
+    "Approve this withdrawal request?\n\n"+
+    "User: "+(request.username||"Unknown")+"\n"+
+    "Amount: "+formatAmount(request.amount)+" DEMO Points\n\n"+
+    "This only changes the DEMO status. No real payment will be sent."
+  );
+
+  if(!confirmed)return;
+
+  reviewBusyId=id;
+  render();
+
+  try{
+
+    await api(
+      "/admin/withdrawals/"+encodeURIComponent(id)+"/approve",
+      {
+        method:"POST",
+        body:{}
+      }
+    );
+
+    showMessage(
+      "Withdrawal request approved. No real payment was sent.",
+      "success"
+    );
+
+    await refreshData();
+
+  }catch(error){
+
+    showMessage(error.message,"error");
+    await refreshData();
+
+  }finally{
+
+    reviewBusyId=null;
+    render();
+  }
+}
+
+function openReject(request){
+
+  if(!authorized)return;
+
+  if(statusOf(request)!=="pending"){
+    showMessage("Only pending requests can be rejected.","error");
+    return;
+  }
+
+  if(reviewBusyId!==null)return;
+
+  selectedId=request.id;
+
+  $("rejectInfo").textContent=
+    "User: "+(request.username||"Unknown")+
+    " · Amount: "+formatAmount(request.amount)+
+    " · Method: "+(request.method||"");
+
+  $("rejectReason").value="";
+  $("rejectModal").classList.add("show");
+}
+
+function closeReject(){
+
+  $("rejectModal").classList.remove("show");
+  selectedId=null;
+  $("rejectReason").value="";
+}
+
+async function confirmReject(){
+
+  if(!authorized||selectedId===null)return;
+
+  const id=selectedId;
+
+  const request=requests.find(
+    item=>String(item.id)===String(id)
+  );
+
+  if(!request||statusOf(request)!=="pending"){
+
+    closeReject();
+
+    showMessage(
+      "Request not found or already reviewed.",
+      "error"
+    );
+
+    await refreshData();
+    return;
+  }
+
+  if(reviewBusyId!==null)return;
+
+  const button=$("confirmReject");
+
+  const reason=
+    $("rejectReason").value.trim()||
+    "Rejected by admin";
+
+  button.disabled=true;
+  button.textContent="Processing...";
+
+  reviewBusyId=id;
+
+  try{
+
+    await api(
+      "/admin/withdrawals/"+encodeURIComponent(id)+"/reject",
+      {
+        method:"POST",
+        body:{reason}
+      }
+    );
+
+    closeReject();
+
+    showMessage(
+      "Withdrawal request rejected successfully.",
+      "success"
+    );
+
+    await refreshData();
+
+  }catch(error){
+
+    closeReject();
+
+    showMessage(error.message,"error");
+    await refreshData();
+
+  }finally{
+
+    reviewBusyId=null;
+    button.disabled=false;
+    button.textContent="Confirm Reject";
+
+    render();
+  }
+}
+
+function scheduleSearch(){
+
+  clearTimeout(searchTimer);
+
+  searchTimer=setTimeout(()=>{
+    refreshData();
+  },450);
+}
+
+async function logout(){
+
+  if(!confirm("Do you want to logout?"))return;
+  if(loggingOut)return;
+
+  loggingOut=true;
+
+  const button=$("logoutBtn");
+
+  button.disabled=true;
+  button.textContent="Logging out...";
+
+  try{
+
+    await fetch(API_BASE_URL+"/auth/logout",{
+      method:"POST",
+      headers:{
+        "Authorization":"Bearer "+getToken(),
+        "Accept":"application/json"
+      },
+      credentials:"include"
+    });
+
+  }catch(error){}
+
+  clearSession();
+  location.replace("login.html");
+}
+
+/* EVENT LISTENERS */
+
+$("confirmReject").addEventListener(
+  "click",
+  confirmReject
+);
+
+$("cancelReject").addEventListener(
+  "click",
+  closeReject
+);
+
+$("rejectModal").addEventListener("click",event=>{
+
+  if(event.target===$("rejectModal")){
+    closeReject();
+  }
+});
+
+$("refreshBtn").addEventListener("click",()=>{
+  clearMessage();
+  refreshData();
+});
+
+$("searchInput").addEventListener(
+  "input",
+  scheduleSearch
+);
+
+$("statusFilter").addEventListener(
+  "change",
+  refreshData
+);
+
+$("logoutBtn").addEventListener(
+  "click",
+  logout
+);
+
+document.addEventListener("keydown",event=>{
+
+  if(
+    event.key==="Escape"&&
+    $("rejectModal").classList.contains("show")
+  ){
+    closeReject();
+  }
+});
+
+/* INITIALIZATION */
+
+(async function init(){
+
+  try{
+
+    if(!getToken()){
+      redirectLogin();
+      return;
+    }
+
+    const allowed=await verifyAdmin();
+
+    if(!allowed)return;
+
+    await refreshData();
+
+  }catch(error){
+
+    showMessage(error.message,"error");
+
+  }
+
+})();
+
+</script>
+</body>
+</html>
