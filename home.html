@@ -1,3 +1,4 @@
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -362,7 +363,8 @@ header{
  align-items:stretch;
 }
 
-.event>div{
+.event>div,
+.event>a{
  min-width:0;
  width:100%;
  text-align:center;
@@ -412,6 +414,8 @@ header{
  display:block;
 }
 
+/* DAILY MILLIONAIRE INFORMATION CARD */
+
 .event .next-date{
  color:#0874c5;
  font-weight:900;
@@ -420,24 +424,44 @@ header{
  flex-direction:column;
  align-items:center;
  justify-content:center;
- gap:4px;
+ gap:5px;
  white-space:normal;
  overflow-wrap:anywhere;
  line-height:1.3;
  min-width:0;
+ text-decoration:none;
+ cursor:pointer;
+ transition:transform .15s,background .15s;
+}
+
+.event .next-date:active{
+ transform:scale(.97);
+ background:#dcefff;
 }
 
 .next-date small{
- font-size:9px;
- color:#69869b;
- font-weight:bold;
+ font-size:10px;
+ color:#075da8;
+ font-weight:900;
+ letter-spacing:.4px;
 }
 
-.next-date strong{
+.next-date .millionaire-time{
  font-size:11px;
- white-space:normal;
- overflow-wrap:anywhere;
- max-width:100%;
+ color:#0874c5;
+ font-weight:900;
+}
+
+.next-date .millionaire-result{
+ font-size:10px;
+ color:#123c63;
+ font-weight:800;
+}
+
+.next-date .millionaire-open{
+ font-size:9px;
+ color:#1688df;
+ font-weight:900;
 }
 
 /* GAME CARDS */
@@ -1009,10 +1033,14 @@ nav button.active{color:#087acb}
   margin-right:8px;
  }
 
- .event>div{padding:9px 4px}
- .event .next-date{gap:3px}
- .next-date small{font-size:8px}
- .next-date strong{font-size:9px}
+ .event>div,
+ .event>a{padding:9px 4px}
+
+ .event .next-date{gap:4px}
+ .next-date small{font-size:9px}
+ .next-date .millionaire-time{font-size:10px}
+ .next-date .millionaire-result{font-size:9px}
+ .next-date .millionaire-open{font-size:8px}
 
  .live-event{gap:3px}
 
@@ -1032,8 +1060,10 @@ nav button.active{color:#087acb}
  .draw-board{grid-template-columns:1fr .75fr 1.2fr}
  .official-label{font-size:14px}
  .result-number{font-size:12px}
- .next-date small{font-size:7px}
- .next-date strong{font-size:8px}
+ .next-date small{font-size:8px}
+ .next-date .millionaire-time{font-size:9px}
+ .next-date .millionaire-result{font-size:8px}
+ .next-date .millionaire-open{font-size:7px}
  .live-event{font-size:10px}
 
 }
@@ -1234,10 +1264,24 @@ nav button.active{color:#087acb}
   </span>
  </div>
 
- <div class="next-date">
-  <small>NEXT DRAW DATE</small>
-  <strong id="nextDrawDate">Not scheduled</strong>
- </div>
+ <!-- DAILY MILLIONAIRE INFORMATION CARD -->
+
+ <a class="next-date" id="dailyMillionaireInfo" href="millionaire.html"
+    aria-label="Open Daily Millionaire information">
+
+  <small>💎 DAILY MILLIONAIRE</small>
+
+  <strong class="millionaire-time" id="millionaireNextDraw">
+   Next Draw: Not announced
+  </strong>
+
+  <strong class="millionaire-result" id="millionaireLatestResult">
+   Latest Result: Not announced
+  </strong>
+
+  <span class="millionaire-open">TAP TO VIEW DETAILS ➜</span>
+
+ </a>
 
 </div>
 
@@ -1548,6 +1592,7 @@ let currentDrawSettings=null;
 let currentResults=[];
 let currentAdminMessage=null;
 let currentLiveEvent=null;
+let currentDailyMillionaire=null;
 let pointsVisible=true;
 let homeLoading=false;
 let homeLoaded=false;
@@ -1671,10 +1716,7 @@ function closePoints(){
  document.getElementById("pointsModal").classList.remove("show");
 }
 
-/* PROFILE AVATAR
-   Header now uses the support icon.
-   Only the bottom navigation profile avatar is updated here.
-*/
+/* PROFILE AVATAR */
 
 function safeImageUrl(value){
 
@@ -1918,22 +1960,8 @@ function updateCountdown(){
    "Admin has not scheduled a draw."
   );
 
-  setText("nextDrawDate","Not scheduled");
-
   return;
  }
-
- setText(
-  "nextDrawDate",
-  next.toLocaleString("en-GB",{
-   day:"2-digit",
-   month:"short",
-   year:"numeric",
-   hour:"2-digit",
-   minute:"2-digit",
-   hour12:true
-  })
- );
 
  const remaining=next.getTime()-Date.now();
 
@@ -2099,6 +2127,146 @@ function updateResults(){
  ids.forEach((id,index)=>{
   setText(id,String(values[index]??"--"));
  });
+}
+
+/* DAILY MILLIONAIRE INFORMATION */
+
+function getFirstAvailableValue(object,keys){
+
+ if(!object||typeof object!=="object")return null;
+
+ for(const key of keys){
+
+  const value=object[key];
+
+  if(value!==undefined&&value!==null&&String(value).trim()!==""){
+   return value;
+  }
+ }
+
+ return null;
+}
+
+function formatMillionaireDate(value){
+
+ if(!value)return "Not announced";
+
+ const date=parseDrawDate(value);
+
+ if(!date)return String(value);
+
+ return date.toLocaleString("en-GB",{
+  day:"2-digit",
+  month:"short",
+  year:"numeric",
+  hour:"2-digit",
+  minute:"2-digit",
+  hour12:true
+ });
+}
+
+function getMillionaireResult(data){
+
+ if(!data)return "Not announced";
+
+ let result=getFirstAvailableValue(data,[
+  "latest_result",
+  "latestResult",
+  "winning_number",
+  "winningNumber",
+  "result",
+  "number",
+  "value"
+ ]);
+
+ if(result===null&&Array.isArray(data.results)&&data.results.length){
+  result=data.results[0];
+ }
+
+ if(result===null&&data.latest&&typeof data.latest==="object"){
+  result=getFirstAvailableValue(data.latest,[
+   "result",
+   "number",
+   "winning_number",
+   "value"
+  ]);
+ }
+
+ if(result&&typeof result==="object"){
+
+  result=getFirstAvailableValue(result,[
+   "result",
+   "number",
+   "winning_number",
+   "winningNumber",
+   "value",
+   "first_prize"
+  ]);
+ }
+
+ if(result===null)return "Not announced";
+
+ return String(result);
+}
+
+function renderDailyMillionaire(){
+
+ const data=currentDailyMillionaire||{};
+
+ const drawValue=getFirstAvailableValue(data,[
+  "next_draw_at",
+  "nextDrawAt",
+  "draw_at",
+  "drawAt",
+  "next_draw",
+  "nextDraw",
+  "draw_time",
+  "drawTime"
+ ]);
+
+ const nextDrawText=drawValue
+  ?"Next Draw: "+formatMillionaireDate(drawValue)
+  :"Next Draw: Not announced";
+
+ const latestResult=getMillionaireResult(data);
+
+ setText("millionaireNextDraw",nextDrawText);
+
+ setText(
+  "millionaireLatestResult",
+  "Latest Result: "+latestResult
+ );
+}
+
+async function loadDailyMillionaire(){
+
+ try{
+
+  const data=await apiRequest("/public/daily-millionaire");
+
+  if(!data||data.success===false){
+   throw new Error("Daily Millionaire data is unavailable.");
+  }
+
+  currentDailyMillionaire=
+   data.dailyMillionaire||
+   data.millionaire||
+   data.data||
+   data;
+
+  renderDailyMillionaire();
+
+ }catch(error){
+
+  console.warn("Daily Millionaire information unavailable:",error);
+
+  if(!currentDailyMillionaire){
+   currentDailyMillionaire={};
+  }
+
+  renderDailyMillionaire();
+
+ }
 }
 
 /* ADMIN NOTICE */
@@ -2341,7 +2509,8 @@ async function loadHome(){
    loadDrawSettings(),
    loadResults(),
    loadAdminMessage(),
-   loadLiveEvent()
+   loadLiveEvent(),
+   loadDailyMillionaire()
   ];
 
   const results=await Promise.allSettled(tasks);
@@ -2364,6 +2533,7 @@ async function loadHome(){
   renderPointHistory();
   updateCountdown();
   updateResults();
+  renderDailyMillionaire();
 
   homeLoaded=true;
 
@@ -2419,7 +2589,8 @@ async function refreshPublicData(){
    loadDrawSettings(),
    loadResults(),
    loadAdminMessage(),
-   loadLiveEvent()
+   loadLiveEvent(),
+   loadDailyMillionaire()
   ];
 
   await Promise.allSettled(tasks);
