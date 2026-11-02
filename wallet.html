@@ -1,40 +1,826 @@
+
 <!DOCTYPE html>
 <html lang="bn">
 <head>
-<meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1.0"><meta name="theme-color" content="#2196e8"><title>GLO 365 - My Wallet</title>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1.0">
+<meta name="theme-color" content="#2196e8">
+<title>GLO 365 - My Wallet</title>
+
 <style>
-*{margin:0;padding:0;box-sizing:border-box} :root{--blue:#2196e8;--blue-dark:#087acb;--blue-light:#eaf5fd;--border:#d8e9f5;--text:#18344b;--muted:#71869a;--bg:#f1f7fc;--white:#fff;--green:#159b63;--red:#df4d5b}
-body{font-family:Arial,sans-serif;background:var(--bg);color:var(--text);min-height:100vh}.container{width:100%;max-width:650px;margin:auto;padding:20px 15px 40px}.header{display:flex;align-items:center;gap:14px;margin-bottom:23px}.back-btn{width:42px;height:42px;border:1px solid var(--border);border-radius:12px;background:white;color:var(--blue-dark);font-size:25px;cursor:pointer}.header h2{font-size:21px}.header p{color:var(--muted);font-size:12px;margin-top:4px}.wallet-card{background:linear-gradient(135deg,#2196e8,#087acb);border-radius:20px;padding:25px 22px;margin-bottom:18px;box-shadow:0 10px 25px #087acb25;color:white}.wallet-card .label{color:#e4f3ff;font-size:14px}.balance{font-size:36px;font-weight:bold;margin:12px 0 7px;overflow-wrap:anywhere}.wallet-card small{color:#e4f3ff;font-size:12px}.wallet-actions{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:23px}.action-btn{display:flex;align-items:center;justify-content:center;gap:8px;padding:13px 8px;background:white;color:var(--blue-dark);border:1px solid var(--border);border-radius:11px;font-size:13px;font-weight:bold;text-decoration:none;box-shadow:0 2px 8px #123c6010}.action-btn span{font-size:17px}.stats{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:25px}.stat-box{background:white;border:1px solid var(--border);border-radius:15px;padding:18px 14px;box-shadow:0 2px 8px #123c6008}.stat-box p{font-size:12px;color:var(--muted);margin-bottom:9px}.stat-box h3{font-size:21px;color:var(--blue-dark);overflow-wrap:anywhere}.section-title{font-size:17px;margin-bottom:14px}.history-list{display:flex;flex-direction:column;gap:10px}.history-item{display:flex;align-items:center;justify-content:space-between;gap:12px;background:white;border:1px solid var(--border);border-radius:13px;padding:15px;box-shadow:0 2px 8px #123c6008}.history-left{min-width:0}.history-left h4{font-size:14px;margin-bottom:6px;overflow-wrap:anywhere}.history-left p{font-size:11px;color:var(--muted)}.history-amount{font-size:15px;font-weight:bold;white-space:nowrap}.credit{color:var(--green)}.debit{color:var(--red)}.empty{text-align:center;padding:35px 15px;background:white;border:1px dashed #b9d7ec;border-radius:14px;color:var(--muted);font-size:13px}.notice{margin-top:22px;padding:14px;border-radius:12px;background:var(--blue-light);border:1px solid var(--border);color:#426b88;font-size:11px;line-height:1.7}.notice strong{color:var(--blue-dark)}.error{color:var(--red)}.loading{text-align:center;padding:22px;color:var(--muted);font-size:13px}@media(max-width:380px){.balance{font-size:29px}.stat-box h3{font-size:18px}.container{padding-left:11px;padding-right:11px}}
+*{margin:0;padding:0;box-sizing:border-box}
+
+:root{
+--blue:#2196e8;
+--blue-dark:#087acb;
+--blue-light:#eaf5fd;
+--border:#d8e9f5;
+--text:#18344b;
+--muted:#71869a;
+--bg:#f1f7fc;
+--white:#fff;
+--green:#159b63;
+--red:#df4d5b;
+}
+
+body{
+font-family:Arial,sans-serif;
+background:var(--bg);
+color:var(--text);
+min-height:100vh;
+}
+
+.container{
+width:100%;
+max-width:650px;
+margin:auto;
+padding:20px 15px 40px;
+}
+
+.header{
+display:flex;
+align-items:center;
+gap:14px;
+margin-bottom:23px;
+}
+
+.back-btn{
+width:42px;
+height:42px;
+border:1px solid var(--border);
+border-radius:12px;
+background:white;
+color:var(--blue-dark);
+font-size:25px;
+cursor:pointer;
+}
+
+.header h2{font-size:21px}
+
+.header p{
+color:var(--muted);
+font-size:12px;
+margin-top:4px;
+}
+
+.wallet-card{
+background:linear-gradient(135deg,#2196e8,#087acb);
+border-radius:20px;
+padding:25px 22px;
+margin-bottom:18px;
+box-shadow:0 10px 25px #087acb25;
+color:white;
+}
+
+.wallet-card .label{
+color:#e4f3ff;
+font-size:14px;
+}
+
+.balance{
+font-size:36px;
+font-weight:bold;
+margin:12px 0 7px;
+overflow-wrap:anywhere;
+}
+
+.wallet-card small{
+color:#e4f3ff;
+font-size:12px;
+}
+
+.wallet-actions{
+display:grid;
+grid-template-columns:1fr 1fr;
+gap:10px;
+margin-bottom:23px;
+}
+
+.action-btn{
+display:flex;
+align-items:center;
+justify-content:center;
+gap:8px;
+padding:13px 8px;
+background:white;
+color:var(--blue-dark);
+border:1px solid var(--border);
+border-radius:11px;
+font-size:13px;
+font-weight:bold;
+text-decoration:none;
+box-shadow:0 2px 8px #123c6010;
+}
+
+.action-btn span{font-size:17px}
+
+.stats{
+display:grid;
+grid-template-columns:1fr 1fr;
+gap:12px;
+margin-bottom:25px;
+}
+
+.stat-box{
+background:white;
+border:1px solid var(--border);
+border-radius:15px;
+padding:18px 14px;
+box-shadow:0 2px 8px #123c6008;
+}
+
+.stat-box p{
+font-size:12px;
+color:var(--muted);
+margin-bottom:9px;
+}
+
+.stat-box h3{
+font-size:21px;
+color:var(--blue-dark);
+overflow-wrap:anywhere;
+}
+
+.section-title{
+font-size:17px;
+margin-bottom:14px;
+}
+
+.history-list{
+display:flex;
+flex-direction:column;
+gap:10px;
+}
+
+.history-item{
+display:flex;
+align-items:center;
+justify-content:space-between;
+gap:12px;
+background:white;
+border:1px solid var(--border);
+border-radius:13px;
+padding:15px;
+box-shadow:0 2px 8px #123c6008;
+}
+
+.history-left{min-width:0}
+
+.history-left h4{
+font-size:14px;
+margin-bottom:6px;
+overflow-wrap:anywhere;
+}
+
+.history-left p{
+font-size:11px;
+color:var(--muted);
+}
+
+.history-amount{
+font-size:15px;
+font-weight:bold;
+white-space:nowrap;
+}
+
+.credit{color:var(--green)}
+.debit{color:var(--red)}
+
+.empty{
+text-align:center;
+padding:35px 15px;
+background:white;
+border:1px dashed #b9d7ec;
+border-radius:14px;
+color:var(--muted);
+font-size:13px;
+line-height:1.7;
+}
+
+.notice{
+margin-top:22px;
+padding:14px;
+border-radius:12px;
+background:var(--blue-light);
+border:1px solid var(--border);
+color:#426b88;
+font-size:11px;
+line-height:1.7;
+}
+
+.notice strong{color:var(--blue-dark)}
+
+.error{color:var(--red)}
+
+.loading{
+text-align:center;
+padding:22px;
+color:var(--muted);
+font-size:13px;
+}
+
+.retry-btn{
+margin-top:12px;
+padding:10px 18px;
+background:var(--blue);
+border:0;
+border-radius:8px;
+color:white;
+font-weight:bold;
+cursor:pointer;
+}
+
+@media(max-width:380px){
+.balance{font-size:29px}
+.stat-box h3{font-size:18px}
+.container{padding-left:11px;padding-right:11px}
+}
 </style>
 </head>
-<body><div class="container">
-<div class="header"><button class="back-btn" id="backBtn" type="button">‹</button><div><h2>My Wallet</h2><p>GLO 365 Personal Wallet</p></div></div>
+
+<body>
+
+<div class="container">
+
+<div class="header">
+<button class="back-btn" id="backBtn" type="button">‹</button>
+<div>
+<h2>My Wallet</h2>
+<p>GLO 365 Personal Wallet</p>
+</div>
+</div>
+
 <div id="walletContent">
-<div class="wallet-card"><div class="label">Available Balance</div><div class="balance" id="balance">0.00 DEMO Points</div><small id="username">Loading account...</small></div>
-<div class="wallet-actions"><a href="deposit.html" class="action-btn"><span>＋</span>Deposit</a><a href="withdraw.html" class="action-btn"><span>↗</span>Withdraw</a></div>
-<div class="stats"><div class="stat-box"><p>Total Received</p><h3 id="totalReceived">0.00</h3></div><div class="stat-box"><p>Total Transactions</p><h3 id="totalTransactions">0</h3></div></div>
-<h3 class="section-title">Point History</h3><div class="history-list" id="historyList"><div class="empty">Loading history...</div></div>
-<div class="notice"><strong>DEMO MODE NOTICE</strong><br>আপনার Wallet-এর পয়েন্ট সার্ভার ও PostgreSQL Database-এ সংরক্ষিত। এটি DEMO points; বাস্তব টাকা নয়। Pending withdrawal request Available Balance থেকে বাদ দেওয়া হয়।</div>
-</div></div>
+
+<div class="wallet-card">
+<div class="label">Available Balance</div>
+<div class="balance" id="balance">Loading...</div>
+<small id="username">Loading account...</small>
+</div>
+
+<div class="wallet-actions">
+<a href="deposit.html" class="action-btn">
+<span>＋</span>Deposit
+</a>
+
+<a href="withdraw.html" class="action-btn">
+<span>↗</span>Withdraw
+</a>
+</div>
+
+<div class="stats">
+
+<div class="stat-box">
+<p>Total Received</p>
+<h3 id="totalReceived">—</h3>
+</div>
+
+<div class="stat-box">
+<p>Total Transactions</p>
+<h3 id="totalTransactions">—</h3>
+</div>
+
+<div class="stat-box">
+<p>Pending Withdrawals</p>
+<h3 id="pendingWithdrawals">—</h3>
+</div>
+
+<div class="stat-box">
+<p>Reserved Points</p>
+<h3 id="reservedBalance">—</h3>
+</div>
+
+</div>
+
+<h3 class="section-title">Point History</h3>
+
+<div class="history-list" id="historyList">
+<div class="empty">Loading history...</div>
+</div>
+
+<div class="notice">
+<strong>DEMO MODE NOTICE</strong>
+<br>
+আপনার Wallet-এর পয়েন্ট Server ও PostgreSQL Database-এ সংরক্ষিত।
+এটি DEMO points; বাস্তব টাকা নয়।
+Pending withdrawal request Available Balance থেকে বাদ দেওয়া হয়।
+</div>
+
+</div>
+</div>
+
 <script>
 "use strict";
+
 (function(){
+
 const API_BASE_URL="https://glo365.onrender.com/api";
 const TOKEN_KEY="glo365_token";
+
 const $=id=>document.getElementById(id);
+
 let refreshBusy=false;
-function getToken(){return sessionStorage.getItem(TOKEN_KEY)||""}
-async function api(path){const t=getToken();if(!t){location.replace("login.html");throw new Error("Please login first.")};const response=await fetch(API_BASE_URL+path,{method:"GET",headers:{Authorization:"Bearer "+t,Accept:"application/json"},credentials:"include"});let data={};try{data=await response.json()}catch{}if(response.status===401){sessionStorage.removeItem(TOKEN_KEY);location.replace("login.html");throw new Error("Session expired. Please login again.")};if(!response.ok||data.success===false)throw new Error(data.message||("Request failed ("+response.status+")"));return data}
-function fmt(n){const x=Number(n);return (Number.isFinite(x)?x:0).toLocaleString("en-US",{minimumFractionDigits:2,maximumFractionDigits:2})}
-function date(v){if(!v)return "Date unavailable";const d=new Date(v);return Number.isNaN(d.getTime())?"Date unavailable":d.toLocaleString("en-GB")}
-function safeText(v){return String(v??"")}
-function showError(msg){const list=$("historyList");list.replaceChildren();const e=document.createElement("div");e.className="empty error";e.textContent=msg;list.append(e)}
-function renderHistory(rows){const list=$("historyList");list.replaceChildren();if(!rows.length){const e=document.createElement("div");e.className="empty";e.textContent="এখনো কোনো পয়েন্ট লেনদেনের ইতিহাস নেই।";list.append(e);return}
-rows.forEach(item=>{const amount=Number(item.amount)||0;const type=String(item.type||"").toLowerCase();const credit=["credit","deposit","bonus","refund","admin_credit"].includes(type);const card=document.createElement("div");card.className="history-item";const left=document.createElement("div");left.className="history-left";const title=document.createElement("h4");title.textContent=item.description|| (credit?"Points Received":"Points Transaction");const when=document.createElement("p");when.textContent=date(item.created_at);left.append(title,when);const value=document.createElement("div");value.className="history-amount "+(credit?"credit":"debit");value.textContent=(credit?"+":"-")+fmt(amount);card.append(left,value);list.append(card)})}
-async function loadWallet(){if(refreshBusy)return;refreshBusy=true;try{const [me,wallet,tx,withdrawals]=await Promise.all([api("/auth/me"),api("/wallet"),api("/wallet/transactions"),api("/withdrawals/me")]);const user=me.user||{};if(String(user.status||"active").toLowerCase()!=="active"){sessionStorage.removeItem(TOKEN_KEY);location.replace("login.html");return}
-const base=Number(wallet.balance)||0;const wr=Array.isArray(withdrawals.requests)?withdrawals.requests:[];const reserved=wr.reduce((sum,r)=>String(r.status||"pending").toLowerCase()==="pending"?sum+(Number(r.amount)||0):sum,0);const available=Math.max(0,base-reserved);$("balance").textContent=fmt(available)+" DEMO Points";$("username").textContent="@"+safeText(user.username||"User");
-const transactions=Array.isArray(tx.transactions)?tx.transactions:[];const received=transactions.reduce((sum,item)=>{const type=String(item.type||"").toLowerCase();return ["credit","deposit","bonus","refund","admin_credit"].includes(type)?sum+(Number(item.amount)||0):sum},0);$("totalReceived").textContent=fmt(received);$("totalTransactions").textContent=transactions.length.toLocaleString("en-US");renderHistory(transactions);
-}catch(error){showError(error.message||"Could not load wallet data.")}finally{refreshBusy=false}}
-$("backBtn").addEventListener("click",()=>{if(document.referrer){try{if(new URL(document.referrer).origin===location.origin){history.back();return}}catch{}}location.href="profile.html"});window.addEventListener("focus",loadWallet);window.addEventListener("pageshow",loadWallet);loadWallet();
+let lastLoadTime=0;
+let isLoggedOut=false;
+
+function getToken(){
+try{
+return sessionStorage.getItem(TOKEN_KEY)||"";
+}catch(error){
+return "";
+}
+
+}
+
+function logout(){
+
+if(isLoggedOut)return;
+
+isLoggedOut=true;
+
+try{
+sessionStorage.removeItem(TOKEN_KEY);
+}catch(error){}
+
+location.replace("login.html");
+
+}
+
+async function api(path){
+
+const token=getToken();
+
+if(!token){
+logout();
+throw new Error("Please login first.");
+}
+
+let response;
+
+try{
+
+response=await fetch(API_BASE_URL+path,{
+method:"GET",
+headers:{
+"Authorization":"Bearer "+token,
+"Accept":"application/json"
+},
+credentials:"include",
+cache:"no-store"
+});
+
+}catch(error){
+
+throw new Error(
+"Cannot connect to the server. Please check your internet connection."
+);
+
+}
+
+let data={};
+
+try{
+data=await response.json();
+}catch(error){
+data={};
+}
+
+if(response.status===401){
+
+logout();
+
+throw new Error("Session expired. Please login again.");
+
+}
+
+if(response.status===403){
+
+throw new Error(
+data.message||data.error||"Access denied."
+);
+
+}
+
+if(!response.ok||data.success===false){
+
+throw new Error(
+data.message||
+data.error||
+("Request failed ("+response.status+")")
+);
+
+}
+
+return data;
+
+}
+
+function unwrap(data){
+
+if(!data||typeof data!=="object")return {};
+
+if(data.data&&typeof data.data==="object"){
+return data.data;
+}
+
+return data;
+
+}
+
+function fmt(n){
+
+const x=Number(n);
+
+return (
+Number.isFinite(x)?x:0
+).toLocaleString("en-US",{
+minimumFractionDigits:2,
+maximumFractionDigits:2
+});
+
+}
+
+function date(value){
+
+if(!value)return "Date unavailable";
+
+const d=new Date(value);
+
+if(Number.isNaN(d.getTime())){
+return "Date unavailable";
+}
+
+return d.toLocaleString("en-GB");
+
+}
+
+function safeText(value){
+
+return String(value??"");
+
+}
+
+function showError(message){
+
+const list=$("historyList");
+
+list.replaceChildren();
+
+const box=document.createElement("div");
+box.className="empty error";
+
+const text=document.createElement("div");
+text.textContent=message;
+
+const retry=document.createElement("button");
+retry.className="retry-btn";
+retry.textContent="Try Again";
+
+retry.addEventListener("click",loadWallet);
+
+box.append(text,retry);
+
+list.append(box);
+
+}
+
+function renderHistory(rows){
+
+const list=$("historyList");
+
+list.replaceChildren();
+
+if(!Array.isArray(rows)||rows.length===0){
+
+const empty=document.createElement("div");
+
+empty.className="empty";
+empty.textContent=
+"এখনো কোনো পয়েন্ট লেনদেনের ইতিহাস নেই।";
+
+list.append(empty);
+
+return;
+
+}
+
+rows.forEach(item=>{
+
+const amount=Number(item.amount)||0;
+
+const type=String(item.type||"").toLowerCase();
+
+const creditTypes=[
+"credit",
+"deposit",
+"bonus",
+"refund",
+"admin_credit"
+];
+
+const credit=creditTypes.includes(type);
+
+const card=document.createElement("div");
+card.className="history-item";
+
+const left=document.createElement("div");
+left.className="history-left";
+
+const title=document.createElement("h4");
+
+title.textContent=
+item.description||
+(credit?"Points Received":"Points Transaction");
+
+const when=document.createElement("p");
+
+when.textContent=date(
+item.created_at||
+item.createdAt||
+item.date
+);
+
+left.append(title,when);
+
+const value=document.createElement("div");
+
+value.className=
+"history-amount "+(credit?"credit":"debit");
+
+value.textContent=
+(credit?"+":"-")+fmt(amount);
+
+card.append(left,value);
+
+list.append(card);
+
+});
+
+}
+
+/*
+  Withdrawal status handling.
+
+  Only requests with a pending status reserve wallet balance.
+  Completed, rejected, cancelled and failed requests are excluded.
+*/
+
+function calculateReservedWithdrawals(rows){
+
+if(!Array.isArray(rows))return 0;
+
+return rows.reduce((sum,item)=>{
+
+const status=String(item.status||"").toLowerCase();
+
+if(status==="pending"){
+
+const amount=Number(item.amount);
+
+return sum+(Number.isFinite(amount)&&amount>0?amount:0);
+
+}
+
+return sum;
+
+},0);
+
+}
+
+function getArray(data,keys){
+
+for(const key of keys){
+
+if(Array.isArray(data[key])){
+return data[key];
+}
+
+}
+
+return [];
+
+}
+
+function getBalance(wallet){
+
+const candidates=[
+wallet.balance,
+wallet.available_balance,
+wallet.wallet_balance,
+wallet.points
+];
+
+for(const value of candidates){
+
+if(value!==undefined&&value!==null){
+
+const number=Number(value);
+
+if(Number.isFinite(number)){
+return Math.max(0,number);
+}
+
+}
+
+}
+
+return 0;
+
+}
+
+async function loadWallet(){
+
+if(refreshBusy||isLoggedOut)return;
+
+refreshBusy=true;
+
+try{
+
+const results=await Promise.all([
+
+api("/auth/me"),
+api("/wallet"),
+api("/wallet/transactions"),
+api("/withdrawals/me")
+
+]);
+
+const me=unwrap(results[0]);
+const wallet=unwrap(results[1]);
+const tx=unwrap(results[2]);
+const withdrawals=unwrap(results[3]);
+
+const user=me.user||me.profile||me;
+
+if(!user||!user.username){
+
+throw new Error("Could not verify your account information.");
+
+}
+
+const accountStatus=String(
+user.status||"active"
+).toLowerCase();
+
+if(!["active","approved"].includes(accountStatus)){
+
+logout();
+
+throw new Error("Your account is not active.");
+
+}
+
+/*
+  Server wallet balance is the source balance.
+  Pending withdrawal reservation is calculated from
+  the authenticated user's own withdrawal response.
+*/
+
+const base=getBalance(wallet);
+
+const withdrawalRows=getArray(
+withdrawals,
+["requests","withdrawals","items"]
+);
+
+const reserved=calculateReservedWithdrawals(
+withdrawalRows
+);
+
+const available=Math.max(0,base-reserved);
+
+$("balance").textContent=
+fmt(available)+" DEMO Points";
+
+$("username").textContent=
+"@"+safeText(user.username||"User");
+
+/* Withdrawal summary */
+
+$("reservedBalance").textContent=
+fmt(reserved);
+
+$("pendingWithdrawals").textContent=
+withdrawalRows.filter(item=>
+String(item.status||"").toLowerCase()==="pending"
+).length.toLocaleString("en-US");
+
+/* Transactions */
+
+const transactions=getArray(
+tx,
+["transactions","history","items"]
+);
+
+const received=transactions.reduce((sum,item)=>{
+
+const type=String(item.type||"").toLowerCase();
+
+const creditTypes=[
+"credit",
+"deposit",
+"bonus",
+"refund",
+"admin_credit"
+];
+
+if(creditTypes.includes(type)){
+
+const amount=Number(item.amount)||0;
+
+return sum+Math.max(0,amount);
+
+}
+
+return sum;
+
+},0);
+
+$("totalReceived").textContent=fmt(received);
+
+$("totalTransactions").textContent=
+transactions.length.toLocaleString("en-US");
+
+renderHistory(transactions);
+
+lastLoadTime=Date.now();
+
+}catch(error){
+
+if(!isLoggedOut){
+
+$("balance").textContent="Unavailable";
+$("username").textContent="Wallet information unavailable";
+
+$("totalReceived").textContent="—";
+$("totalTransactions").textContent="—";
+$("pendingWithdrawals").textContent="—";
+$("reservedBalance").textContent="—";
+
+showError(
+error.message||"Could not load wallet data."
+);
+
+}
+
+}finally{
+
+refreshBusy=false;
+
+}
+
+}
+
+/* BACK BUTTON */
+
+$("backBtn").addEventListener("click",()=>{
+
+if(document.referrer){
+
+try{
+
+if(
+new URL(document.referrer).origin===
+location.origin
+){
+
+history.back();
+return;
+
+}
+
+}catch(error){}
+
+}
+
+location.href="profile.html";
+
+});
+
+/* PAGE REFRESH */
+
+window.addEventListener("focus",()=>{
+
+if(Date.now()-lastLoadTime>5000){
+loadWallet();
+}
+
+});
+
+window.addEventListener("pageshow",event=>{
+
+if(event.persisted){
+loadWallet();
+}
+
+});
+
+/* INITIAL LOAD */
+
+loadWallet();
+
 })();
-</script></body></html>
+</script>
+
+</body>
+</html>
