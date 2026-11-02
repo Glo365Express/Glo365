@@ -632,6 +632,28 @@
         WHERE role = 'admin'
       `);
 
+      // Live Support tables. CREATE IF NOT EXISTS preserves existing application data.
+      await pool.query(`
+        CREATE TABLE IF NOT EXISTS support_conversations (
+          id BIGSERIAL PRIMARY KEY,
+          user_id BIGINT NOT NULL UNIQUE REFERENCES users(id) ON DELETE CASCADE,
+          created_at TIMESTAMPTZ NOT NULL DEFAULT NOW(),
+          updated_at TIMESTAMPTZ NOT NULL DEFAULT NOW()
+        );
+        CREATE TABLE IF NOT EXISTS support_messages (
+          id BIGSERIAL PRIMARY KEY,
+          conversation_id BIGINT NOT NULL REFERENCES support_conversations(id) ON DELETE CASCADE,
+          sender_id BIGINT NOT NULL REFERENCES users(id) ON DELETE CASCADE,
+          sender_role VARCHAR(10) NOT NULL CHECK (sender_role IN ('user','admin')),
+          message TEXT NOT NULL CHECK (char_length(message) BETWEEN 1 AND 5000),
+          created_at TIMESTAMPTZ NOT NULL DEFAULT NOW()
+        );
+        CREATE INDEX IF NOT EXISTS idx_support_messages_conversation
+          ON support_messages(conversation_id, created_at, id);
+        CREATE INDEX IF NOT EXISTS idx_support_conversations_updated
+          ON support_conversations(updated_at DESC);
+      `);
+
       console.log("GLO 365 database initialized.");
     }
 
@@ -3647,6 +3669,130 @@
     // ==========================================
     // 404
     // ==========================================
+
+    // ==========================================
+    // LIVE SUPPORT
+    // Users can open a conversation by sending the first message.
+    // Only the primary admin can reply, and only after a user message exists.
+    // ==========================================
+
+    function normalizeSupportMessage(row) {
+      return {
+        id: row.id,
+        conversation_id: row.conversation_id,
+        sender_id: row.sender_id,
+        sender_role: row.sender_role,
+        message: row.message,
+        created_at: row.created_at
+      };
+    }
+
+    app.get("/api/support/messages", authenticateToken, asyncRoute(async (req, res) => {
+      let userId;
+      if (isPrimaryAdmin(req.user)) {
+        userId = req.query.user_id;
+        if (!userId) return sendError(res, 400, "user_id is required for Admin.");
+      } else {
+        userId = req.user.id;
+      }
+
+      const conversation = await pool.query(
+        `SELECT id, user_id, created_at, updated_at
+         FROM support_conversations WHERE user_id = $1`, [userId]
+      );
+      if (!conversation.rows.length) {
+        return res.json({ success: true, conversation: null, messages: [] });
+      }
+      const conv = conversation.rows[0];
+      const result = await pool.query(
+        `SELECT id, conversation_id, sender_id, sender_role, message, created_at
+         FROM support_messages WHERE conversation_id = $1
+         ORDER BY created_at ASC, id ASC`, [conv.id]
+      );
+      return res.json({ success: true, conversation: conv, messages: result.rows.map(normalizeSupportMessage) });
+    }));
+
+    app.post("/api/support/messages", authenticateToken, asyncRoute(async (req, res) => {
+      const message = typeof req.body.message === "string" ? req.body.message.trim() : "";
+      if (!message || message.length > 5000) {
+        return sendError(res, 400, "Message must contain 1 to 5000 characters.");
+      }
+
+      const adminSending = isPrimaryAdmin(req.user);
+      const targetUserId = adminSending ? req.body.user_id : req.user.id;
+      if (adminSending && !targetUserId) {
+        return sendError(res, 400, "user_id is required when Admin replies.");
+      }
+
+      const client = await pool.connect();
+      try {
+        await client.query("BEGIN");
+        let conversation;
+        if (adminSending) {
+          const found = await client.query(
+            `SELECT id, user_id FROM support_conversations
+             WHERE user_id = $1 FOR UPDATE`, [targetUserId]
+          );
+          if (!found.rows.length) {
+            await client.query("ROLLBACK");
+            return sendError(res, 404, "The user has not started a support conversation.");
+          }
+          conversation = found.rows[0];
+          const firstUserMessage = await client.query(
+            `SELECT id FROM support_messages
+             WHERE conversation_id = $1 AND sender_role = 'user' LIMIT 1`, [conversation.id]
+          );
+          if (!firstUserMessage.rows.length) {
+            await client.query("ROLLBACK");
+            return sendError(res, 403, "Admin can reply only after the user sends a message.");
+          }
+        } else {
+          const created = await client.query(
+            `INSERT INTO support_conversations (user_id) VALUES ($1)
+             ON CONFLICT (user_id) DO UPDATE SET updated_at = NOW()
+             RETURNING id, user_id`, [req.user.id]
+          );
+          conversation = created.rows[0];
+          await client.query(
+            `SELECT id FROM support_conversations WHERE id = $1 FOR UPDATE`, [conversation.id]
+          );
+        }
+
+        const inserted = await client.query(
+          `INSERT INTO support_messages
+             (conversation_id, sender_id, sender_role, message)
+           VALUES ($1, $2, $3, $4)
+           RETURNING id, conversation_id, sender_id, sender_role, message, created_at`,
+          [conversation.id, req.user.id, adminSending ? "admin" : "user", message]
+        );
+        await client.query(
+          `UPDATE support_conversations SET updated_at = NOW() WHERE id = $1`, [conversation.id]
+        );
+        await client.query("COMMIT");
+        return res.status(201).json({ success: true, message: normalizeSupportMessage(inserted.rows[0]) });
+      } catch (error) {
+        await client.query("ROLLBACK").catch(() => {});
+        throw error;
+      } finally {
+        client.release();
+      }
+    }));
+
+    app.get("/api/admin/support/conversations", authenticateToken, requireAdmin, asyncRoute(async (req, res) => {
+      const result = await pool.query(
+        `SELECT c.id, c.user_id, u.username, u.email, c.created_at, c.updated_at,
+                (SELECT m.message FROM support_messages m
+                 WHERE m.conversation_id = c.id
+                 ORDER BY m.created_at DESC, m.id DESC LIMIT 1) AS last_message,
+                (SELECT m.sender_role FROM support_messages m
+                 WHERE m.conversation_id = c.id
+                 ORDER BY m.created_at DESC, m.id DESC LIMIT 1) AS last_sender_role
+         FROM support_conversations c
+         JOIN users u ON u.id = c.user_id
+         ORDER BY c.updated_at DESC, c.id DESC`
+      );
+      return res.json({ success: true, conversations: result.rows });
+    }));
 
     app.use((req, res) => {
       res.status(404).json({
