@@ -2639,7 +2639,7 @@
 
     app.get("/api/withdrawals/me", authenticateToken, asyncRoute(async (req, res) => {
       const result = await pool.query(
-        `SELECT id,amount,method,account,status,rejection_reason,created_at,reviewed_at
+        `SELECT id,amount,method,account,status,rejection_reason,points_deducted,created_at,reviewed_at
          FROM withdrawal_requests WHERE user_id=$1 ORDER BY created_at DESC LIMIT 100`,
         [req.user.id]
       );
@@ -3882,4 +3882,3 @@
     // ==========================================
 
     // ==========================================
-    // LIVE SUP
