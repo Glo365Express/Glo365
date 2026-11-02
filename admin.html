@@ -4,243 +4,682 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
 <meta name="theme-color" content="#087acb">
-<title>GLO 365 - Admin Live Support</title>
+<title>GLO 365 - Admin Dashboard</title>
 <style>
 *{box-sizing:border-box;margin:0;padding:0}
 body{font-family:Arial,sans-serif;background:#f1f7fc;color:#172b45}
-.app{max-width:760px;margin:auto;min-height:100vh;padding-bottom:30px}
-header{background:linear-gradient(120deg,#066bb5,#087acb,#29b7f5);padding:18px 16px;display:flex;justify-content:space-between;align-items:center;gap:12px;box-shadow:0 5px 18px #087acb20}
-.logo{font-size:24px;font-weight:900;color:white}.logo span{color:#d9f5ff}
+.app{max-width:520px;margin:auto;min-height:100vh;padding-bottom:30px}
+header{background:linear-gradient(120deg,#066bb5,#087acb,#29b7f5);padding:20px 16px;display:flex;justify-content:space-between;align-items:center;box-shadow:0 5px 18px #087acb20}
+.logo{font-size:25px;font-weight:900;color:white}.logo span{color:#d9f5ff}
 .admin-label{font-size:11px;background:#fff;color:#087acb;padding:7px 10px;border-radius:20px;font-weight:900}
-.top{padding:18px 14px 8px}.top h2{font-size:22px;color:#17466d}.top p{font-size:12px;color:#778da0;margin-top:6px;line-height:1.6}
-.notice{display:none;margin:12px;padding:12px;border-radius:9px;font-size:13px;line-height:1.6;overflow-wrap:anywhere}
-.notice.show{display:block}.notice.error{background:#fff0f0;color:#a22}.notice.success{background:#e8f8ed;color:#147a36}
-.layout{display:grid;grid-template-columns:minmax(0, .9fr) minmax(0,1.4fr);gap:12px;padding:10px 12px}
-.panel{background:white;border:1px solid #dceaf4;border-radius:14px;box-shadow:0 3px 10px #087acb08;overflow:hidden;min-width:0}
-.panel-head{padding:14px;border-bottom:1px solid #e5eff6;display:flex;justify-content:space-between;align-items:center;gap:8px}
-.panel-head h3{font-size:15px;color:#17466d}
-button{border:0;border-radius:9px;padding:10px 12px;font-weight:bold;cursor:pointer}
+.welcome{padding:20px 15px}.welcome h2{font-size:22px;color:#17466d}
+.welcome p{font-size:12px;color:#778da0;margin-top:6px}
+.grid{display:grid;grid-template-columns:repeat(2,1fr);gap:10px;padding:0 12px}
+.stat{background:white;border:1px solid #dceaf4;border-radius:14px;padding:17px;box-shadow:0 3px 10px #087acb08}
+.stat small{color:#8296a8;font-size:12px}
+.stat strong{display:block;font-size:26px;margin-top:9px;color:#087acb;font-variant-numeric:tabular-nums}
+.section{background:white;margin:15px 12px;padding:17px;border:1px solid #dceaf4;border-radius:15px;box-shadow:0 3px 10px #087acb08}
+.section h3{font-size:17px;margin-bottom:13px;color:#17466d}
+.muted{color:#8296a8;font-size:12px;line-height:1.7}
+.menu{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px}
+.menu a{display:flex;flex-direction:column;gap:8px;text-decoration:none;color:#17466d;background:#f4faff;border:1px solid #dceaf4;border-radius:12px;padding:14px;min-height:100px}
+.menu a:active{transform:scale(.98)}
+.menu .emoji{font-size:23px}.menu strong{font-size:13px;color:#17699f}
+.menu small{font-size:10px;color:#8296a8;line-height:1.5}
+.menu a.deposit-card,.menu a.timer-card{background:linear-gradient(135deg,#eaf6ff,#d8edff);border:1px solid #b9def7}
+.menu a.deposit-card strong,.menu a.timer-card strong{color:#075c9b}
+.menu a.live-card{background:linear-gradient(135deg,#fff2f3,#ffe6e9);border:1px solid #ffd0d6}
+.menu a.live-card strong{color:#c51d35}
+.menu a.message-card{background:linear-gradient(135deg,#e9f8ff,#ccecff);border:1px solid #a9dafa}
+.menu a.message-card strong{color:#0767aa}
+.notice{display:none;margin:12px;padding:12px;background:#fff0f0;color:#a22;border-radius:9px;font-size:13px;line-height:1.6}
+.notice.show{display:block}
+button{border:0;border-radius:9px;padding:12px;font-weight:bold;cursor:pointer}
 button:disabled{opacity:.55;cursor:not-allowed}
-.primary{background:#087acb;color:white}.secondary{background:#eaf4fc;color:#17699f}
-.list{max-height:65vh;overflow-y:auto}
-.conversation{display:block;width:100%;text-align:left;border:0;border-bottom:1px solid #edf3f8;border-radius:0;background:white;padding:13px}
-.conversation.active{background:#eaf6ff;border-left:4px solid #087acb}
-.conversation strong{display:block;font-size:13px;color:#17466d;overflow-wrap:anywhere}
-.conversation small{display:block;color:#8296a8;font-size:10px;margin-top:5px}
-.conversation .preview{font-size:11px;color:#607b91;margin-top:7px;line-height:1.45;overflow:hidden;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical}
-.empty{padding:22px 14px;text-align:center;color:#8296a8;font-size:12px;line-height:1.7}
-.chat{display:flex;flex-direction:column;min-height:560px}
-.chat-head{padding:13px 14px;border-bottom:1px solid #e5eff6}
-.chat-head strong{display:block;color:#17466d;font-size:14px;overflow-wrap:anywhere}
-.chat-head small{display:block;color:#8296a8;font-size:11px;margin-top:5px}
-.messages{padding:14px;display:flex;flex-direction:column;gap:10px;flex:1;min-height:320px;max-height:55vh;overflow-y:auto;background:#f8fbfe}
-.bubble{max-width:88%;padding:10px 12px;border-radius:12px;font-size:13px;line-height:1.55;overflow-wrap:anywhere;white-space:pre-wrap}
-.bubble.user{align-self:flex-start;background:white;border:1px solid #dceaf4;color:#29465e;border-bottom-left-radius:4px}
-.bubble.admin{align-self:flex-end;background:#087acb;color:white;border-bottom-right-radius:4px}
-.bubble small{display:block;font-size:9px;opacity:.72;margin-top:6px}
-.composer{padding:12px;border-top:1px solid #e5eff6;display:flex;gap:8px;align-items:flex-end}
-textarea{width:100%;min-height:48px;max-height:130px;resize:vertical;padding:12px;border:1px solid #d5e5f1;border-radius:10px;font:14px Arial;outline:none;color:#172b45}
-textarea:focus{border-color:#087acb}
-.send{min-width:82px;min-height:46px}
-.toolbar{display:flex;gap:8px;align-items:center}
-.hint{font-size:11px;color:#8296a8;line-height:1.6;padding:0 13px 12px}
-.back{display:none}
-footer{text-align:center;color:#8296a8;font-size:11px;padding:16px}
-@media(max-width:620px){
- .layout{display:block}
- .list-panel{margin-bottom:12px}
- .list{max-height:34vh}
- .chat{min-height:56vh}
- .messages{max-height:48vh}
- .back{display:inline-block}
- .layout.chat-open .list-panel{display:none}
- .layout:not(.chat-open) .chat-panel{display:none}
-}
+.dark{background:#087acb;color:white;width:100%}
+.live-modal{display:none;position:fixed;inset:0;z-index:100;background:#071d35b8;padding:15px;align-items:center;justify-content:center}
+.live-modal.show{display:flex}
+.live-modal-box{width:100%;max-width:460px;max-height:90vh;overflow-y:auto;background:white;border:1px solid #d5e8f5;border-radius:16px;padding:18px}
+.live-modal-header{display:flex;justify-content:space-between;align-items:center;gap:10px;margin-bottom:15px}
+.live-modal-header h3{font-size:18px;color:#17466d}
+.close-btn{background:#eaf4fc;color:#17699f;padding:8px 12px}
+.live-label{display:block;font-size:13px;font-weight:bold;margin:12px 0 6px;color:#17466d}
+.live-input{width:100%;padding:13px;border:1px solid #d5e5f1;border-radius:9px;font-size:14px;outline:none;background:white;color:#222}
+.live-input:focus{border-color:#087acb}
+.live-help{margin-top:9px;font-size:11px;line-height:1.7;color:#8296a8}
+.live-status{margin-top:13px;padding:12px;border-radius:9px;background:#f1f7fc;font-size:12px;line-height:1.7;overflow-wrap:anywhere}
+.live-status.active{background:#e8f8ed;color:#147a36}
+.live-status.inactive{background:#fff0f0;color:#b22}
+.live-actions{display:flex;gap:9px;margin-top:15px}
+.live-save,.message-save{flex:1;background:#087acb;color:white}
+.live-disable,.message-disable{background:#ffe6e6;color:#b21d2b;flex:1}
+.message-preview{margin-top:14px;padding:13px;border-radius:10px;background:#eaf6ff;border:1px solid #c7e4f7;overflow:hidden}
+.message-preview small{display:block;color:#5684a4;font-size:10px;font-weight:bold;margin-bottom:8px}
+.message-preview-text{color:#075c9b;font-size:13px;font-weight:bold;line-height:1.6;overflow-wrap:anywhere}
+footer{text-align:center;color:#8296a8;font-size:11px;padding:18px}
+@media(max-width:350px){.menu{grid-template-columns:1fr}.stat strong{font-size:23px}.live-actions{flex-direction:column}}
 </style>
 </head>
 <body>
 <div class="app">
-<header><div class="logo">GLO <span>365</span></div><div class="admin-label">ADMIN LIVE SUPPORT</div></header>
-<div class="top">
- <h2>Live Support</h2>
- <p id="adminInfo">Checking administrator access...</p>
+<header>
+ <div class="logo">GLO <span>365</span></div>
+ <div class="admin-label">ADMIN PANEL</div>
+</header>
+
+<div class="welcome">
+ <h2>Admin Dashboard</h2>
+ <p id="adminName">Checking administrator access...</p>
 </div>
+
 <div id="notice" class="notice"></div>
-<div class="layout" id="layout">
- <section class="panel list-panel">
-  <div class="panel-head">
-   <h3>Support Conversations</h3>
-   <button class="secondary" id="refreshButton" type="button">Refresh</button>
-  </div>
-  <div class="list" id="conversationList"><div class="empty">Loading conversations...</div></div>
- </section>
- <section class="panel chat-panel">
-  <div class="chat">
-   <div class="chat-head">
-    <div class="toolbar">
-     <button class="secondary back" id="backButton" type="button">← Back</button>
-     <strong id="chatTitle">Select a conversation</strong>
-    </div>
-    <small id="chatSubTitle">Choose a user from the conversation list.</small>
-   </div>
-   <div class="messages" id="messages"><div class="empty">No conversation selected.</div></div>
-   <div class="composer">
-    <textarea id="replyText" maxlength="5000" placeholder="Write your reply..." disabled></textarea>
-    <button class="primary send" id="sendButton" type="button" disabled>Send</button>
-   </div>
-   <div class="hint">You can reply only after the user has sent at least one message. The server enforces this rule. Maximum 5,000 characters.</div>
-  </div>
- </section>
+
+<div class="grid">
+ <div class="stat"><small>Total Accounts</small><strong id="totalUsers">—</strong></div>
+ <div class="stat"><small>Affiliates</small><strong id="totalAffiliates">—</strong></div>
+ <div class="stat"><small>Bet Records</small><strong id="totalBets">—</strong></div>
+ <div class="stat"><small>Pending Withdrawals</small><strong id="totalWithdrawals">—</strong></div>
+ <div class="stat"><small>Pending Deposits</small><strong id="totalDeposits">—</strong></div>
+ <div class="stat"><small>Rewards Given</small><strong id="totalRewards">—</strong></div>
+ <div class="stat"><small>Reward Points</small><strong id="totalRewardPoints">—</strong></div>
 </div>
-<footer>GLO 365 Admin · Live Support</footer>
+
+<div class="section">
+ <h3>Admin Management</h3>
+ <p class="muted">Manage GLO 365 using the sections below. Dashboard information is loaded from the server.</p>
 </div>
+
+<div class="section">
+ <h3>Management Menu</h3>
+ <div class="menu">
+  <a href="admin-affiliates.html"><span class="emoji">🤝</span><strong>Affiliates</strong><small>Affiliate and Referral Management</small></a>
+  <a href="admin-users.html"><span class="emoji">👥</span><strong>Users</strong><small>User Accounts Management</small></a>
+  <a href="admin-deposits.html" class="deposit-card"><span class="emoji">💰</span><strong>Deposit Management</strong><small>Payment Methods and Deposit Requests</small></a>
+  <a href="timer.html" class="timer-card"><span class="emoji">⏳</span><strong>Draw Timer Settings</strong><small>Manage Draw Date, Month, Year and Time</small></a>
+  <a href="#" class="message-card" onclick="openMessageSettings();return false;"><span class="emoji">📢</span><strong>Admin Message Management</strong><small>Publish a scrolling Home Page message</small></a>
+  <a href="#" class="live-card" onclick="openLiveSettings();return false;"><span class="emoji">🔴</span><strong>Live Event Management</strong><small>Manage YouTube and Facebook Live links</small></a>
+  <a href="admin-number-reports.html"><span class="emoji">🔎</span><strong>Number Reports</strong><small>Search Number and D/R Reports</small></a>
+  <a href="admin-terms.html"><span class="emoji">📜</span><strong>Terms & Conditions</strong><small>Publish and Update Terms</small></a>
+  <a href="admin-results.html"><span class="emoji">📊</span><strong>Results</strong><small>Publish Results</small></a>
+  <a href="admin-winners.html"><span class="emoji">🏆</span><strong>Winners & Rewards</strong><small>Achievement Reward Management</small></a>
+  <a href="admin-withdrawals.html"><span class="emoji">💳</span><strong>Withdrawals</strong><small>Withdrawal Request Management</small></a>
+ </div>
+</div>
+
+<div class="section">
+ <h3>System Information</h3>
+ <p class="muted" id="systemInfo">Connecting to GLO 365 backend...</p>
+ <button class="dark" style="margin-top:14px" onclick="refreshAll()">Refresh Dashboard</button>
+</div>
+
+<div class="section"><button class="dark" id="logoutButton" onclick="logout()">Logout</button></div>
+<footer>GLO 365 Admin · Server Connected</footer>
+</div>
+
+<!-- ADMIN MESSAGE SETTINGS -->
+<div class="live-modal" id="messageModal">
+ <div class="live-modal-box">
+  <div class="live-modal-header">
+   <h3>📢 Admin Message</h3>
+   <button class="close-btn" onclick="closeMessageSettings()">✕</button>
+  </div>
+  <label class="live-label" for="adminMessage">Home Page Message</label>
+  <textarea class="live-input" id="adminMessage" rows="4" maxlength="300" placeholder="Write your announcement..." style="resize:vertical"></textarea>
+  <div class="live-help">Maximum 300 characters. The message will be published on the Home Page.</div>
+  <div class="message-preview">
+   <small>MESSAGE PREVIEW</small>
+   <div class="message-preview-text" id="messagePreview">Your message will appear here.</div>
+  </div>
+  <div id="messageStatus" class="live-status">Loading message status...</div>
+  <div class="live-actions">
+   <button class="message-save" id="messageSaveButton" onclick="publishAdminMessage()">📢 Save & Publish</button>
+   <button class="message-disable" id="messageDisableButton" onclick="disableAdminMessage()">⏹ Disable</button>
+  </div>
+ </div>
+</div>
+
+<!-- LIVE EVENT SETTINGS -->
+<div class="live-modal" id="liveModal">
+ <div class="live-modal-box">
+  <div class="live-modal-header">
+   <h3>🔴 Live Event Management</h3>
+   <button class="close-btn" onclick="closeLiveSettings()">✕</button>
+  </div>
+  <label class="live-label" for="liveTitle">Live Event Title</label>
+  <input class="live-input" type="text" id="liveTitle" maxlength="80" placeholder="GLO 365 Official Live">
+  <label class="live-label" for="liveUrl">YouTube or Facebook Live Link</label>
+  <input class="live-input" type="url" id="liveUrl" placeholder="https://www.youtube.com/watch?v=...">
+  <div class="live-help">Enter a public YouTube or Facebook video/live link. Facebook embedding depends on the video's privacy and embed permissions.</div>
+  <div id="liveStatus" class="live-status">Loading Live Event status...</div>
+  <div class="live-actions">
+   <button class="live-save" id="liveSaveButton" onclick="saveLiveEvent()">💾 Save & Start Live</button>
+   <button class="live-disable" id="liveDisableButton" onclick="disableLiveEvent()">⏹ Disable Live</button>
+  </div>
+ </div>
+</div>
+
 <script>
 "use strict";
-const API_BASE="https://glo365.onrender.com/api";
-const TOKEN_KEY="glo365_token";
-let currentAdmin=null;
-let conversations=[];
-let selectedUserId=null;
-let selectedConversation=null;
-let refreshTimer=null;
-let loading=false;
-let redirecting=false;
 
-function getToken(){try{return sessionStorage.getItem(TOKEN_KEY)||"";}catch(e){return "";}}
-function clearToken(){try{sessionStorage.removeItem(TOKEN_KEY);sessionStorage.removeItem("glo365_user");sessionStorage.removeItem("glo365_session");}catch(e){}}
-function goToLogin(){if(redirecting)return;redirecting=true;clearToken();location.replace("login.html");}
-function showNotice(message,type="error"){const el=document.getElementById("notice");el.textContent=message;el.className="notice show "+(type==="success"?"success":"error");}
-function clearNotice(){const el=document.getElementById("notice");el.textContent="";el.className="notice";}
-function unwrap(data){if(!data||typeof data!=="object")return {};return data.data&&typeof data.data==="object"?data.data:data;}
-async function api(path,options={}){
- const token=getToken();
- const headers={"Accept":"application/json",...(options.body?{"Content-Type":"application/json"}:{}),...(token?{"Authorization":"Bearer "+token}:{}),...(options.headers||{})};
- let response;
- try{response=await fetch(API_BASE+path,{method:options.method||"GET",headers,credentials:"include",cache:"no-store",body:options.body?JSON.stringify(options.body):undefined});}
- catch(e){throw new Error("Cannot connect to the server. Check your internet connection.");}
- const raw=await response.text();let data={};
- try{data=raw?JSON.parse(raw):{};}catch(e){data={message:raw||"Invalid server response"};}
- if(response.status===401){goToLogin();throw new Error("Session expired. Please log in again.");}
- if(!response.ok)throw new Error(data.message||data.error||("Server request failed ("+response.status+")"));
- if(data.success===false)throw new Error(data.message||data.error||"Request failed.");
- return data;
-}
-function dateText(value){
- if(!value)return "";
- const date=new Date(value);
- if(Number.isNaN(date.getTime()))return "";
- return date.toLocaleString();
-}
-function escapeText(value){return String(value??"");}
-async function verifyAdmin(){
- if(!getToken()){goToLogin();return false;}
- try{
-  const data=unwrap(await api("/auth/me"));
-  const user=data.user||data.profile||data;
-  if(!user||String(user.role||"").toLowerCase()!=="admin"){
-   showNotice("Admin access only.");clearToken();location.replace("login.html");return false;
+const API_BASE = "https://glo365.onrender.com/api";
+const TOKEN_KEY = "glo365_token";
+
+let currentAdmin = null;
+let activeMessage = null;
+let activeLiveEvent = null;
+let isAuthorized = false;
+let redirecting = false;
+
+/*
+  Authentication:
+  Login/Register page stores glo365_token in sessionStorage.
+  This page uses the same key.
+  No application data is stored in localStorage.
+*/
+function getToken(){
+  try{
+    return sessionStorage.getItem(TOKEN_KEY) || "";
+  }catch(error){
+    return "";
   }
-  currentAdmin=user;
-  document.getElementById("adminInfo").textContent="Signed in as "+(user.username||user.full_name||"Admin")+". Only the primary administrator can manage support.";
-  return true;
- }catch(error){if(!redirecting){document.getElementById("adminInfo").textContent="Administrator verification failed.";showNotice(error.message);}return false;}
 }
-function renderConversations(){
- const list=document.getElementById("conversationList");
- list.replaceChildren();
- if(!conversations.length){const empty=document.createElement("div");empty.className="empty";empty.textContent="No support conversations yet. Conversations appear after users send their first message.";list.appendChild(empty);return;}
- conversations.forEach(item=>{
-  const button=document.createElement("button");button.type="button";button.className="conversation"+(String(item.user_id)===String(selectedUserId)?" active":"");
-  const name=document.createElement("strong");name.textContent=item.username||("User #"+item.user_id);
-  const meta=document.createElement("small");meta.textContent="Updated: "+dateText(item.updated_at||item.created_at);
-  const preview=document.createElement("div");preview.className="preview";
-  preview.textContent=(item.last_sender_role==="admin"?"You: ":"User: ")+(item.last_message||"No messages");
-  button.append(name,meta,preview);
-  button.addEventListener("click",()=>selectConversation(item));
-  list.appendChild(button);
- });
+
+function clearToken(){
+  try{
+    sessionStorage.removeItem(TOKEN_KEY);
+    sessionStorage.removeItem("glo365_user");
+    sessionStorage.removeItem("glo365_session");
+    sessionStorage.removeItem("token");
+    sessionStorage.removeItem("authToken");
+  }catch(error){}
 }
-async function loadConversations(){
- if(loading)return;loading=true;
- const button=document.getElementById("refreshButton");button.disabled=true;
- try{
-  const data=unwrap(await api("/admin/support/conversations"));
-  conversations=Array.isArray(data.conversations)?data.conversations:[];
-  renderConversations();
-  if(selectedUserId){
-   const stillExists=conversations.find(c=>String(c.user_id)===String(selectedUserId));
-   if(stillExists){selectedConversation=stillExists;await loadMessages(false);}
-   else{selectedUserId=null;selectedConversation=null;resetChat();}
+
+function goToLogin(){
+  if(redirecting) return;
+  redirecting = true;
+  clearToken();
+  location.replace("login.html");
+}
+
+function showNotice(message, type){
+  const box = document.getElementById("notice");
+  box.textContent = message;
+  box.className = "notice show";
+  if(type === "success"){
+    box.style.background = "#e8f8ed";
+    box.style.color = "#147a36";
+  }else{
+    box.style.background = "#fff0f0";
+    box.style.color = "#a22";
   }
- }catch(error){showNotice("Could not load support conversations: "+error.message);}
- finally{loading=false;button.disabled=false;}
 }
-function resetChat(){
- document.getElementById("chatTitle").textContent="Select a conversation";
- document.getElementById("chatSubTitle").textContent="Choose a user from the conversation list.";
- document.getElementById("messages").replaceChildren();
- const empty=document.createElement("div");empty.className="empty";empty.textContent="No conversation selected.";document.getElementById("messages").appendChild(empty);
- document.getElementById("replyText").disabled=true;document.getElementById("sendButton").disabled=true;
- document.getElementById("layout").classList.remove("chat-open");
+
+function clearNotice(){
+  const box = document.getElementById("notice");
+  box.textContent = "";
+  box.className = "notice";
 }
-async function selectConversation(item){
- selectedConversation=item;selectedUserId=item.user_id;
- renderConversations();
- document.getElementById("layout").classList.add("chat-open");
- await loadMessages(true);
+
+async function api(path, options = {}){
+  const token = getToken();
+
+  const headers = {
+    "Accept":"application/json",
+    ...(options.body ? {"Content-Type":"application/json"} : {}),
+    ...(token ? {"Authorization":"Bearer " + token} : {}),
+    ...(options.headers || {})
+  };
+
+  let response;
+  try{
+    response = await fetch(API_BASE + path, {
+      method:options.method || "GET",
+      headers,
+      credentials:"include",
+      cache:"no-store",
+      body:options.body ? JSON.stringify(options.body) : undefined
+    });
+  }catch(error){
+    throw new Error("Cannot connect to the server. Please check your internet connection.");
+  }
+
+  const raw = await response.text();
+  let data = {};
+
+  try{
+    data = raw ? JSON.parse(raw) : {};
+  }catch(error){
+    data = {message:raw || "Invalid server response"};
+  }
+
+  if(response.status === 401){
+    goToLogin();
+    throw new Error("Your session has expired. Please log in again.");
+  }
+
+  if(response.status === 403){
+    throw new Error(data.message || data.error || "You do not have permission to perform this action.");
+  }
+
+  if(!response.ok){
+    throw new Error(data.message || data.error || "Server request failed (" + response.status + ")");
+  }
+
+  if(data && data.success === false){
+    throw new Error(data.message || data.error || "The request was not successful.");
+  }
+
+  return data;
 }
-async function loadMessages(showErrors=true){
- if(!selectedUserId)return;
- try{
-  const data=unwrap(await api("/support/messages?user_id="+encodeURIComponent(selectedUserId)));
-  const messages=Array.isArray(data.messages)?data.messages:[];
-  renderMessages(messages);
-  const name=selectedConversation?.username||("User #"+selectedUserId);
-  document.getElementById("chatTitle").textContent=name;
-  document.getElementById("chatSubTitle").textContent=(selectedConversation?.email||"Support conversation")+" · "+messages.length+" message(s)";
-  document.getElementById("replyText").disabled=false;
-  document.getElementById("sendButton").disabled=false;
- }catch(error){if(showErrors)showNotice("Could not load this conversation: "+error.message);}
+
+function unwrap(data){
+  if(!data || typeof data !== "object") return {};
+  return data.data && typeof data.data === "object" ? data.data : data;
 }
-function renderMessages(messages){
- const box=document.getElementById("messages");box.replaceChildren();
- if(!messages.length){const empty=document.createElement("div");empty.className="empty";empty.textContent="The conversation has no messages yet.";box.appendChild(empty);return;}
- messages.forEach(message=>{
-  const bubble=document.createElement("div");
-  bubble.className="bubble "+(message.sender_role==="admin"?"admin":"user");
-  const text=document.createElement("div");text.textContent=escapeText(message.message);
-  const time=document.createElement("small");time.textContent=(message.sender_role==="admin"?"Admin":"User")+" · "+dateText(message.created_at);
-  bubble.append(text,time);box.appendChild(bubble);
- });
- box.scrollTop=box.scrollHeight;
+
+function setText(id, value){
+  const element = document.getElementById(id);
+  if(!element) return;
+
+  if(value === null || value === undefined || value === ""){
+    element.textContent = "—";
+    return;
+  }
+
+  const number = Number(value);
+  element.textContent = Number.isFinite(number)
+    ? number.toLocaleString()
+    : String(value);
 }
-async function sendReply(){
- if(!selectedUserId)return;
- const field=document.getElementById("replyText");
- const message=field.value.trim();
- if(!message){showNotice("Please write a message first.");return;}
- if(message.length>5000){showNotice("Message cannot exceed 5,000 characters.");return;}
- const button=document.getElementById("sendButton");button.disabled=true;
- try{
-  await api("/support/messages",{method:"POST",body:{user_id:selectedUserId,message}});
-  field.value="";clearNotice();
-  await loadMessages(false);
-  await loadConversations();
- }catch(error){showNotice("Reply could not be sent: "+error.message);}
- finally{button.disabled=false;field.focus();}
+
+/* ADMIN AUTHENTICATION */
+async function requireAdmin(){
+  if(!getToken()){
+    goToLogin();
+    return false;
+  }
+
+  try{
+    const response = await api("/auth/me");
+    const data = unwrap(response);
+    const user = data.user || data.profile || data;
+
+    if(!user || String(user.role || "").toLowerCase() !== "admin"){
+      alert("Admin access only.");
+      clearToken();
+      location.replace("login.html");
+      return false;
+    }
+
+    currentAdmin = user;
+    isAuthorized = true;
+
+    document.getElementById("adminName").textContent =
+      "Welcome, " + (user.username || user.full_name || "Admin");
+
+    return true;
+  }catch(error){
+    if(!redirecting){
+      document.getElementById("adminName").textContent = "Administrator verification failed.";
+      showNotice(error.message);
+    }
+    return false;
+  }
 }
-document.getElementById("sendButton").addEventListener("click",sendReply);
-document.getElementById("replyText").addEventListener("keydown",event=>{
- if(event.key==="Enter"&&!event.shiftKey){event.preventDefault();sendReply();}
+
+/* DASHBOARD STATISTICS */
+async function loadDashboard(){
+  try{
+    const response = await api("/admin/dashboard");
+    const data = unwrap(response);
+    const stats = data.dashboard || data.stats || data;
+
+    setText("totalUsers", stats.total_users);
+    setText("totalAffiliates", stats.total_affiliates);
+    setText("totalBets", stats.total_demo_bets);
+
+    /*
+      The current backend dashboard endpoint does not return
+      withdrawal, deposit or reward statistics.
+      Do not display invented values.
+    */
+    setText("totalWithdrawals", null);
+    setText("totalDeposits", null);
+    setText("totalRewards", null);
+    setText("totalRewardPoints", null);
+
+    document.getElementById("systemInfo").textContent =
+      "Connected to PostgreSQL. User, affiliate and demo bet statistics are loaded from the server. Other statistics are not provided by the current dashboard API.";
+
+  }catch(error){
+    ["totalUsers","totalAffiliates","totalBets",
+     "totalWithdrawals","totalDeposits",
+     "totalRewards","totalRewardPoints"].forEach(id => setText(id, null));
+
+    showNotice("Dashboard could not load: " + error.message);
+  }
+}
+
+/* ADMIN MESSAGE */
+function extractMessage(response){
+  if(!response || typeof response !== "object") return null;
+
+  if(response.message && typeof response.message === "object"){
+    return response.message;
+  }
+
+  const data = unwrap(response);
+
+  if(data.message && typeof data.message === "object"){
+    return data.message;
+  }
+
+  if(data.messages && Array.isArray(data.messages)){
+    return data.messages.find(item => item && item.active === true) || null;
+  }
+
+  if(Array.isArray(data)){
+    return data.find(item => item && item.active === true) || null;
+  }
+
+  if(typeof data.text === "string"){
+    return data;
+  }
+
+  return null;
+}
+
+async function loadAdminMessage(){
+  const status = document.getElementById("messageStatus");
+  status.className = "live-status";
+  status.textContent = "Loading message status...";
+
+  try{
+    const response = await api("/admin/messages");
+    activeMessage = extractMessage(response);
+
+    document.getElementById("adminMessage").value =
+      activeMessage ? (activeMessage.text || "") : "";
+
+    updateMessagePreview();
+
+    if(activeMessage && activeMessage.active === true){
+      status.className = "live-status active";
+      status.textContent = "🟢 An Admin Message is currently published.";
+    }else{
+      status.className = "live-status inactive";
+      status.textContent = "🔴 No active Admin Message.";
+    }
+  }catch(error){
+    activeMessage = null;
+    status.className = "live-status inactive";
+    status.textContent = "Could not load message status: " + error.message;
+  }
+}
+
+function openMessageSettings(){
+  if(!isAuthorized) return;
+  document.getElementById("messageModal").classList.add("show");
+  loadAdminMessage();
+}
+
+function closeMessageSettings(){
+  document.getElementById("messageModal").classList.remove("show");
+}
+
+function updateMessagePreview(){
+  const value = document.getElementById("adminMessage").value.trim();
+  document.getElementById("messagePreview").textContent =
+    value || "Your message will appear here.";
+}
+
+document.getElementById("adminMessage").addEventListener("input", updateMessagePreview);
+
+async function publishAdminMessage(){
+  if(!isAuthorized) return;
+
+  const text = document.getElementById("adminMessage").value.trim();
+
+  if(!text){
+    alert("Please write a message first.");
+    return;
+  }
+
+  if(text.length > 300){
+    alert("Message cannot exceed 300 characters.");
+    return;
+  }
+
+  const button = document.getElementById("messageSaveButton");
+  button.disabled = true;
+
+  try{
+    await api("/admin/messages", {
+      method:"POST",
+      body:{text}
+    });
+
+    await loadAdminMessage();
+    alert("Admin Message published successfully.");
+    closeMessageSettings();
+  }catch(error){
+    alert("Message could not be published: " + error.message);
+  }finally{
+    button.disabled = false;
+  }
+}
+
+async function disableAdminMessage(){
+  if(!isAuthorized) return;
+
+  if(!confirm("Disable the Admin Message on the Home Page?")) return;
+
+  const button = document.getElementById("messageDisableButton");
+  button.disabled = true;
+
+  try{
+    await api("/admin/messages/disable", {method:"POST"});
+    await loadAdminMessage();
+    alert("Admin Message has been disabled.");
+    closeMessageSettings();
+  }catch(error){
+    alert("Message could not be disabled: " + error.message);
+  }finally{
+    button.disabled = false;
+  }
+}
+
+/* LIVE EVENT */
+function getVideoInfo(url){
+  try{
+    const parsed = new URL(url);
+    if(parsed.protocol !== "https:") return null;
+
+    const host = parsed.hostname.toLowerCase();
+
+    if([
+      "youtube.com","www.youtube.com","m.youtube.com",
+      "youtu.be","www.youtu.be"
+    ].includes(host)){
+      let videoId = "";
+
+      if(host === "youtu.be" || host === "www.youtu.be"){
+        videoId = parsed.pathname.split("/").filter(Boolean)[0] || "";
+      }else if(parsed.searchParams.get("v")){
+        videoId = parsed.searchParams.get("v");
+      }else{
+        const parts = parsed.pathname.split("/").filter(Boolean);
+        if(parts.length >= 2 && ["live","embed","shorts"].includes(parts[0])){
+          videoId = parts[1];
+        }
+      }
+
+      if(!/^[a-zA-Z0-9_-]{6,20}$/.test(videoId)) return null;
+      return {platform:"youtube",url:parsed.href};
+    }
+
+    if(["facebook.com","www.facebook.com","m.facebook.com","fb.watch"].includes(host)){
+      return {platform:"facebook",url:parsed.href};
+    }
+
+    return null;
+  }catch(error){
+    return null;
+  }
+}
+
+async function loadLiveEvent(){
+  const status = document.getElementById("liveStatus");
+  status.className = "live-status";
+  status.textContent = "Loading Live Event status...";
+
+  try{
+    const response = await api("/admin/live-event");
+    const data = unwrap(response);
+
+    activeLiveEvent = data.event || data.liveEvent || data.live_event || null;
+
+    document.getElementById("liveTitle").value =
+      activeLiveEvent && activeLiveEvent.title ? activeLiveEvent.title : "";
+
+    document.getElementById("liveUrl").value =
+      activeLiveEvent && activeLiveEvent.url ? activeLiveEvent.url : "";
+
+    updateLiveStatus();
+  }catch(error){
+    activeLiveEvent = null;
+    status.className = "live-status inactive";
+    status.textContent = "Could not load Live Event: " + error.message;
+  }
+}
+
+function openLiveSettings(){
+  if(!isAuthorized) return;
+  document.getElementById("liveModal").classList.add("show");
+  loadLiveEvent();
+}
+
+function closeLiveSettings(){
+  document.getElementById("liveModal").classList.remove("show");
+}
+
+function updateLiveStatus(){
+  const status = document.getElementById("liveStatus");
+  status.className = "live-status";
+
+  if(activeLiveEvent && activeLiveEvent.active === true){
+    const platform = activeLiveEvent.platform === "youtube" ? "YouTube" : "Facebook";
+    status.classList.add("active");
+    status.textContent =
+      "🟢 Live Event is active. Platform: " + platform +
+      " | Title: " + (activeLiveEvent.title || "GLO 365 Live");
+  }else{
+    status.classList.add("inactive");
+    status.textContent = "🔴 No active Live Event.";
+  }
+}
+
+async function saveLiveEvent(){
+  if(!isAuthorized) return;
+
+  const title =
+    document.getElementById("liveTitle").value.trim() ||
+    "GLO 365 Official Live";
+
+  const url = document.getElementById("liveUrl").value.trim();
+
+  if(!url){
+    alert("Please enter a YouTube or Facebook link.");
+    return;
+  }
+
+  const video = getVideoInfo(url);
+
+  if(!video){
+    alert("Please enter a valid HTTPS YouTube or Facebook video link.");
+    return;
+  }
+
+  const button = document.getElementById("liveSaveButton");
+  button.disabled = true;
+
+  try{
+    await api("/admin/live-event", {
+      method:"POST",
+      body:{
+        title,
+        url:video.url,
+        platform:video.platform
+      }
+    });
+
+    await loadLiveEvent();
+    alert("Live Event saved successfully.");
+    closeLiveSettings();
+  }catch(error){
+    alert("Live Event could not be saved: " + error.message);
+  }finally{
+    button.disabled = false;
+  }
+}
+
+async function disableLiveEvent(){
+  if(!isAuthorized) return;
+
+  if(!confirm("Are you sure you want to disable the Live Event?")) return;
+
+  const button = document.getElementById("liveDisableButton");
+  button.disabled = true;
+
+  try{
+    await api("/admin/live-event/disable", {method:"POST"});
+    await loadLiveEvent();
+    alert("Live Event has been disabled.");
+    closeLiveSettings();
+  }catch(error){
+    alert("Live Event could not be disabled: " + error.message);
+  }finally{
+    button.disabled = false;
+  }
+}
+
+/* REFRESH */
+async function refreshAll(){
+  if(!isAuthorized) return;
+  clearNotice();
+  await loadDashboard();
+}
+
+/* LOGOUT */
+async function logout(){
+  const button = document.getElementById("logoutButton");
+  button.disabled = true;
+
+  try{
+    await api("/auth/logout", {method:"POST"});
+  }catch(error){
+    /* Local session is still cleared below. */
+  }
+
+  clearToken();
+  location.replace("login.html");
+}
+
+/* CLOSE MODALS WHEN CLICKING OUTSIDE */
+document.getElementById("messageModal").addEventListener("click", function(event){
+  if(event.target === this) closeMessageSettings();
 });
-document.getElementById("refreshButton").addEventListener("click",async()=>{clearNotice();await loadConversations();if(selectedUserId)await loadMessages(false);});
-document.getElementById("backButton").addEventListener("click",()=>document.getElementById("layout").classList.remove("chat-open"));
+
+document.getElementById("liveModal").addEventListener("click", function(event){
+  if(event.target === this) closeLiveSettings();
+});
+
+/* INITIALIZE */
 (async function init(){
- if(!await verifyAdmin())return;
- await loadConversations();
- refreshTimer=setInterval(()=>{if(!document.hidden)loadConversations();},7000);
+  const allowed = await requireAdmin();
+  if(!allowed) return;
+  await refreshAll();
 })();
-window.addEventListener("beforeunload",()=>{if(refreshTimer)clearInterval(refreshTimer);});
 </script>
 </body>
 </html>
