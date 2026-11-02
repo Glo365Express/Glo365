@@ -31,11 +31,41 @@ header{background:linear-gradient(120deg,#0755a5,#1688df,#45b5f5);padding:13px 1
 .days-label{font-size:clamp(17px,5vw,28px);white-space:nowrap;margin-top:8px}
 .draw-info{min-width:0;display:flex;flex-direction:column;gap:7px}
 .draw-number{background:#fff;border-radius:30px;padding:10px 5px;text-align:center;color:#1976b9;font-size:clamp(13px,4vw,24px);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;border:1px solid #d8eaf8}
-.time-row{display:grid;grid-template-columns:1fr 1fr;gap:6px;flex:1}
-.time-box{display:grid;grid-template-columns:1fr auto;align-items:center;overflow:hidden;border-radius:30px;background:#1688df;color:#fff;min-width:0}
-.time-value{text-align:center;font-size:clamp(20px,6vw,37px);padding:8px 1px;font-variant-numeric:tabular-nums}
-.time-label{background:#0874c5;height:100%;display:grid;place-items:center;padding:3px;font-size:clamp(11px,3.5vw,22px)}
-.draw-status{grid-column:1/-1;text-align:center;color:#0874c5;font-size:11px;font-weight:bold;padding:2px}
+
+/* DAILY MILLIONAIRE RESULT - REPLACES OLD HR/MIN COUNTDOWN */
+.millionaire-result-card{
+ flex:1;
+ min-height:105px;
+ display:flex;
+ flex-direction:column;
+ justify-content:center;
+ align-items:center;
+ gap:8px;
+ padding:9px 5px;
+ border-radius:19px;
+ border:1px solid #b9dcf6;
+ background:linear-gradient(145deg,#eaf7ff,#d4edff);
+ text-align:center;
+ overflow:hidden;
+}
+.millionaire-result-title{
+ color:#075da8;
+ font-size:clamp(10px,2.8vw,14px);
+ font-weight:900;
+ line-height:1.2;
+}
+.millionaire-result-number{
+ color:#0874c5;
+ font-size:clamp(24px,7vw,38px);
+ font-weight:900;
+ letter-spacing:2px;
+ line-height:1.1;
+}
+.millionaire-result-caption{
+ color:#5b7891;
+ font-size:9px;
+ font-weight:bold;
+}
 
 /* PREVIOUS RESULTS */
 .results-heading{margin:0 8px 6px;color:#0874c5;font-size:14px;font-weight:900}
@@ -55,43 +85,42 @@ header{background:linear-gradient(120deg,#0755a5,#1688df,#45b5f5);padding:13px 1
 .notice-wrap:hover .notice-track{animation-play-state:paused}
 @keyframes noticeMove{0%{transform:translateX(0)}100%{transform:translateX(-50%)}}
 
-/* EVENT */
-.event{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:7px;margin:0 12px 15px;align-items:stretch}
-.event>div,.event>a{min-width:0;width:100%;text-align:center;background:linear-gradient(145deg,#f5fbff,#e5f4ff);border:1px solid #cfe6f8;border-radius:22px;padding:10px 5px}
-.live-event{display:flex;justify-content:center;align-items:center;gap:6px;cursor:pointer;font-weight:bold;color:#075da8;white-space:nowrap;font-size:clamp(11px,3.4vw,16px)}
-.live-dot{color:#ed263d;font-size:14px;flex-shrink:0}
-.platform-logos{display:flex;align-items:center;gap:4px;flex-shrink:0}
-.platform-logo{width:17px;height:17px;display:inline-flex;align-items:center;justify-content:center;flex-shrink:0}
-.platform-logo svg{width:100%;height:100%;display:block}
-
-/* DAILY MILLIONAIRE COUNTDOWN CARD */
+/* DAILY MILLIONAIRE COUNTDOWN - NO LIVE CARD */
+.event{
+ display:flex;
+ justify-content:center;
+ margin:0 12px 15px;
+}
 .event .next-date{
+ width:100%;
+ max-width:360px;
  display:flex;
  flex-direction:column;
  align-items:center;
  justify-content:center;
- gap:5px;
+ gap:7px;
  min-width:0;
+ padding:11px 12px;
  cursor:default;
  user-select:none;
+ background:linear-gradient(145deg,#f5fbff,#e5f4ff);
+ border:1px solid #cfe6f8;
+ border-radius:18px;
 }
-
 .millionaire-title{
  color:#075da8;
- font-size:clamp(11px,3.2vw,15px);
+ font-size:14px;
  font-weight:900;
  letter-spacing:.3px;
  white-space:nowrap;
 }
-
 .millionaire-clock{
  width:100%;
  display:flex;
  align-items:stretch;
  justify-content:center;
- gap:4px;
+ gap:5px;
 }
-
 .millionaire-unit{
  display:flex;
  flex-direction:column;
@@ -101,26 +130,19 @@ header{background:linear-gradient(120deg,#0755a5,#1688df,#45b5f5);padding:13px 1
  background:#1688df;
  color:#fff;
  border-radius:11px;
- padding:5px 2px;
+ padding:7px 3px;
  box-shadow:inset -4px 0 0 #0874c5;
 }
-
 .millionaire-unit.hours{flex:1.25}
 .millionaire-unit.minutes{flex:1}
 .millionaire-unit.seconds{flex:.75}
-
 .millionaire-unit strong{
- font-size:clamp(16px,4.5vw,25px);
+ font-size:clamp(18px,5vw,26px);
  line-height:1.1;
  font-weight:500;
  font-variant-numeric:tabular-nums;
 }
-
-.millionaire-unit span{
- font-size:clamp(8px,2.2vw,11px);
- margin-top:3px;
- font-weight:700;
-}
+.millionaire-unit span{font-size:9px;margin-top:4px;font-weight:700}
 
 /* GAME CARDS */
 .cards{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:13px;padding:0 12px}
@@ -159,8 +181,17 @@ nav button.active{color:#087acb}
 .nav-profile-avatar img{width:100%;height:100%;object-fit:cover;display:block;border-radius:50%}
 
 /* MODALS */
-.points-modal,.live-modal{display:none;position:fixed;inset:0;background:#071d35b8;z-index:20;padding:15px;align-items:center;justify-content:center}
-.points-modal.show,.live-modal.show{display:flex}
+.points-modal,.live-message-modal{
+ display:none;
+ position:fixed;
+ inset:0;
+ background:#071d35b8;
+ z-index:40;
+ padding:15px;
+ align-items:center;
+ justify-content:center;
+}
+.points-modal.show,.live-message-modal.show{display:flex}
 .points-content{width:100%;max-width:460px;max-height:85vh;overflow-y:auto;background:white;border:1px solid #cfe6f8;border-radius:16px;padding:18px}
 .points-header{display:flex;justify-content:space-between;align-items:center;margin-bottom:15px}
 .points-header h3{font-size:18px;color:#075da8}
@@ -173,18 +204,127 @@ nav button.active{color:#087acb}
 .point-entry .amount{color:#17833c;font-weight:bold;font-size:16px}
 .point-entry .debit{color:#d14343}
 .point-entry small{color:#999;display:block}
-.live-box{width:100%;max-width:480px;max-height:92vh;overflow-y:auto;background:white;border:1px solid #cfe6f8;border-radius:17px;padding:16px}
-.live-heading{display:flex;justify-content:space-between;align-items:center;gap:10px;margin-bottom:15px}
-.live-heading h3{font-size:18px;color:#075da8}
-.live-player{width:100%;aspect-ratio:16/9;background:#071a2d;border-radius:12px;overflow:hidden}
+
+/* LIVE FLOATING BUBBLE */
+.live-bubble{
+ display:none;
+ position:fixed;
+ z-index:60;
+ width:76px;
+ height:76px;
+ border:3px solid #fff;
+ border-radius:50%;
+ background:radial-gradient(circle at 35% 25%,#4bb8ff,#0755a5 75%);
+ box-shadow:0 5px 22px #001d3d70;
+ color:#fff;
+ cursor:grab;
+ touch-action:none;
+ overflow:hidden;
+ align-items:center;
+ justify-content:center;
+ user-select:none;
+}
+.live-bubble.show{display:flex}
+.live-bubble:active{cursor:grabbing}
+.live-bubble-content{display:flex;flex-direction:column;align-items:center;justify-content:center;gap:3px;pointer-events:none}
+.live-bubble-play{font-size:25px;line-height:1;text-shadow:0 2px 5px #001d3d}
+.live-bubble-label{font-size:10px;font-weight:900;letter-spacing:1px}
+.live-bubble-dot{position:absolute;top:5px;right:7px;width:10px;height:10px;border-radius:50%;background:#ff183d;border:2px solid white}
+.live-bubble-close{
+ position:absolute;
+ top:-1px;
+ left:-1px;
+ width:22px;
+ height:22px;
+ border:2px solid #fff;
+ border-radius:50%;
+ background:#d71943;
+ color:#fff;
+ font-size:13px;
+ line-height:1;
+ cursor:pointer;
+ display:grid;
+ place-items:center;
+ z-index:2;
+}
+
+/* LIVE VIDEO POPUP */
+.live-popup{
+ display:none;
+ position:fixed;
+ z-index:70;
+ width:min(92vw,470px);
+ background:#fff;
+ border:1px solid #b9dcf6;
+ border-radius:17px;
+ box-shadow:0 15px 50px #001d3d65;
+ overflow:hidden;
+}
+.live-popup.show{display:block}
+.live-popup.fullscreen{
+ inset:0!important;
+ width:100%!important;
+ height:100%!important;
+ max-width:none!important;
+ border-radius:0;
+ border:0;
+ display:flex;
+ flex-direction:column;
+}
+.live-popup-header{
+ display:flex;
+ align-items:center;
+ justify-content:space-between;
+ gap:8px;
+ padding:10px 12px;
+ background:linear-gradient(120deg,#0755a5,#1688df);
+ color:#fff;
+ cursor:grab;
+ touch-action:none;
+ user-select:none;
+}
+.live-popup-header:active{cursor:grabbing}
+.live-popup-title{
+ min-width:0;
+ overflow:hidden;
+ white-space:nowrap;
+ text-overflow:ellipsis;
+ font-size:14px;
+ font-weight:900;
+}
+.live-popup-actions{display:flex;align-items:center;gap:6px;flex-shrink:0}
+.live-control{
+ border:0;
+ border-radius:7px;
+ background:#ffffff25;
+ color:#fff;
+ padding:7px 9px;
+ font-size:12px;
+ font-weight:bold;
+ cursor:pointer;
+}
+.live-control:active{transform:scale(.95)}
+.live-popup-close{background:#e3294b}
+.live-player{
+ width:100%;
+ aspect-ratio:16/9;
+ background:#071a2d;
+ overflow:hidden;
+}
 .live-player iframe{width:100%;height:100%;border:0;display:block}
+.live-popup.fullscreen .live-player{
+ flex:1;
+ aspect-ratio:auto;
+ min-height:0;
+}
+.live-popup.fullscreen .live-player iframe{width:100%;height:100%}
+
+/* LIVE CLOSED MESSAGE */
 .live-message-box{width:100%;max-width:390px;background:#fff;border:1px solid #cfe6f8;border-radius:20px;padding:25px 20px;text-align:center;box-shadow:0 15px 45px #0004;animation:livePopup .25s ease}
 @keyframes livePopup{from{opacity:0;transform:scale(.88)}to{opacity:1;transform:scale(1)}}
 .live-message-icon{width:70px;height:70px;border-radius:50%;background:#eaf5ff;display:grid;place-items:center;font-size:32px;margin:0 auto 15px}
 .live-message-box h3{font-size:20px;margin-bottom:10px;color:#075da8}
 .live-message-box p{color:#718697;font-size:14px;line-height:1.7;margin-bottom:18px}
-.live-message-logos{display:flex;justify-content:center;align-items:center;gap:12px;margin-bottom:20px}
-.live-message-logos .platform-logo{width:27px;height:27px}
 .live-message-button{width:100%;border:0;border-radius:30px;padding:13px;background:#1688df;color:white;font-size:15px;font-weight:bold;cursor:pointer}
 
 /* MOBILE RESPONSIVE */
@@ -199,50 +339,44 @@ nav button.active{color:#087acb}
  .two .ball{width:37px;height:37px}
  .three .ball{width:29px;height:29px}
  .six .ball{width:23px;height:23px;font-size:12px}
- .millionaire{width:100%;max-width:310px;height:158px;padding:7px;justify-self:center;margin-left:auto;margin-right:auto}
+ .millionaire{width:100%;max-width:310px;height:158px;padding:7px}
  .millionaire-logo{width:100%;height:100%;object-fit:contain}
  .play{width:89%;padding:6px 8px 6px 12px;font-size:10px}
- .platform-logo{width:17px;height:17px}
  .draw-board{gap:4px;margin-left:5px;margin-right:5px}
  .official-box{min-height:125px;border-radius:18px}
  .official-logo{max-width:85px;max-height:85px}
  .days-box{border-radius:18px}
  .draw-number{font-size:12px;padding:9px 2px}
- .time-row{gap:3px}
- .time-box{border-radius:18px}
- .time-value{font-size:19px}
- .time-label{font-size:10px}
+ .millionaire-result-card{min-height:90px;padding:7px 3px}
+ .millionaire-result-title{font-size:9px}
+ .millionaire-result-number{font-size:25px}
+ .millionaire-result-caption{font-size:8px}
  .result-card{height:68px;padding:4px 1px}
  .result-rank{width:19px;height:19px;font-size:11px;left:4px;top:4px}
  .result-number{font-size:13px;margin-top:9px}
  .result-caption{font-size:7px;margin-top:4px}
  .results-heading{font-size:13px}
- .event{gap:5px;margin-left:8px;margin-right:8px}
- .event>div,.event>a{padding:9px 4px}
- .live-event{gap:3px}
+ .event{margin-left:8px;margin-right:8px}
+ .event .next-date{padding:9px 8px}
  .notice-wrap{margin-left:8px;margin-right:8px}
  .notice-track span{font-size:12px;padding:11px 20px}
  .millionaire-clock{gap:3px}
- .millionaire-unit{padding:5px 2px;border-radius:10px}
+ .millionaire-unit{padding:6px 2px;border-radius:10px}
  .millionaire-unit strong{font-size:clamp(15px,4.5vw,21px)}
  .millionaire-unit span{font-size:8px}
- .millionaire-title{font-size:10px}
+ .millionaire-title{font-size:12px}
+ .live-bubble{width:68px;height:68px}
+ .live-popup{width:94vw}
 }
 @media(max-width:340px){
  .draw-board{grid-template-columns:1fr .75fr 1.2fr}
  .official-label{font-size:14px}
  .result-number{font-size:12px}
- .live-event{font-size:10px}
  .millionaire-unit strong{font-size:14px}
  .millionaire-unit span{font-size:7px}
- .millionaire-title{font-size:9px}
-}
-
-/* SMALL SCREEN COUNTDOWN WIDTH ORDER */
-@media(max-width:340px){
- .millionaire-unit.hours{flex:1.25}
- .millionaire-unit.minutes{flex:1}
- .millionaire-unit.seconds{flex:.75}
+ .millionaire-title{font-size:11px}
+ .millionaire-result-number{font-size:22px}
+ .millionaire-result-title{font-size:8px}
 }
 </style>
 </head>
@@ -298,10 +432,14 @@ nav button.active{color:#087acb}
 
  <div class="draw-info">
   <div class="draw-number" id="drawNumber">Draw #: --</div>
-  <div class="time-row">
-   <div class="time-box"><span class="time-value" id="countHours">--</span><span class="time-label">HR</span></div>
-   <div class="time-box"><span class="time-value" id="countMinutes">--</span><span class="time-label">MIN</span></div>
+
+  <!-- DAILY MILLIONAIRE RESULT CARD -->
+  <div class="millionaire-result-card" aria-label="Daily Millionaire result">
+   <div class="millionaire-result-title">💎 DAILY MILLIONAIRE RESULT</div>
+   <div class="millionaire-result-number" id="millionaireResultNumber">--</div>
+   <div class="millionaire-result-caption" id="millionaireResultCaption">RESULT NOT PUBLISHED</div>
   </div>
+
   <div class="draw-status" id="drawScheduleStatus">Loading schedule...</div>
  </div>
 </section>
@@ -318,34 +456,14 @@ nav button.active{color:#087acb}
  <div class="notice-window"><div class="notice-track" id="noticeTrack"></div></div>
 </section>
 
+<!-- DAILY MILLIONAIRE COUNTDOWN ONLY: NO OLD LIVE CARD -->
 <div class="event">
- <div class="live-event" onclick="openLiveEvent()">
-  <span class="live-dot">🔴</span><span>Live</span>
-  <span class="platform-logos">
-   <span class="platform-logo"><svg viewBox="0 0 24 24"><rect x="1" y="4" width="22" height="16" rx="5" fill="#FF0033"/><path d="M10 8L16 12L10 16Z" fill="#fff"/></svg></span>
-   <span class="platform-logo"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="11" fill="#1877F2"/><path d="M13.5 20V13.1H16L16.4 10.2H13.5V8.4C13.5 7.6 13.8 7.1 14.9 7.1H16.5V4.5C16.2 4.5 15.2 4.4 14.2 4.4C11.7 4.4 10.1 5.9 10.1 8.1V10.2H7.7V13.1H10.1V20Z" fill="#fff"/></svg></span>
-  </span>
- </div>
-
- <!-- DAILY MILLIONAIRE: COUNTDOWN ONLY, NOT CLICKABLE -->
  <div class="next-date" id="dailyMillionaireInfo" role="status" aria-live="polite" aria-label="Daily Millionaire countdown">
-  <div class="millionaire-title">💎 DAILY MILLIONAIRE</div>
-
+  <div class="millionaire-title">💎 DAILY MILLIONAIRE COUNTDOWN</div>
   <div class="millionaire-clock">
-   <div class="millionaire-unit hours">
-    <strong id="millionaireHours">--</strong>
-    <span>HR</span>
-   </div>
-
-   <div class="millionaire-unit minutes">
-    <strong id="millionaireMinutes">--</strong>
-    <span>MIN</span>
-   </div>
-
-   <div class="millionaire-unit seconds">
-    <strong id="millionaireSeconds">--</strong>
-    <span>SEC</span>
-   </div>
+   <div class="millionaire-unit hours"><strong id="millionaireHours">--</strong><span>HR</span></div>
+   <div class="millionaire-unit minutes"><strong id="millionaireMinutes">--</strong><span>MIN</span></div>
+   <div class="millionaire-unit seconds"><strong id="millionaireSeconds">--</strong><span>SEC</span></div>
   </div>
  </div>
 </div>
@@ -424,24 +542,35 @@ nav button.active{color:#087acb}
  </div>
 </div>
 
-<!-- LIVE EVENT MODAL -->
-<div class="live-modal" id="liveModal">
- <div class="live-box">
-  <div class="live-heading"><h3 id="liveTitle">🔴 GLO 365 Live Event</h3><button class="close-btn" onclick="closeLiveModal()">✕</button></div>
-  <div class="live-player" id="livePlayer"></div>
+<!-- LIVE FLOATING VIDEO BUBBLE -->
+<button class="live-bubble" id="liveBubble" type="button" aria-label="Open live video">
+ <span class="live-bubble-dot"></span>
+ <span class="live-bubble-content">
+  <span class="live-bubble-play">▶</span>
+  <span class="live-bubble-label">LIVE</span>
+ </span>
+ <span class="live-bubble-close" id="liveBubbleClose" role="button" aria-label="Hide live bubble">×</span>
+</button>
+
+<!-- LIVE VIDEO POPUP -->
+<div class="live-popup" id="livePopup">
+ <div class="live-popup-header" id="livePopupDragHandle">
+  <div class="live-popup-title" id="liveTitle">🔴 GLO 365 Live Event</div>
+  <div class="live-popup-actions">
+   <button class="live-control" id="liveMinimizeButton" type="button" title="Minimize">—</button>
+   <button class="live-control" id="liveFullscreenButton" type="button" title="Full Screen">⛶</button>
+   <button class="live-control live-popup-close" id="liveCloseButton" type="button" title="Close">✕</button>
+  </div>
  </div>
+ <div class="live-player" id="livePlayer"></div>
 </div>
 
-<!-- LIVE MESSAGE MODAL -->
-<div class="live-modal" id="liveMessageModal">
+<!-- LIVE CLOSED MESSAGE -->
+<div class="live-message-modal" id="liveMessageModal">
  <div class="live-message-box">
   <div class="live-message-icon" id="liveMessageIcon">🔴</div>
   <h3 id="liveMessageTitle">Live Event is currently closed</h3>
   <p id="liveMessageText">You can watch the next live event here.</p>
-  <div class="live-message-logos">
-   <span class="platform-logo"><svg viewBox="0 0 24 24"><rect x="1" y="4" width="22" height="16" rx="5" fill="#FF0033"/><path d="M10 8L16 12L10 16Z" fill="#fff"/></svg></span>
-   <span class="platform-logo"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="11" fill="#1877F2"/><path d="M13.5 20V13.1H16L16.4 10.2H13.5V8.4C13.5 7.6 13.8 7.1 14.9 7.1H16.5V4.5C16.2 4.5 15.2 4.4 14.2 4.4C11.7 4.4 10.1 5.9 10.1 8.1V10.2H7.7V13.1H10.1V20Z" fill="#fff"/></svg></span>
-  </div>
   <button class="live-message-button" onclick="closeLiveMessage()">OK</button>
  </div>
 </div>
@@ -461,14 +590,23 @@ let currentResults=[];
 let currentAdminMessage=null;
 let currentLiveEvent=null;
 let currentDailyMillionaire=null;
+
 let pointsVisible=true;
 let homeLoading=false;
 let homeLoaded=false;
 let refreshRunning=false;
+
 let countdownTimer=null;
 let publicRefreshTimer=null;
 let millionaireCountdownTimer=null;
 
+let dismissedLiveEventKey="";
+let activeLiveEventKey="";
+let liveBubblePointer=null;
+let livePopupPointer=null;
+let livePopupOpened=false;
+
+/* API */
 function getToken(){
  try{return sessionStorage.getItem(TOKEN_KEY)||""}
  catch(error){return ""}
@@ -481,6 +619,7 @@ async function apiRequest(path,options={}){
   ...(options.body?{"Content-Type":"application/json"}:{}),
   ...(token?{"Authorization":"Bearer "+token}:{})
  };
+
  const response=await fetch(API_BASE_URL+path,{
   method:options.method||"GET",
   headers,
@@ -488,13 +627,16 @@ async function apiRequest(path,options={}){
   cache:"no-store",
   body:options.body?JSON.stringify(options.body):undefined
  });
+
  let data={};
  try{data=await response.json()}catch(error){}
+
  if(!response.ok){
   const error=new Error(data.message||data.error||"Request failed ("+response.status+")");
   error.status=response.status;
   throw error;
  }
+
  return data;
 }
 
@@ -518,7 +660,12 @@ function getCurrentPoints(){
 function updatePointsVisibility(){
  const button=document.getElementById("balance");
  if(!button)return;
- if(!currentUser){button.textContent="Login Required";return}
+
+ if(!currentUser){
+  button.textContent="Login Required";
+  return;
+ }
+
  button.textContent=pointsVisible?"👁️ "+formatPoints(getCurrentPoints())+" Points":"🙈 •••••• Points";
  button.title=pointsVisible?"Tap to hide points":"Tap to show points";
  button.setAttribute("aria-label",pointsVisible?"Hide points":"Show points");
@@ -534,16 +681,24 @@ function togglePointsVisibility(){
 function updateBalance(){updatePointsVisibility()}
 
 async function openPoints(){
- if(!currentUser){alert("Please log in to your account.");location.href="login.html";return}
+ if(!currentUser){
+  alert("Please log in to your account.");
+  location.href="login.html";
+  return;
+ }
+
  renderPointHistory();
  document.getElementById("pointsModal").classList.add("show");
 }
 
-function closePoints(){document.getElementById("pointsModal").classList.remove("show")}
+function closePoints(){
+ document.getElementById("pointsModal").classList.remove("show");
+}
 
 /* PROFILE AVATAR */
 function safeImageUrl(value){
  if(typeof value!=="string"||!value.trim())return "";
+
  try{
   const url=new URL(value,location.href);
   if(url.protocol!=="https:"&&url.origin!==location.origin)return "";
@@ -554,48 +709,79 @@ function safeImageUrl(value){
 function renderProfileAvatar(){
  const avatar=safeImageUrl((currentProfile&&currentProfile.avatar)||(currentUser&&currentUser.avatar)||"");
  const element=document.getElementById("navProfileAvatar");
+
  if(!element)return;
- if(!avatar){element.replaceChildren();element.textContent="♙";return}
+
+ if(!avatar){
+  element.replaceChildren();
+  element.textContent="♙";
+  return;
+ }
+
  const img=document.createElement("img");
  img.alt="My Profile Avatar";
  img.src=avatar;
- img.onerror=function(){this.onerror=null;element.replaceChildren();element.textContent="♙"};
+
+ img.onerror=function(){
+  this.onerror=null;
+  element.replaceChildren();
+  element.textContent="♙";
+ };
+
  element.replaceChildren(img);
 }
 
 /* AUTHENTICATION */
 async function loadCurrentUser(){
  const data=await apiRequest("/auth/me");
+
  if(!data||data.success!==true||!data.user){
   const error=new Error("Unable to verify your account.");
   error.status=401;
   throw error;
  }
+
  currentUser=data.user;
+
  if(currentUser.status&&String(currentUser.status).toLowerCase()!=="active"){
   alert("Your account is not active. Please contact the administrator.");
   await logoutAndRedirect();
   throw new Error("Account is not active.");
  }
+
  return currentUser;
 }
 
 async function logoutAndRedirect(){
- try{await apiRequest("/auth/logout",{method:"POST"})}
- catch(error){console.warn("Server logout request failed:",error)}
+ try{
+  await apiRequest("/auth/logout",{method:"POST"});
+ }catch(error){
+  console.warn("Server logout request failed:",error);
+ }
+
  try{sessionStorage.removeItem(TOKEN_KEY)}catch(error){}
- currentUser=null;currentWallet=null;currentProfile=null;currentTransactions=[];
+
+ currentUser=null;
+ currentWallet=null;
+ currentProfile=null;
+ currentTransactions=[];
+
  location.replace("login.html");
 }
 
 /* WALLET */
 async function loadWallet(){
  const data=await apiRequest("/wallet");
- if(data.success){currentWallet=data;updateBalance()}
+
+ if(data.success){
+  currentWallet=data;
+  updateBalance();
+ }
 }
 
 async function loadTransactions(){
  const data=await apiRequest("/wallet/transactions");
+
  currentTransactions=Array.isArray(data.transactions)?data.transactions:[];
  renderPointHistory();
 }
@@ -603,26 +789,45 @@ async function loadTransactions(){
 function renderPointHistory(){
  const container=document.getElementById("myPointHistory");
  if(!container)return;
+
  container.replaceChildren();
+
  setText("modalPoints",pointsVisible?formatPoints(getCurrentPoints()):"••••••");
+
  if(!currentTransactions.length){
   const empty=document.createElement("div");
-  empty.className="empty";empty.textContent="No transaction history yet.";
-  container.appendChild(empty);return;
+  empty.className="empty";
+  empty.textContent="No transaction history yet.";
+  container.appendChild(empty);
+  return;
  }
+
  currentTransactions.forEach(item=>{
-  const card=document.createElement("div");card.className="point-entry";
-  const amount=document.createElement("div");amount.className="amount";
+  const card=document.createElement("div");
+  card.className="point-entry";
+
+  const amount=document.createElement("div");
+  amount.className="amount";
+
   const type=String(item.type||"").toLowerCase();
   const isDebit=["debit","bet","withdrawal","deduction"].includes(type);
+
   if(isDebit)amount.classList.add("debit");
+
   const value=Number(item.amount||0);
   amount.textContent=pointsVisible?(isDebit?"-":"+")+formatPoints(value)+" Points":"•••••• Points";
-  const reason=document.createElement("div");reason.textContent="Description: "+(item.description||item.type||"Transaction");
-  const reference=document.createElement("div");reference.textContent="Reference: "+(item.reference||"—");
+
+  const reason=document.createElement("div");
+  reason.textContent="Description: "+(item.description||item.type||"Transaction");
+
+  const reference=document.createElement("div");
+  reference.textContent="Reference: "+(item.reference||"—");
+
   const date=document.createElement("small");
   const parsed=new Date(item.created_at);
+
   date.textContent="Date: "+(Number.isNaN(parsed.getTime())?"—":parsed.toLocaleString());
+
   card.append(amount,reason,reference,date);
   container.appendChild(card);
  });
@@ -631,19 +836,26 @@ function renderPointHistory(){
 /* PROFILE */
 async function loadProfile(){
  const data=await apiRequest("/profile");
- if(data.success){currentProfile=data.profile||{};renderProfileAvatar()}
+
+ if(data.success){
+  currentProfile=data.profile||{};
+  renderProfileAvatar();
+ }
 }
 
 /* DRAW SETTINGS */
 function parseDrawDate(value){
  if(!value)return null;
+
  const date=new Date(value);
  return Number.isNaN(date.getTime())?null:date;
 }
 
 async function loadDrawSettings(){
  const data=await apiRequest("/public/draw-settings");
+
  if(!data.success)throw new Error("Unable to load draw schedule.");
+
  currentDrawSettings=data.drawSettings||data.settings||null;
  updateCountdown();
 }
@@ -652,71 +864,100 @@ function updateCountdown(){
  const settings=currentDrawSettings||{};
  const drawNumber=String(settings.draw_number||"").trim();
  const next=parseDrawDate(settings.draw_at);
+
  setText("drawNumber","Draw #: "+(drawNumber||"--"));
+
  if(!next){
-  setText("countDays","--");setText("countHours","--");setText("countMinutes","--");
+  setText("countDays","--");
   setText("drawScheduleStatus","Admin has not scheduled a draw.");
   return;
  }
+
  const remaining=next.getTime()-Date.now();
+
  if(remaining<=0){
-  setText("countDays","0");setText("countHours","00");setText("countMinutes","00");
-  setText("drawScheduleStatus","DRAW TIME REACHED");return;
+  setText("countDays","0");
+  setText("drawScheduleStatus","DRAW TIME REACHED");
+  return;
  }
+
  const total=Math.floor(remaining/1000);
+
  setText("countDays",Math.floor(total/86400));
- setText("countHours",String(Math.floor(total%86400/3600)).padStart(2,"0"));
- setText("countMinutes",String(Math.floor(total%3600/60)).padStart(2,"0"));
  setText("drawScheduleStatus",settings.betting_locked===true?"BETTING CLOSED":"NEXT DRAW SCHEDULED");
 }
 
-/* RESULTS */
+/* PREVIOUS DRAW RESULTS */
 function parseResultObject(value){
- if(typeof value==="string"){try{return JSON.parse(value)}catch(error){return value}}
+ if(typeof value==="string"){
+  try{return JSON.parse(value)}catch(error){return value}
+ }
+
  return value;
 }
 
 function findResultValue(object,keys){
  if(!object||typeof object!=="object")return "--";
+
  for(const key of keys){
   const value=object[key];
+
   if(value!==undefined&&value!==null&&String(value).trim()!==""){
    if(typeof value==="object")return value.number??value.result??value.value??"--";
    return value;
   }
  }
+
  return "--";
 }
 
 function extractPrizeNumbers(row){
  const result=parseResultObject(row&&row.result!==undefined?row.result:row);
  const nested=result&&typeof result==="object"?(result.numbers||result.prizes||result.winners||result):result;
+
  const firstKeys=["first","firstPrize","first_prize","prize1","number1","result1","first_prize_number","firstPrizeNumber","1st"];
  const lastTwoKeys=["lastTwo","last_two","last_2","last_two_digits","lastTwoDigits","two_digit","2d"];
  const frontThreeKeys=["frontThree","front_three","front_3","front_three_digits","frontThreeDigits","three_digit","3up"];
- if(Array.isArray(nested))return[nested[0]??"--",nested[1]??"--",nested[2]??"--"];
- if(nested&&typeof nested==="object")return[findResultValue(nested,firstKeys),findResultValue(nested,lastTwoKeys),findResultValue(nested,frontThreeKeys)];
+
+ if(Array.isArray(nested)){
+  return[nested[0]??"--",nested[1]??"--",nested[2]??"--"];
+ }
+
+ if(nested&&typeof nested==="object"){
+  return[
+   findResultValue(nested,firstKeys),
+   findResultValue(nested,lastTwoKeys),
+   findResultValue(nested,frontThreeKeys)
+  ];
+ }
+
  return[nested??"--","--","--"];
 }
 
 async function loadResults(){
  const data=await apiRequest("/results");
+
  currentResults=Array.isArray(data.results)?data.results:[];
  updateResults();
 }
 
 function updateResults(){
  const ids=["resultFirst","resultSecond","resultThird"];
- if(!currentResults.length){ids.forEach(id=>setText(id,"--"));return}
+
+ if(!currentResults.length){
+  ids.forEach(id=>setText(id,"--"));
+  return;
+ }
+
  const values=extractPrizeNumbers(currentResults[0]);
- ids.forEach((id,index)=>setText(id,String(values[index]??"--")));
+
+ ids.forEach((id,index)=>{
+  setText(id,String(values[index]??"--"));
+ });
 }
 
 /* DAILY MILLIONAIRE COUNTDOWN
    Fixed daily draw: 12:15 AM Bangladesh time.
-   Three separate cards, ordered by width:
-   HR > MIN > SEC.
-   No next-draw text is displayed.
 */
 const MILLIONAIRE_TIME_ZONE="Asia/Dhaka";
 const MILLIONAIRE_DRAW_HOUR=0;
@@ -732,7 +973,10 @@ function getBangladeshDateParts(date=new Date()){
  }).formatToParts(date);
 
  const values={};
- parts.forEach(part=>{values[part.type]=part.value});
+
+ parts.forEach(part=>{
+  values[part.type]=part.value;
+ });
 
  return{
   year:Number(values.year),
@@ -774,20 +1018,31 @@ function updateMillionaireCountdown(){
  setText("millionaireSeconds",String(seconds).padStart(2,"0"));
 }
 
-/* MILLIONAIRE RESULT API IS NOT CALLED ON HOME.
-   The Home information card intentionally contains countdown only.
+/* DAILY MILLIONAIRE RESULT
+   API is not configured yet.
+   Do not use /results here because it belongs to the regular draw.
 */
+function updateDailyMillionaireResult(){
+ setText("millionaireResultNumber","--");
+ setText("millionaireResultCaption","RESULT NOT PUBLISHED");
+}
 
 /* ADMIN NOTICE */
 function getNoticeText(data){
  if(!data)return "";
+
  if(typeof data==="string")return data.trim();
- if(typeof data==="object")return String(data.text||data.message||data.content||data.notice||"").trim();
+
+ if(typeof data==="object"){
+  return String(data.text||data.message||data.content||data.notice||"").trim();
+ }
+
  return "";
 }
 
 async function loadAdminMessage(){
  const data=await apiRequest("/public/admin-message");
+
  currentAdminMessage=data.message||null;
  renderHomeMessages();
 }
@@ -795,26 +1050,91 @@ async function loadAdminMessage(){
 function renderHomeMessages(){
  const wrap=document.getElementById("noticeWrap");
  const track=document.getElementById("noticeTrack");
+
  track.replaceChildren();
+
  const message=getNoticeText(currentAdminMessage);
- if(!message){wrap.classList.remove("show");return}
+
+ if(!message){
+  wrap.classList.remove("show");
+  return;
+ }
+
  wrap.classList.add("show");
+
  const text="📢 GLO 365 NOTICE: "+message;
- const first=document.createElement("span");first.textContent=text;
- const second=document.createElement("span");second.textContent=text;
+
+ const first=document.createElement("span");
+ first.textContent=text;
+
+ const second=document.createElement("span");
+ second.textContent=text;
+
  track.append(first,second);
 }
 
-/* LIVE EVENT */
+/* LIVE EVENT API */
 async function loadLiveEvent(){
  const data=await apiRequest("/public/live-event");
+
  currentLiveEvent=data.event||null;
+ syncLiveEventUI();
 }
 
+function getLiveEventKey(event){
+ if(!event)return "";
+
+ return String(
+  event.id||
+  event.updated_at||
+  ((event.title||"Live")+"|"+(event.url||""))
+ );
+}
+
+function isLiveEventActive(event){
+ if(!event||event.active!==true||!event.url)return false;
+
+ return Boolean(getVideoEmbed(event.url));
+}
+
+function syncLiveEventUI(){
+ const bubble=document.getElementById("liveBubble");
+ const popup=document.getElementById("livePopup");
+
+ const event=currentLiveEvent;
+
+ if(!isLiveEventActive(event)){
+  bubble.classList.remove("show");
+  closeLivePopup(false);
+  activeLiveEventKey="";
+  dismissedLiveEventKey="";
+  return;
+ }
+
+ const newKey=getLiveEventKey(event);
+
+ if(newKey!==activeLiveEventKey){
+  activeLiveEventKey=newKey;
+  dismissedLiveEventKey="";
+  closeLivePopup(false);
+ }
+
+ if(dismissedLiveEventKey===activeLiveEventKey){
+  bubble.classList.remove("show");
+  return;
+ }
+
+ if(!popup.classList.contains("show")){
+  bubble.classList.add("show");
+ }
+}
+
+/* LIVE MESSAGE */
 function showLiveMessage(title,message,icon){
  setText("liveMessageTitle",title);
  setText("liveMessageText",message);
  setText("liveMessageIcon",icon||"🔴");
+
  document.getElementById("liveMessageModal").classList.add("show");
 }
 
@@ -826,53 +1146,72 @@ document.getElementById("liveMessageModal").addEventListener("click",function(ev
  if(event.target===this)closeLiveMessage();
 });
 
+/* VIDEO EMBED URL VALIDATION */
 function getVideoEmbed(url){
  try{
   const parsed=new URL(url);
+
   if(parsed.protocol!=="https:")return null;
+
   const host=parsed.hostname.toLowerCase();
 
   if(["youtube.com","www.youtube.com","m.youtube.com","youtu.be","www.youtu.be"].includes(host)){
    let id="";
-   if(host.includes("youtu.be"))id=parsed.pathname.split("/").filter(Boolean)[0]||"";
-   else if(parsed.searchParams.get("v"))id=parsed.searchParams.get("v");
-   else{
+
+   if(host.includes("youtu.be")){
+    id=parsed.pathname.split("/").filter(Boolean)[0]||"";
+   }else if(parsed.searchParams.get("v")){
+    id=parsed.searchParams.get("v");
+   }else{
     const parts=parsed.pathname.split("/").filter(Boolean);
-    if(parts.length>=2&&["live","embed","shorts"].includes(parts[0]))id=parts[1];
+
+    if(parts.length>=2&&["live","embed","shorts"].includes(parts[0])){
+     id=parts[1];
+    }
    }
+
    if(!/^[a-zA-Z0-9_-]{6,20}$/.test(id))return null;
-   return{embed:"https://www.youtube-nocookie.com/embed/"+id+"?autoplay=1&playsinline=1&rel=0"};
+
+   return{
+    embed:"https://www.youtube-nocookie.com/embed/"+id+"?autoplay=1&playsinline=1&rel=0"
+   };
   }
 
   if(["facebook.com","www.facebook.com","m.facebook.com","fb.watch"].includes(host)){
-   return{embed:"https://www.facebook.com/plugins/video.php?href="+encodeURIComponent(parsed.href)+"&show_text=false&width=500"};
+   return{
+    embed:"https://www.facebook.com/plugins/video.php?href="+encodeURIComponent(parsed.href)+"&show_text=false&width=500"
+   };
   }
 
   return null;
- }catch(error){return null}
+
+ }catch(error){
+  return null;
+ }
 }
 
-function openLiveEvent(){
+/* LIVE POPUP PLAYER */
+function createLivePlayer(){
  const event=currentLiveEvent;
 
- if(!event||event.active!==true||!event.url){
+ if(!isLiveEventActive(event)){
   showLiveMessage("Live Event is currently closed","You can watch the next live event here.","🔴");
-  return;
+  return false;
  }
 
  const video=getVideoEmbed(event.url);
 
  if(!video){
   showLiveMessage("Invalid video link","Admin has not configured a valid YouTube or Facebook video link.","⚠️");
-  return;
+  return false;
  }
 
- setText("liveTitle","🔴 "+(event.title||"GLO 365 Live Event"));
-
  const player=document.getElementById("livePlayer");
+
  player.replaceChildren();
 
  const iframe=document.createElement("iframe");
+
  iframe.src=video.embed;
  iframe.title="GLO 365 Live Event";
  iframe.allow="autoplay; encrypted-media; picture-in-picture; fullscreen";
@@ -880,21 +1219,275 @@ function openLiveEvent(){
  iframe.referrerPolicy="strict-origin-when-cross-origin";
 
  player.appendChild(iframe);
- document.getElementById("liveModal").classList.add("show");
+
+ setText("liveTitle","🔴 "+(event.title||"GLO 365 Live Event"));
+
+ return true;
 }
 
-function closeLiveModal(){
- document.getElementById("livePlayer").replaceChildren();
- document.getElementById("liveModal").classList.remove("show");
+function openLivePopup(){
+ if(!isLiveEventActive(currentLiveEvent)){
+  showLiveMessage("Live Event is currently closed","You can watch the next live event here.","🔴");
+  return;
+ }
+
+ if(!createLivePlayer())return;
+
+ const popup=document.getElementById("livePopup");
+ const bubble=document.getElementById("liveBubble");
+
+ bubble.classList.remove("show");
+
+ popup.classList.remove("fullscreen");
+ popup.classList.add("show");
+
+ livePopupOpened=true;
+
+ positionLivePopup();
 }
 
-document.getElementById("liveModal").addEventListener("click",function(event){
- if(event.target===this)closeLiveModal();
+function closeLivePopup(showBubble=true){
+ const popup=document.getElementById("livePopup");
+ const player=document.getElementById("livePlayer");
+
+ popup.classList.remove("show","fullscreen");
+ player.replaceChildren();
+
+ livePopupOpened=false;
+
+ if(showBubble&&isLiveEventActive(currentLiveEvent)&&dismissedLiveEventKey!==activeLiveEventKey){
+  document.getElementById("liveBubble").classList.add("show");
+ }
+}
+
+function minimizeLivePopup(){
+ closeLivePopup(true);
+}
+
+function hideLiveCompletely(){
+ dismissedLiveEventKey=activeLiveEventKey;
+
+ document.getElementById("liveBubble").classList.remove("show");
+ closeLivePopup(false);
+}
+
+function closeLiveFromButton(){
+ hideLiveCompletely();
+}
+
+function positionLivePopup(){
+ const popup=document.getElementById("livePopup");
+
+ if(popup.classList.contains("fullscreen"))return;
+
+ const rect=popup.getBoundingClientRect();
+
+ let left=(window.innerWidth-rect.width)/2;
+ let top=Math.max(65,(window.innerHeight-rect.height)/2);
+
+ left=Math.max(5,Math.min(left,window.innerWidth-rect.width-5));
+ top=Math.max(5,Math.min(top,window.innerHeight-rect.height-5));
+
+ popup.style.left=left+"px";
+ popup.style.top=top+"px";
+}
+
+async function toggleLiveFullscreen(){
+ const popup=document.getElementById("livePopup");
+
+ if(!popup.classList.contains("show"))return;
+
+ if(popup.classList.contains("fullscreen")){
+  popup.classList.remove("fullscreen");
+  positionLivePopup();
+
+  if(document.fullscreenElement){
+   try{await document.exitFullscreen()}catch(error){}
+  }
+
+  return;
+ }
+
+ popup.classList.add("fullscreen");
+
+ try{
+  if(popup.requestFullscreen){
+   await popup.requestFullscreen();
+  }
+ }catch(error){
+  console.warn("Fullscreen request was not available:",error);
+ }
+}
+
+document.getElementById("liveBubble").addEventListener("click",function(event){
+ if(event.target.closest("#liveBubbleClose"))return;
+
+ if(liveBubblePointer&&liveBubblePointer.moved)return;
+
+ openLivePopup();
 });
+
+document.getElementById("liveBubbleClose").addEventListener("click",function(event){
+ event.stopPropagation();
+ hideLiveCompletely();
+});
+
+document.getElementById("liveMinimizeButton").addEventListener("click",minimizeLivePopup);
+document.getElementById("liveCloseButton").addEventListener("click",closeLiveFromButton);
+document.getElementById("liveFullscreenButton").addEventListener("click",toggleLiveFullscreen);
+
+/* DRAG LIVE BUBBLE - TOUCH AND MOUSE */
+const liveBubble=document.getElementById("liveBubble");
+
+liveBubble.addEventListener("pointerdown",event=>{
+ if(event.target.closest("#liveBubbleClose"))return;
+
+ liveBubblePointer={
+  id:event.pointerId,
+  startX:event.clientX,
+  startY:event.clientY,
+  originalLeft:liveBubble.getBoundingClientRect().left,
+  originalTop:liveBubble.getBoundingClientRect().top,
+  moved:false
+ };
+
+ liveBubble.setPointerCapture(event.pointerId);
+});
+
+liveBubble.addEventListener("pointermove",event=>{
+ if(!liveBubblePointer||liveBubblePointer.id!==event.pointerId)return;
+
+ const dx=event.clientX-liveBubblePointer.startX;
+ const dy=event.clientY-liveBubblePointer.startY;
+
+ if(Math.abs(dx)>6||Math.abs(dy)>6){
+  liveBubblePointer.moved=true;
+ }
+
+ if(!liveBubblePointer.moved)return;
+
+ const width=liveBubble.offsetWidth;
+ const height=liveBubble.offsetHeight;
+
+ const left=Math.max(0,Math.min(
+  liveBubblePointer.originalLeft+dx,
+  window.innerWidth-width
+ ));
+
+ const top=Math.max(0,Math.min(
+  liveBubblePointer.originalTop+dy,
+  window.innerHeight-height
+ ));
+
+ liveBubble.style.left=left+"px";
+ liveBubble.style.top=top+"px";
+ liveBubble.style.right="auto";
+ liveBubble.style.bottom="auto";
+});
+
+liveBubble.addEventListener("pointerup",event=>{
+ if(!liveBubblePointer||liveBubblePointer.id!==event.pointerId)return;
+
+ const moved=liveBubblePointer.moved;
+
+ liveBubblePointer=null;
+
+ if(moved){
+  liveBubble.dataset.dragged="true";
+  setTimeout(()=>{delete liveBubble.dataset.dragged},100);
+ }
+});
+
+liveBubble.addEventListener("click",event=>{
+ if(liveBubble.dataset.dragged==="true"){
+  event.stopImmediatePropagation();
+ }
+},true);
+
+/* DRAG LIVE POPUP USING HEADER */
+const livePopup=document.getElementById("livePopup");
+const livePopupHandle=document.getElementById("livePopupDragHandle");
+
+livePopupHandle.addEventListener("pointerdown",event=>{
+ if(event.target.closest("button"))return;
+ if(livePopup.classList.contains("fullscreen"))return;
+
+ const rect=livePopup.getBoundingClientRect();
+
+ livePopupPointer={
+  id:event.pointerId,
+  startX:event.clientX,
+  startY:event.clientY,
+  originalLeft:rect.left,
+  originalTop:rect.top
+ };
+
+ livePopupHandle.setPointerCapture(event.pointerId);
+});
+
+livePopupHandle.addEventListener("pointermove",event=>{
+ if(!livePopupPointer||livePopupPointer.id!==event.pointerId)return;
+
+ const dx=event.clientX-livePopupPointer.startX;
+ const dy=event.clientY-livePopupPointer.startY;
+
+ const width=livePopup.offsetWidth;
+ const height=livePopup.offsetHeight;
+
+ const left=Math.max(0,Math.min(
+  livePopupPointer.originalLeft+dx,
+  window.innerWidth-width
+ ));
+
+ const top=Math.max(0,Math.min(
+  livePopupPointer.originalTop+dy,
+  window.innerHeight-height
+ ));
+
+ livePopup.style.left=left+"px";
+ livePopup.style.top=top+"px";
+});
+
+livePopupHandle.addEventListener("pointerup",event=>{
+ if(livePopupPointer&&livePopupPointer.id===event.pointerId){
+  livePopupPointer=null;
+ }
+});
+
+/* WINDOW RESIZE */
+window.addEventListener("resize",()=>{
+ const bubble=document.getElementById("liveBubble");
+ const popup=document.getElementById("livePopup");
+
+ if(bubble.classList.contains("show")){
+  const rect=bubble.getBoundingClientRect();
+
+  bubble.style.left=Math.max(0,Math.min(rect.left,window.innerWidth-rect.width))+"px";
+  bubble.style.top=Math.max(0,Math.min(rect.top,window.innerHeight-rect.height))+"px";
+ }
+
+ if(popup.classList.contains("show")&&!popup.classList.contains("fullscreen")){
+  const rect=popup.getBoundingClientRect();
+
+  popup.style.left=Math.max(0,Math.min(rect.left,window.innerWidth-rect.width))+"px";
+  popup.style.top=Math.max(0,Math.min(rect.top,window.innerHeight-rect.height))+"px";
+ }
+});
+
+/* DEFAULT BUBBLE POSITION */
+function setDefaultLiveBubblePosition(){
+ const bubble=document.getElementById("liveBubble");
+
+ if(bubble.style.left||bubble.style.top)return;
+
+ bubble.style.left=Math.max(8,window.innerWidth-90)+"px";
+ bubble.style.top=Math.max(80,window.innerHeight*.55)+"px";
+}
 
 /* HOME INITIALIZATION */
 async function loadHome(){
  if(homeLoading)return;
+
  homeLoading=true;
 
  try{
@@ -923,6 +1516,8 @@ async function loadHome(){
   renderPointHistory();
   updateCountdown();
   updateResults();
+  updateDailyMillionaireResult();
+  updateMillionaireCountdown();
 
   homeLoaded=true;
 
@@ -987,13 +1582,23 @@ window.addEventListener("focus",()=>{
 document.addEventListener("keydown",event=>{
  if(event.key==="Escape"){
   closePoints();
-  closeLiveModal();
   closeLiveMessage();
+
+  if(document.getElementById("livePopup").classList.contains("show")){
+   minimizeLivePopup();
+  }
  }
+});
+
+/* CLOSE POINTS MODAL BY BACKDROP */
+document.getElementById("pointsModal").addEventListener("click",function(event){
+ if(event.target===this)closePoints();
 });
 
 /* START */
 pointsVisible=true;
+
+setDefaultLiveBubblePosition();
 
 loadHome();
 
@@ -1003,7 +1608,9 @@ updateMillionaireCountdown();
 millionaireCountdownTimer=setInterval(updateMillionaireCountdown,1000);
 
 publicRefreshTimer=setInterval(()=>{
- if(homeLoaded&&!document.hidden)refreshPublicData();
+ if(homeLoaded&&!document.hidden){
+  refreshPublicData();
+ }
 },60000);
 </script>
 </body>
