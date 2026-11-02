@@ -26,7 +26,7 @@ body{
 
 header{
  background:linear-gradient(120deg,#0755a5,#1688df,#45b5f5);
- padding:16px 15px;
+ padding:13px 15px;
  display:flex;
  justify-content:space-between;
  align-items:center;
@@ -45,64 +45,49 @@ header{
 .account{
  display:flex;
  align-items:center;
- gap:9px;
+ gap:8px;
 }
+
+/* SMALLER POINTS BUTTON */
 
 .balance{
  background:#fff;
  color:#0874c5;
- padding:12px 15px;
+ padding:8px 11px;
  border-radius:30px;
- font-size:15px;
+ font-size:12px;
  font-weight:bold;
  cursor:pointer;
  border:0;
  white-space:nowrap;
+ min-height:34px;
 }
 
-.balance:active,.shortcut:active{transform:scale(.97)}
+.balance:active,.profile:active{transform:scale(.96)}
+
+/* HEADER SUPPORT BUTTON */
 
 .profile{
- width:43px;
- height:43px;
+ width:40px;
+ height:40px;
  border-radius:50%;
  background:#0755a5;
  color:#fff;
  display:grid;
  place-items:center;
- font-size:24px;
  cursor:pointer;
  border:2px solid #ffffff90;
  overflow:hidden;
  flex-shrink:0;
 }
 
-.profile img,.nav-profile-avatar img{
- width:100%;
- height:100%;
- object-fit:cover;
+.support-header-icon{
+ width:23px;
+ height:23px;
  display:block;
- border-radius:50%;
 }
 
-.shortcuts{
- display:flex;
- gap:10px;
- padding:14px 12px;
-}
-
-.shortcut{
- flex:1;
- min-width:0;
- border:1px solid #c6e3f8;
- border-radius:40px;
- background:linear-gradient(145deg,#f5fbff,#e2f3ff);
- padding:14px 5px;
- font-size:14px;
- font-weight:bold;
- color:#0874c5;
- cursor:pointer;
-}
+/* DRAW BOARD */
 
 .draw-board{
  margin:2px 8px 12px;
@@ -238,6 +223,8 @@ header{
  padding:2px;
 }
 
+/* PREVIOUS RESULTS */
+
 .results-heading{
  margin:0 8px 6px;
  color:#0874c5;
@@ -303,6 +290,8 @@ header{
  text-transform:uppercase;
 }
 
+/* ADMIN NOTICE */
+
 .notice-wrap{
  margin:0 12px 12px;
  display:none;
@@ -362,6 +351,8 @@ header{
  0%{transform:translateX(0)}
  100%{transform:translateX(-50%)}
 }
+
+/* EVENT */
 
 .event{
  display:grid;
@@ -620,27 +611,22 @@ header{
  box-shadow:0 1px 4px #00000012;
 }
 
-/* DAILY MILLIONAIRE CARD - CENTERED */
+/* DAILY MILLIONAIRE CARD */
 
 .millionaire{
  grid-column:1 / -1;
-
- /* দুই পাশে সমান ফাঁকা রাখবে */
  width:100%;
  max-width:310px;
  justify-self:center;
  margin-left:auto;
  margin-right:auto;
-
  height:150px;
  padding:3px;
  background:linear-gradient(145deg,#eaf8ff,#c4eaff,#a9dcff);
  border-radius:23px;
-
  display:flex;
  align-items:center;
  justify-content:center;
-
  overflow:hidden;
 }
 
@@ -663,7 +649,7 @@ header{
  flex-shrink:0;
 }
 
-/* NAVIGATION */
+/* BOTTOM NAVIGATION */
 
 nav{
  position:fixed;
@@ -714,6 +700,14 @@ nav button.active{color:#087acb}
  border:1.5px solid #1688df;
  font-size:19px;
  line-height:1;
+}
+
+.nav-profile-avatar img{
+ width:100%;
+ height:100%;
+ object-fit:cover;
+ display:block;
+ border-radius:50%;
 }
 
 /* MODALS */
@@ -916,8 +910,8 @@ nav button.active{color:#087acb}
 @media(max-width:380px){
 
  .logo{font-size:26px}
- .balance{font-size:12px;padding:10px 11px}
- .profile{width:38px;height:38px}
+ .balance{font-size:11px;padding:7px 9px;min-height:32px}
+ .profile{width:36px;height:36px}
 
  .game-card{
   height:158px;
@@ -954,7 +948,6 @@ nav button.active{color:#087acb}
   font-size:10px;
  }
 
- .shortcut{font-size:12px}
  .platform-logo{width:17px;height:17px}
 
  .draw-board{
@@ -1055,20 +1048,40 @@ nav button.active{color:#087acb}
  <div class="logo">GLO <span>365</span></div>
 
  <div class="account">
+
   <button class="balance" id="balance" type="button"
    onclick="openPoints()" title="Show or hide points">Loading...</button>
 
-  <div class="profile" id="homeProfileAvatar"
-   onclick="location.href='profile.html'"
-   title="My Profile" role="button"
-   aria-label="Open My Profile">♙</div>
+  <!-- HEADER SUPPORT BUTTON -->
+  <button class="profile" id="homeSupportButton"
+   onclick="location.href='support.html'"
+   title="Live Support"
+   aria-label="Open Live Support"
+   type="button">
+
+   <svg class="support-header-icon"
+        viewBox="0 0 24 24"
+        fill="none"
+        xmlns="http://www.w3.org/2000/svg"
+        aria-hidden="true">
+
+    <path d="M4 5.8C4 4.81 4.81 4 5.8 4H18.2C19.19 4 20 4.81 20 5.8V14.2C20 15.19 19.19 16 18.2 16H10L5 20V16.8C4.39 16.49 4 15.88 4 15.2V5.8Z"
+          stroke="white"
+          stroke-width="1.8"
+          stroke-linecap="round"
+          stroke-linejoin="round"/>
+
+    <path d="M8 9H16M8 12H13"
+          stroke="white"
+          stroke-width="1.8"
+          stroke-linecap="round"/>
+
+   </svg>
+
+  </button>
+
  </div>
 </header>
-
-<div class="shortcuts">
- <button class="shortcut" onclick="location.href='mybets.html'">◷ My Bets</button>
- <button class="shortcut" onclick="location.href='support.html'">💬 Live Support</button>
-</div>
 
 <section class="draw-board">
 
@@ -1658,7 +1671,10 @@ function closePoints(){
  document.getElementById("pointsModal").classList.remove("show");
 }
 
-/* PROFILE AVATAR */
+/* PROFILE AVATAR
+   Header now uses the support icon.
+   Only the bottom navigation profile avatar is updated here.
+*/
 
 function safeImageUrl(value){
 
@@ -1684,32 +1700,28 @@ function renderProfileAvatar(){
   (currentUser&&currentUser.avatar)||""
  );
 
- ["homeProfileAvatar","navProfileAvatar"].forEach(id=>{
+ const element=document.getElementById("navProfileAvatar");
 
-  const element=document.getElementById(id);
+ if(!element)return;
 
-  if(!element)return;
+ if(!avatar){
+  element.replaceChildren();
+  element.textContent="♙";
+  return;
+ }
 
-  if(!avatar){
-   element.replaceChildren();
-   element.textContent="♙";
-   return;
-  }
+ const img=document.createElement("img");
 
-  const img=document.createElement("img");
+ img.alt="My Profile Avatar";
+ img.src=avatar;
 
-  img.alt="My Profile Avatar";
-  img.src=avatar;
+ img.onerror=function(){
+  this.onerror=null;
+  element.replaceChildren();
+  element.textContent="♙";
+ };
 
-  img.onerror=function(){
-   this.onerror=null;
-   element.replaceChildren();
-   element.textContent="♙";
-  };
-
-  element.replaceChildren(img);
-
- });
+ element.replaceChildren(img);
 }
 
 /* AUTHENTICATION */
