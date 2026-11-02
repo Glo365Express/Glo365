@@ -1,4 +1,3 @@
-
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -68,8 +67,6 @@ body{
  font-weight:bold;
 }
 
-/* BETTING LOCK */
-
 .lock-notice{
  display:none;
  margin:12px 11px 4px;
@@ -116,12 +113,9 @@ body{
  cursor:not-allowed;
 }
 
-.column-heading,
-.bet-row{
+.column-heading,.bet-row{
  display:grid;
- grid-template-columns:
- 23px minmax(0,1.05fr)
- minmax(0,.9fr) minmax(0,.9fr) 20px;
+ grid-template-columns:30px minmax(0,1.4fr) minmax(0,.9fr) minmax(0,.9fr) 22px;
  gap:5px;
 }
 
@@ -201,8 +195,6 @@ body{
  cursor:not-allowed;
 }
 
-/* SUMMARY */
-
 .summary{padding:5px 11px}
 
 .summary-box{
@@ -239,17 +231,10 @@ body{
  color:#167fc4;
 }
 
-.discount-percent{
- color:#526f87;
- font-weight:bold;
-}
-
 .discount-amount{
  font-weight:bold;
  color:#1687d5;
 }
-
-/* BUTTON */
 
 .place-btn{
  width:calc(100% - 22px);
@@ -274,8 +259,6 @@ body{
  box-shadow:none;
 }
 
-/* NOTICES */
-
 .notice{
  margin:10px 11px;
  padding:12px;
@@ -289,6 +272,17 @@ body{
 }
 
 .notice strong{color:#167fc4}
+
+.back-btn{
+ display:block;
+ margin:10px auto;
+ border:0;
+ background:transparent;
+ color:#167fc4;
+ padding:10px;
+ font-size:13px;
+ cursor:pointer;
+}
 
 .message{
  display:none;
@@ -321,17 +315,6 @@ body{
  color:#167fc4;
 }
 
-.back-btn{
- display:block;
- margin:10px auto;
- border:0;
- background:transparent;
- color:#167fc4;
- padding:10px;
- font-size:13px;
- cursor:pointer;
-}
-
 @media(max-width:380px){
  .logo{font-size:24px}
  .balance{font-size:11px;padding:9px}
@@ -359,7 +342,7 @@ body{
 <div class="page-title">SINGLE NUMBER</div>
 
 <div class="subtitle">
- Enter Single Digit Number &amp; Virtual Points
+ Enter 1 Digit Number &amp; Virtual Points
 </div>
 
 <div class="lock-notice" id="lockNotice" role="alert">
@@ -368,7 +351,8 @@ body{
  <span class="lock-countdown" id="lockCountdown"></span>
 </div>
 
-<div id="pageMessage" class="message" role="status" aria-live="polite"></div>
+<div id="pageMessage" class="message"
+ role="status" aria-live="polite"></div>
 
 <section class="bet-area" id="betArea">
 
@@ -383,12 +367,8 @@ body{
  <div id="betRows"></div>
 
  <div class="add-area">
-  <button
-   class="add-btn"
-   id="addRow"
-   type="button"
-   title="Add more rows"
-  >+</button>
+  <button class="add-btn" id="addRow"
+   type="button" title="Add more rows">+</button>
  </div>
 
 </section>
@@ -403,13 +383,10 @@ body{
  <div class="summary-box">
   <div class="discount-line">
    <span>Discount</span>
-
    <span class="discount-value" id="discountPercent">0</span>
-
-   <span class="discount-percent">%</span>
-
-   <strong class="discount-amount" id="discountAmount">0.00</strong>
-
+   <span>%</span>
+   <strong class="discount-amount"
+    id="discountAmount">0.00</strong>
    <span>Points</span>
   </div>
  </div>
@@ -456,9 +433,11 @@ const TOKEN_KEY="glo365_token";
 
 const MIN_ROWS=10;
 const MAX_ROWS=50;
+
 const DEFAULT_LOCK_MINUTES=45;
 const MAX_BET_AMOUNT=100000;
-const MAX_SELECTION_LENGTH=100;
+
+const MAX_SINGLE_NUMBER=1;
 
 const rowsContainer=document.getElementById("betRows");
 const addButton=document.getElementById("addRow");
@@ -493,8 +472,8 @@ let authenticated=false;
 let settingsLoaded=false;
 
 let countdownTimer=null;
-let messageTimer=null;
 let refreshBusy=false;
+let messageTimer=null;
 
 /* =========================================
    SESSION
@@ -537,12 +516,11 @@ function showMessage(message,type="info"){
  messageTimer=setTimeout(()=>{
   pageMessage.className="message";
   pageMessage.textContent="";
- },7000);
+ },10000);
 }
 
 function clearMessage(){
  clearTimeout(messageTimer);
-
  pageMessage.textContent="";
  pageMessage.className="message";
 }
@@ -565,6 +543,7 @@ async function apiRequest(path,options={}){
  let body=options.body;
 
  if(body!==undefined&&body!==null){
+
   if(typeof body!=="string"){
    body=JSON.stringify(body);
   }
@@ -592,6 +571,7 @@ async function apiRequest(path,options={}){
  }
 
  const raw=await response.text();
+
  let data={};
 
  if(raw){
@@ -635,9 +615,7 @@ async function apiRequest(path,options={}){
 
 function unwrap(data){
 
- if(!data||typeof data!=="object"){
-  return {};
- }
+ if(!data||typeof data!=="object")return {};
 
  return data.data&&typeof data.data==="object"
   ?data.data
@@ -901,7 +879,7 @@ function updateBettingStatus(){
 }
 
 /* =========================================
-   CONTROL STATES
+   CONTROLS
 ========================================= */
 
 function applyControls(){
@@ -945,8 +923,8 @@ function applyControls(){
 
 /* =========================================
    DISCOUNT
-   No separate backend discount setting
-   is available in the current API.
+   Current generic Single API does not provide
+   an independent discount setting.
 ========================================= */
 
 function loadDiscount(){
@@ -976,20 +954,23 @@ function updateSerials(){
 function createRow(){
 
  const row=document.createElement("div");
+
  row.className="bet-row";
 
  const serial=document.createElement("span");
  serial.className="serial";
 
  const number=document.createElement("input");
+
  number.type="text";
  number.inputMode="numeric";
- number.maxLength=1;
+ number.maxLength=MAX_SINGLE_NUMBER;
  number.placeholder="Number";
  number.autocomplete="off";
  number.dataset.field="number";
 
  const straight=document.createElement("input");
+
  straight.type="number";
  straight.inputMode="decimal";
  straight.min="0";
@@ -998,6 +979,7 @@ function createRow(){
  straight.dataset.field="straight";
 
  const rumble=document.createElement("input");
+
  rumble.type="number";
  rumble.inputMode="decimal";
  rumble.min="0";
@@ -1006,6 +988,7 @@ function createRow(){
  rumble.dataset.field="rumble";
 
  const remove=document.createElement("button");
+
  remove.type="button";
  remove.className="remove-btn";
  remove.textContent="×";
@@ -1026,10 +1009,7 @@ function createRow(){
   input.addEventListener("input",()=>{
 
    if(input===number){
-
-    input.value=input.value
-     .replace(/\D/g,"")
-     .slice(0,1);
+    input.value=input.value.replace(/\D/g,"").slice(0,1);
    }
 
    calculate();
@@ -1046,11 +1026,8 @@ function createRow(){
   const count=rowsContainer.querySelectorAll(".bet-row").length;
 
   if(count>MIN_ROWS){
-
    row.remove();
-
   }else{
-
    number.value="";
    straight.value="";
    rumble.value="";
@@ -1155,9 +1132,7 @@ function calculate(){
  const finalAmount=total-discountAmount;
 
  totalElement.textContent=formatPoints(total);
-
  discountElement.textContent=formatPoints(discountAmount);
-
  betAmountElement.textContent=formatPoints(finalAmount);
 
  return {
@@ -1177,7 +1152,7 @@ function validateRows(rows){
  if(!rows.length){
 
   showMessage(
-   "Please enter at least one Single digit number and D or R amount.",
+   "Please enter at least one Single number and D or R amount.",
    "error"
   );
 
@@ -1190,10 +1165,10 @@ function validateRows(rows){
 
   const row=rows[index];
 
-  if(!/^[0-9]$/.test(row.number)){
+  if(!/^\d$/.test(row.number)){
 
    showMessage(
-    "Row "+(index+1)+": Single Number must be exactly one digit (0-9).",
+    "Row "+(index+1)+": Single number must contain exactly one digit (0-9).",
     "error"
    );
 
@@ -1244,47 +1219,24 @@ function validateRows(rows){
 }
 
 /* =========================================
-   BACKEND SELECTION FORMAT
+   SUBMIT SINGLE BETS
 
-   Generic API:
-   game_name, selection, amount
-
-   One request for all rows.
-========================================= */
-
-function makeSelection(rows){
-
- return rows.map(row=>{
-
-  let item=row.number;
-
-  if(row.straight>0){
-   item+="D"+formatPoints(row.straight);
-  }
-
-  if(row.rumble>0){
-   item+="R"+formatPoints(row.rumble);
-  }
-
-  return item;
-
- }).join(",");
-}
-
-/* =========================================
-   SUBMIT BET
-
+   Existing backend:
    POST /api/demo/bets
 
-   Server handles:
-   - Draw cutoff validation
-   - Balance validation
-   - Balance deduction
-   - PostgreSQL insertion
-   - Wallet transaction
+   Each Single entry is sent separately.
 
    IMPORTANT:
-   This page sends ONE API request.
+   selection MUST be a raw one-digit number.
+   Example: "5"
+
+   Do not send:
+   Number=5, D=10, R=0
+
+   Amount = D + R.
+
+   The server enforces the actual draw cutoff,
+   wallet balance and PostgreSQL transaction.
 ========================================= */
 
 async function submitBet(){
@@ -1329,18 +1281,6 @@ async function submitBet(){
   return;
  }
 
- const selection=makeSelection(rows);
-
- if(selection.length>MAX_SELECTION_LENGTH){
-
-  showMessage(
-   "Your selection is too long for the current server API. Please submit fewer rows.",
-   "error"
-  );
-
-  return;
- }
-
  if(amounts.finalAmount>wallet){
 
   showMessage(
@@ -1365,14 +1305,17 @@ async function submitBet(){
  submitting=true;
  applyControls();
 
+ let completed=0;
+ let failed=false;
+
  try{
 
   /*
-   * Refresh authoritative server data.
+   * Refresh authoritative server information
+   * before submitting any entry.
    */
 
   await loadWallet();
-
   await loadDrawSettings();
 
   if(isBetLocked){
@@ -1391,33 +1334,53 @@ async function submitBet(){
   }
 
   /*
-   * One request for the complete selection.
-   * Do not submit each row separately.
+   * Backend generic endpoint accepts only one
+   * selection per request.
+   *
+   * Therefore each row becomes one Single bet.
+   *
+   * D + R = row amount.
+   *
+   * Selection is only the digit 0-9.
    */
 
-  const response=await apiRequest("/demo/bets",{
-   method:"POST",
+  for(let index=0;index<rows.length;index++){
 
-   body:{
-    game_name:"Single",
-    selection:selection,
-    amount:amounts.finalAmount
-   }
-  });
+   const row=rows[index];
+
+   const rowAmount=Number(
+    (row.straight+row.rumble).toFixed(2)
+   );
+
+   if(rowAmount<=0)continue;
+
+   await apiRequest("/demo/bets",{
+
+    method:"POST",
+
+    body:{
+     game_name:"Single",
+     selection:row.number,
+     amount:rowAmount
+    }
+
+   });
+
+   completed++;
+  }
 
   /*
+   * All rows accepted.
    * Reload authoritative wallet balance.
    */
 
   await loadWallet();
 
-  const bet=response.bet||{};
-
   showMessage(
-   "Single entry submitted successfully!\n"+
-   "Bet ID: "+(bet.id??"Confirmed")+"\n"+
-   "Numbers: "+rows.length+"\n"+
-   "Bet Amount: "+formatPoints(amounts.finalAmount)+" Points\n"+
+   "Single entries submitted successfully!\n"+
+   "Accepted Entries: "+completed+
+   "\nTotal Amount: "+formatPoints(amounts.finalAmount)+
+   " Points\n"+
    "Remaining Points: "+formatPoints(wallet),
    "success"
   );
@@ -1430,45 +1393,49 @@ async function submitBet(){
 
   console.error("Single bet submission error:",error);
 
-  showMessage(
-   error.message||"Could not submit your Single entry.",
-   "error"
-  );
-
-  if(error.status===401){
-
-   authenticated=false;
-   redirectToLogin();
-
-   return;
-  }
+  failed=true;
 
   /*
-   * Refresh wallet and schedule after failure.
+   * If a later request fails, earlier entries
+   * may already have been accepted by the backend.
+   *
+   * Do not automatically retry or resubmit them.
    */
 
   try{
-
    await loadWallet();
-
   }catch(walletError){
-
-   console.warn(
-    "Wallet refresh error:",
-    walletError
-   );
+   console.warn("Wallet refresh error:",walletError);
   }
 
   try{
-
    await loadDrawSettings();
-
   }catch(settingsError){
+   console.warn("Settings refresh error:",settingsError);
+  }
 
-   console.warn(
-    "Settings refresh error:",
-    settingsError
+  if(completed>0){
+
+   showMessage(
+    "Some Single entries were accepted before the request failed.\n"+
+    "Accepted Entries: "+completed+
+    "\nError: "+error.message+
+    "\n\nPlease check My Bets before submitting again to avoid duplicate entries.",
+    "error"
    );
+
+  }else{
+
+   showMessage(
+    error.message||"Could not submit your Single entry.",
+    "error"
+   );
+  }
+
+  if(error.status===401){
+   authenticated=false;
+   redirectToLogin();
+   return;
   }
 
  }finally{
@@ -1547,9 +1514,7 @@ async function initialize(){
   if(!countdownTimer){
 
    countdownTimer=setInterval(()=>{
-
     updateBettingStatus();
-
    },1000);
   }
 
@@ -1590,15 +1555,9 @@ window.addEventListener("focus",async()=>{
  if(!submitting){
 
   try{
-
    await refreshPageData();
-
   }catch(error){
-
-   console.warn(
-    "Page refresh error:",
-    error
-   );
+   console.warn("Page refresh error:",error);
   }
  }
 });
@@ -1608,15 +1567,9 @@ window.addEventListener("pageshow",async()=>{
  if(!submitting){
 
   try{
-
    await refreshPageData();
-
   }catch(error){
-
-   console.warn(
-    "Page restore error:",
-    error
-   );
+   console.warn("Page restore error:",error);
   }
  }
 });
