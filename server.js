@@ -2563,8 +2563,8 @@
         return sendError(res, 400, "Enter a valid withdrawal amount, method and account.");
       }
 
-      // Deduct DEMO points immediately when the request is created.
-      // The wallet row lock prevents concurrent withdrawals from overspending.
+      // Do NOT deduct DEMO points when a withdrawal request is submitted.
+      // Pending requests reserve the amount for validation; points are deducted only on admin approval.
       const client = await pool.connect();
       try {
         await client.query("BEGIN");
@@ -2581,53 +2581,43 @@
           return sendError(res, 403, "Your account is not active.");
         }
 
-        // Only legacy pending requests (created before immediate deduction was enabled)
-        // are reserved here. New requests have already been deducted from users.balance.
-        const legacyPendingResult = await client.query(
+        // Reserve all pending requests that have not yet been deducted.
+        // The wallet balance itself remains unchanged until an admin approves.
+        const pendingResult = await client.query(
           `SELECT COALESCE(SUM(amount),0) AS reserved
            FROM withdrawal_requests
            WHERE user_id=$1 AND status='pending' AND points_deducted=FALSE`,
           [req.user.id]
         );
         const balance = Number(walletResult.rows[0].balance || 0);
-        const legacyReserved = Number(legacyPendingResult.rows[0].reserved || 0);
-        const available = Math.max(0, balance - legacyReserved);
-        if (!Number.isFinite(balance) || amount > available) {
+        const pendingReserved = Number(pendingResult.rows[0].reserved || 0);
+        const available = Math.max(0, balance - pendingReserved);
+        if (!Number.isFinite(balance) || !Number.isFinite(pendingReserved) || amount > available) {
           await client.query("ROLLBACK");
-          return sendError(res, 400, "Insufficient available DEMO points.");
+          return sendError(res, 400, "Insufficient available DEMO points after pending withdrawal requests.");
         }
 
-        const newBalance = Number((balance - amount).toFixed(2));
         const result = await client.query(
           `INSERT INTO withdrawal_requests (user_id,amount,method,account,points_deducted)
-           VALUES ($1,$2,$3,$4,TRUE)
+           VALUES ($1,$2,$3,$4,FALSE)
            RETURNING id,amount,method,account,status,points_deducted,created_at`,
           [req.user.id, amount.toFixed(2), method, account]
         );
         const withdrawalId = result.rows[0].id;
 
-        await client.query(
-          `UPDATE users SET balance=$1,updated_at=NOW() WHERE id=$2`,
-          [newBalance.toFixed(2), req.user.id]
-        );
-        await client.query(
-          `INSERT INTO wallet_transactions (user_id,type,amount,currency,description,reference)
-           VALUES ($1,'withdrawal_debit',$2,'DEMO',$3,$4)`,
-          [req.user.id, (-amount).toFixed(2), "Withdrawal points deducted at request submission", "WD-" + withdrawalId]
-        );
-
         await client.query("COMMIT");
         await audit(req.user.id, "withdrawal_requested", req.user.id, {
           withdrawal_id: withdrawalId,
           amount,
-          new_balance: newBalance
+          wallet_balance_unchanged: balance,
+          pending_reserved: Number((pendingReserved + amount).toFixed(2))
         });
         res.status(201).json({
           success: true,
           request: result.rows[0],
-          balance: newBalance,
-          available_balance: Number((newBalance - legacyReserved).toFixed(2)),
-          message: "Withdrawal request submitted. DEMO points were deducted from your wallet."
+          balance,
+          available_balance: Number((available - amount).toFixed(2)),
+          message: "Withdrawal request submitted. DEMO points will be deducted only after admin approval."
         });
       } catch (error) {
         await client.query("ROLLBACK");
@@ -2719,8 +2709,8 @@
           return sendError(res, 400, "The withdrawal amount is invalid.");
         }
 
-        // New requests have already deducted their points at submission.
-        // Legacy pending requests are deducted here once, for backward compatibility.
+        // Deduct points now for requests that have not been deducted yet.
+        // Older requests with points_deducted=TRUE were already debited; do not debit twice.
         let newBalance = Number.NaN;
         if (request.points_deducted !== true) {
           const walletResult = await client.query(
@@ -2748,7 +2738,7 @@
           await client.query(
             `INSERT INTO wallet_transactions (user_id,type,amount,currency,description,reference)
              VALUES ($1,'withdrawal_debit',$2,'DEMO',$3,$4)`,
-            [request.user_id,(-amount).toFixed(2),"Legacy withdrawal points deducted on approval","WD-"+id]
+            [request.user_id,(-amount).toFixed(2),"Withdrawal points deducted after admin approval","WD-"+id]
           );
         } else {
           const walletResult = await client.query(
@@ -2791,7 +2781,9 @@
           success: true,
           request: updated.rows[0],
           new_balance: newBalance,
-          message: "Approved successfully. The withdrawal points were already deducted from the wallet. No real payment was sent."
+          message: request.points_deducted === true
+            ? "Approved successfully. Points for this older request had already been deducted. No real payment was sent."
+            : "Approved successfully. DEMO points have now been deducted from the wallet. No real payment was sent."
         });
 
       } catch (error) {
@@ -3882,3 +3874,9 @@
     // ==========================================
 
     // ==========================================
+    // LIVE SUPPORT
+    // Users can open a conversation by sending the first message.
+    // Only the primary admin can reply, and only after a user message exists.
+    // ==========================================
+
+    fun
