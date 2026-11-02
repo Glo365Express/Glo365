@@ -592,6 +592,14 @@
           ON demo_6up_bets(user_id, created_at DESC);
       `);
 
+      // Apply the 100-point default to the EXISTING PostgreSQL users table too.
+      // CREATE TABLE IF NOT EXISTS does not update defaults on an existing table.
+      // This changes only the default for future accounts; existing balances stay untouched.
+      await pool.query(`
+        ALTER TABLE users
+        ALTER COLUMN balance SET DEFAULT 100.00
+      `);
+
       // Keep existing accounts and their data.
       // Any previous admin other than the permanent owner becomes a normal user.
       await pool.query(`
