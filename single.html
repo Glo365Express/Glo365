@@ -1,348 +1,438 @@
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<meta name="theme-color" content="#168dcc">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="theme-color" content="#2196e8">
 <title>GLO 365 - Single</title>
 
 <style>
-:root {
-  --blue: #168dcc;
-  --blue-dark: #0874b5;
-  --bg: #f5f7fb;
-  --card: #ffffff;
-  --text: #263445;
-  --muted: #718096;
-  --border: #e4eaf1;
-  --danger: #df5757;
-  --green: #168a62;
+*{box-sizing:border-box;margin:0;padding:0}
+
+body{
+ font-family:Arial,sans-serif;
+ background:#f0f7fd;
+ color:#18334d;
 }
 
-* {
-  box-sizing: border-box;
+.app{
+ max-width:520px;
+ min-height:100vh;
+ margin:auto;
+ background:#fff;
+ padding-bottom:25px;
+ box-shadow:0 0 25px #163c5c0b;
 }
 
-body {
-  margin: 0;
-  padding: 0;
-  background: var(--bg);
-  color: var(--text);
-  font-family: Arial, Helvetica, sans-serif;
+.header{
+ background:linear-gradient(120deg,#1687d5,#2196e8);
+ padding:17px 15px;
+ display:flex;
+ justify-content:space-between;
+ align-items:center;
 }
 
-.container {
-  width: 100%;
-  max-width: 650px;
-  margin: auto;
-  padding: 14px;
+.logo{
+ font-size:27px;
+ font-weight:900;
+ color:#fff;
 }
 
-.topbar {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  gap: 10px;
-  margin-bottom: 18px;
+.logo span{color:#d9f0ff}
+
+.balance{
+ background:#fff;
+ color:#167fc4;
+ padding:10px 14px;
+ border-radius:30px;
+ font-size:13px;
+ font-weight:bold;
 }
 
-.brand {
-  font-size: 21px;
-  font-weight: 800;
-  color: var(--blue-dark);
+.page-title{
+ background:#2196e8;
+ text-align:center;
+ padding:15px 10px;
+ font-size:19px;
+ font-weight:900;
+ color:#fff;
 }
 
-.balance {
-  background: #e8f5fc;
-  border: 1px solid #cdeafa;
-  border-radius: 20px;
-  padding: 9px 13px;
-  font-size: 13px;
-  font-weight: 700;
-  color: #0874b5;
+.subtitle{
+ text-align:center;
+ padding:12px 5px;
+ background:#eff8ff;
+ color:#167fc4;
+ font-size:13px;
+ font-weight:bold;
 }
 
-.heading {
-  font-size: 23px;
-  font-weight: 800;
-  margin: 18px 0 5px;
+/* BETTING LOCK */
+
+.lock-notice{
+ display:none;
+ margin:12px 11px 4px;
+ padding:14px 12px;
+ background:#fff0f0;
+ border:1px solid #ffcaca;
+ border-radius:11px;
+ text-align:center;
+ color:#b42332;
 }
 
-.subtitle {
-  font-size: 13px;
-  color: var(--muted);
-  margin-bottom: 20px;
+.lock-notice.show{display:block}
+
+.lock-notice strong{
+ display:block;
+ font-size:14px;
+ font-weight:900;
+ margin-bottom:5px;
 }
 
-.rows {
-  display: flex;
-  flex-direction: column;
-  gap: 10px;
+.lock-notice span{
+ display:block;
+ font-size:12px;
+ line-height:1.6;
+ overflow-wrap:anywhere;
 }
 
-.bet-row {
-  display: grid;
-  grid-template-columns: 30px minmax(0, 1.5fr) minmax(0, 0.8fr) minmax(0, 0.8fr) 25px;
-  gap: 5px;
-  align-items: center;
+.lock-countdown{
+ margin-top:7px;
+ font-weight:bold;
 }
 
-.row-number {
-  text-align: center;
-  font-size: 13px;
-  color: #6b7a8d;
-  font-weight: 700;
+.bet-area{padding:8px 9px 0}
+
+.bet-area.locked input{
+ background:#f0f0f0;
+ color:#999;
+ border-color:#ddd;
+ cursor:not-allowed;
 }
 
-.bet-row input {
-  width: 100%;
-  min-width: 0;
-  height: 47px;
-  border: 1px solid var(--border);
-  border-radius: 12px;
-  outline: none;
-  background: white;
-  padding: 0 8px;
-  text-align: center;
-  font-size: 15px;
-  color: var(--text);
+.bet-area.locked .remove-btn{
+ opacity:.35;
+ cursor:not-allowed;
 }
 
-.bet-row input:focus {
-  border-color: var(--blue);
-  box-shadow: 0 0 0 2px #168dcc18;
+.column-heading,
+.bet-row{
+ display:grid;
+ grid-template-columns:
+ 23px minmax(0,1.05fr)
+ minmax(0,.9fr) minmax(0,.9fr) 20px;
+ gap:5px;
 }
 
-.bet-row input::placeholder {
-  color: #8793a2;
+.column-heading{
+ padding:8px 0;
+ font-size:10px;
+ font-weight:bold;
+ color:#8195a8;
+ text-align:center;
 }
 
-.remove-row {
-  border: none;
-  background: transparent;
-  color: var(--danger);
-  font-size: 21px;
-  cursor: pointer;
-  padding: 0;
+.bet-row{
+ align-items:center;
+ margin-bottom:8px;
 }
 
-.add-area {
-  display: flex;
-  justify-content: flex-end;
-  margin: 18px 5px 25px;
+.serial{
+ text-align:center;
+ font-size:14px;
+ color:#526f87;
 }
 
-.add-btn {
-  width: 58px;
-  height: 58px;
-  border-radius: 50%;
-  border: 1px solid #dce8f4;
-  background: #edf6fc;
-  color: var(--blue-dark);
-  font-size: 32px;
-  font-weight: 700;
-  cursor: pointer;
+.bet-row input{
+ width:100%;
+ min-width:0;
+ height:49px;
+ border:1px solid #cbdfee;
+ background:#f7fbff;
+ border-radius:10px;
+ text-align:center;
+ font-size:14px;
+ color:#18334d;
+ outline:none;
+ padding:4px;
 }
 
-.add-btn:disabled {
-  opacity: .4;
-  cursor: not-allowed;
+.bet-row input:focus{
+ border-color:#2196e8;
+ background:#fff;
+ box-shadow:0 0 0 3px #2196e817;
 }
 
-.summary-card {
-  background: var(--card);
-  border: 1px solid var(--border);
-  border-radius: 18px;
-  padding: 25px 12px;
-  margin-bottom: 13px;
-  text-align: center;
-  box-shadow: 0 3px 12px #152b3b08;
-  font-size: 18px;
-  color: #5c6571;
+.bet-row input::placeholder{color:#9aabba}
+
+.remove-btn{
+ border:0;
+ background:transparent;
+ color:#d34c5e;
+ font-size:20px;
+ font-weight:bold;
+ padding:3px 0;
+ cursor:pointer;
 }
 
-.amount {
-  color: var(--blue-dark);
-  font-weight: 800;
+.add-area{
+ display:flex;
+ justify-content:flex-end;
+ padding:5px 3px 17px;
 }
 
-.discount-card {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  flex-wrap: wrap;
-  gap: 9px;
+.add-btn{
+ width:43px;
+ height:43px;
+ border-radius:50%;
+ background:#eff8ff;
+ color:#1687d5;
+ border:1px solid #cbdfee;
+ font-size:29px;
+ font-weight:bold;
+ display:grid;
+ place-items:center;
+ cursor:pointer;
 }
 
-.discount-input {
-  width: 75px;
-  height: 48px;
-  border: 1px solid var(--border);
-  border-radius: 12px;
-  text-align: center;
-  font-size: 17px;
-  font-weight: 700;
-  background: #f9fbfd;
-  color: var(--blue-dark);
+.add-btn:disabled{
+ opacity:.4;
+ cursor:not-allowed;
 }
 
-.discount-input:disabled {
-  opacity: 1;
-  color: var(--blue-dark);
+/* SUMMARY */
+
+.summary{padding:5px 11px}
+
+.summary-box{
+ background:#eff8ff;
+ border:1px solid #dcebf6;
+ border-radius:12px;
+ padding:16px 7px;
+ text-align:center;
+ font-size:14px;
+ margin-bottom:9px;
+ color:#526f87;
 }
 
-.bet-button {
-  width: 100%;
-  min-height: 88px;
-  margin-top: 35px;
-  border: none;
-  border-radius: 17px;
-  background: linear-gradient(135deg, #35a8d6, #168dcc);
-  color: white;
-  font-size: 23px;
-  font-weight: 900;
-  cursor: pointer;
-  box-shadow: 0 5px 13px #168dcc30;
+.summary-box strong{
+ font-weight:900;
+ color:#167fc4;
 }
 
-.bet-button:disabled {
-  opacity: .6;
-  cursor: not-allowed;
+.discount-line{
+ display:flex;
+ align-items:center;
+ justify-content:center;
+ flex-wrap:wrap;
+ gap:7px;
 }
 
-.back-link {
-  display: block;
-  text-align: center;
-  text-decoration: none;
-  color: #567b9e;
-  font-size: 17px;
-  margin: 30px 0;
+.discount-value{
+ background:#fff;
+ border:1px solid #cbdfee;
+ border-radius:7px;
+ min-width:55px;
+ padding:7px 9px;
+ font-weight:bold;
+ color:#167fc4;
 }
 
-.message {
-  display: none;
-  padding: 15px;
-  margin: 15px 0;
-  border-radius: 13px;
-  font-size: 14px;
-  line-height: 1.5;
-  overflow-wrap: anywhere;
+.discount-percent{
+ color:#526f87;
+ font-weight:bold;
 }
 
-.message.error {
-  display: block;
-  background: #fff0ed;
-  border: 1px solid #f3d1ca;
-  color: #b44d42;
+.discount-amount{
+ font-weight:bold;
+ color:#1687d5;
 }
 
-.message.success {
-  display: block;
-  background: #e9f8f0;
-  border: 1px solid #c7ebd8;
-  color: #168052;
+/* BUTTON */
+
+.place-btn{
+ width:calc(100% - 22px);
+ margin:17px 11px 0;
+ padding:16px 8px;
+ background:linear-gradient(90deg,#1687d5,#2196e8);
+ border:0;
+ border-radius:10px;
+ color:#fff;
+ font-size:17px;
+ font-weight:900;
+ box-shadow:0 4px 12px #1687d530;
+ cursor:pointer;
 }
 
-.message.info {
-  display: block;
-  background: #eaf5fc;
-  border: 1px solid #cde6f7;
-  color: #176b9c;
+.place-btn:active{transform:scale(.98)}
+
+.place-btn:disabled{
+ opacity:.6;
+ cursor:not-allowed;
+ background:#8999a5;
+ box-shadow:none;
 }
 
-.demo-notice {
-  background: #eaf6f0;
-  border: 1px solid #d2eade;
-  border-radius: 17px;
-  padding: 18px 13px;
-  text-align: center;
-  color: #527765;
-  font-size: 14px;
-  line-height: 1.7;
-  margin-bottom: 10px;
+/* NOTICES */
+
+.notice{
+ margin:10px 11px;
+ padding:12px;
+ background:#eff8ff;
+ border:1px solid #dcebf6;
+ border-radius:9px;
+ text-align:center;
+ color:#526f87;
+ font-size:11px;
+ line-height:1.7;
 }
 
-.demo-notice strong {
-  display: block;
-  margin-bottom: 5px;
+.notice strong{color:#167fc4}
+
+.message{
+ display:none;
+ margin:12px 11px;
+ padding:11px;
+ border-radius:9px;
+ font-size:13px;
+ line-height:1.5;
+ white-space:pre-line;
+ overflow-wrap:anywhere;
 }
 
-@media (max-width: 370px) {
-  .container {
-    padding: 10px;
-  }
+.message.show{display:block}
 
-  .bet-row {
-    grid-template-columns: 23px minmax(0, 1.4fr) minmax(0, .7fr) minmax(0, .7fr) 20px;
-    gap: 3px;
-  }
+.message.error{
+ background:#fff0f0;
+ border:1px solid #f0b8b8;
+ color:#a32635;
+}
 
-  .bet-row input {
-    height: 43px;
-    font-size: 13px;
-    padding: 0 3px;
-  }
+.message.success{
+ background:#effbf3;
+ border:1px solid #b9e4ca;
+ color:#187344;
+}
 
-  .summary-card {
-    font-size: 16px;
-  }
+.message.info{
+ background:#eff8ff;
+ border:1px solid #cbdfee;
+ color:#167fc4;
+}
+
+.back-btn{
+ display:block;
+ margin:10px auto;
+ border:0;
+ background:transparent;
+ color:#167fc4;
+ padding:10px;
+ font-size:13px;
+ cursor:pointer;
+}
+
+@media(max-width:380px){
+ .logo{font-size:24px}
+ .balance{font-size:11px;padding:9px}
+ .bet-row input{height:45px;font-size:12px}
+ .column-heading{font-size:9px;gap:3px}
+ .bet-row{gap:3px}
+ .serial{font-size:12px}
+ .summary-box{font-size:13px}
 }
 </style>
 </head>
 
 <body>
 
-<div class="container">
+<div class="app">
 
-  <div class="topbar">
-    <div class="brand">GLO 365</div>
-    <div class="balance">
-      Balance: <span id="walletBalance">--</span> Points
-    </div>
+<header class="header">
+ <div class="logo">GLO <span>365</span></div>
+
+ <div class="balance">
+  <span id="balance">0.00</span> Points
+ </div>
+</header>
+
+<div class="page-title">SINGLE NUMBER</div>
+
+<div class="subtitle">
+ Enter Single Digit Number &amp; Virtual Points
+</div>
+
+<div class="lock-notice" id="lockNotice" role="alert">
+ <strong id="lockTitle">LOADING BETTING STATUS</strong>
+ <span id="lockMessage">Connecting to the server...</span>
+ <span class="lock-countdown" id="lockCountdown"></span>
+</div>
+
+<div id="pageMessage" class="message" role="status" aria-live="polite"></div>
+
+<section class="bet-area" id="betArea">
+
+ <div class="column-heading">
+  <span>#</span>
+  <span>NUMBER</span>
+  <span>STRAIGHT (D)</span>
+  <span>RUMBLE (R)</span>
+  <span></span>
+ </div>
+
+ <div id="betRows"></div>
+
+ <div class="add-area">
+  <button
+   class="add-btn"
+   id="addRow"
+   type="button"
+   title="Add more rows"
+  >+</button>
+ </div>
+
+</section>
+
+<section class="summary">
+
+ <div class="summary-box">
+  Total Amount =
+  <strong id="totalAmount">0.00</strong> Points
+ </div>
+
+ <div class="summary-box">
+  <div class="discount-line">
+   <span>Discount</span>
+
+   <span class="discount-value" id="discountPercent">0</span>
+
+   <span class="discount-percent">%</span>
+
+   <strong class="discount-amount" id="discountAmount">0.00</strong>
+
+   <span>Points</span>
   </div>
+ </div>
 
-  <h1 class="heading">Single</h1>
-  <div class="subtitle">Enter your selections below.</div>
+ <div class="summary-box">
+  Bet Amount =
+  <strong id="betAmount">0.00</strong> Points
+ </div>
 
-  <div id="rows" class="rows"></div>
+</section>
 
-  <div class="add-area">
-    <button type="button" class="add-btn" id="addButton" aria-label="Add row">+</button>
-  </div>
+<button class="place-btn" id="placeBet" type="button" disabled>
+ LOADING...
+</button>
 
-  <div class="summary-card">
-    Total Amount = <span class="amount" id="totalAmount">0.00</span> Points
-  </div>
+<div class="notice">
+ <strong>DEMO POINTS ONLY</strong><br>
+ This is a demo entry system. No real-money payment is processed.
+</div>
 
-  <div class="summary-card discount-card">
-    <span>Discount</span>
-    <input
-      class="discount-input"
-      id="discount"
-      type="number"
-      value="0"
-      min="0"
-      max="100"
-      readonly
-      aria-label="Discount percentage"
-    >
-    <span>%</span>
-    <span class="amount" id="discountAmount">0.00</span>
-    Points
-  </div>
-
-  <div class="summary-card">
-    Bet Amount = <span class="amount" id="betAmount">0.00</span> Points
-  </div>
-
-  <button type="button" class="bet-button" id="placeBetButton">
-    PLACE BET
-  </button>
-
-  <a class="back-link" href="index.html">← Back to Home</a>
-
-  <div id="message" class="message"></div>
-
+<button class="back-btn" id="backHome" type="button">
+ ← Back to Home
+</button>
 
 </div>
 
@@ -350,570 +440,1190 @@ body {
 "use strict";
 
 /* =========================================
-   GLO 365 API CONFIGURATION
+   GLO 365 - SINGLE
+   Backend: Node.js + Express
+   Database: PostgreSQL
+
+   Authentication:
+   - HttpOnly Cookie
+   - sessionStorage token fallback
+
+   No LocalStorage.
 ========================================= */
 
-const API_BASE = "https://glo365.onrender.com/api";
+const API_BASE_URL="https://glo365.onrender.com/api";
+const TOKEN_KEY="glo365_token";
 
-const TOKEN_KEYS = [
-  "glo365_access_token",
-  "glo365_token",
-  "access_token"
-];
+const MIN_ROWS=10;
+const MAX_ROWS=50;
+const DEFAULT_LOCK_MINUTES=45;
+const MAX_BET_AMOUNT=100000;
+const MAX_SELECTION_LENGTH=100;
 
-const MAX_ROWS = 50;
-const INITIAL_ROWS = 10;
+const rowsContainer=document.getElementById("betRows");
+const addButton=document.getElementById("addRow");
+const placeButton=document.getElementById("placeBet");
 
-let currentBalance = 0;
-let isSubmitting = false;
+const balanceElement=document.getElementById("balance");
+const totalElement=document.getElementById("totalAmount");
+const discountElement=document.getElementById("discountAmount");
+const discountPercentElement=document.getElementById("discountPercent");
+const betAmountElement=document.getElementById("betAmount");
+
+const lockNotice=document.getElementById("lockNotice");
+const lockTitle=document.getElementById("lockTitle");
+const lockMessage=document.getElementById("lockMessage");
+const lockCountdown=document.getElementById("lockCountdown");
+
+const betArea=document.getElementById("betArea");
+const pageMessage=document.getElementById("pageMessage");
+
+let currentUser=null;
+let wallet=0;
+let discount=0;
+
+let isBetLocked=true;
+let serverBettingLocked=true;
+
+let drawSchedule=null;
+let lockMinutes=DEFAULT_LOCK_MINUTES;
+
+let submitting=false;
+let authenticated=false;
+let settingsLoaded=false;
+
+let countdownTimer=null;
+let messageTimer=null;
+let refreshBusy=false;
 
 /* =========================================
-   ELEMENTS
+   SESSION
 ========================================= */
 
-const rowsContainer = document.getElementById("rows");
-const addButton = document.getElementById("addButton");
-const placeBetButton = document.getElementById("placeBetButton");
-const messageBox = document.getElementById("message");
-
-const totalAmountElement = document.getElementById("totalAmount");
-const discountAmountElement = document.getElementById("discountAmount");
-const betAmountElement = document.getElementById("betAmount");
-const walletBalanceElement = document.getElementById("walletBalance");
-
-/* =========================================
-   AUTH TOKEN
-========================================= */
-
-function getToken() {
-  for (const key of TOKEN_KEYS) {
-    const value = localStorage.getItem(key);
-
-    if (value && value.trim()) {
-      return value.trim();
-    }
-  }
-
-  try {
-    const session = JSON.parse(
-      localStorage.getItem("glo365_session") || "null"
-    );
-
-    if (session) {
-      return (
-        session.token ||
-        session.access_token ||
-        session.accessToken ||
-        null
-      );
-    }
-  } catch (error) {
-    console.warn("Session parsing error:", error);
-  }
-
-  return null;
+function getToken(){
+ try{
+  return sessionStorage.getItem(TOKEN_KEY)||"";
+ }catch(error){
+  return "";
+ }
 }
 
-/* =========================================
-   API REQUEST
-========================================= */
+function clearSession(){
+ try{
+  sessionStorage.removeItem(TOKEN_KEY);
+  sessionStorage.removeItem("glo365_user");
+  sessionStorage.removeItem("glo365_session");
+ }catch(error){}
+}
 
-async function apiRequest(path, options = {}) {
-  const token = getToken();
+function redirectToLogin(){
+ clearSession();
 
-  const headers = {
-    "Content-Type": "application/json",
-    ...(options.headers || {})
-  };
-
-  if (token) {
-    headers.Authorization = "Bearer " + token;
-  }
-
-  let response;
-
-  try {
-    response = await fetch(API_BASE + path, {
-      ...options,
-      headers,
-      credentials: "include"
-    });
-  } catch (error) {
-    throw new Error(
-      "Cannot connect to the server. Please check your internet connection."
-    );
-  }
-
-  let data;
-
-  try {
-    data = await response.json();
-  } catch {
-    throw new Error("The server returned an invalid response.");
-  }
-
-  if (!response.ok) {
-    throw new Error(
-      data.message || ("Server error: " + response.status)
-    );
-  }
-
-  return data;
+ location.replace(
+  "login.html?next="+encodeURIComponent("single.html")
+ );
 }
 
 /* =========================================
    MESSAGE
 ========================================= */
 
-function showMessage(text, type = "error") {
-  messageBox.className = "message " + type;
-  messageBox.textContent = text;
+function showMessage(message,type="info"){
+ clearTimeout(messageTimer);
+
+ pageMessage.textContent=String(message||"");
+ pageMessage.className="message show "+type;
+
+ messageTimer=setTimeout(()=>{
+  pageMessage.className="message";
+  pageMessage.textContent="";
+ },7000);
 }
 
-function hideMessage() {
-  messageBox.className = "message";
-  messageBox.textContent = "";
+function clearMessage(){
+ clearTimeout(messageTimer);
+
+ pageMessage.textContent="";
+ pageMessage.className="message";
+}
+
+/* =========================================
+   API REQUEST
+========================================= */
+
+async function apiRequest(path,options={}){
+
+ const headers=new Headers(options.headers||{});
+ const token=getToken();
+
+ headers.set("Accept","application/json");
+
+ if(token){
+  headers.set("Authorization","Bearer "+token);
+ }
+
+ let body=options.body;
+
+ if(body!==undefined&&body!==null){
+  if(typeof body!=="string"){
+   body=JSON.stringify(body);
+  }
+
+  headers.set("Content-Type","application/json");
+ }
+
+ let response;
+
+ try{
+
+  response=await fetch(API_BASE_URL+path,{
+   method:options.method||"GET",
+   headers,
+   credentials:"include",
+   cache:"no-store",
+   body
+  });
+
+ }catch(error){
+
+  throw new Error(
+   "Cannot connect to GLO 365 server. Check your internet connection."
+  );
+ }
+
+ const raw=await response.text();
+ let data={};
+
+ if(raw){
+  try{
+   data=JSON.parse(raw);
+  }catch(error){
+   throw new Error("The server returned an invalid response.");
+  }
+ }
+
+ if(response.status===401){
+
+  authenticated=false;
+  redirectToLogin();
+
+  const error=new Error("Login session expired.");
+  error.status=401;
+
+  throw error;
+ }
+
+ if(!response.ok||data.success===false){
+
+  const error=new Error(
+   data.message||
+   data.error||
+   "Request failed ("+response.status+")."
+  );
+
+  error.status=response.status;
+
+  throw error;
+ }
+
+ return data;
+}
+
+/* =========================================
+   RESPONSE HELPER
+========================================= */
+
+function unwrap(data){
+
+ if(!data||typeof data!=="object"){
+  return {};
+ }
+
+ return data.data&&typeof data.data==="object"
+  ?data.data
+  :data;
+}
+
+/* =========================================
+   AUTHENTICATION
+========================================= */
+
+async function loadCurrentUser(){
+
+ const response=await apiRequest("/auth/me");
+ const data=unwrap(response);
+
+ currentUser=data.user||data.profile||data;
+
+ if(
+  !currentUser||
+  typeof currentUser!=="object"||
+  currentUser.id===undefined
+ ){
+  throw new Error(
+   "The server did not return valid logged-in user information."
+  );
+ }
+
+ if(
+  currentUser.status&&
+  String(currentUser.status).toLowerCase()!=="active"
+ ){
+  throw new Error(
+   "Your account is not active. Please contact the administrator."
+  );
+ }
+
+ authenticated=true;
+}
+
+/* =========================================
+   WALLET
+========================================= */
+
+function formatPoints(value){
+
+ const n=Number(value);
+
+ return Number.isFinite(n)
+  ?n.toFixed(2)
+  :"0.00";
+}
+
+function setWallet(value){
+
+ const amount=Number(value);
+
+ if(!Number.isFinite(amount)||amount<0){
+  throw new Error("Invalid wallet balance returned by server.");
+ }
+
+ wallet=amount;
+
+ balanceElement.textContent=formatPoints(wallet);
+}
+
+async function loadWallet(){
+
+ const response=await apiRequest("/wallet");
+ const data=unwrap(response);
+
+ if(data.currency&&data.currency!=="DEMO"){
+  throw new Error("Unexpected wallet currency.");
+ }
+
+ if(data.balance===undefined){
+  throw new Error("The server did not return wallet balance.");
+ }
+
+ setWallet(data.balance);
+}
+
+/* =========================================
+   DRAW SETTINGS
+   GET /api/public/draw-settings
+========================================= */
+
+function parseDrawTime(value){
+
+ if(!value)return null;
+
+ const timestamp=Date.parse(value);
+
+ return Number.isFinite(timestamp)
+  ?timestamp
+  :null;
+}
+
+async function loadDrawSettings(){
+
+ const response=await apiRequest("/public/draw-settings");
+ const data=unwrap(response);
+
+ const draw=
+  data.drawSettings||
+  data.draw_settings||
+  data.draw||
+  null;
+
+ if(!draw||typeof draw!=="object"){
+  throw new Error(
+   "The server has not configured a valid draw schedule."
+  );
+ }
+
+ const timestamp=parseDrawTime(
+  draw.draw_at||draw.drawAt
+ );
+
+ if(timestamp===null){
+  throw new Error(
+   "The server returned an invalid draw date and time."
+  );
+ }
+
+ drawSchedule={
+  timestamp,
+  drawNumber:String(
+   draw.draw_number||
+   draw.drawNumber||
+   ""
+  )
+ };
+
+ lockMinutes=Number(data.lock_minutes)>0
+  ?Number(data.lock_minutes)
+  :DEFAULT_LOCK_MINUTES;
+
+ serverBettingLocked=data.betting_locked===true;
+
+ settingsLoaded=true;
+
+ updateBettingStatus();
+}
+
+/* =========================================
+   DRAW TIME DISPLAY
+========================================= */
+
+function formatDrawTime(timestamp){
+
+ return new Date(timestamp).toLocaleString("en-GB",{
+  day:"2-digit",
+  month:"short",
+  year:"numeric",
+  hour:"2-digit",
+  minute:"2-digit",
+  hour12:true
+ });
+}
+
+function formatRemaining(milliseconds){
+
+ if(!Number.isFinite(milliseconds)||milliseconds<=0){
+  return "00:00:00";
+ }
+
+ const seconds=Math.floor(milliseconds/1000);
+
+ const hours=Math.floor(seconds/3600);
+ const minutes=Math.floor((seconds%3600)/60);
+ const secs=seconds%60;
+
+ return [
+  String(hours).padStart(2,"0"),
+  String(minutes).padStart(2,"0"),
+  String(secs).padStart(2,"0")
+ ].join(":");
+}
+
+/* =========================================
+   BETTING STATUS
+========================================= */
+
+function getBettingStatus(){
+
+ if(!settingsLoaded||!drawSchedule){
+
+  return {
+   locked:true,
+   reason:"missing",
+   remaining:null
+  };
+ }
+
+ const remaining=drawSchedule.timestamp-Date.now();
+ const cutoff=lockMinutes*60*1000;
+
+ if(serverBettingLocked||remaining<=cutoff){
+
+  return {
+   locked:true,
+   reason:"cutoff",
+   remaining
+  };
+ }
+
+ return {
+  locked:false,
+  reason:"open",
+  remaining
+ };
+}
+
+function updateBettingStatus(){
+
+ const status=getBettingStatus();
+
+ isBetLocked=status.locked;
+
+ if(isBetLocked){
+
+  lockNotice.classList.add("show");
+  betArea.classList.add("locked");
+
+  if(status.reason==="missing"){
+
+   lockTitle.textContent="BETTING UNAVAILABLE";
+
+   lockMessage.textContent=
+    "The server draw schedule is unavailable. Please wait for the next valid schedule.";
+
+   lockCountdown.textContent="";
+
+  }else{
+
+   lockTitle.textContent="BETTING CLOSED";
+
+   lockMessage.textContent=
+    (drawSchedule.drawNumber
+     ?"Draw Number: "+drawSchedule.drawNumber+". "
+     :"")+
+    "Draw Time: "+formatDrawTime(drawSchedule.timestamp);
+
+   lockCountdown.textContent=
+    status.remaining<=0
+     ?"The scheduled draw time has passed."
+     :"Draw starts in: "+formatRemaining(status.remaining);
+  }
+
+ }else{
+
+  lockNotice.classList.remove("show");
+  betArea.classList.remove("locked");
+
+  lockTitle.textContent="BETTING OPEN";
+  lockMessage.textContent="";
+  lockCountdown.textContent="";
+ }
+
+ applyControls();
+}
+
+/* =========================================
+   CONTROL STATES
+========================================= */
+
+function applyControls(){
+
+ const disabled=
+  isBetLocked||
+  submitting||
+  !authenticated||
+  !settingsLoaded;
+
+ rowsContainer.querySelectorAll(".bet-row").forEach(row=>{
+
+  row.querySelectorAll("input").forEach(input=>{
+   input.disabled=disabled;
+  });
+
+  const remove=row.querySelector(".remove-btn");
+
+  if(remove){
+   remove.disabled=disabled;
+  }
+ });
+
+ const count=rowsContainer.querySelectorAll(".bet-row").length;
+
+ addButton.disabled=disabled||count>=MAX_ROWS;
+
+ placeButton.disabled=disabled;
+
+ placeButton.textContent=
+  submitting
+   ?"SUBMITTING..."
+   :!authenticated
+    ?"LOGIN REQUIRED"
+    :!settingsLoaded
+     ?"LOADING..."
+     :isBetLocked
+      ?"BETTING CLOSED"
+      :"PLACE BET";
+}
+
+/* =========================================
+   DISCOUNT
+   No separate backend discount setting
+   is available in the current API.
+========================================= */
+
+function loadDiscount(){
+
+ discount=0;
+
+ discountPercentElement.textContent="0";
+
+ calculate();
 }
 
 /* =========================================
    ROW MANAGEMENT
 ========================================= */
 
-function createRow(number) {
-  const row = document.createElement("div");
+function updateSerials(){
 
-  row.className = "bet-row";
+ const rows=rowsContainer.querySelectorAll(".bet-row");
 
-  row.innerHTML = `
-    <span class="row-number">${number}.</span>
+ rows.forEach((row,index)=>{
+  row.querySelector(".serial").textContent=(index+1)+".";
+ });
 
-    <input
-      type="text"
-      class="number-input"
-      placeholder="Number"
-      maxlength="20"
-      autocomplete="off"
-    >
-
-    <input
-      type="number"
-      class="d-input"
-      placeholder="D"
-      min="0"
-      step="0.01"
-      inputmode="decimal"
-    >
-
-    <input
-      type="number"
-      class="r-input"
-      placeholder="R"
-      min="0"
-      step="0.01"
-      inputmode="decimal"
-    >
-
-    <button
-      type="button"
-      class="remove-row"
-      aria-label="Remove row"
-    >×</button>
-  `;
-
-  row.querySelectorAll("input").forEach(input => {
-    input.addEventListener("input", calculateTotal);
-  });
-
-  row.querySelector(".remove-row").addEventListener("click", () => {
-    if (rowsContainer.children.length <= 1) {
-      showMessage("At least one row is required.", "info");
-      return;
-    }
-
-    row.remove();
-    renumberRows();
-    calculateTotal();
-  });
-
-  return row;
+ applyControls();
 }
 
-function addRow() {
-  const count = rowsContainer.children.length;
+function createRow(){
 
-  if (count >= MAX_ROWS) {
-    showMessage("Maximum 50 rows are allowed.", "info");
-    return;
+ const row=document.createElement("div");
+ row.className="bet-row";
+
+ const serial=document.createElement("span");
+ serial.className="serial";
+
+ const number=document.createElement("input");
+ number.type="text";
+ number.inputMode="numeric";
+ number.maxLength=1;
+ number.placeholder="Number";
+ number.autocomplete="off";
+ number.dataset.field="number";
+
+ const straight=document.createElement("input");
+ straight.type="number";
+ straight.inputMode="decimal";
+ straight.min="0";
+ straight.step="0.01";
+ straight.placeholder="D";
+ straight.dataset.field="straight";
+
+ const rumble=document.createElement("input");
+ rumble.type="number";
+ rumble.inputMode="decimal";
+ rumble.min="0";
+ rumble.step="0.01";
+ rumble.placeholder="R";
+ rumble.dataset.field="rumble";
+
+ const remove=document.createElement("button");
+ remove.type="button";
+ remove.className="remove-btn";
+ remove.textContent="×";
+ remove.title="Clear or remove row";
+
+ row.append(
+  serial,
+  number,
+  straight,
+  rumble,
+  remove
+ );
+
+ rowsContainer.appendChild(row);
+
+ [number,straight,rumble].forEach(input=>{
+
+  input.addEventListener("input",()=>{
+
+   if(input===number){
+
+    input.value=input.value
+     .replace(/\D/g,"")
+     .slice(0,1);
+   }
+
+   calculate();
+  });
+ });
+
+ remove.addEventListener("click",()=>{
+
+  if(isBetLocked||submitting){
+   updateBettingStatus();
+   return;
   }
 
-  rowsContainer.appendChild(createRow(count + 1));
+  const count=rowsContainer.querySelectorAll(".bet-row").length;
 
-  renumberRows();
-  calculateTotal();
-  hideMessage();
+  if(count>MIN_ROWS){
 
-  addButton.disabled = rowsContainer.children.length >= MAX_ROWS;
+   row.remove();
+
+  }else{
+
+   number.value="";
+   straight.value="";
+   rumble.value="";
+  }
+
+  updateSerials();
+  calculate();
+ });
+
+ updateSerials();
+ calculate();
 }
 
-function renumberRows() {
-  [...rowsContainer.children].forEach((row, index) => {
-    row.querySelector(".row-number").textContent = (index + 1) + ".";
-  });
+function addRow(){
 
-  addButton.disabled = rowsContainer.children.length >= MAX_ROWS;
+ if(isBetLocked||submitting||!authenticated){
+  updateBettingStatus();
+  return;
+ }
+
+ const count=rowsContainer.querySelectorAll(".bet-row").length;
+
+ if(count>=MAX_ROWS){
+  showMessage("Maximum 50 rows allowed.","error");
+  return;
+ }
+
+ createRow();
 }
+
+function resetRows(){
+
+ rowsContainer.replaceChildren();
+
+ for(let i=0;i<MIN_ROWS;i++){
+  createRow();
+ }
+
+ updateSerials();
+ calculate();
+ applyControls();
+}
+
+addButton.addEventListener("click",addRow);
 
 /* =========================================
-   AMOUNT CALCULATION
-
-   D and R are treated as point amounts.
-   Total = sum of D + R values.
+   READ ROWS
 ========================================= */
 
-function getInputAmount(input) {
-  const value = Number(input.value);
+function getRows(){
 
-  if (input.value.trim() === "") return 0;
+ const result=[];
 
-  if (!Number.isFinite(value) || value < 0) {
-    return 0;
+ rowsContainer.querySelectorAll(".bet-row").forEach(row=>{
+
+  const number=row.querySelector('[data-field="number"]').value.trim();
+
+  const dValue=row.querySelector('[data-field="straight"]').value.trim();
+
+  const rValue=row.querySelector('[data-field="rumble"]').value.trim();
+
+  if(number===""&&dValue===""&&rValue===""){
+   return;
   }
 
-  return value;
-}
-
-function calculateTotal() {
-  let total = 0;
-
-  const rows = [...rowsContainer.querySelectorAll(".bet-row")];
-
-  rows.forEach(row => {
-    const d = getInputAmount(row.querySelector(".d-input"));
-    const r = getInputAmount(row.querySelector(".r-input"));
-
-    total += d + r;
+  result.push({
+   number,
+   straight:dValue===""?0:Number(dValue),
+   rumble:rValue===""?0:Number(rValue)
   });
+ });
 
-  // Discount remains zero until the backend provides
-  // an authenticated admin-controlled discount setting.
-  const discountPercent = 0;
-  const discountAmount = total * discountPercent / 100;
-  const finalAmount = Math.max(0, total - discountAmount);
-
-  totalAmountElement.textContent = total.toFixed(2);
-  discountAmountElement.textContent = discountAmount.toFixed(2);
-  betAmountElement.textContent = finalAmount.toFixed(2);
-
-  return {
-    total,
-    discountAmount,
-    finalAmount
-  };
+ return result;
 }
 
 /* =========================================
-   LOAD WALLET
-   Correct endpoint: GET /api/wallet
+   CALCULATION
 ========================================= */
 
-async function loadWallet() {
-  const token = getToken();
+function calculate(){
 
-  if (!token) {
-    walletBalanceElement.textContent = "Login required";
-    return;
+ let total=0;
+
+ rowsContainer.querySelectorAll(".bet-row").forEach(row=>{
+
+  const d=row.querySelector('[data-field="straight"]').value;
+  const r=row.querySelector('[data-field="rumble"]').value;
+
+  const straight=d===""?0:Number(d);
+  const rumble=r===""?0:Number(r);
+
+  if(Number.isFinite(straight)&&straight>0){
+   total+=straight;
   }
 
-  try {
-    const data = await apiRequest("/wallet");
-
-    if (data.success) {
-      currentBalance = Number(data.balance || 0);
-
-      walletBalanceElement.textContent =
-        currentBalance.toFixed(2);
-    } else {
-      walletBalanceElement.textContent = "--";
-    }
-
-  } catch (error) {
-    console.error("Wallet error:", error.message);
-    walletBalanceElement.textContent = "--";
+  if(Number.isFinite(rumble)&&rumble>0){
+   total+=rumble;
   }
+ });
+
+ const discountAmount=total*discount/100;
+ const finalAmount=total-discountAmount;
+
+ totalElement.textContent=formatPoints(total);
+
+ discountElement.textContent=formatPoints(discountAmount);
+
+ betAmountElement.textContent=formatPoints(finalAmount);
+
+ return {
+  total,
+  discount,
+  discountAmount,
+  finalAmount
+ };
 }
 
 /* =========================================
-   VERIFY LOGIN
-   Correct endpoint: GET /api/auth/me
+   VALIDATION
 ========================================= */
 
-async function verifyLogin() {
-  const token = getToken();
+function validateRows(rows){
 
-  if (!token) {
-    showMessage(
-      "Please log in first. Your login token was not found.",
-      "error"
-    );
+ if(!rows.length){
 
-    placeBetButton.disabled = true;
-    return false;
+  showMessage(
+   "Please enter at least one Single digit number and D or R amount.",
+   "error"
+  );
+
+  return false;
+ }
+
+ let total=0;
+
+ for(let index=0;index<rows.length;index++){
+
+  const row=rows[index];
+
+  if(!/^[0-9]$/.test(row.number)){
+
+   showMessage(
+    "Row "+(index+1)+": Single Number must be exactly one digit (0-9).",
+    "error"
+   );
+
+   return false;
   }
 
-  try {
-    await apiRequest("/auth/me");
-    placeBetButton.disabled = false;
-    return true;
+  if(
+   !Number.isFinite(row.straight)||
+   !Number.isFinite(row.rumble)||
+   row.straight<0||
+   row.rumble<0||
+   Math.round(row.straight*100)!==row.straight*100||
+   Math.round(row.rumble*100)!==row.rumble*100
+  ){
 
-  } catch (error) {
-    showMessage(
-      "Login verification failed: " + error.message,
-      "error"
-    );
+   showMessage(
+    "Row "+(index+1)+": Enter valid amounts with up to 2 decimal places.",
+    "error"
+   );
 
-    placeBetButton.disabled = true;
-    return false;
+   return false;
   }
+
+  if(row.straight===0&&row.rumble===0){
+
+   showMessage(
+    "Row "+(index+1)+": Enter a Straight (D) or Rumble (R) amount.",
+    "error"
+   );
+
+   return false;
+  }
+
+  total+=row.straight+row.rumble;
+
+  if(total>MAX_BET_AMOUNT){
+
+   showMessage(
+    "Total amount cannot exceed 100000 DEMO points.",
+    "error"
+   );
+
+   return false;
+  }
+ }
+
+ return true;
 }
 
 /* =========================================
-   COLLECT ROW DATA
+   BACKEND SELECTION FORMAT
+
+   Generic API:
+   game_name, selection, amount
+
+   One request for all rows.
 ========================================= */
 
-function collectSelections() {
-  const rows = [...rowsContainer.querySelectorAll(".bet-row")];
+function makeSelection(rows){
 
-  const selections = [];
+ return rows.map(row=>{
 
-  for (let index = 0; index < rows.length; index++) {
-    const row = rows[index];
+  let item=row.number;
 
-    const number = row.querySelector(".number-input").value.trim();
-    const dInput = row.querySelector(".d-input");
-    const rInput = row.querySelector(".r-input");
-
-    const dText = dInput.value.trim();
-    const rText = rInput.value.trim();
-
-    const d = getInputAmount(dInput);
-    const r = getInputAmount(rInput);
-
-    const hasData = Boolean(number || dText || rText);
-
-    if (!hasData) continue;
-
-    if (!number) {
-      throw new Error(
-        "Please enter Number in row " + (index + 1) + "."
-      );
-    }
-
-    if (!dText && !rText) {
-      throw new Error(
-        "Please enter a D or R amount in row " + (index + 1) + "."
-      );
-    }
-
-    if (
-      (dText && (!Number.isFinite(Number(dText)) || Number(dText) < 0)) ||
-      (rText && (!Number.isFinite(Number(rText)) || Number(rText) < 0))
-    ) {
-      throw new Error(
-        "Invalid D or R amount in row " + (index + 1) + "."
-      );
-    }
-
-    selections.push({
-      number,
-      d,
-      r
-    });
+  if(row.straight>0){
+   item+="D"+formatPoints(row.straight);
   }
 
-  if (!selections.length) {
-    throw new Error("Please enter at least one selection.");
+  if(row.rumble>0){
+   item+="R"+formatPoints(row.rumble);
   }
 
-  return selections;
+  return item;
+
+ }).join(",");
 }
 
 /* =========================================
-   PLACE DEMO BET
+   SUBMIT BET
 
-   Correct backend route:
    POST /api/demo/bets
 
-   Backend accepts:
-   {
-     game_name,
-     selection,
-     amount
-   }
+   Server handles:
+   - Draw cutoff validation
+   - Balance validation
+   - Balance deduction
+   - PostgreSQL insertion
+   - Wallet transaction
+
+   IMPORTANT:
+   This page sends ONE API request.
 ========================================= */
 
-async function placeDemoBet() {
-  if (isSubmitting) return;
+async function submitBet(){
 
-  hideMessage();
+ if(submitting)return;
 
-  let selections;
+ clearMessage();
 
-  try {
-    selections = collectSelections();
-  } catch (error) {
-    showMessage(error.message, "error");
-    return;
+ if(!authenticated){
+  redirectToLogin();
+  return;
+ }
+
+ updateBettingStatus();
+
+ if(isBetLocked){
+
+  showMessage(
+   "Betting is closed. Please check the next draw schedule.",
+   "error"
+  );
+
+  return;
+ }
+
+ const rows=getRows();
+
+ if(!validateRows(rows))return;
+
+ const amounts=calculate();
+
+ if(
+  amounts.total<=0||
+  amounts.finalAmount<=0
+ ){
+
+  showMessage(
+   "Please enter a valid amount greater than zero.",
+   "error"
+  );
+
+  return;
+ }
+
+ const selection=makeSelection(rows);
+
+ if(selection.length>MAX_SELECTION_LENGTH){
+
+  showMessage(
+   "Your selection is too long for the current server API. Please submit fewer rows.",
+   "error"
+  );
+
+  return;
+ }
+
+ if(amounts.finalAmount>wallet){
+
+  showMessage(
+   "Insufficient demo points. Current balance: "+
+   formatPoints(wallet),
+   "error"
+  );
+
+  return;
+ }
+
+ const confirmed=confirm(
+  "Confirm your Single demo entry?\n\n"+
+  "Numbers: "+rows.length+
+  "\nTotal Amount: "+formatPoints(amounts.finalAmount)+
+  " Points\n\n"+
+  "The server will verify and deduct points from your demo wallet."
+ );
+
+ if(!confirmed)return;
+
+ submitting=true;
+ applyControls();
+
+ try{
+
+  /*
+   * Refresh authoritative server data.
+   */
+
+  await loadWallet();
+
+  await loadDrawSettings();
+
+  if(isBetLocked){
+
+   throw new Error(
+    "Betting has closed. Please try the next draw."
+   );
   }
 
-  const amounts = calculateTotal();
-  const amount = Number(amounts.finalAmount.toFixed(2));
+  if(amounts.finalAmount>wallet){
 
-  if (!Number.isFinite(amount) || amount <= 0) {
-    showMessage("Bet Amount must be greater than 0.", "error");
-    return;
-  }
-
-  if (amount > currentBalance) {
-    showMessage("Insufficient demo balance.", "error");
-    return;
-  }
-
-  const token = getToken();
-
-  if (!token) {
-    showMessage("Please log in before placing a demo bet.", "error");
-    return;
+   throw new Error(
+    "Insufficient demo points. Current balance: "+
+    formatPoints(wallet)
+   );
   }
 
   /*
-    The current backend has one selection field
-    with a maximum length of 100 characters.
+   * One request for the complete selection.
+   * Do not submit each row separately.
+   */
 
-    Therefore each row is submitted as a separate
-    demo bet. Total amount is divided proportionally
-    by each row's D + R amount.
-  */
+  const response=await apiRequest("/demo/bets",{
+   method:"POST",
 
-  const rowAmounts = selections.map(item => item.d + item.r);
-  const total = rowAmounts.reduce((sum, value) => sum + value, 0);
-
-  if (total <= 0) {
-    showMessage("Enter a valid D or R amount.", "error");
-    return;
-  }
-
-  const payloads = selections.map((item, index) => {
-    const selection = [
-      "Number=" + item.number,
-      "D=" + item.d,
-      "R=" + item.r
-    ].join(", ");
-
-    const rowAmount = Number(
-      (amount * rowAmounts[index] / total).toFixed(2)
-    );
-
-    return {
-      game_name: "Single",
-      selection,
-      amount: rowAmount
-    };
+   body:{
+    game_name:"Single",
+    selection:selection,
+    amount:amounts.finalAmount
+   }
   });
 
-  // Correct rounding difference on the final row.
-  const allocated = payloads.reduce(
-    (sum, item) => sum + item.amount,
-    0
+  /*
+   * Reload authoritative wallet balance.
+   */
+
+  await loadWallet();
+
+  const bet=response.bet||{};
+
+  showMessage(
+   "Single entry submitted successfully!\n"+
+   "Bet ID: "+(bet.id??"Confirmed")+"\n"+
+   "Numbers: "+rows.length+"\n"+
+   "Bet Amount: "+formatPoints(amounts.finalAmount)+" Points\n"+
+   "Remaining Points: "+formatPoints(wallet),
+   "success"
   );
 
-  const difference = Number((amount - allocated).toFixed(2));
+  resetRows();
 
-  payloads[payloads.length - 1].amount = Number(
-    (payloads[payloads.length - 1].amount + difference).toFixed(2)
+  await loadDrawSettings();
+
+ }catch(error){
+
+  console.error("Single bet submission error:",error);
+
+  showMessage(
+   error.message||"Could not submit your Single entry.",
+   "error"
   );
 
-  isSubmitting = true;
-  placeBetButton.disabled = true;
-  placeBetButton.textContent = "PLEASE WAIT...";
+  if(error.status===401){
 
-  try {
-    /*
-      Submit sequentially to avoid duplicate simultaneous
-      balance updates. The server checks the draw cutoff
-      and balance for every request.
-    */
+   authenticated=false;
+   redirectToLogin();
 
-    let completed = 0;
-
-    for (const payload of payloads) {
-      await apiRequest("/demo/bets", {
-        method: "POST",
-        body: JSON.stringify(payload)
-      });
-
-      completed++;
-    }
-
-    await loadWallet();
-
-    showMessage(
-      completed + " bet(s) placed successfully. Total: " +
-      amount.toFixed(2) + " Points.",
-      "success"
-    );
-
-    // Clear all rows after successful submission.
-    rowsContainer.innerHTML = "";
-
-    for (let i = 1; i <= INITIAL_ROWS; i++) {
-      rowsContainer.appendChild(createRow(i));
-    }
-
-    renumberRows();
-    calculateTotal();
-
-  } catch (error) {
-    /*
-      Note: If a later row fails, earlier rows may already
-      have been accepted by the existing backend.
-    */
-    await loadWallet();
-
-    showMessage(
-      "Bet submission failed: " + error.message,
-      "error"
-    );
-
-  } finally {
-    isSubmitting = false;
-    placeBetButton.disabled = false;
-    placeBetButton.textContent = "PLACE BET";
+   return;
   }
+
+  /*
+   * Refresh wallet and schedule after failure.
+   */
+
+  try{
+
+   await loadWallet();
+
+  }catch(walletError){
+
+   console.warn(
+    "Wallet refresh error:",
+    walletError
+   );
+  }
+
+  try{
+
+   await loadDrawSettings();
+
+  }catch(settingsError){
+
+   console.warn(
+    "Settings refresh error:",
+    settingsError
+   );
+  }
+
+ }finally{
+
+  submitting=false;
+  updateBettingStatus();
+ }
+}
+
+placeButton.addEventListener("click",submitBet);
+
+/* =========================================
+   LOAD PAGE DATA
+========================================= */
+
+async function refreshPageData(){
+
+ if(refreshBusy)return;
+
+ refreshBusy=true;
+
+ try{
+
+  await loadCurrentUser();
+
+  const results=await Promise.allSettled([
+   loadWallet(),
+   loadDrawSettings()
+  ]);
+
+  const walletResult=results[0];
+  const settingsResult=results[1];
+
+  if(walletResult.status==="rejected"){
+   throw walletResult.reason;
+  }
+
+  if(settingsResult.status==="rejected"){
+
+   settingsLoaded=false;
+   serverBettingLocked=true;
+   drawSchedule=null;
+
+   updateBettingStatus();
+
+   throw settingsResult.reason;
+  }
+
+  loadDiscount();
+
+  clearMessage();
+
+ }finally{
+
+  refreshBusy=false;
+ }
 }
 
 /* =========================================
-   INITIALIZE PAGE
+   INITIALIZATION
 ========================================= */
 
-addButton.addEventListener("click", addRow);
+async function initialize(){
 
-placeBetButton.addEventListener("click", placeDemoBet);
+ placeButton.disabled=true;
+ placeButton.textContent="LOADING...";
 
-async function initializePage() {
-  for (let i = 1; i <= INITIAL_ROWS; i++) {
-    rowsContainer.appendChild(createRow(i));
+ resetRows();
+
+ try{
+
+  await refreshPageData();
+
+  updateBettingStatus();
+
+  if(!countdownTimer){
+
+   countdownTimer=setInterval(()=>{
+
+    updateBettingStatus();
+
+   },1000);
   }
 
-  calculateTotal();
+ }catch(error){
 
-  const loggedIn = await verifyLogin();
+  console.error("Single initialization error:",error);
 
-  if (loggedIn) {
-    await loadWallet();
+  settingsLoaded=false;
+  serverBettingLocked=true;
+  drawSchedule=null;
+
+  updateBettingStatus();
+
+  showMessage(
+   error.message||"Unable to load Single page.",
+   "error"
+  );
+
+  if(error.status===401){
+   redirectToLogin();
   }
+ }
 }
 
-initializePage();
+/* =========================================
+   PAGE EVENTS
+========================================= */
+
+document.getElementById("backHome").addEventListener(
+ "click",
+ ()=>{
+  location.href="home.html";
+ }
+);
+
+window.addEventListener("focus",async()=>{
+
+ if(!submitting){
+
+  try{
+
+   await refreshPageData();
+
+  }catch(error){
+
+   console.warn(
+    "Page refresh error:",
+    error
+   );
+  }
+ }
+});
+
+window.addEventListener("pageshow",async()=>{
+
+ if(!submitting){
+
+  try{
+
+   await refreshPageData();
+
+  }catch(error){
+
+   console.warn(
+    "Page restore error:",
+    error
+   );
+  }
+ }
+});
+
+/* START */
+
+initialize();
 
 </script>
 
