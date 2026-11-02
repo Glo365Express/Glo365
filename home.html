@@ -70,11 +70,12 @@ header{background:linear-gradient(120deg,#0755a5,#1688df,#45b5f5);padding:13px 1
  flex-direction:column;
  align-items:center;
  justify-content:center;
- gap:7px;
+ gap:5px;
  min-width:0;
  cursor:default;
  user-select:none;
 }
+
 .millionaire-title{
  color:#075da8;
  font-size:clamp(11px,3.2vw,15px);
@@ -82,6 +83,7 @@ header{background:linear-gradient(120deg,#0755a5,#1688df,#45b5f5);padding:13px 1
  letter-spacing:.3px;
  white-space:nowrap;
 }
+
 .millionaire-clock{
  width:100%;
  display:flex;
@@ -89,6 +91,7 @@ header{background:linear-gradient(120deg,#0755a5,#1688df,#45b5f5);padding:13px 1
  justify-content:center;
  gap:4px;
 }
+
 .millionaire-unit{
  display:flex;
  flex-direction:column;
@@ -97,30 +100,26 @@ header{background:linear-gradient(120deg,#0755a5,#1688df,#45b5f5);padding:13px 1
  min-width:0;
  background:#1688df;
  color:#fff;
- border-radius:13px;
- padding:7px 3px;
- box-shadow:inset -5px 0 0 #0874c5;
+ border-radius:11px;
+ padding:5px 2px;
+ box-shadow:inset -4px 0 0 #0874c5;
 }
-.millionaire-unit.hours{flex:1.2}
+
+.millionaire-unit.hours{flex:1.25}
 .millionaire-unit.minutes{flex:1}
-.millionaire-unit.seconds{flex:.82}
+.millionaire-unit.seconds{flex:.75}
+
 .millionaire-unit strong{
- font-size:clamp(18px,5vw,29px);
- line-height:1.15;
+ font-size:clamp(16px,4.5vw,25px);
+ line-height:1.1;
  font-weight:500;
  font-variant-numeric:tabular-nums;
 }
+
 .millionaire-unit span{
- font-size:clamp(9px,2.5vw,12px);
- margin-top:4px;
+ font-size:clamp(8px,2.2vw,11px);
+ margin-top:3px;
  font-weight:700;
-}
-.millionaire-status{
- color:#0874c5;
- font-size:clamp(9px,2.7vw,12px);
- font-weight:900;
- text-align:center;
- white-space:nowrap;
 }
 
 /* GAME CARDS */
@@ -224,21 +223,26 @@ nav button.active{color:#087acb}
  .notice-wrap{margin-left:8px;margin-right:8px}
  .notice-track span{font-size:12px;padding:11px 20px}
  .millionaire-clock{gap:3px}
- .millionaire-unit{padding:7px 2px;border-radius:11px}
- .millionaire-unit strong{font-size:clamp(16px,5vw,23px)}
- .millionaire-unit span{font-size:9px}
+ .millionaire-unit{padding:5px 2px;border-radius:10px}
+ .millionaire-unit strong{font-size:clamp(15px,4.5vw,21px)}
+ .millionaire-unit span{font-size:8px}
  .millionaire-title{font-size:10px}
- .millionaire-status{font-size:9px}
 }
 @media(max-width:340px){
  .draw-board{grid-template-columns:1fr .75fr 1.2fr}
  .official-label{font-size:14px}
  .result-number{font-size:12px}
  .live-event{font-size:10px}
- .millionaire-unit strong{font-size:15px}
- .millionaire-unit span{font-size:8px}
+ .millionaire-unit strong{font-size:14px}
+ .millionaire-unit span{font-size:7px}
  .millionaire-title{font-size:9px}
- .millionaire-status{font-size:8px}
+}
+
+/* SMALL SCREEN COUNTDOWN WIDTH ORDER */
+@media(max-width:340px){
+ .millionaire-unit.hours{flex:1.25}
+ .millionaire-unit.minutes{flex:1}
+ .millionaire-unit.seconds{flex:.75}
 }
 </style>
 </head>
@@ -326,21 +330,23 @@ nav button.active{color:#087acb}
  <!-- DAILY MILLIONAIRE: COUNTDOWN ONLY, NOT CLICKABLE -->
  <div class="next-date" id="dailyMillionaireInfo" role="status" aria-live="polite" aria-label="Daily Millionaire countdown">
   <div class="millionaire-title">💎 DAILY MILLIONAIRE</div>
+
   <div class="millionaire-clock">
    <div class="millionaire-unit hours">
     <strong id="millionaireHours">--</strong>
     <span>HR</span>
    </div>
+
    <div class="millionaire-unit minutes">
     <strong id="millionaireMinutes">--</strong>
     <span>MIN</span>
    </div>
+
    <div class="millionaire-unit seconds">
     <strong id="millionaireSeconds">--</strong>
     <span>SEC</span>
    </div>
   </div>
-  <div class="millionaire-status">NEXT DRAW SCHEDULED</div>
  </div>
 </div>
 
@@ -496,10 +502,12 @@ function setText(id,value){
  const element=document.getElementById(id);
  if(element)element.textContent=value;
 }
+
 function formatPoints(value){
  const number=Number(value||0);
  return Number.isFinite(number)?number.toLocaleString("en-US"):"0";
 }
+
 function getCurrentPoints(){
  if(currentWallet&&currentWallet.balance!==undefined)return Number(currentWallet.balance)||0;
  if(currentUser&&currentUser.balance!==undefined)return Number(currentUser.balance)||0;
@@ -516,17 +524,21 @@ function updatePointsVisibility(){
  button.setAttribute("aria-label",pointsVisible?"Hide points":"Show points");
  setText("modalPoints",pointsVisible?formatPoints(getCurrentPoints()):"••••••");
 }
+
 function togglePointsVisibility(){
  pointsVisible=!pointsVisible;
  updatePointsVisibility();
  renderPointHistory();
 }
+
 function updateBalance(){updatePointsVisibility()}
+
 async function openPoints(){
  if(!currentUser){alert("Please log in to your account.");location.href="login.html";return}
  renderPointHistory();
  document.getElementById("pointsModal").classList.add("show");
 }
+
 function closePoints(){document.getElementById("pointsModal").classList.remove("show")}
 
 /* PROFILE AVATAR */
@@ -538,6 +550,7 @@ function safeImageUrl(value){
   return url.href;
  }catch(error){return ""}
 }
+
 function renderProfileAvatar(){
  const avatar=safeImageUrl((currentProfile&&currentProfile.avatar)||(currentUser&&currentUser.avatar)||"");
  const element=document.getElementById("navProfileAvatar");
@@ -566,6 +579,7 @@ async function loadCurrentUser(){
  }
  return currentUser;
 }
+
 async function logoutAndRedirect(){
  try{await apiRequest("/auth/logout",{method:"POST"})}
  catch(error){console.warn("Server logout request failed:",error)}
@@ -579,11 +593,13 @@ async function loadWallet(){
  const data=await apiRequest("/wallet");
  if(data.success){currentWallet=data;updateBalance()}
 }
+
 async function loadTransactions(){
  const data=await apiRequest("/wallet/transactions");
  currentTransactions=Array.isArray(data.transactions)?data.transactions:[];
  renderPointHistory();
 }
+
 function renderPointHistory(){
  const container=document.getElementById("myPointHistory");
  if(!container)return;
@@ -624,12 +640,14 @@ function parseDrawDate(value){
  const date=new Date(value);
  return Number.isNaN(date.getTime())?null:date;
 }
+
 async function loadDrawSettings(){
  const data=await apiRequest("/public/draw-settings");
  if(!data.success)throw new Error("Unable to load draw schedule.");
  currentDrawSettings=data.drawSettings||data.settings||null;
  updateCountdown();
 }
+
 function updateCountdown(){
  const settings=currentDrawSettings||{};
  const drawNumber=String(settings.draw_number||"").trim();
@@ -657,6 +675,7 @@ function parseResultObject(value){
  if(typeof value==="string"){try{return JSON.parse(value)}catch(error){return value}}
  return value;
 }
+
 function findResultValue(object,keys){
  if(!object||typeof object!=="object")return "--";
  for(const key of keys){
@@ -668,6 +687,7 @@ function findResultValue(object,keys){
  }
  return "--";
 }
+
 function extractPrizeNumbers(row){
  const result=parseResultObject(row&&row.result!==undefined?row.result:row);
  const nested=result&&typeof result==="object"?(result.numbers||result.prizes||result.winners||result):result;
@@ -678,11 +698,13 @@ function extractPrizeNumbers(row){
  if(nested&&typeof nested==="object")return[findResultValue(nested,firstKeys),findResultValue(nested,lastTwoKeys),findResultValue(nested,frontThreeKeys)];
  return[nested??"--","--","--"];
 }
+
 async function loadResults(){
  const data=await apiRequest("/results");
  currentResults=Array.isArray(data.results)?data.results:[];
  updateResults();
 }
+
 function updateResults(){
  const ids=["resultFirst","resultSecond","resultThird"];
  if(!currentResults.length){ids.forEach(id=>setText(id,"--"));return}
@@ -692,7 +714,9 @@ function updateResults(){
 
 /* DAILY MILLIONAIRE COUNTDOWN
    Fixed daily draw: 12:15 AM Bangladesh time.
-   The display uses three separate cards. No result is shown here.
+   Three separate cards, ordered by width:
+   HR > MIN > SEC.
+   No next-draw text is displayed.
 */
 const MILLIONAIRE_TIME_ZONE="Asia/Dhaka";
 const MILLIONAIRE_DRAW_HOUR=0;
@@ -701,29 +725,50 @@ const BANGLADESH_UTC_OFFSET_MINUTES=360;
 
 function getBangladeshDateParts(date=new Date()){
  const parts=new Intl.DateTimeFormat("en-GB",{
-  timeZone:MILLIONAIRE_TIME_ZONE,year:"numeric",month:"2-digit",day:"2-digit"
+  timeZone:MILLIONAIRE_TIME_ZONE,
+  year:"numeric",
+  month:"2-digit",
+  day:"2-digit"
  }).formatToParts(date);
+
  const values={};
  parts.forEach(part=>{values[part.type]=part.value});
- return{year:Number(values.year),month:Number(values.month),day:Number(values.day)};
+
+ return{
+  year:Number(values.year),
+  month:Number(values.month),
+  day:Number(values.day)
+ };
 }
+
 function getNextMillionaireDraw(){
  const now=new Date();
  const bd=getBangladeshDateParts(now);
+
  let targetUtc=Date.UTC(
-  bd.year,bd.month-1,bd.day,
-  MILLIONAIRE_DRAW_HOUR,MILLIONAIRE_DRAW_MINUTE
+  bd.year,
+  bd.month-1,
+  bd.day,
+  MILLIONAIRE_DRAW_HOUR,
+  MILLIONAIRE_DRAW_MINUTE
  )-(BANGLADESH_UTC_OFFSET_MINUTES*60*1000);
- if(targetUtc<=now.getTime())targetUtc+=24*60*60*1000;
+
+ if(targetUtc<=now.getTime()){
+  targetUtc+=24*60*60*1000;
+ }
+
  return targetUtc;
 }
+
 function updateMillionaireCountdown(){
  const target=getNextMillionaireDraw();
  const remaining=Math.max(0,target-Date.now());
  const totalSeconds=Math.floor(remaining/1000);
+
  const hours=Math.floor(totalSeconds/3600);
  const minutes=Math.floor((totalSeconds%3600)/60);
  const seconds=totalSeconds%60;
+
  setText("millionaireHours",String(hours).padStart(2,"0"));
  setText("millionaireMinutes",String(minutes).padStart(2,"0"));
  setText("millionaireSeconds",String(seconds).padStart(2,"0"));
@@ -740,11 +785,13 @@ function getNoticeText(data){
  if(typeof data==="object")return String(data.text||data.message||data.content||data.notice||"").trim();
  return "";
 }
+
 async function loadAdminMessage(){
  const data=await apiRequest("/public/admin-message");
  currentAdminMessage=data.message||null;
  renderHomeMessages();
 }
+
 function renderHomeMessages(){
  const wrap=document.getElementById("noticeWrap");
  const track=document.getElementById("noticeTrack");
@@ -763,19 +810,28 @@ async function loadLiveEvent(){
  const data=await apiRequest("/public/live-event");
  currentLiveEvent=data.event||null;
 }
+
 function showLiveMessage(title,message,icon){
- setText("liveMessageTitle",title);setText("liveMessageText",message);setText("liveMessageIcon",icon||"🔴");
+ setText("liveMessageTitle",title);
+ setText("liveMessageText",message);
+ setText("liveMessageIcon",icon||"🔴");
  document.getElementById("liveMessageModal").classList.add("show");
 }
-function closeLiveMessage(){document.getElementById("liveMessageModal").classList.remove("show")}
+
+function closeLiveMessage(){
+ document.getElementById("liveMessageModal").classList.remove("show");
+}
+
 document.getElementById("liveMessageModal").addEventListener("click",function(event){
  if(event.target===this)closeLiveMessage();
 });
+
 function getVideoEmbed(url){
  try{
   const parsed=new URL(url);
   if(parsed.protocol!=="https:")return null;
   const host=parsed.hostname.toLowerCase();
+
   if(["youtube.com","www.youtube.com","m.youtube.com","youtu.be","www.youtu.be"].includes(host)){
    let id="";
    if(host.includes("youtu.be"))id=parsed.pathname.split("/").filter(Boolean)[0]||"";
@@ -787,35 +843,51 @@ function getVideoEmbed(url){
    if(!/^[a-zA-Z0-9_-]{6,20}$/.test(id))return null;
    return{embed:"https://www.youtube-nocookie.com/embed/"+id+"?autoplay=1&playsinline=1&rel=0"};
   }
+
   if(["facebook.com","www.facebook.com","m.facebook.com","fb.watch"].includes(host)){
    return{embed:"https://www.facebook.com/plugins/video.php?href="+encodeURIComponent(parsed.href)+"&show_text=false&width=500"};
   }
+
   return null;
  }catch(error){return null}
 }
+
 function openLiveEvent(){
  const event=currentLiveEvent;
+
  if(!event||event.active!==true||!event.url){
-  showLiveMessage("Live Event is currently closed","You can watch the next live event here.","🔴");return;
+  showLiveMessage("Live Event is currently closed","You can watch the next live event here.","🔴");
+  return;
  }
+
  const video=getVideoEmbed(event.url);
+
  if(!video){
-  showLiveMessage("Invalid video link","Admin has not configured a valid YouTube or Facebook video link.","⚠️");return;
+  showLiveMessage("Invalid video link","Admin has not configured a valid YouTube or Facebook video link.","⚠️");
+  return;
  }
+
  setText("liveTitle","🔴 "+(event.title||"GLO 365 Live Event"));
+
  const player=document.getElementById("livePlayer");
  player.replaceChildren();
+
  const iframe=document.createElement("iframe");
- iframe.src=video.embed;iframe.title="GLO 365 Live Event";
+ iframe.src=video.embed;
+ iframe.title="GLO 365 Live Event";
  iframe.allow="autoplay; encrypted-media; picture-in-picture; fullscreen";
- iframe.allowFullscreen=true;iframe.referrerPolicy="strict-origin-when-cross-origin";
+ iframe.allowFullscreen=true;
+ iframe.referrerPolicy="strict-origin-when-cross-origin";
+
  player.appendChild(iframe);
  document.getElementById("liveModal").classList.add("show");
 }
+
 function closeLiveModal(){
  document.getElementById("livePlayer").replaceChildren();
  document.getElementById("liveModal").classList.remove("show");
 }
+
 document.getElementById("liveModal").addEventListener("click",function(event){
  if(event.target===this)closeLiveModal();
 });
@@ -824,40 +896,79 @@ document.getElementById("liveModal").addEventListener("click",function(event){
 async function loadHome(){
  if(homeLoading)return;
  homeLoading=true;
+
  try{
   await loadCurrentUser();
+
   const tasks=[
-   loadWallet(),loadProfile(),loadTransactions(),loadDrawSettings(),
-   loadResults(),loadAdminMessage(),loadLiveEvent()
+   loadWallet(),
+   loadProfile(),
+   loadTransactions(),
+   loadDrawSettings(),
+   loadResults(),
+   loadAdminMessage(),
+   loadLiveEvent()
   ];
+
   const results=await Promise.allSettled(tasks);
+
   results.forEach((result,index)=>{
-   if(result.status==="rejected")console.error("Home data request "+index+" failed:",result.reason);
+   if(result.status==="rejected"){
+    console.error("Home data request "+index+" failed:",result.reason);
+   }
   });
-  updateBalance();renderProfileAvatar();renderPointHistory();updateCountdown();updateResults();
+
+  updateBalance();
+  renderProfileAvatar();
+  renderPointHistory();
+  updateCountdown();
+  updateResults();
+
   homeLoaded=true;
+
  }catch(error){
   console.error("Home initialization failed:",error);
-  if(error.status===401){await logoutAndRedirect();return}
+
+  if(error.status===401){
+   await logoutAndRedirect();
+   return;
+  }
+
   if(error.status===403){
    alert("Access denied. Please contact the administrator.");
-   await logoutAndRedirect();return;
+   await logoutAndRedirect();
+   return;
   }
+
   if(!currentUser){
    setText("balance","Login Required");
    setText("drawScheduleStatus","Unable to connect. Please refresh.");
   }
- }finally{homeLoading=false}
+
+ }finally{
+  homeLoading=false;
+ }
 }
 
 /* REFRESH PUBLIC DATA */
 async function refreshPublicData(){
  if(refreshRunning||!currentUser||document.hidden)return;
+
  refreshRunning=true;
+
  try{
-  const tasks=[loadDrawSettings(),loadResults(),loadAdminMessage(),loadLiveEvent()];
+  const tasks=[
+   loadDrawSettings(),
+   loadResults(),
+   loadAdminMessage(),
+   loadLiveEvent()
+  ];
+
   await Promise.allSettled(tasks);
- }finally{refreshRunning=false}
+
+ }finally{
+  refreshRunning=false;
+ }
 }
 
 /* PAGE EVENTS */
@@ -867,20 +978,30 @@ document.addEventListener("visibilitychange",()=>{
   updateMillionaireCountdown();
  }
 });
+
 window.addEventListener("focus",()=>{
  if(homeLoaded)refreshPublicData();
  updateMillionaireCountdown();
 });
+
 document.addEventListener("keydown",event=>{
- if(event.key==="Escape"){closePoints();closeLiveModal();closeLiveMessage()}
+ if(event.key==="Escape"){
+  closePoints();
+  closeLiveModal();
+  closeLiveMessage();
+ }
 });
 
 /* START */
 pointsVisible=true;
+
 loadHome();
+
 countdownTimer=setInterval(updateCountdown,1000);
+
 updateMillionaireCountdown();
 millionaireCountdownTimer=setInterval(updateMillionaireCountdown,1000);
+
 publicRefreshTimer=setInterval(()=>{
  if(homeLoaded&&!document.hidden)refreshPublicData();
 },60000);
