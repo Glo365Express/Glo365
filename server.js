@@ -2644,22 +2644,142 @@
 
     app.post("/api/admin/withdrawals/:id/approve", authenticateToken, requireAdmin, asyncRoute(async (req, res) => {
       const id = Number(req.params.id);
-      if (!Number.isSafeInteger(id) || id < 1) return sendError(res,400,"Invalid withdrawal request ID.");
+
+      if (!Number.isSafeInteger(id) || id < 1) {
+        return sendError(res, 400, "Invalid withdrawal request ID.");
+      }
+
       const client = await pool.connect();
+
       try {
         await client.query("BEGIN");
-        const found = await client.query("SELECT * FROM withdrawal_requests WHERE id=$1 FOR UPDATE",[id]);
-        if (!found.rows.length) { await client.query("ROLLBACK"); return sendError(res,404,"Withdrawal request not found."); }
-        if (found.rows[0].status !== "pending") { await client.query("ROLLBACK"); return sendError(res,409,"This request has already been reviewed."); }
-        const updated = await client.query(
-          `UPDATE withdrawal_requests SET status='approved',reviewed_by=$1,reviewed_at=NOW()
-           WHERE id=$2 AND status='pending' RETURNING *`,[req.user.id,id]
+
+        // Lock the request first so concurrent approvals cannot debit twice.
+        const found = await client.query(
+          `SELECT *
+           FROM withdrawal_requests
+           WHERE id = $1
+           FOR UPDATE`,
+          [id]
         );
+
+        if (!found.rows.length) {
+          await client.query("ROLLBACK");
+          return sendError(res, 404, "Withdrawal request not found.");
+        }
+
+        const request = found.rows[0];
+
+        if (request.status !== "pending") {
+          await client.query("ROLLBACK");
+          return sendError(res, 409, "This request has already been reviewed.");
+        }
+
+        const amount = Number(request.amount);
+
+        if (
+          !Number.isFinite(amount) ||
+          amount <= 0 ||
+          Math.round(amount * 100) !== amount * 100
+        ) {
+          await client.query("ROLLBACK");
+          return sendError(res, 400, "The withdrawal amount is invalid.");
+        }
+
+        // Lock the wallet row and ensure the reserved points still exist.
+        const walletResult = await client.query(
+          `SELECT balance, status
+           FROM users
+           WHERE id = $1
+           FOR UPDATE`,
+          [request.user_id]
+        );
+
+        if (!walletResult.rows.length) {
+          await client.query("ROLLBACK");
+          return sendError(res, 404, "Withdrawal user's account was not found.");
+        }
+
+        if (String(walletResult.rows[0].status || "active").toLowerCase() !== "active") {
+          await client.query("ROLLBACK");
+          return sendError(res, 403, "The user's account is not active.");
+        }
+
+        const currentBalance = Number(walletResult.rows[0].balance || 0);
+
+        if (!Number.isFinite(currentBalance) || currentBalance < amount) {
+          await client.query("ROLLBACK");
+          return sendError(
+            res,
+            409,
+            "Insufficient DEMO points in the wallet. The pending withdrawal remains unchanged."
+          );
+        }
+
+        const newBalance = Number((currentBalance - amount).toFixed(2));
+
+        // Deduct points and write the wallet ledger entry in this same transaction.
+        await client.query(
+          `UPDATE users
+           SET balance = $1,
+               updated_at = NOW()
+           WHERE id = $2`,
+          [newBalance.toFixed(2), request.user_id]
+        );
+
+        await client.query(
+          `INSERT INTO wallet_transactions
+           (user_id, type, amount, currency, description, reference)
+           VALUES ($1, 'withdrawal_debit', $2, 'DEMO', $3, $4)`,
+          [
+            request.user_id,
+            (-amount).toFixed(2),
+            "Admin-approved demo withdrawal",
+            "WD-" + id
+          ]
+        );
+
+        const updated = await client.query(
+          `UPDATE withdrawal_requests
+           SET status = 'approved',
+               reviewed_by = $1,
+               reviewed_at = NOW()
+           WHERE id = $2
+             AND status = 'pending'
+           RETURNING *`,
+          [req.user.id, id]
+        );
+
+        if (!updated.rows.length) {
+          throw new Error("Withdrawal approval state changed unexpectedly.");
+        }
+
         await client.query("COMMIT");
-        await audit(req.user.id,"withdrawal_approved",found.rows[0].user_id,{withdrawal_id:id,amount:found.rows[0].amount});
-        res.json({success:true,request:updated.rows[0],message:"Approved in demo system. No real payment was sent."});
-      } catch(error) { await client.query("ROLLBACK"); throw error; }
-      finally { client.release(); }
+
+        await audit(
+          req.user.id,
+          "withdrawal_approved",
+          request.user_id,
+          {
+            withdrawal_id: id,
+            amount,
+            new_balance: newBalance
+          }
+        );
+
+        res.json({
+          success: true,
+          request: updated.rows[0],
+          new_balance: newBalance,
+          message: "Approved successfully. DEMO points were deducted from the wallet. No real payment was sent."
+        });
+
+      } catch (error) {
+        await client.query("ROLLBACK");
+        throw error;
+      } finally {
+        client.release();
+      }
     }));
 
     app.post("/api/admin/withdrawals/:id/reject", authenticateToken, requireAdmin, asyncRoute(async (req, res) => {
@@ -3780,75 +3900,4 @@
 
     app.get("/api/admin/support/conversations", authenticateToken, requireAdmin, asyncRoute(async (req, res) => {
       const result = await pool.query(
-        `SELECT c.id, c.user_id, u.username, u.email, c.created_at, c.updated_at,
-                (SELECT m.message FROM support_messages m
-                 WHERE m.conversation_id = c.id
-                 ORDER BY m.created_at DESC, m.id DESC LIMIT 1) AS last_message,
-                (SELECT m.sender_role FROM support_messages m
-                 WHERE m.conversation_id = c.id
-                 ORDER BY m.created_at DESC, m.id DESC LIMIT 1) AS last_sender_role
-         FROM support_conversations c
-         JOIN users u ON u.id = c.user_id
-         ORDER BY c.updated_at DESC, c.id DESC`
-      );
-      return res.json({ success: true, conversations: result.rows });
-    }));
-
-    app.use((req, res) => {
-      res.status(404).json({
-        success: false,
-        message: "API endpoint not found."
-      });
-    });
-
-    // ==========================================
-    // GLOBAL ERROR HANDLER
-    // ==========================================
-
-    app.use((error, req, res, next) => {
-      console.error("Server error:", error.message);
-
-      if (error.type === "entity.parse.failed") {
-        return sendError(res, 400, "Invalid JSON request.");
-      }
-
-      if (error.message === "Origin not allowed.") {
-        return sendError(res, 403, "Origin not allowed.");
-      }
-
-      if (error.code === "23505") {
-        return sendError(res, 409, "A record with this information already exists.");
-      }
-
-      res.status(500).json({
-        success: false,
-        message: "Internal server error."
-      });
-    });
-
-    // ==========================================
-    // START SERVER
-    // ==========================================
-
-    async function startServer() {
-      try {
-        await initializeDatabase();
-
-        await bootstrapAdmin();
-
-        await installPrimaryAdminProtection();
-
-        app.listen(PORT, "0.0.0.0", () => {
-          console.log(
-            "GLO 365 API v2.6.0 running on port " + PORT
-          );
-          console.log("Primary Admin username: adminglo365");
-        });
-
-      } catch (error) {
-        console.error("Server startup failed:", error.message);
-        process.exit(1);
-      }
-    }
-
-    startServer();
+        
