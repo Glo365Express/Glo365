@@ -2,1683 +2,676 @@
 <!DOCTYPE html>
 <html lang="bn">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
-    <meta name="theme-color" content="#2196e8">
-
-    <title>GLO 365 - Deposit</title>
-
-    <style>
-        * {
-            box-sizing: border-box;
-            margin: 0;
-            padding: 0;
-        }
-
-        body {
-            font-family: Arial, sans-serif;
-            background: #f0f7fd;
-            color: #18334d;
-            min-height: 100vh;
-            padding-bottom: 30px;
-        }
-
-        .app {
-            max-width: 520px;
-            min-height: 100vh;
-            margin: auto;
-            background: #fff;
-            padding-bottom: 25px;
-            overflow: hidden;
-            box-shadow: 0 0 25px #163c5c0b;
-        }
-
-        header {
-            background: linear-gradient(120deg, #1687d5, #2196e8);
-            padding: 19px 16px;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            border-bottom: 1px solid #ffffff25;
-        }
-
-        .logo {
-            font-size: 26px;
-            font-weight: 900;
-            color: #fff;
-        }
-
-        .logo span {
-            color: #d9f0ff;
-        }
-
-        .balance {
-            background: #ffffff20;
-            border: 1px solid #ffffff45;
-            padding: 10px 13px;
-            border-radius: 25px;
-            font-size: 12px;
-            font-weight: bold;
-            color: #fff;
-        }
-
-        .page-heading {
-            padding: 24px 18px 17px;
-        }
-
-        .page-heading h2 {
-            font-size: 25px;
-            font-weight: 900;
-            color: #167fc4;
-        }
-
-        .page-heading p {
-            font-size: 12px;
-            color: #71869a;
-            margin-top: 7px;
-        }
-
-        /* WALLET CARD */
-
-        .wallet-card {
-            margin: 0 14px 18px;
-            padding: 22px 19px;
-            border-radius: 17px;
-            background: linear-gradient(130deg, #1687d5, #2196e8);
-            border: 1px solid #d5edff;
-            box-shadow: 0 8px 20px #1687d526;
-            position: relative;
-            overflow: hidden;
-            color: #fff;
-        }
-
-        .wallet-card:after {
-            content: "";
-            position: absolute;
-            width: 150px;
-            height: 150px;
-            right: -55px;
-            top: -65px;
-            border-radius: 50%;
-            background: #ffffff16;
-        }
-
-        .wallet-top {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-        }
-
-        .wallet-label {
-            font-size: 13px;
-            color: #e6f5ff;
-        }
-
-        .wallet-symbol {
-            font-size: 25px;
-        }
-
-        .wallet-amount {
-            margin-top: 13px;
-            font-size: 34px;
-            font-weight: 900;
-            color: #fff;
-            letter-spacing: .5px;
-        }
-
-        .wallet-amount small {
-            font-size: 14px;
-            color: #e6f5ff;
-        }
-
-        .wallet-note {
-            font-size: 11px;
-            color: #e2f3ff;
-            margin-top: 10px;
-            line-height: 1.6;
-        }
-
-        /* DEPOSIT FORM */
-
-        .form-card {
-            margin: 0 14px 18px;
-            padding: 19px 16px;
-            border-radius: 17px;
-            background: #fff;
-            border: 1px solid #dcecf8;
-            box-shadow: 0 5px 20px #17466b0b;
-        }
-
-        .form-title {
-            font-size: 19px;
-            font-weight: 900;
-            color: #167fc4;
-            margin-bottom: 20px;
-        }
-
-        .field {
-            margin-bottom: 18px;
-        }
-
-        .field label {
-            display: block;
-            font-size: 13px;
-            font-weight: bold;
-            margin-bottom: 9px;
-            color: #294760;
-        }
-
-        .field input,
-        .field select {
-            width: 100%;
-            height: 49px;
-            padding: 0 13px;
-            border: 1px solid #cbdfee;
-            border-radius: 10px;
-            background: #f7fbff;
-            color: #193b56;
-            outline: none;
-            font-size: 14px;
-        }
-
-        .field input:focus,
-        .field select:focus {
-            border-color: #2196e8;
-            box-shadow: 0 0 0 3px #2196e81a;
-        }
-
-        .field input::placeholder {
-            color: #9aabba;
-        }
-
-        /* PAYMENT METHOD SELECTOR */
-
-        .method-toggle {
-            width: 100%;
-            padding: 14px 13px;
-            border-radius: 11px;
-            border: 1px solid #cbdfee;
-            background: #f4faff;
-            color: #193b56;
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            cursor: pointer;
-            text-align: left;
-        }
-
-        .method-toggle-left {
-            display: flex;
-            align-items: center;
-            gap: 11px;
-            min-width: 0;
-        }
-
-        .method-toggle-icon {
-            width: 38px;
-            height: 38px;
-            min-width: 38px;
-            border-radius: 10px;
-            display: grid;
-            place-items: center;
-            background: #e3f3ff;
-            color: #1687d5;
-            font-size: 15px;
-            font-weight: 900;
-        }
-
-        .method-toggle strong {
-            font-size: 13px;
-            overflow-wrap: anywhere;
-        }
-
-        .method-toggle small {
-            display: block;
-            font-size: 10px;
-            color: #7d93a7;
-            margin-top: 4px;
-        }
-
-        .toggle-arrow {
-            font-size: 20px;
-            color: #1687d5;
-            transition: .2s;
-        }
-
-        .method-toggle.open .toggle-arrow {
-            transform: rotate(180deg);
-        }
-
-        .methods-panel {
-            display: none;
-            margin-top: 11px;
-            padding: 10px;
-            border: 1px solid #d6e9f7;
-            border-radius: 12px;
-            background: #f7fbff;
-        }
-
-        .methods-panel.show {
-            display: block;
-        }
-
-        .method-search {
-            margin-bottom: 10px;
-        }
-
-        .method-search input {
-            width: 100%;
-            height: 43px;
-            padding: 0 11px;
-            border: 1px solid #cbdfee;
-            border-radius: 9px;
-            background: #fff;
-            color: #193b56;
-            font-size: 12px;
-            outline: none;
-        }
-
-        .methods {
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 9px;
-        }
-
-        .method {
-            min-height: 75px;
-            padding: 10px 8px;
-            border: 1px solid #d4e5f2;
-            border-radius: 11px;
-            background: #fff;
-            color: #294760;
-            display: flex;
-            align-items: center;
-            gap: 9px;
-            cursor: pointer;
-            text-align: left;
-            position: relative;
-            min-width: 0;
-        }
-
-        .method.active {
-            border: 2px solid #2196e8;
-            background: #eaf6ff;
-            box-shadow: 0 0 0 2px #2196e812;
-        }
-
-        .method-logo {
-            width: 36px;
-            height: 36px;
-            min-width: 36px;
-            border-radius: 10px;
-            display: grid;
-            place-items: center;
-            color: white;
-            font-size: 12px;
-            font-weight: 900;
-            overflow: hidden;
-        }
-
-        .method-text {
-            min-width: 0;
-        }
-
-        .method-name {
-            font-size: 11px;
-            font-weight: 800;
-            line-height: 1.4;
-            overflow-wrap: anywhere;
-        }
-
-        .method-account {
-            font-size: 9px;
-            color: #8295a7;
-            margin-top: 4px;
-            overflow-wrap: anywhere;
-        }
-
-        .method-check {
-            position: absolute;
-            right: 6px;
-            top: 5px;
-            color: #1687d5;
-            font-size: 12px;
-            display: none;
-        }
-
-        .method.active .method-check {
-            display: block;
-        }
-
-        .selected-method {
-            font-size: 11px;
-            color: #1687d5;
-            margin-top: 11px;
-            line-height: 1.6;
-            min-height: 15px;
-        }
-
-        /* PAYMENT INSTRUCTIONS */
-
-        .payment-instruction {
-            display: none;
-            background: #eff8ff;
-            border: 1px solid #d1eaff;
-            border-radius: 11px;
-            padding: 13px;
-            margin: 0 0 18px;
-            font-size: 11px;
-            line-height: 1.8;
-            color: #526f87;
-            overflow-wrap: anywhere;
-        }
-
-        .payment-instruction.show {
-            display: block;
-        }
-
-        .payment-instruction strong {
-            color: #167fc4;
-            font-size: 12px;
-        }
-
-        /* DEPOSIT SUMMARY */
-
-        .summary {
-            background: #f4faff;
-            border: 1px solid #d7eaf8;
-            border-radius: 12px;
-            padding: 14px;
-            margin-bottom: 16px;
-        }
-
-        .summary-line {
-            display: flex;
-            justify-content: space-between;
-            gap: 8px;
-            padding: 7px 0;
-            font-size: 12px;
-            color: #71869a;
-        }
-
-        .summary-line strong {
-            color: #294760;
-            text-align: right;
-            overflow-wrap: anywhere;
-        }
-
-        .summary-line.final {
-            border-top: 1px solid #d5e6f3;
-            margin-top: 6px;
-            padding-top: 13px;
-            font-size: 14px;
-            font-weight: 900;
-            color: #294760;
-        }
-
-        .summary-line.final strong {
-            color: #1687d5;
-        }
-
-        .submit-btn {
-            width: 100%;
-            border: 0;
-            border-radius: 11px;
-            padding: 16px;
-            background: linear-gradient(100deg, #1687d5, #2196e8);
-            color: #fff;
-            font-size: 14px;
-            font-weight: 900;
-            cursor: pointer;
-            box-shadow: 0 5px 15px #1687d52b;
-        }
-
-        .submit-btn:disabled {
-            opacity: .5;
-            cursor: not-allowed;
-        }
-
-        /* ADVERTISEMENT */
-
-        .deposit-ad {
-            width: 100%;
-            min-height: 58px;
-            margin: 12px auto 0;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            overflow: hidden;
-            background: #fff;
-            border-radius: 7px;
-        }
-
-        .deposit-ad iframe {
-            max-width: 100%;
-            border: 0;
-        }
-
-        /* DEPOSIT HISTORY */
-
-        .history-section {
-            margin: 18px 14px;
-        }
-
-        .history-title {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-bottom: 10px;
-            font-size: 17px;
-            font-weight: 900;
-            color: #167fc4;
-        }
-
-        .history-title small {
-            color: #8195a8;
-            font-size: 11px;
-        }
-
-        .request-card {
-            background: #fff;
-            border: 1px solid #dcebf6;
-            border-radius: 11px;
-            padding: 10px 11px;
-            margin-bottom: 8px;
-            box-shadow: 0 2px 8px #173c5b06;
-        }
-
-        .request-top {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            gap: 7px;
-        }
-
-        .request-method {
-            display: flex;
-            align-items: center;
-            gap: 7px;
-            font-size: 13px;
-            font-weight: 900;
-            color: #294760;
-            min-width: 0;
-        }
-
-        .history-logo {
-            width: 28px;
-            height: 28px;
-            min-width: 28px;
-            background: #1687d5;
-            color: white;
-            border-radius: 8px;
-            display: grid;
-            place-items: center;
-            font-size: 9px;
-            font-weight: 900;
-        }
-
-        .request-status {
-            font-size: 9px;
-            font-weight: bold;
-            padding: 6px 8px;
-            border-radius: 18px;
-            background: #fff5dc;
-            color: #a87613;
-            white-space: nowrap;
-        }
-
-        .request-status.approved {
-            background: #e4f8ed;
-            color: #16884b;
-        }
-
-        .request-status.rejected {
-            background: #fff0f1;
-            color: #d34c5e;
-        }
-
-        .request-details {
-            margin-top: 7px;
-            color: #8193a5;
-            font-size: 10px;
-            line-height: 1.65;
-            white-space: pre-line;
-            overflow-wrap: anywhere;
-        }
-
-        .request-amount {
-            font-size: 17px;
-            font-weight: 900;
-            color: #1687d5;
-            margin-top: 6px;
-        }
-
-        .request-credit {
-            margin-top: 5px;
-            font-size: 10px;
-            line-height: 1.5;
-            color: #16884b;
-        }
-
-        .empty {
-            text-align: center;
-            padding: 18px 10px;
-            color: #8b9eaf;
-            font-size: 12px;
-            line-height: 1.7;
-        }
-
-        /* NOTICE */
-
-        .notice {
-            margin: 16px 14px;
-            padding: 14px;
-            border-radius: 11px;
-            background: #eff8ff;
-            border: 1px solid #d3eaff;
-            color: #526f87;
-            font-size: 11px;
-            line-height: 1.8;
-        }
-
-        .notice strong {
-            color: #167fc4;
-            font-size: 12px;
-        }
-
-        .back-btn {
-            display: block;
-            margin: 15px auto;
-            padding: 12px 22px;
-            border: 1px solid #cbdfee;
-            background: #f1f8fe;
-            color: #2678ad;
-            border-radius: 10px;
-            font-size: 12px;
-            cursor: pointer;
-        }
-
-        /* TOAST */
-
-        .toast {
-            display: none;
-            position: fixed;
-            left: 50%;
-            bottom: 25px;
-            transform: translateX(-50%);
-            z-index: 1000;
-            background: #173d5b;
-            color: #fff;
-            padding: 13px 18px;
-            border: 1px solid #427ba5;
-            border-radius: 11px;
-            width: max-content;
-            max-width: 90%;
-            font-size: 12px;
-            box-shadow: 0 8px 25px #0003;
-            text-align: center;
-        }
-
-        /* MOBILE RESPONSIVE */
-
-        @media(max-width:360px) {
-            .logo {
-                font-size: 23px;
-            }
-
-            .wallet-amount {
-                font-size: 29px;
-            }
-
-            .method {
-                gap: 6px;
-                padding: 9px 6px;
-            }
-
-            .method-logo {
-                width: 32px;
-                height: 32px;
-                min-width: 32px;
-            }
-
-            .request-card {
-                padding: 9px;
-            }
-
-            .request-details {
-                font-size: 9px;
-            }
-        }
-    </style>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="theme-color" content="#2196e8">
+<title>GLO 365 - Deposit</title>
+
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:Arial,sans-serif;background:#f0f7fd;color:#18334d;min-height:100vh}
+.app{max-width:520px;min-height:100vh;margin:auto;background:#fff;padding-bottom:35px;box-shadow:0 0 25px #163c5c0b}
+header{background:linear-gradient(120deg,#1687d5,#2196e8);padding:19px 16px;display:flex;justify-content:space-between;align-items:center;color:#fff}
+.logo{font-size:26px;font-weight:900}.logo span{color:#d9f0ff}
+.balance{background:#ffffff20;border:1px solid #ffffff45;padding:10px 13px;border-radius:25px;font-size:12px;font-weight:bold}
+.page-heading{padding:24px 18px 17px}
+.page-heading h2{font-size:25px;font-weight:900;color:#167fc4}
+.page-heading p{font-size:12px;color:#71869a;margin-top:7px}
+.wallet-card{margin:0 14px 18px;padding:19px;border-radius:16px;background:linear-gradient(130deg,#1687d5,#2196e8);color:white;box-shadow:0 8px 20px #1687d526}
+.wallet-label{font-size:13px;color:#e6f5ff}
+.wallet-amount{margin-top:10px;font-size:32px;font-weight:900}
+.wallet-amount small{font-size:13px}
+.wallet-note{font-size:11px;color:#e2f3ff;margin-top:9px;line-height:1.6}
+.step-card{margin:0 14px 18px;padding:18px 15px;border-radius:16px;background:#fff;border:1px solid #dcecf8;box-shadow:0 5px 20px #17466b0b}
+.step-title{font-size:18px;font-weight:900;color:#167fc4;margin-bottom:7px}
+.step-subtitle{font-size:12px;color:#8295a7;line-height:1.6;margin-bottom:16px}
+.methods{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.method{min-height:82px;padding:11px 9px;border:1px solid #d4e5f2;border-radius:12px;background:#fff;color:#294760;display:flex;align-items:center;gap:10px;cursor:pointer;text-align:left;position:relative;min-width:0}
+.method:active{transform:scale(.98)}
+.method.active{border:2px solid #2196e8;background:#eaf6ff}
+.method-logo{width:42px;height:42px;min-width:42px;border-radius:11px;display:grid;place-items:center;color:white;font-size:13px;font-weight:900}
+.method-text{min-width:0}
+.method-name{font-size:12px;font-weight:900;overflow-wrap:anywhere}
+.method-account{font-size:9px;color:#8295a7;margin-top:5px;overflow-wrap:anywhere}
+.method-check{position:absolute;right:7px;top:5px;color:#1687d5;font-size:12px;display:none}
+.method.active .method-check{display:block}
+.empty{text-align:center;padding:22px 10px;color:#8b9eaf;font-size:12px;line-height:1.7;grid-column:1/-1}
+.field{margin-bottom:16px}
+.field label{display:block;font-size:13px;font-weight:bold;margin-bottom:8px;color:#294760}
+.field input,.field select{width:100%;height:49px;padding:0 13px;border:1px solid #cbdfee;border-radius:10px;background:#f7fbff;color:#193b56;outline:none;font-size:14px}
+.field input:focus,.field select:focus{border-color:#2196e8;box-shadow:0 0 0 3px #2196e81a}
+.field input::placeholder{color:#9aabba}
+.payment-box{background:#eff8ff;border:1px solid #d1eaff;border-radius:11px;padding:14px;margin-bottom:18px;font-size:12px;line-height:1.8;color:#526f87;overflow-wrap:anywhere}
+.payment-box strong{color:#167fc4}
+.payment-account{font-size:18px;font-weight:900;color:#18334d;margin:7px 0;word-break:break-all}
+.copy-btn{border:0;background:#d9efff;color:#167fc4;border-radius:8px;padding:8px 12px;font-weight:bold;cursor:pointer;margin-top:7px}
+.summary{background:#f4faff;border:1px solid #d7eaf8;border-radius:12px;padding:14px;margin-bottom:16px}
+.summary-line{display:flex;justify-content:space-between;gap:8px;padding:8px 0;font-size:12px;color:#71869a}
+.summary-line strong{color:#294760;text-align:right;overflow-wrap:anywhere}
+.summary-line.final{border-top:1px solid #d5e6f3;margin-top:6px;padding-top:13px;font-size:14px;font-weight:900;color:#294760}
+.summary-line.final strong{color:#1687d5}
+.submit-btn{width:100%;border:0;border-radius:11px;padding:16px;background:linear-gradient(100deg,#1687d5,#2196e8);color:#fff;font-size:14px;font-weight:900;cursor:pointer;box-shadow:0 5px 15px #1687d52b}
+.submit-btn:disabled{opacity:.5;cursor:not-allowed}
+.secondary-btn{width:100%;border:1px solid #cbdfee;border-radius:11px;padding:14px;background:#f1f8fe;color:#2678ad;font-size:13px;font-weight:bold;cursor:pointer;margin-top:10px}
+.back-link{display:block;text-align:center;color:#1687d5;text-decoration:none;font-size:12px;margin:18px auto}
+.loading-area{text-align:center;padding:45px 10px}
+.spinner{width:52px;height:52px;border:5px solid #dceefa;border-top-color:#1687d5;border-radius:50%;animation:spin .8s linear infinite;margin:0 auto 20px}
+@keyframes spin{to{transform:rotate(360deg)}}
+.loading-area strong{font-size:16px;color:#167fc4}
+.loading-area p{font-size:12px;color:#8295a7;margin-top:9px}
+.countdown{font-size:22px;font-weight:900;color:#1687d5;margin-top:12px}
+.confirm-icon{width:65px;height:65px;margin:0 auto 15px;border-radius:50%;display:grid;place-items:center;background:#e4f8ed;color:#16884b;font-size:32px}
+.confirm-heading{text-align:center;font-size:19px;font-weight:900;color:#167fc4;margin-bottom:8px}
+.confirm-note{text-align:center;font-size:12px;color:#8295a7;line-height:1.7;margin-bottom:20px}
+.notice{margin:16px 14px;padding:14px;border-radius:11px;background:#eff8ff;border:1px solid #d3eaff;color:#526f87;font-size:11px;line-height:1.8}
+.notice strong{color:#167fc4;font-size:12px}
+.toast{display:none;position:fixed;left:50%;bottom:25px;transform:translateX(-50%);z-index:1000;background:#173d5b;color:#fff;padding:13px 18px;border-radius:11px;width:max-content;max-width:90%;font-size:12px;box-shadow:0 8px 25px #0003;text-align:center}
+.hidden{display:none!important}
+@media(max-width:360px){.logo{font-size:23px}.method{gap:6px;padding:9px 6px}.method-logo{width:35px;height:35px;min-width:35px}}
+</style>
 </head>
 
 <body>
-
 <div class="app">
 
-    <header>
-        <div class="logo">GLO <span>365</span></div>
-
-        <div class="balance">
-            <span id="headerBalance">0.00</span> Points
-        </div>
-    </header>
-
-    <!-- PAGE HEADING -->
-
-    <section class="page-heading">
-        <h2>Deposit</h2>
-        <p>Add funds to your GLO 365 account.</p>
-    </section>
-
-    <!-- WALLET CARD -->
-
-    <section class="wallet-card">
-
-        <div class="wallet-top">
-            <div class="wallet-label">Current Wallet Balance</div>
-            <div class="wallet-symbol">💰</div>
-        </div>
-
-        <div class="wallet-amount">
-            <span id="walletBalance">0.00</span>
-            <small>Points</small>
-        </div>
-
-        <div class="wallet-note">
-            Deposit requests are reviewed by the admin.
-            Points are added only after successful admin verification.
-        </div>
-
-    </section>
-
-    <!-- DEPOSIT FORM -->
-
-    <section class="form-card">
-
-        <div class="form-title">Deposit Request</div>
-
-        <div class="field">
-
-            <label>Select Payment Method</label>
-
-            <button
-                type="button"
-                class="method-toggle"
-                id="methodToggle"
-                aria-expanded="false"
-            >
-
-                <span class="method-toggle-left">
-
-                    <span class="method-toggle-icon" id="selectedIcon">
-                        ＋
-                    </span>
-
-                    <span>
-                        <strong id="selectedMethodName">
-                            Choose a payment method
-                        </strong>
-
-                        <small id="selectedMethodSub">
-                            Tap to view available methods
-                        </small>
-                    </span>
-
-                </span>
-
-                <span class="toggle-arrow">⌄</span>
-
-            </button>
-
-            <div class="methods-panel" id="methodsPanel">
-
-                <div class="method-search">
-                    <input
-                        type="search"
-                        id="methodSearch"
-                        placeholder="Search payment method or account..."
-                    >
-                </div>
-
-                <div class="methods" id="methodsGrid"></div>
-
-                <div class="selected-method" id="methodHelp">
-                    Select a payment method.
-                </div>
-
-            </div>
-
-        </div>
-
-        <!-- PAYMENT INSTRUCTIONS -->
-
-        <div class="payment-instruction" id="paymentInstruction">
-
-            <strong>Payment Instructions</strong>
-
-            <div id="instructionText"></div>
-
-        </div>
-
-        <!-- AMOUNT -->
-
-        <div class="field">
-
-            <label>Deposit Amount</label>
-
-            <input
-                id="amount"
-                type="number"
-                min="0.01"
-                step="0.01"
-                inputmode="decimal"
-                placeholder="Enter deposit amount"
-            >
-
-        </div>
-
-        <!-- CURRENCY -->
-
-        <div class="field">
-
-            <label>Currency</label>
-
-            <select id="currency">
-                <option value="BDT">BDT (৳)</option>
-                <option value="USDT">USDT</option>
-                <option value="USD">USD</option>
-                <option value="INR">INR</option>
-                <option value="Other">Other</option>
-            </select>
-
-        </div>
-
-        <!-- SENDER ACCOUNT -->
-
-        <div class="field">
-
-            <label>Sender Account Number / ID</label>
-
-            <input
-                id="senderAccount"
-                type="text"
-                maxlength="150"
-                placeholder="Enter the account you paid from"
-                autocomplete="off"
-            >
-
-        </div>
-
-        <!-- TRANSACTION ID -->
-
-        <div class="field">
-
-            <label>Transaction ID / Reference Number</label>
-
-            <input
-                id="transactionId"
-                type="text"
-                maxlength="150"
-                placeholder="Enter transaction reference"
-                autocomplete="off"
-            >
-
-        </div>
-
-        <!-- SUMMARY -->
-
-        <div class="summary">
-
-            <div class="summary-line">
-                <span>Deposit Amount</span>
-                <strong id="requestAmount">0.00 BDT</strong>
-            </div>
-
-            <div class="summary-line">
-                <span>Transaction Fee</span>
-                <strong>As per payment provider</strong>
-            </div>
-
-            <div class="summary-line final">
-                <span>Submitted Amount</span>
-                <strong id="totalAmount">0.00 BDT</strong>
-            </div>
-
-        </div>
-
-        <button class="submit-btn" id="submitBtn" type="button">
-            SUBMIT DEPOSIT REQUEST →
-        </button>
-
-        <!-- ADVERTISEMENT -->
-
-        <div class="deposit-ad">
-
-            <script>
-                var atOptions = {
-                    'key': 'ab837cf0ea9c26ae43b7bc4e05a0b5de',
-                    'format': 'iframe',
-                    'height': 50,
-                    'width': 320,
-                    'params': {}
-                };
-            </script>
-
-            <script src="https://bicea.org/22/ab837cf0ea9c26ae43b7bc4e05a0b5de"></script>
-
-        </div>
-
-    </section>
-
-    <!-- DEPOSIT HISTORY -->
-
-    <section class="history-section">
-
-        <div class="history-title">
-            <span>Deposit History</span>
-            <small id="requestCount">0 Requests</small>
-        </div>
-
-        <div id="requestList"></div>
-
-    </section>
-
-    <!-- IMPORTANT NOTICE -->
-
-    <div class="notice">
-
-        <strong>⚠ IMPORTANT DEPOSIT NOTICE</strong>
-        <br>
-
-        1. সঠিক Payment Method এবং Account নির্বাচন করুন।
-        <br>
-
-        2. পেমেন্ট করার পর Transaction ID জমা দিন।
-        <br>
-
-        3. Admin আপনার পেমেন্ট যাচাই করবেন।
-        <br>
-
-        4. Approved হওয়ার পর Admin নির্ধারিত Points যোগ করবেন।
-
+<header>
+    <div class="logo">GLO <span>365</span></div>
+    <div class="balance"><span id="headerBalance">0.00</span> Points</div>
+</header>
+
+<section class="page-heading">
+    <h2>Deposit</h2>
+    <p>Add funds to your GLO 365 account.</p>
+</section>
+
+<section class="wallet-card">
+    <div class="wallet-label">Current Wallet Balance</div>
+    <div class="wallet-amount"><span id="walletBalance">0.00</span> <small>Points</small></div>
+    <div class="wallet-note">Deposit requests are reviewed by Admin. Points are added only after successful verification.</div>
+</section>
+
+<!-- STEP 1: PAYMENT CHANNELS -->
+<section class="step-card" id="step1">
+    <div class="step-title">① Select Payment Channel</div>
+    <div class="step-subtitle">আপনার পছন্দের পেমেন্ট চ্যানেল নির্বাচন করুন।</div>
+    <div class="methods" id="methodsGrid">
+        <div class="empty">Loading payment channels...</div>
+    </div>
+    <div class="notice" style="margin:15px 0 0">
+        <strong>নোট:</strong> Admin থেকে চালু করা সব Active Payment Channel এখানে দেখানো হবে।
+    </div>
+</section>
+
+<!-- LOADING STEP -->
+<section class="step-card hidden" id="loadingStep">
+    <div class="loading-area">
+        <div class="spinner"></div>
+        <strong>Payment Channel Loading...</strong>
+        <p>আপনার নির্বাচিত পেমেন্ট চ্যানেল প্রস্তুত করা হচ্ছে।</p>
+        <div class="countdown" id="countdown">5</div>
+    </div>
+</section>
+
+<!-- STEP 2: TRANSACTION DETAILS -->
+<section class="step-card hidden" id="step2">
+    <div class="step-title">② Deposit Information</div>
+    <div class="step-subtitle">পেমেন্ট সম্পন্ন করে নিচের তথ্যগুলো পূরণ করুন।</div>
+
+    <div class="payment-box">
+        <strong>Selected Payment Channel</strong>
+        <div id="selectedMethodName" style="font-size:17px;font-weight:900;color:#18334d;margin-top:5px"></div>
+
+        <div style="margin-top:12px"><strong>Payment Account / Wallet Address</strong></div>
+        <div class="payment-account" id="paymentAccount">Not available</div>
+        <button type="button" class="copy-btn" id="copyAccountBtn">Copy Account</button>
+
+        <div style="margin-top:12px"><strong>Payment Instructions</strong></div>
+        <div id="paymentInstructions">Please follow the payment instructions.</div>
+        <div style="margin-top:8px"><strong>Currency:</strong> <span id="methodCurrency">BDT</span></div>
     </div>
 
-    <button class="back-btn" onclick="location.href='profile.html'">
-        ← Back to Profile
-    </button>
+    <div class="field">
+        <label for="amount">Deposit Amount</label>
+        <input id="amount" type="number" min="0.01" step="0.01" inputmode="decimal" placeholder="Enter deposit amount">
+    </div>
+
+    <div class="field">
+        <label for="currency">Currency</label>
+        <select id="currency">
+            <option value="BDT">BDT (৳)</option>
+            <option value="USDT">USDT</option>
+            <option value="USD">USD</option>
+            <option value="INR">INR</option>
+            <option value="Other">Other</option>
+        </select>
+    </div>
+
+    <div class="field">
+        <label for="senderAccount">Sender Account Number / ID</label>
+        <input id="senderAccount" type="text" maxlength="150" placeholder="Enter the account you paid from" autocomplete="off">
+    </div>
+
+    <div class="field">
+        <label for="transactionId">Transaction ID / Reference Number</label>
+        <input id="transactionId" type="text" maxlength="150" placeholder="Enter transaction reference" autocomplete="off">
+    </div>
+
+    <div class="summary">
+        <div class="summary-line">
+            <span>Payment Method</span>
+            <strong id="summaryMethod">—</strong>
+        </div>
+        <div class="summary-line">
+            <span>Deposit Amount</span>
+            <strong id="requestAmount">0.00 BDT</strong>
+        </div>
+        <div class="summary-line final">
+            <span>Total Amount</span>
+            <strong id="totalAmount">0.00 BDT</strong>
+        </div>
+    </div>
+
+    <button class="submit-btn" type="button" id="reviewBtn">CONFIRM INFORMATION →</button>
+    <button class="secondary-btn" type="button" id="backToChannels">← Change Payment Channel</button>
+</section>
+
+<!-- STEP 3: FINAL CONFIRMATION -->
+<section class="step-card hidden" id="step3">
+    <div class="confirm-icon">✓</div>
+    <div class="confirm-heading">Deposit Confirmation</div>
+    <div class="confirm-note">
+        আপনার জমার তথ্যগুলো ভালোভাবে যাচাই করুন। সব তথ্য সঠিক হলে জমা বাটনে চাপ দিন।
+    </div>
+
+    <div class="summary">
+        <div class="summary-line">
+            <span>Payment Channel</span>
+            <strong id="confirmMethod">—</strong>
+        </div>
+        <div class="summary-line">
+            <span>Deposit Amount</span>
+            <strong id="confirmAmount">—</strong>
+        </div>
+        <div class="summary-line">
+            <span>Currency</span>
+            <strong id="confirmCurrency">—</strong>
+        </div>
+        <div class="summary-line">
+            <span>Sender Account</span>
+            <strong id="confirmSender">—</strong>
+        </div>
+        <div class="summary-line">
+            <span>Transaction ID</span>
+            <strong id="confirmTransaction">—</strong>
+        </div>
+        <div class="summary-line">
+            <span>Payment Account</span>
+            <strong id="confirmPaymentAccount">—</strong>
+        </div>
+        <div class="summary-line final">
+            <span>Total Deposit</span>
+            <strong id="confirmTotal">—</strong>
+        </div>
+    </div>
+
+    <div class="notice" style="margin:0 0 16px">
+        <strong>সতর্কতা:</strong><br>
+        একই Transaction ID দিয়ে একাধিক Deposit Request করবেন না। ভুল তথ্য দিলে আপনার Deposit Request বাতিল হতে পারে।
+        Admin যাচাই না করা পর্যন্ত Points যোগ হবে না।
+    </div>
+
+    <button class="submit-btn" type="button" id="finalSubmitBtn">জমা দিন ✓</button>
+    <button class="secondary-btn" type="button" id="backToDetails">← ফিরে যান</button>
+</section>
+
+<div class="notice">
+    <strong>⚠ IMPORTANT DEPOSIT NOTICE</strong><br>
+    1. সঠিক Payment Channel নির্বাচন করুন।<br>
+    2. পেমেন্ট করার পর সঠিক Transaction ID দিন।<br>
+    3. Admin আপনার পেমেন্ট যাচাই করবেন।<br>
+    4. Approved হওয়ার পর Points যোগ হবে।
+</div>
+
+<a class="back-link" href="profile.html">← Back to Profile</a>
 
 </div>
 
 <div class="toast" id="toast"></div>
 
 <script>
-    "use strict";
+"use strict";
 
-    /* SERVER CONFIGURATION */
+/* SERVER CONFIGURATION */
+const API_BASE_URL = "https://glo365.onrender.com/api";
+const TOKEN_KEY = "glo365_token";
+const HOME_PAGE = "home.html";
 
-    const API_BASE_URL = "https://glo365.onrender.com/api";
-    const TOKEN_KEY = "glo365_token";
+const PRESETS = {
+    "bkash": {short:"bK",color:"#d51b72"},
+    "nagad": {short:"N",color:"#f58220"},
+    "rocket": {short:"R",color:"#8b45a8"},
+    "binance": {short:"B",color:"#d9a400"},
+    "redotpay": {short:"R",color:"#df3154"},
+    "paypal": {short:"P",color:"#1769aa"},
+    "google pay": {short:"G",color:"#4285f4"},
+    "bank transfer": {short:"BK",color:"#287c65"}
+};
 
-    const PRESETS = {
-        bKash: {
-            short: "bK",
-            color: "#d51b72"
-        },
+let currentUser = null;
+let wallet = 0;
+let methods = [];
+let selectedMethod = null;
+let toastTimer = null;
+let loadingTimer = null;
+let formData = null;
 
-        Nagad: {
-            short: "N",
-            color: "#f58220"
-        },
+/* AUTH */
+function token(){
+    return sessionStorage.getItem(TOKEN_KEY) || "";
+}
 
-        Rocket: {
-            short: "R",
-            color: "#8b45a8"
-        },
+/* API */
+async function api(path,options={}){
+    const headers = {...(options.headers || {})};
 
-        Binance: {
-            short: "B",
-            color: "#d9a400"
-        },
+    if(token()){
+        headers.Authorization = "Bearer " + token();
+    }
 
-        RedotPay: {
-            short: "R",
-            color: "#df3154"
-        },
+    if(options.body && !headers["Content-Type"]){
+        headers["Content-Type"] = "application/json";
+    }
 
-        PayPal: {
-            short: "P",
-            color: "#1769aa"
-        },
+    const response = await fetch(API_BASE_URL + path,{
+        ...options,
+        headers,
+        credentials:"include",
+        cache:"no-store"
+    });
 
-        "Google Pay": {
-            short: "G",
-            color: "#4285f4"
-        },
+    let data = {};
+    try{
+        data = await response.json();
+    }catch(e){}
 
-        "Bank Transfer": {
-            short: "BK",
-            color: "#287c65"
+    if(response.status === 401){
+        sessionStorage.removeItem(TOKEN_KEY);
+        throw new Error("Session expired. Please login again.");
+    }
+
+    if(!response.ok || data.success === false){
+        throw new Error(data.message || "Server request failed.");
+    }
+
+    return data;
+}
+
+/* TOAST */
+function showToast(message){
+    const el = document.getElementById("toast");
+    el.textContent = message;
+    el.style.display = "block";
+    clearTimeout(toastTimer);
+    toastTimer = setTimeout(()=>{
+        el.style.display = "none";
+    },3500);
+}
+
+/* LOGO */
+function getLogoInfo(method){
+    const key = String(method.preset || method.name || "").toLowerCase().trim();
+    return PRESETS[key] || {
+        short:String(method.name || "PM").slice(0,2).toUpperCase(),
+        color:"#287eae"
+    };
+}
+
+/* MASK */
+function maskAccount(value){
+    const s = String(value || "");
+    return s.length <= 4 ? (s || "Not set") : "••••••" + s.slice(-4);
+}
+
+/* WALLET */
+function renderWallet(){
+    document.getElementById("walletBalance").textContent = wallet.toFixed(2);
+    document.getElementById("headerBalance").textContent = wallet.toFixed(2);
+}
+
+/* PAYMENT CHANNEL LIST */
+function renderMethods(){
+    const grid = document.getElementById("methodsGrid");
+    grid.replaceChildren();
+
+    if(!methods.length){
+        const empty = document.createElement("div");
+        empty.className = "empty";
+        empty.textContent = "কোনো Active Payment Channel পাওয়া যায়নি। Admin-এর সঙ্গে যোগাযোগ করুন।";
+        grid.append(empty);
+        return;
+    }
+
+    methods.forEach(method=>{
+        const button = document.createElement("button");
+        button.type = "button";
+        button.className = "method";
+
+        const logoInfo = getLogoInfo(method);
+
+        const logo = document.createElement("span");
+        logo.className = "method-logo";
+        logo.style.background = logoInfo.color;
+        logo.textContent = logoInfo.short;
+
+        const textWrap = document.createElement("span");
+        textWrap.className = "method-text";
+
+        const name = document.createElement("span");
+        name.className = "method-name";
+        name.textContent = method.name || "Payment Method";
+
+        const account = document.createElement("span");
+        account.className = "method-account";
+        account.textContent =
+            (method.currency || "BDT") +
+            (method.account ? " · " + maskAccount(method.account) : "");
+
+        textWrap.append(name,account);
+
+        const check = document.createElement("span");
+        check.className = "method-check";
+        check.textContent = "✓";
+
+        button.append(logo,textWrap,check);
+
+        button.addEventListener("click",()=>{
+            selectMethod(method);
+        });
+
+        grid.append(button);
+    });
+}
+
+/* SELECT CHANNEL */
+function selectMethod(method){
+    if(!method || !method.id){
+        showToast("Invalid payment method.");
+        return;
+    }
+
+    selectedMethod = method;
+    startLoading();
+}
+
+/* 5 SECOND LOADING */
+function startLoading(){
+    showPage("loadingStep");
+
+    let seconds = 5;
+    document.getElementById("countdown").textContent = seconds;
+
+    clearInterval(loadingTimer);
+
+    loadingTimer = setInterval(()=>{
+        seconds--;
+
+        document.getElementById("countdown").textContent = seconds;
+
+        if(seconds <= 0){
+            clearInterval(loadingTimer);
+            openPaymentDetails();
         }
+    },1000);
+}
+
+/* OPEN SECOND PAGE */
+function openPaymentDetails(){
+    if(!selectedMethod){
+        showPage("step1");
+        return;
+    }
+
+    document.getElementById("selectedMethodName").textContent =
+        selectedMethod.name || "Payment Method";
+
+    document.getElementById("paymentAccount").textContent =
+        selectedMethod.account || "Admin has not configured an account.";
+
+    document.getElementById("paymentInstructions").textContent =
+        selectedMethod.instructions ||
+        "Please complete your payment and enter the correct transaction reference.";
+
+    const currency = selectedMethod.currency || "BDT";
+
+    document.getElementById("methodCurrency").textContent = currency;
+
+    const currencySelect = document.getElementById("currency");
+
+    const supported = ["BDT","USDT","USD","INR","Other"];
+
+    currencySelect.value = supported.includes(currency) ? currency : "Other";
+
+    document.getElementById("summaryMethod").textContent =
+        selectedMethod.name || "Payment Method";
+
+    calculate();
+    showPage("step2");
+}
+
+/* COPY PAYMENT ACCOUNT */
+document.getElementById("copyAccountBtn").addEventListener("click",async()=>{
+    const account = String(selectedMethod?.account || "");
+
+    if(!account){
+        showToast("Payment account is not available.");
+        return;
+    }
+
+    try{
+        await navigator.clipboard.writeText(account);
+        showToast("Payment account copied.");
+    }catch(e){
+        showToast("Copy not supported on this device.");
+    }
+});
+
+/* PAGE NAVIGATION */
+function showPage(id){
+    ["step1","loadingStep","step2","step3"].forEach(page=>{
+        document.getElementById(page).classList.add("hidden");
+    });
+
+    document.getElementById(id).classList.remove("hidden");
+    window.scrollTo({top:0,behavior:"smooth"});
+}
+
+/* AMOUNT CALCULATION */
+function calculate(){
+    const amount = Math.max(0,Number(document.getElementById("amount").value) || 0);
+    const currency = document.getElementById("currency").value;
+    const formatted = amount.toFixed(2) + " " + currency;
+
+    document.getElementById("requestAmount").textContent = formatted;
+    document.getElementById("totalAmount").textContent = formatted;
+}
+
+/* VALIDATE AND SHOW CONFIRMATION */
+function reviewDeposit(){
+    if(!selectedMethod){
+        showToast("Please select a payment channel.");
+        showPage("step1");
+        return;
+    }
+
+    const amount = Number(document.getElementById("amount").value);
+    const currency = document.getElementById("currency").value;
+    const sender = document.getElementById("senderAccount").value.trim();
+    const transaction = document.getElementById("transactionId").value.trim();
+
+    if(!Number.isFinite(amount) || amount <= 0){
+        showToast("Please enter a valid deposit amount.");
+        return;
+    }
+
+    if(!sender){
+        showToast("Please enter your sender account details.");
+        return;
+    }
+
+    if(!transaction){
+        showToast("Please enter the Transaction ID.");
+        return;
+    }
+
+    if(transaction.length < 4){
+        showToast("Please enter a valid Transaction ID.");
+        return;
+    }
+
+    formData = {
+        payment_method_id:Number(selectedMethod.id),
+        amount:amount,
+        sender_account:sender,
+        transaction_id:transaction,
+        currency:currency
     };
 
-    let currentUser = null;
-    let wallet = 0;
-    let requests = [];
-    let methods = [];
-    let selectedMethod = null;
-    let toastTimer = null;
+    document.getElementById("confirmMethod").textContent =
+        selectedMethod.name || "—";
 
-    /* AUTHENTICATION */
+    document.getElementById("confirmAmount").textContent =
+        amount.toFixed(2) + " " + currency;
 
-    function token() {
-        return sessionStorage.getItem(TOKEN_KEY) || "";
+    document.getElementById("confirmCurrency").textContent = currency;
+    document.getElementById("confirmSender").textContent = sender;
+    document.getElementById("confirmTransaction").textContent = transaction;
+
+    document.getElementById("confirmPaymentAccount").textContent =
+        selectedMethod.account || "—";
+
+    document.getElementById("confirmTotal").textContent =
+        amount.toFixed(2) + " " + currency;
+
+    showPage("step3");
+}
+
+/* FINAL SERVER SUBMISSION */
+async function finalSubmit(){
+    const btn = document.getElementById("finalSubmitBtn");
+
+    if(!formData || !selectedMethod){
+        showToast("Deposit information is missing. Please try again.");
+        showPage("step1");
+        return;
     }
 
-    /* API REQUEST */
+    if(!currentUser){
+        showToast("Please login before submitting.");
+        return;
+    }
 
-    async function api(path, options = {}) {
+    btn.disabled = true;
+    btn.textContent = "SUBMITTING...";
 
-        const headers = {
-            ...(options.headers || {})
-        };
-
-        if (token()) {
-            headers.Authorization = "Bearer " + token();
-        }
-
-        if (options.body && !headers["Content-Type"]) {
-            headers["Content-Type"] = "application/json";
-        }
-
-        const response = await fetch(API_BASE_URL + path, {
-            ...options,
-            headers,
-            credentials: "include"
+    try{
+        /*
+          Existing backend endpoint is retained.
+          The backend should validate transaction uniqueness,
+          payment method status and amount before saving.
+        */
+        await api("/deposits",{
+            method:"POST",
+            body:JSON.stringify({
+                payment_method_id:formData.payment_method_id,
+                amount:formData.amount,
+                sender_account:formData.sender_account,
+                transaction_id:formData.transaction_id
+            })
         });
 
-        let data = {};
+        showToast("Deposit request submitted successfully.");
 
-        try {
-            data = await response.json();
-        } catch (e) {}
+        formData = null;
 
-        if (response.status === 401) {
+        document.getElementById("amount").value = "";
+        document.getElementById("senderAccount").value = "";
+        document.getElementById("transactionId").value = "";
 
-            sessionStorage.removeItem(TOKEN_KEY);
+        setTimeout(()=>{
+            location.href = HOME_PAGE;
+        },1000);
 
-            throw new Error("Session expired. Please login again.");
-        }
-
-        if (!response.ok || data.success === false) {
-            throw new Error(data.message || "Server request failed.");
-        }
-
-        return data;
+    }catch(error){
+        showToast(error.message || "Deposit submission failed.");
+        btn.disabled = false;
+        btn.textContent = "জমা দিন ✓";
     }
+}
 
-    /* TOAST MESSAGE */
+/* LOAD SERVER DATA */
+async function loadAll(){
+    const [me,walletData,methodData] = await Promise.all([
+        api("/auth/me"),
+        api("/wallet"),
+        api("/public/payment-methods")
+    ]);
 
-    function showToast(message) {
+    currentUser = me.user || null;
+    wallet = Number(walletData.balance) || 0;
 
-        const el = document.getElementById("toast");
+    methods = Array.isArray(methodData.methods)
+        ? methodData.methods
+        : [];
 
-        el.textContent = message;
-        el.style.display = "block";
+    /*
+      The public payment-methods endpoint is expected to return
+      only Admin-enabled/active methods.
+      Do not hardcode a fixed list here.
+    */
 
-        clearTimeout(toastTimer);
+    renderWallet();
+    renderMethods();
+}
 
-        toastTimer = setTimeout(() => {
-            el.style.display = "none";
-        }, 3500);
-    }
+/* EVENTS */
+document.getElementById("amount").addEventListener("input",calculate);
+document.getElementById("currency").addEventListener("change",calculate);
 
-    /* PAYMENT METHOD LOGO */
+document.getElementById("reviewBtn").addEventListener("click",reviewDeposit);
 
-    function getLogoInfo(method) {
+document.getElementById("finalSubmitBtn").addEventListener("click",finalSubmit);
 
-        return PRESETS[method.preset] || {
-            short: String(method.name || "PM").slice(0, 2).toUpperCase(),
-            color: "#287eae"
-        };
-    }
+document.getElementById("backToChannels").addEventListener("click",()=>{
+    selectedMethod = null;
+    formData = null;
+    showPage("step1");
+});
 
-    /* MASK ACCOUNT NUMBER */
+document.getElementById("backToDetails").addEventListener("click",()=>{
+    showPage("step2");
+});
 
-    function maskAccount(value) {
-
-        const s = String(value || "");
-
-        return s.length <= 4
-            ? (s || "Not set")
-            : "••••••" + s.slice(-4);
-    }
-
-    /* WALLET */
-
-    function renderWallet() {
-
-        document.getElementById("walletBalance").textContent =
-            wallet.toFixed(2);
-
-        document.getElementById("headerBalance").textContent =
-            wallet.toFixed(2);
-    }
-
-    /* RENDER PAYMENT METHODS */
-
-    function renderMethods() {
-
-        const grid = document.getElementById("methodsGrid");
-
-        const query = document
-            .getElementById("methodSearch")
-            .value
-            .trim()
-            .toLowerCase();
-
-        grid.replaceChildren();
-
-        const filtered = methods.filter(m => {
-
-            return [
-                m.name,
-                m.label,
-                m.account,
-                m.currency,
-                m.instructions
-            ].join(" ").toLowerCase().includes(query);
-
-        });
-
-        if (!filtered.length) {
-
-            const e = document.createElement("div");
-
-            e.className = "empty";
-
-            e.style.gridColumn = "1/-1";
-
-            e.textContent = methods.length
-                ? "No matching payment method found."
-                : "No active payment methods are available. Please contact Admin.";
-
-            grid.append(e);
-
+/* INITIALIZE */
+(async()=>{
+    try{
+        if(!token()){
+            location.href = "index.html";
             return;
         }
 
-        filtered.forEach(m => {
+        await loadAll();
+        showPage("step1");
 
-            const info = getLogoInfo(m);
+    }catch(error){
+        showToast(error.message || "Unable to load deposit page.");
 
-            const b = document.createElement("button");
-
-            b.type = "button";
-            b.className = "method";
-
-            if (
-                selectedMethod &&
-                String(selectedMethod.id) === String(m.id)
-            ) {
-                b.classList.add("active");
-            }
-
-            const logo = document.createElement("span");
-
-            logo.className = "method-logo";
-            logo.style.background = info.color;
-            logo.textContent = info.short;
-
-            const wrap = document.createElement("span");
-
-            wrap.className = "method-text";
-
-            const name = document.createElement("span");
-
-            name.className = "method-name";
-            name.textContent = m.name || "Payment Method";
-
-            const account = document.createElement("span");
-
-            account.className = "method-account";
-
-            account.textContent =
-                (m.label ? m.label + " · " : "") +
-                (m.currency || "BDT") +
-                (m.account ? " · " + maskAccount(m.account) : "");
-
-            wrap.append(name, account);
-
-            const check = document.createElement("span");
-
-            check.className = "method-check";
-            check.textContent = "✓";
-
-            b.append(logo, wrap, check);
-
-            b.addEventListener("click", () => selectMethod(m));
-
-            grid.append(b);
-
-        });
-    }
-
-    /* SELECT PAYMENT METHOD */
-
-    function selectMethod(m) {
-
-        selectedMethod = m;
-
-        const info = getLogoInfo(m);
-
-        const icon = document.getElementById("selectedIcon");
-
-        icon.textContent = info.short;
-        icon.style.background = info.color;
-        icon.style.color = "#fff";
-
-        document.getElementById("selectedMethodName").textContent =
-            m.name + (m.label ? " — " + m.label : "");
-
-        document.getElementById("selectedMethodSub").textContent =
-            (m.currency || "BDT") + " · " +
-            (m.account || "Account not set");
-
-        document.getElementById("methodHelp").textContent =
-            "Selected: " + m.name +
-            (m.label ? " — " + m.label : "");
-
-        document.getElementById("currency").value =
-            ["BDT", "USDT", "USD", "INR", "Other"].includes(m.currency)
-                ? m.currency
-                : "Other";
-
-        const box = document.getElementById("instructionText");
-
-        box.replaceChildren();
-
-        const a = document.createElement("div");
-
-        a.style.marginTop = "8px";
-        a.textContent = "Payment Account: " + (m.account || "Not provided");
-
-        const c = document.createElement("div");
-
-        c.textContent = "Currency: " + (m.currency || "BDT");
-
-        const i = document.createElement("div");
-
-        i.style.marginTop = "7px";
-
-        i.textContent = m.instructions ||
-            "Please complete your payment and submit the transaction reference.";
-
-        box.append(a, c, i);
-
-        document.getElementById("paymentInstruction").classList.add("show");
-
-        document.getElementById("methodsPanel").classList.remove("show");
-
-        document.getElementById("methodToggle").classList.remove("open");
-
-        document.getElementById("methodToggle").setAttribute(
-            "aria-expanded",
-            "false"
-        );
-
-        calculate();
-
-        renderMethods();
-    }
-
-    /* CALCULATE DEPOSIT AMOUNT */
-
-    function calculate() {
-
-        const amount = Math.max(
-            0,
-            Number(document.getElementById("amount").value) || 0
-        );
-
-        const formatted =
-            amount.toFixed(2) + " " +
-            document.getElementById("currency").value;
-
-        document.getElementById("requestAmount").textContent = formatted;
-
-        document.getElementById("totalAmount").textContent = formatted;
-    }
-
-    /* DATE FORMAT */
-
-    function formatDate(v) {
-
-        const d = new Date(v);
-
-        return Number.isNaN(d.getTime())
-            ? "Unavailable"
-            : d.toLocaleString("en-GB");
-    }
-
-    /* DEPOSIT HISTORY */
-
-    function renderHistory() {
-
-        const list = document.getElementById("requestList");
-
-        list.replaceChildren();
-
-        document.getElementById("requestCount").textContent =
-            requests.length + " Requests";
-
-        if (!requests.length) {
-
-            const e = document.createElement("div");
-
-            e.className = "empty";
-            e.textContent = "No deposit requests yet.";
-
-            list.append(e);
-
-            return;
-        }
-
-        requests.forEach(r => {
-
-            const card = document.createElement("div");
-
-            card.className = "request-card";
-
-            const top = document.createElement("div");
-
-            top.className = "request-top";
-
-            const method = document.createElement("div");
-
-            method.className = "request-method";
-
-            const logo = document.createElement("span");
-
-            logo.className = "history-logo";
-
-            const saved = methods.find(
-                m => String(m.id) === String(r.payment_method_id)
-            );
-
-            const info = saved
-                ? getLogoInfo(saved)
-                : {
-                    short: String(r.method || "PM").slice(0, 2).toUpperCase(),
-                    color: "#287eae"
-                };
-
-            logo.textContent = info.short;
-            logo.style.background = info.color;
-
-            const name = document.createElement("span");
-
-            name.textContent = r.method || "Unknown";
-
-            method.append(logo, name);
-
-            const status = document.createElement("span");
-
-            const state = String(r.status || "pending").toLowerCase();
-
-            status.className = "request-status";
-
-            if (state === "approved") {
-                status.classList.add("approved");
-            }
-
-            if (state === "rejected") {
-                status.classList.add("rejected");
-            }
-
-            status.textContent = state.toUpperCase();
-
-            top.append(method, status);
-
-            const details = document.createElement("div");
-
-            details.className = "request-details";
-
-            details.textContent =
-                "Request ID: " + r.id +
-                "\nCurrency: " + (r.currency || "BDT") +
-                "\nSender Account: " + maskAccount(r.sender_account) +
-                "\nPayment Account: " + (r.payment_account || "—") +
-                "\nTransaction ID: " + (r.transaction_id || "—") +
-                "\nDate: " + formatDate(r.created_at);
-
-            const amount = document.createElement("div");
-
-            amount.className = "request-amount";
-
-            amount.textContent =
-                Number(r.amount || 0).toFixed(2) +
-                " " + (r.currency || "BDT");
-
-            card.append(top, details, amount);
-
-            if (
-                state === "approved" &&
-                Number(r.credited_points) > 0
-            ) {
-
-                const credit = document.createElement("div");
-
-                credit.className = "request-credit";
-
-                credit.textContent =
-                    "Credited Points: " +
-                    Number(r.credited_points).toFixed(2);
-
-                card.append(credit);
-            }
-
-            if (state === "rejected" && r.rejection_reason) {
-
-                const reason = document.createElement("div");
-
-                reason.className = "request-details";
-
-                reason.style.color = "#d34c5e";
-
-                reason.textContent =
-                    "Rejection Reason: " + r.rejection_reason;
-
-                card.append(reason);
-            }
-
-            list.append(card);
-
-        });
-    }
-
-    /* LOAD DATA FROM SERVER */
-
-    async function loadAll() {
-
-        const [
-            me,
-            walletData,
-            methodData,
-            historyData
-        ] = await Promise.all([
-
-            api("/auth/me"),
-
-            api("/wallet"),
-
-            api("/public/payment-methods"),
-
-            api("/deposits/me")
-
-        ]);
-
-        currentUser = me.user;
-
-        wallet = Number(walletData.balance) || 0;
-
-        methods = Array.isArray(methodData.methods)
-            ? methodData.methods
-            : [];
-
-        requests = Array.isArray(historyData.requests)
-            ? historyData.requests
-            : [];
-
-        renderWallet();
-
-        renderMethods();
-
-        renderHistory();
-
-        document.getElementById("submitBtn").disabled = false;
-
-        if (
-            selectedMethod &&
-            !methods.some(m => String(m.id) === String(selectedMethod.id))
-        ) {
-
-            selectedMethod = null;
-
-            resetSelectedMethod();
-        }
-    }
-
-    /* RESET PAYMENT METHOD */
-
-    function resetSelectedMethod() {
-
-        document.getElementById("selectedMethodName").textContent =
-            "Choose a payment method";
-
-        document.getElementById("selectedMethodSub").textContent =
-            "Tap to view available methods";
-
-        document.getElementById("selectedIcon").textContent = "＋";
-
-        document.getElementById("selectedIcon").style.background =
-            "#e3f3ff";
-
-        document.getElementById("selectedIcon").style.color =
-            "#1687d5";
-
-        document.getElementById("paymentInstruction").classList.remove("show");
-
-        document.getElementById("instructionText").replaceChildren();
-
-        renderMethods();
-    }
-
-    /* SUBMIT DEPOSIT REQUEST */
-
-    async function submitRequest() {
-
-        const btn = document.getElementById("submitBtn");
-
-        if (!currentUser) {
-
-            showToast("Please login before submitting a deposit request.");
-
-            return;
-        }
-
-        if (!selectedMethod) {
-
-            showToast("Please select a payment method.");
-
-            document.getElementById("methodsPanel").classList.add("show");
-
-            document.getElementById("methodToggle").classList.add("open");
-
-            document.getElementById("methodToggle").setAttribute(
-                "aria-expanded",
-                "true"
-            );
-
-            renderMethods();
-
-            return;
-        }
-
-        const amount = Number(
-            document.getElementById("amount").value
-        );
-
-        const sender = document
-            .getElementById("senderAccount")
-            .value
-            .trim();
-
-        const transaction = document
-            .getElementById("transactionId")
-            .value
-            .trim();
-
-        if (!Number.isFinite(amount) || amount <= 0) {
-
-            showToast("Please enter a valid deposit amount.");
-
-            return;
-        }
-
-        if (!sender) {
-
-            showToast("Please enter your sender account details.");
-
-            return;
-        }
-
-        if (!transaction) {
-
-            showToast("Please enter the Transaction ID.");
-
-            return;
-        }
-
-        btn.disabled = true;
-
-        btn.textContent = "SUBMITTING...";
-
-        try {
-
-            await api("/deposits", {
-                method: "POST",
-
-                body: JSON.stringify({
-
-                    payment_method_id: Number(selectedMethod.id),
-
-                    amount,
-
-                    sender_account: sender,
-
-                    transaction_id: transaction
-
-                })
-            });
-
-            document.getElementById("senderAccount").value = "";
-
-            document.getElementById("transactionId").value = "";
-
-            document.getElementById("amount").value = "";
-
-            selectedMethod = null;
-
-            resetSelectedMethod();
-
-            calculate();
-
-            await loadAll();
-
-            showToast("Deposit request submitted. Status: Pending.");
-
-        } catch (e) {
-
-            showToast(e.message);
-
-        } finally {
-
-            btn.disabled = false;
-
-            btn.textContent = "SUBMIT DEPOSIT REQUEST →";
-        }
-    }
-
-    /* PAYMENT METHOD PANEL EVENTS */
-
-    document.getElementById("methodToggle").addEventListener(
-        "click",
-        () => {
-
-            const panel = document.getElementById("methodsPanel");
-
-            const open = panel.classList.toggle("show");
-
-            document.getElementById("methodToggle").classList.toggle(
-                "open",
-                open
-            );
-
-            document.getElementById("methodToggle").setAttribute(
-                "aria-expanded",
-                String(open)
-            );
-
-            if (open) {
-
-                document.getElementById("methodSearch").focus();
-
-                renderMethods();
-            }
-        }
-    );
-
-    /* SEARCH METHODS */
-
-    document.getElementById("methodSearch").addEventListener(
-        "input",
-        renderMethods
-    );
-
-    /* AMOUNT CHANGE */
-
-    document.getElementById("amount").addEventListener(
-        "input",
-        calculate
-    );
-
-    document.getElementById("currency").addEventListener(
-        "change",
-        calculate
-    );
-
-    /* SUBMIT BUTTON */
-
-    document.getElementById("submitBtn").addEventListener(
-        "click",
-        submitRequest
-    );
-
-    /* INITIALIZE DEPOSIT PAGE */
-
-    (async () => {
-
-        try {
-
-            if (!token()) {
-
+        if(/login|session|token/i.test(error.message)){
+            setTimeout(()=>{
                 location.href = "index.html";
-
-                return;
-            }
-
-            document.getElementById("submitBtn").disabled = true;
-
-            await loadAll();
-
-        } catch (e) {
-
-            showToast(e.message);
-
-            document.getElementById("submitBtn").disabled = true;
-
-            if (/login|session|token/i.test(e.message)) {
-
-                setTimeout(() => {
-                    location.href = "index.html";
-                }, 1600);
-            }
+            },1500);
         }
-
-    })();
-
+    }
+})();
 </script>
-
 </body>
 </html>
