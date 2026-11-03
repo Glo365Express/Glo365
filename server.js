@@ -363,6 +363,33 @@
           updated_by BIGINT REFERENCES users(id) ON DELETE SET NULL
         );
 
+        -- Millionaire is intentionally isolated from Single/2D/3UP/6UP settlement.
+        CREATE TABLE IF NOT EXISTS millionaire_draws (
+          id BIGSERIAL PRIMARY KEY,
+          draw_date DATE NOT NULL UNIQUE,
+          draw_number VARCHAR(40) NOT NULL UNIQUE,
+          draw_at TIMESTAMPTZ NOT NULL,
+          result VARCHAR(3),
+          published_at TIMESTAMPTZ,
+          updated_at TIMESTAMPTZ NOT NULL DEFAULT NOW(),
+          updated_by BIGINT REFERENCES users(id) ON DELETE SET NULL,
+          CHECK (result IS NULL OR result ~ '^[0-9]{3}$')
+        );
+        CREATE TABLE IF NOT EXISTS millionaire_bets (
+          id BIGSERIAL PRIMARY KEY,
+          user_id BIGINT NOT NULL REFERENCES users(id) ON DELETE CASCADE,
+          draw_id BIGINT NOT NULL REFERENCES millionaire_draws(id) ON DELETE RESTRICT,
+          selection VARCHAR(3) NOT NULL CHECK (selection ~ '^[0-9]{3}$'),
+          amount NUMERIC(12,2) NOT NULL CHECK (amount > 0),
+          status VARCHAR(20) NOT NULL DEFAULT 'pending'
+            CHECK (status IN ('pending','win','loss')),
+          created_at TIMESTAMPTZ NOT NULL DEFAULT NOW()
+        );
+        CREATE INDEX IF NOT EXISTS idx_millionaire_bets_user_date
+          ON millionaire_bets(user_id, created_at DESC);
+        CREATE INDEX IF NOT EXISTS idx_millionaire_bets_draw
+          ON millionaire_bets(draw_id, status);
+
 
         ALTER TABLE users
           ADD COLUMN IF NOT EXISTS role VARCHAR(20) NOT NULL DEFAULT 'user';
@@ -459,7 +486,7 @@
           ON deposit_requests(LOWER(transaction_id));
 
 
-        -- Withdrawal requests are stored server-side; review changes status only.
+        -- Withdrawal requests are stored server-side; points are debited on submission and refunded only on rejection.
         CREATE TABLE IF NOT EXISTS withdrawal_requests (
           id BIGSERIAL PRIMARY KEY,
           user_id BIGINT NOT NULL REFERENCES users(id) ON DELETE CASCADE,
@@ -589,6 +616,7 @@
         CREATE INDEX IF NOT EXISTS idx_admin_messages_active ON admin_messages(active);
         CREATE INDEX IF NOT EXISTS idx_admin_live_events_active ON admin_live_events(active);
         CREATE INDEX IF NOT EXISTS idx_draw_settings_time ON draw_settings(draw_at);
+        CREATE INDEX IF NOT EXISTS idx_millionaire_draw_date ON millionaire_draws(draw_date DESC);
         CREATE INDEX IF NOT EXISTS idx_demo_3up_user
           ON demo_3up_bets(user_id, created_at DESC);
         CREATE INDEX IF NOT EXISTS idx_demo_6up_user
@@ -2563,8 +2591,6 @@
         return sendError(res, 400, "Enter a valid withdrawal amount, method and account.");
       }
 
-      // Do NOT deduct DEMO points when a withdrawal request is submitted.
-      // Pending requests reserve the amount for validation; points are deducted only on admin approval.
       const client = await pool.connect();
       try {
         await client.query("BEGIN");
@@ -2581,43 +2607,38 @@
           return sendError(res, 403, "Your account is not active.");
         }
 
-        // Reserve all pending requests that have not yet been deducted.
-        // The wallet balance itself remains unchanged until an admin approves.
-        const pendingResult = await client.query(
-          `SELECT COALESCE(SUM(amount),0) AS reserved
-           FROM withdrawal_requests
-           WHERE user_id=$1 AND status='pending' AND points_deducted=FALSE`,
-          [req.user.id]
-        );
         const balance = Number(walletResult.rows[0].balance || 0);
-        const pendingReserved = Number(pendingResult.rows[0].reserved || 0);
-        const available = Math.max(0, balance - pendingReserved);
-        if (!Number.isFinite(balance) || !Number.isFinite(pendingReserved) || amount > available) {
+        if (!Number.isFinite(balance) || balance < amount) {
           await client.query("ROLLBACK");
-          return sendError(res, 400, "Insufficient available DEMO points after pending withdrawal requests.");
+          return sendError(res, 400, "Insufficient DEMO points.");
         }
 
+        // Debit immediately when the request is created. Approval never debits again.
+        await client.query(
+          "UPDATE users SET balance=balance-$1,updated_at=NOW() WHERE id=$2",
+          [amount.toFixed(2), req.user.id]
+        );
         const result = await client.query(
           `INSERT INTO withdrawal_requests (user_id,amount,method,account,points_deducted)
-           VALUES ($1,$2,$3,$4,FALSE)
+           VALUES ($1,$2,$3,$4,TRUE)
            RETURNING id,amount,method,account,status,points_deducted,created_at`,
           [req.user.id, amount.toFixed(2), method, account]
         );
         const withdrawalId = result.rows[0].id;
-
+        await client.query(
+          `INSERT INTO wallet_transactions (user_id,type,amount,currency,description,reference)
+           VALUES ($1,'withdrawal_debit',$2,'DEMO',$3,$4)`,
+          [req.user.id, (-amount).toFixed(2), "Withdrawal points deducted when request was submitted", "WD-"+withdrawalId]
+        );
+        const newBalance = Number((balance-amount).toFixed(2));
         await client.query("COMMIT");
         await audit(req.user.id, "withdrawal_requested", req.user.id, {
-          withdrawal_id: withdrawalId,
-          amount,
-          wallet_balance_unchanged: balance,
-          pending_reserved: Number((pendingReserved + amount).toFixed(2))
+          withdrawal_id: withdrawalId, amount, new_balance: newBalance, points_deducted: true
         });
         res.status(201).json({
-          success: true,
-          request: result.rows[0],
-          balance,
-          available_balance: Number((available - amount).toFixed(2)),
-          message: "Withdrawal request submitted. DEMO points will be deducted only after admin approval."
+          success: true, request: result.rows[0], balance: newBalance,
+          available_balance: newBalance,
+          message: "Withdrawal request submitted. DEMO points have been deducted from your wallet.",
         });
       } catch (error) {
         await client.query("ROLLBACK");
@@ -2667,131 +2688,66 @@
 
     app.post("/api/admin/withdrawals/:id/approve", authenticateToken, requireAdmin, asyncRoute(async (req, res) => {
       const id = Number(req.params.id);
-
-      if (!Number.isSafeInteger(id) || id < 1) {
-        return sendError(res, 400, "Invalid withdrawal request ID.");
-      }
-
+      if (!Number.isSafeInteger(id) || id < 1) return sendError(res, 400, "Invalid withdrawal request ID.");
       const client = await pool.connect();
-
       try {
         await client.query("BEGIN");
-
-        // Lock the request first so concurrent approvals cannot debit twice.
         const found = await client.query(
-          `SELECT *
-           FROM withdrawal_requests
-           WHERE id = $1
-           FOR UPDATE`,
-          [id]
+          "SELECT * FROM withdrawal_requests WHERE id=$1 FOR UPDATE", [id]
         );
-
         if (!found.rows.length) {
           await client.query("ROLLBACK");
           return sendError(res, 404, "Withdrawal request not found.");
         }
-
         const request = found.rows[0];
-
         if (request.status !== "pending") {
           await client.query("ROLLBACK");
           return sendError(res, 409, "This request has already been reviewed.");
         }
-
-        const amount = Number(request.amount);
-
-        if (
-          !Number.isFinite(amount) ||
-          amount <= 0 ||
-          Math.round(amount * 100) !== amount * 100
-        ) {
-          await client.query("ROLLBACK");
-          return sendError(res, 400, "The withdrawal amount is invalid.");
-        }
-
-        // Deduct points now for requests that have not been deducted yet.
-        // Older requests with points_deducted=TRUE were already debited; do not debit twice.
-        let newBalance = Number.NaN;
+        // New requests are already debited at submission. Only legacy pending
+        // requests created before this rule (points_deducted=FALSE) need a one-time
+        // debit here so that old records cannot be approved without a deduction.
         if (request.points_deducted !== true) {
+          const amount = Number(request.amount);
           const walletResult = await client.query(
-            `SELECT balance, status FROM users WHERE id = $1 FOR UPDATE`,
-            [request.user_id]
+            'SELECT balance FROM users WHERE id=$1 FOR UPDATE', [request.user_id]
           );
           if (!walletResult.rows.length) {
-            await client.query("ROLLBACK");
-            return sendError(res, 404, "Withdrawal user's account was not found.");
-          }
-          if (String(walletResult.rows[0].status || "active").toLowerCase() !== "active") {
-            await client.query("ROLLBACK");
-            return sendError(res, 403, "The user's account is not active.");
+            await client.query('ROLLBACK');
+            return sendError(res,404,'Withdrawal user account was not found.');
           }
           const currentBalance = Number(walletResult.rows[0].balance || 0);
-          if (!Number.isFinite(currentBalance) || currentBalance < amount) {
-            await client.query("ROLLBACK");
-            return sendError(res, 409, "Insufficient DEMO points for this legacy pending withdrawal.");
+          if (!Number.isFinite(amount) || amount <= 0 || currentBalance < amount) {
+            await client.query('ROLLBACK');
+            return sendError(res,409,'This older pending request was not deducted at submission and the wallet has insufficient points.');
           }
-          newBalance = Number((currentBalance - amount).toFixed(2));
-          await client.query(
-            `UPDATE users SET balance=$1,updated_at=NOW() WHERE id=$2`,
-            [newBalance.toFixed(2), request.user_id]
-          );
-          await client.query(
-            `INSERT INTO wallet_transactions (user_id,type,amount,currency,description,reference)
-             VALUES ($1,'withdrawal_debit',$2,'DEMO',$3,$4)`,
-            [request.user_id,(-amount).toFixed(2),"Withdrawal points deducted after admin approval","WD-"+id]
-          );
-        } else {
-          const walletResult = await client.query(
-            "SELECT balance FROM users WHERE id=$1",
-            [request.user_id]
-          );
-          newBalance = walletResult.rows.length ? Number(walletResult.rows[0].balance) : Number.NaN;
+          await client.query('UPDATE users SET balance=balance-$1,updated_at=NOW() WHERE id=$2',
+            [amount.toFixed(2),request.user_id]);
+          await client.query(`INSERT INTO wallet_transactions(user_id,type,amount,currency,description,reference)
+            VALUES($1,'withdrawal_debit',$2,'DEMO',$3,$4)`,
+            [request.user_id,(-amount).toFixed(2),'Legacy withdrawal points deducted on approval','WD-'+id]);
         }
-
         const updated = await client.query(
           `UPDATE withdrawal_requests
-           SET status = 'approved',
-               points_deducted = TRUE,
-               reviewed_by = $1,
-               reviewed_at = NOW()
-           WHERE id = $2
-             AND status = 'pending'
-           RETURNING *`,
+           SET status='approved', points_deducted=TRUE, reviewed_by=$1, reviewed_at=NOW()
+           WHERE id=$2 AND status='pending' RETURNING *`,
           [req.user.id, id]
         );
-
-        if (!updated.rows.length) {
-          throw new Error("Withdrawal approval state changed unexpectedly.");
-        }
-
+        if (!updated.rows.length) throw new Error("Withdrawal approval state changed unexpectedly.");
+        const wallet = await client.query("SELECT balance FROM users WHERE id=$1", [request.user_id]);
+        const balance = wallet.rows.length ? Number(wallet.rows[0].balance) : null;
         await client.query("COMMIT");
-
-        await audit(
-          req.user.id,
-          "withdrawal_approved",
-          request.user_id,
-          {
-            withdrawal_id: id,
-            amount,
-            new_balance: newBalance
-          }
-        );
-
-        res.json({
-          success: true,
-          request: updated.rows[0],
-          new_balance: newBalance,
-          message: request.points_deducted === true
-            ? "Approved successfully. Points for this older request had already been deducted. No real payment was sent."
-            : "Approved successfully. DEMO points have now been deducted from the wallet. No real payment was sent."
+        await audit(req.user.id, "withdrawal_approved", request.user_id, {
+          withdrawal_id:id, amount:Number(request.amount), points_deducted_before_approval:true
         });
-
+        res.json({
+          success:true, request:updated.rows[0], new_balance:balance,
+          message:"Withdrawal approved. Previously deducted DEMO points remain deducted; no wallet credit was made and no real payment was sent."
+        });
       } catch (error) {
         await client.query("ROLLBACK");
         throw error;
-      } finally {
-        client.release();
-      }
+      } finally { client.release(); }
     }));
 
     app.post("/api/admin/withdrawals/:id/reject", authenticateToken, requireAdmin, asyncRoute(async (req, res) => {
@@ -2876,6 +2832,223 @@
       } finally {
         client.release();
       }
+    }));
+
+    // ==========================================
+    // MILLIONAIRE DRAW API (Asia/Dhaka, daily at 00:15 / 12:15 AM)
+    // Betting closes at 00:00 and reopens at 03:15 Bangladesh time.
+    // Result settlement updates history only; it never credits/debits wallet.
+    // ==========================================
+
+    async function getMillionaireSchedule() {
+      const result = await pool.query(`
+        WITH clock AS (
+          SELECT NOW() AS now_at,
+                 ((NOW() AT TIME ZONE 'Asia/Dhaka')::date + TIME '00:15:00')
+                   AT TIME ZONE 'Asia/Dhaka' AS today_draw_at
+        )
+        SELECT now_at,
+               CASE WHEN now_at < today_draw_at + INTERVAL '3 hours'
+                    THEN today_draw_at ELSE today_draw_at + INTERVAL '1 day' END AS draw_at
+        FROM clock
+      `);
+      const drawAt = result.rows[0].draw_at;
+      const draw = await pool.query(`
+        INSERT INTO millionaire_draws (draw_date,draw_number,draw_at)
+        VALUES ((($1::timestamptz AT TIME ZONE 'Asia/Dhaka')::date),
+                (3679 + ((($1::timestamptz AT TIME ZONE 'Asia/Dhaka')::date - DATE '2026-11-03'))::int)::text || ':' || TO_CHAR($1::timestamptz AT TIME ZONE 'Asia/Dhaka','MM:DD'), $1)
+        ON CONFLICT (draw_date) DO UPDATE SET draw_at=EXCLUDED.draw_at, updated_at=NOW()
+        RETURNING id,draw_date,draw_number,draw_at,result,published_at
+      `,[drawAt]);
+      const row = draw.rows[0];
+      const status = await pool.query(`
+        SELECT NOW() >= ($1::timestamptz - INTERVAL '15 minutes')
+           AND NOW() < ($1::timestamptz + INTERVAL '3 hours') AS betting_locked,
+               NOW() AS server_now
+      `,[row.draw_at]);
+      return { draw:row, betting_locked:status.rows[0].betting_locked,
+        server_now:status.rows[0].server_now, timezone:'Asia/Dhaka',
+        draw_time:'00:15', lock_minutes:15, reopen_after_hours:3 };
+    }
+
+    app.get('/api/public/daily-millionaire-settings', asyncRoute(async (req,res) => {
+      const schedule = await getMillionaireSchedule();
+      res.json({ success:true, ...schedule,
+        drawSettings:{ drawNumber:schedule.draw.draw_number, drawAt:schedule.draw.draw_at,
+          drawDate:schedule.draw.draw_date, bettingLocked:schedule.betting_locked,
+          lockMinutes:15, timezone:'Asia/Dhaka' }
+      });
+    }));
+
+    app.get('/api/public/daily-millionaire/result', asyncRoute(async (req,res) => {
+      const result = await pool.query(`
+        SELECT id,draw_number,TO_CHAR(draw_date,'YYYY-MM-DD') AS draw_date,
+               draw_at,result,published_at,updated_at
+        FROM millionaire_draws WHERE result IS NOT NULL
+        ORDER BY draw_date DESC LIMIT 1
+      `);
+      res.json({ success:true, result:result.rows[0] || null,
+        latestResult:result.rows[0] || null });
+    }));
+
+    app.get('/api/public/daily-millionaire/results', asyncRoute(async (req,res) => {
+      const result = await pool.query(`
+        SELECT id,draw_number,TO_CHAR(draw_date,'YYYY-MM-DD') AS draw_date,
+               draw_at,result,published_at,updated_at
+        FROM millionaire_draws WHERE result IS NOT NULL
+        ORDER BY draw_date DESC LIMIT 100
+      `);
+      res.json({ success:true, results:result.rows });
+    }));
+
+    app.post('/api/demo/daily-millionaire/bets', authenticateToken, asyncRoute(async (req,res) => {
+      const input = Array.isArray(req.body) ? req.body :
+        (Array.isArray(req.body.rows) ? req.body.rows :
+        (Array.isArray(req.body.bets) ? req.body.bets :
+        (Array.isArray(req.body.selections) ? req.body.selections : [req.body])));
+      const entries = input.map(item => ({
+        number:String(item.number ?? item.selection ?? item.selectedNumber ?? '').trim(),
+        amount:Number(item.amount ?? item.betAmount ?? item.stake)
+      })).filter(item => item.number || Number.isFinite(item.amount));
+      if (!entries.length || entries.length > 50 || entries.some(x => !/^\d{3}$/.test(x.number) || !Number.isFinite(x.amount) || x.amount <= 0 || x.amount > 100000 || Math.round(x.amount*100)!==x.amount*100)) {
+        return sendError(res,400,'Enter 3-digit numbers (000-999) and valid amounts.');
+      }
+      const total = entries.reduce((sum,x)=>sum+x.amount,0);
+      if (!Number.isFinite(total) || total > 1000000) return sendError(res,400,'Invalid total bet amount.');
+      const client = await pool.connect();
+      try {
+        await client.query('BEGIN');
+        const schedule = await getMillionaireSchedule();
+        // Re-check server time inside the transaction to prevent client-side bypass.
+        const lockCheck = await client.query(`
+          SELECT NOW() >= ($1::timestamptz - INTERVAL '15 minutes')
+             AND NOW() < ($1::timestamptz + INTERVAL '3 hours') AS locked
+        `,[schedule.draw.draw_at]);
+        if (lockCheck.rows[0].locked) {
+          await client.query('ROLLBACK');
+          return sendError(res,403,'Millionaire betting is closed. It reopens at 03:15 AM Bangladesh time.');
+        }
+        const drawResult = await client.query(
+          'SELECT id,result FROM millionaire_draws WHERE id=$1 FOR SHARE',[schedule.draw.id]);
+        if (!drawResult.rows.length || drawResult.rows[0].result) {
+          await client.query('ROLLBACK');
+          return sendError(res,403,'This Millionaire draw is no longer accepting entries.');
+        }
+        const userResult = await client.query(
+          'SELECT balance,status FROM users WHERE id=$1 FOR UPDATE',[req.user.id]);
+        if (!userResult.rows.length) { await client.query('ROLLBACK'); return sendError(res,404,'User not found.'); }
+        if (String(userResult.rows[0].status||'active').toLowerCase()!=='active') {
+          await client.query('ROLLBACK'); return sendError(res,403,'Your account is not active.');
+        }
+        const balance = Number(userResult.rows[0].balance||0);
+        if (balance < total) { await client.query('ROLLBACK'); return sendError(res,400,'Insufficient DEMO points.'); }
+        await client.query('UPDATE users SET balance=balance-$1,updated_at=NOW() WHERE id=$2',[total.toFixed(2),req.user.id]);
+        const saved=[];
+        for (const item of entries) {
+          const bet = await client.query(`
+            INSERT INTO millionaire_bets(user_id,draw_id,selection,amount,status)
+            VALUES($1,$2,$3,$4,'pending') RETURNING id,selection,amount,status,created_at
+          `,[req.user.id,schedule.draw.id,item.number,item.amount.toFixed(2)]);
+          saved.push(bet.rows[0]);
+          await client.query(`
+            INSERT INTO wallet_transactions(user_id,type,amount,currency,description,reference)
+            VALUES($1,'demo_bet',$2,'DEMO',$3,$4)
+          `,[req.user.id,(-item.amount).toFixed(2),'Millionaire demo entry','MLBET-'+bet.rows[0].id]);
+        }
+        const updatedWallet = await client.query('SELECT balance FROM users WHERE id=$1',[req.user.id]);
+        await client.query('COMMIT');
+        res.status(201).json({ success:true,message:'Millionaire entries submitted.',
+          draw:schedule.draw,bets:saved,total_amount:total,
+          balance:Number(updatedWallet.rows[0].balance) });
+      } catch(error) {
+        await client.query('ROLLBACK');
+        console.error('Millionaire bet error:',error.message);
+        return sendError(res,500,'Could not submit Millionaire entries.');
+      } finally { client.release(); }
+    }));
+
+    app.get('/api/demo/daily-millionaire/bets/me', authenticateToken, asyncRoute(async (req,res) => {
+      const result = await pool.query(`
+        SELECT b.id,b.selection,b.amount,b.status,b.created_at,
+               d.draw_number,TO_CHAR(d.draw_date,'YYYY-MM-DD') AS draw_date,
+               d.draw_at,d.result
+        FROM millionaire_bets b JOIN millionaire_draws d ON d.id=b.draw_id
+        WHERE b.user_id=$1 ORDER BY b.created_at DESC LIMIT 200
+      `,[req.user.id]);
+      res.json({ success:true,bets:result.rows });
+    }));
+
+    app.get('/api/admin/daily-millionaire/draws', authenticateToken, requireAdmin, asyncRoute(async (req,res) => {
+      const result = await pool.query(`
+        SELECT id,draw_number,TO_CHAR(draw_date,'YYYY-MM-DD') AS draw_date,
+               draw_at,result,published_at,updated_at
+        FROM millionaire_draws ORDER BY draw_date DESC LIMIT 200
+      `);
+      res.json({ success:true,draws:result.rows });
+    }));
+
+    app.post('/api/admin/daily-millionaire/results', authenticateToken, requireAdmin, asyncRoute(async (req,res) => {
+      const resultNumber = String(req.body.result ?? req.body.number ?? '').trim();
+      if (!/^\d{3}$/.test(resultNumber)) return sendError(res,400,'Result must be exactly 3 digits (000-999).');
+      const dateRaw = String(req.body.draw_date ?? req.body.date ?? '').trim();
+      const drawNumber = cleanText(req.body.draw_number || '',40);
+      const client = await pool.connect();
+      try {
+        await client.query('BEGIN');
+        let draw;
+        if (dateRaw) {
+          if (!/^\d{4}-\d{2}-\d{2}$/.test(dateRaw)) { await client.query('ROLLBACK'); return sendError(res,400,'Invalid draw date.'); }
+          const found = await client.query(`
+            INSERT INTO millionaire_draws(draw_date,draw_number,draw_at)
+            VALUES($1,COALESCE(NULLIF($2,''),(3679 + ($1::date - DATE '2026-11-03'))::text || ':' || TO_CHAR($1::date,'MM:DD')),
+              (($1::date + TIME '00:15:00') AT TIME ZONE 'Asia/Dhaka'))
+            ON CONFLICT(draw_date) DO UPDATE SET updated_at=NOW()
+            RETURNING *
+          `,[dateRaw,drawNumber]);
+          draw=found.rows[0];
+        } else {
+          const schedule=await getMillionaireSchedule();
+          const found=await client.query('SELECT * FROM millionaire_draws WHERE id=$1 FOR UPDATE',[schedule.draw.id]);
+          draw=found.rows[0];
+        }
+        const saved=await client.query(`
+          UPDATE millionaire_draws SET result=$1,published_at=COALESCE(published_at,NOW()),
+            updated_at=NOW(),updated_by=$2 WHERE id=$3 RETURNING *
+        `,[resultNumber,req.user.id,draw.id]);
+        const settlement=await client.query(`
+          UPDATE millionaire_bets SET status=CASE WHEN selection=$1 THEN 'win' ELSE 'loss' END
+          WHERE draw_id=$2 AND status='pending' RETURNING id
+        `,[resultNumber,draw.id]);
+        await client.query('COMMIT');
+        await audit(req.user.id,'millionaire_result_published',null,{
+          draw_id:draw.id,draw_date:draw.draw_date,result:resultNumber,
+          settled_bets:settlement.rowCount,wallet_credited:false
+        });
+        res.json({ success:true,message:'Millionaire result published. Bet history updated; wallet balances were not changed.',
+          result:saved.rows[0],settled_bets:settlement.rowCount });
+      } catch(error) {
+        await client.query('ROLLBACK');
+        console.error('Millionaire result publish error:',error.message);
+        return sendError(res,500,'Could not publish Millionaire result.');
+      } finally { client.release(); }
+    }));
+
+    app.put('/api/admin/daily-millionaire/results/:id', authenticateToken, requireAdmin, asyncRoute(async (req,res) => {
+      const id=Number(req.params.id);
+      const resultNumber=String(req.body.result ?? req.body.number ?? '').trim();
+      if (!Number.isSafeInteger(id)||id<1||!/^\d{3}$/.test(resultNumber)) return sendError(res,400,'Valid draw ID and 3-digit result are required.');
+      const client=await pool.connect();
+      try {
+        await client.query('BEGIN');
+        const found=await client.query('SELECT * FROM millionaire_draws WHERE id=$1 FOR UPDATE',[id]);
+        if (!found.rows.length) { await client.query('ROLLBACK'); return sendError(res,404,'Millionaire draw not found.'); }
+        const saved=await client.query(`UPDATE millionaire_draws SET result=$1,published_at=COALESCE(published_at,NOW()),updated_at=NOW(),updated_by=$2 WHERE id=$3 RETURNING *`,[resultNumber,req.user.id,id]);
+        const settlement=await client.query(`UPDATE millionaire_bets SET status=CASE WHEN selection=$1 THEN 'win' ELSE 'loss' END WHERE draw_id=$2 RETURNING id`,[resultNumber,id]);
+        await client.query('COMMIT');
+        await audit(req.user.id,'millionaire_result_updated',null,{draw_id:id,result:resultNumber,settled_bets:settlement.rowCount,wallet_credited:false});
+        res.json({success:true,message:'Millionaire result updated. Bet history recalculated without wallet changes.',result:saved.rows[0],settled_bets:settlement.rowCount});
+      } catch(error) { await client.query('ROLLBACK'); throw error; }
+      finally { client.release(); }
     }));
 
     // ==========================================
@@ -3038,17 +3211,15 @@
       asyncRoute(async (req, res) => {
         const result = await pool.query(
           `SELECT id, game_name, selection, amount, status, created_at
-           FROM demo_bets
-           WHERE user_id = $1
-           ORDER BY created_at DESC
-           LIMIT 100`,
+           FROM demo_bets WHERE user_id = $1
+           UNION ALL
+           SELECT b.id, 'Millionaire' AS game_name, b.selection, b.amount, b.status, b.created_at
+           FROM millionaire_bets b WHERE b.user_id = $1
+           ORDER BY created_at DESC LIMIT 200`,
           [req.user.id]
         );
 
-        res.json({
-          success: true,
-          bets: result.rows
-        });
+        res.json({ success: true, bets: result.rows });
       })
     );
 
@@ -3585,298 +3756,4 @@
           const discountPercent = Number(
             settingsResult.rows[0]?.discount_percent || 0
           );
-          const discountCents = Math.round(totalCents * discountPercent / 100);
-          const payableCents = totalCents - discountCents;
-
-          if (payableCents <= 0) {
-            await client.query("ROLLBACK");
-            return sendError(res, 400, "Payable amount must be greater than zero.");
-          }
-
-          const userResult = await client.query(
-            `SELECT balance
-             FROM users
-             WHERE id = $1
-             FOR UPDATE`,
-            [req.user.id]
-          );
-
-          if (!userResult.rows.length) {
-            await client.query("ROLLBACK");
-            return sendError(res, 404, "User not found.");
-          }
-
-          const balanceCents = Math.round(Number(userResult.rows[0].balance) * 100);
-
-          if (balanceCents < payableCents) {
-            await client.query("ROLLBACK");
-            return sendError(res, 400, "Insufficient demo balance.");
-          }
-
-          await client.query(
-            `UPDATE users
-             SET balance = balance - $1,
-                 updated_at = NOW()
-             WHERE id = $2`,
-            [centsToAmount(payableCents), req.user.id]
-          );
-
-          const betResult = await client.query(
-            `INSERT INTO demo_6up_bets
-             (user_id, draw_number, rows, total_amount,
-              discount_percent, discount_amount, payable_amount, draw_date)
-             VALUES ($1, $2, $3::jsonb, $4, $5, $6, $7,
-                     ($8::timestamptz AT TIME ZONE 'Asia/Dhaka')::date)
-             RETURNING id, user_id, draw_number, rows, total_amount,
-                       discount_percent, discount_amount, payable_amount,
-                       status, created_at`,
-            [
-              req.user.id,
-              draw.draw_number || "",
-              JSON.stringify(cleanRows),
-              centsToAmount(totalCents),
-              discountPercent,
-              centsToAmount(discountCents),
-              centsToAmount(payableCents),
-              draw.draw_at
-            ]
-          );
-
-          await client.query(
-            `INSERT INTO wallet_transactions
-             (user_id, type, amount, currency, description, reference)
-             VALUES ($1, 'demo_6up_bet', $2, 'DEMO', $3, $4)`,
-            [
-              req.user.id,
-              -Number(centsToAmount(payableCents)),
-              "6UP Demo Entry",
-              "6UP-" + betResult.rows[0].id
-            ]
-          );
-
-          const updatedBalance = await client.query(
-            "SELECT balance FROM users WHERE id = $1",
-            [req.user.id]
-          );
-
-          await client.query("COMMIT");
-
-          res.status(201).json({
-            success: true,
-            message: "6UP demo entry submitted successfully.",
-            currency: "DEMO",
-            is_demo: true,
-            bet: betResult.rows[0],
-            balance: updatedBalance.rows[0].balance
-          });
-        } catch (error) {
-          await client.query("ROLLBACK");
-          console.error("6UP demo entry error:", error.message);
-          return sendError(res, 500, "Could not submit 6UP demo entry.");
-        } finally {
-          client.release();
-        }
-      })
-    );
-
-    // Each user can see only their own 6UP entries.
-    app.get(
-      "/api/demo/6up/bets",
-      authenticateToken,
-      asyncRoute(async (req, res) => {
-        const result = await pool.query(
-          `SELECT id, draw_number, rows, total_amount,
-                  discount_percent, discount_amount, payable_amount,
-                  status, created_at
-           FROM demo_6up_bets
-           WHERE user_id = $1
-           ORDER BY created_at DESC
-           LIMIT 100`,
-          [req.user.id]
-        );
-
-        res.json({
-          success: true,
-          currency: "DEMO",
-          bets: result.rows
-        });
-      })
-    );
-
-    // ==========================================
-    // STRUCTURED DRAW RESULTS + SERVER SETTLEMENT
-    // ==========================================
-
-    function resultMatches(game, selection, result) {
-      const g = String(game || "").toLowerCase().replace(/[\s_-]/g, "");
-      const n = String(selection || "").trim();
-      const first = String(result.first_prize || "").padStart(6, "0");
-      const last = String(result.last_two || "").padStart(2, "0");
-      const fronts = Array.isArray(result.front_three) ? result.front_three : [];
-      if (g.includes("single")) return /^\d$/.test(n) && n === first.slice(-1);
-      if (g === "2d" || g.includes("2d")) return /^\d{1,2}$/.test(n) && n.padStart(2, "0") === last;
-      if (g.includes("3up")) return /^\d{1,3}$/.test(n) && fronts.includes(n.padStart(3, "0"));
-      if (g.includes("6up")) return /^\d{1,6}$/.test(n) && n.padStart(6, "0") === first;
-      return false;
-    }
-
-    async function settleDrawBets(client, result) {
-      let checked = 0, won = 0, lost = 0;
-      const singleRows = await client.query(
-        `SELECT id, game_name, selection FROM demo_bets
-         WHERE draw_date = $1 AND LOWER(status) NOT IN ('win','won','loss','lose','lost','cancelled','canceled')
-         FOR UPDATE`, [result.draw_date]
-      );
-      for (const bet of singleRows.rows) {
-        const isWin = resultMatches(bet.game_name, bet.selection, result);
-        await client.query(`UPDATE demo_bets SET status=$1, result_id=$2 WHERE id=$3`, [isWin ? 'win' : 'loss', result.id, bet.id]);
-        checked++; if (isWin) won++; else lost++;
-      }
-
-      for (const [table, game] of [['demo_3up_bets','3up'], ['demo_6up_bets','6up']]) {
-        const rows = await client.query(
-          `SELECT id, rows FROM ${table}
-           WHERE draw_date=$1 AND LOWER(status) NOT IN ('win','won','loss','lose','lost','cancelled','canceled')
-           FOR UPDATE`, [result.draw_date]
-        );
-        for (const bet of rows.rows) {
-          const selections = Array.isArray(bet.rows) ? bet.rows : [];
-          const isWin = selections.some(row => {
-            const n = String(row.number || '').trim();
-            return game === '3up'
-              ? /^\d{3}$/.test(n) && result.front_three.includes(n)
-              : /^\d{6}$/.test(n) && n === result.first_prize;
-          });
-          await client.query(`UPDATE ${table} SET status=$1, result_id=$2 WHERE id=$3`, [isWin ? 'win' : 'loss', result.id, bet.id]);
-          checked++; if (isWin) won++; else lost++;
-        }
-      }
-      return { checked, won, lost };
-    }
-
-    app.get('/api/results', asyncRoute(async (req, res) => {
-      const result = await pool.query(
-        `SELECT id, TO_CHAR(draw_date, 'YYYY-MM-DD') AS date,
-                first_prize AS "firstPrize", last_two AS "lastTwo",
-                front_three AS "frontThree", published_at AS "publishedAt",
-                updated_at AS "updatedAt"
-         FROM draw_results ORDER BY draw_date DESC LIMIT 100`
-      );
-      res.json({ success: true, results: result.rows });
-    }));
-
-    app.get('/api/admin/results', authenticateToken, requireAdmin, asyncRoute(async (req, res) => {
-      const result = await pool.query(
-        `SELECT id, TO_CHAR(draw_date, 'YYYY-MM-DD') AS date,
-                first_prize AS "firstPrize", last_two AS "lastTwo",
-                front_three AS "frontThree", published_at AS "publishedAt",
-                updated_at AS "updatedAt"
-         FROM draw_results ORDER BY draw_date DESC LIMIT 100`
-      );
-      res.json({ success: true, results: result.rows });
-    }));
-
-    app.post('/api/admin/results', authenticateToken, requireAdmin, asyncRoute(async (req, res) => {
-      const date = String(req.body.drawDate || req.body.date || '').trim();
-      const firstRaw = String(req.body.firstPrize ?? '').trim();
-      const lastRaw = String(req.body.lastTwo ?? '').trim();
-      const frontRaw = req.body.frontThree;
-      if (!/^\d{4}-\d{2}-\d{2}$/.test(date) || !/^\d{1,6}$/.test(firstRaw) || !/^\d{1,2}$/.test(lastRaw)) {
-        return sendError(res, 400, 'Enter a valid Draw Date, First Prize and Last Two.');
-      }
-      const fronts = Array.isArray(frontRaw)
-        ? frontRaw.map(x => String(x).trim())
-        : String(frontRaw || '').split(',').map(x => x.trim()).filter(Boolean);
-      if (fronts.some(x => !/^\d{3}$/.test(x))) return sendError(res, 400, 'Every Front Three number must contain exactly 3 digits.');
-      const uniqueFronts = [...new Set(fronts)];
-      const client = await pool.connect();
-      try {
-        await client.query('BEGIN');
-        const saved = await client.query(
-          `INSERT INTO draw_results
-           (draw_date, first_prize, last_two, front_three, published_at, updated_at, updated_by)
-           VALUES ($1::date, $2, $3, $4::jsonb, NOW(), NOW(), $5)
-           ON CONFLICT (draw_date) DO UPDATE SET
-             first_prize=EXCLUDED.first_prize, last_two=EXCLUDED.last_two,
-             front_three=EXCLUDED.front_three, updated_at=NOW(), updated_by=EXCLUDED.updated_by
-           RETURNING id, TO_CHAR(draw_date, 'YYYY-MM-DD') AS date,
-             first_prize AS "firstPrize", last_two AS "lastTwo", front_three AS "frontThree",
-             published_at AS "publishedAt", updated_at AS "updatedAt"`,
-          [date, firstRaw.padStart(6,'0'), lastRaw.padStart(2,'0'), JSON.stringify(uniqueFronts), req.user.id]
-        );
-        const result = saved.rows[0];
-        // On re-publish, retain the original published_at timestamp.
-        const settled = await settleDrawBets(client, { ...result, draw_date: date, first_prize: result.firstPrize, last_two: result.lastTwo, front_three: result.frontThree });
-        await client.query('COMMIT');
-        await audit(req.user.id, 'draw_result_published', null, { result_id: result.id, draw_date: date, ...settled });
-        res.status(201).json({ success: true, message: 'Result published and bets settled.', result, settlement: settled });
-      } catch (error) {
-        await client.query('ROLLBACK');
-        console.error('Draw result publish error:', error.message);
-        return sendError(res, 500, 'Could not publish or settle this result.');
-      } finally { client.release(); }
-    }));
-
-    // Submission-number report: hide entries submitted before publication once 72h have elapsed.
-    app.get('/api/admin/number-reports', authenticateToken, requireAdmin, asyncRoute(async (req, res) => {
-      const result = await pool.query(`
-        SELECT 'single' AS game, b.id, b.game_name, b.selection AS number, b.amount,
-               b.status, b.draw_date, b.created_at, u.username
-        FROM demo_bets b JOIN users u ON u.id=b.user_id
-        LEFT JOIN draw_results r ON r.draw_date=b.draw_date
-        WHERE r.id IS NULL OR b.created_at >= r.published_at OR NOW() < r.published_at + INTERVAL '72 hours'
-        UNION ALL
-        SELECT '3up', b.id, '3UP', row_item->>'number',
-               COALESCE((row_item->>'straight')::numeric,0)+COALESCE((row_item->>'rumble')::numeric,0),
-               b.status, b.draw_date, b.created_at, u.username
-        FROM demo_3up_bets b JOIN users u ON u.id=b.user_id
-        CROSS JOIN LATERAL jsonb_array_elements(b.rows) row_item
-        LEFT JOIN draw_results r ON r.draw_date=b.draw_date
-        WHERE r.id IS NULL OR b.created_at >= r.published_at OR NOW() < r.published_at + INTERVAL '72 hours'
-        UNION ALL
-        SELECT '6up', b.id, '6UP', row_item->>'number',
-               COALESCE((row_item->>'straight')::numeric,0)+COALESCE((row_item->>'rumble')::numeric,0),
-               b.status, b.draw_date, b.created_at, u.username
-        FROM demo_6up_bets b JOIN users u ON u.id=b.user_id
-        CROSS JOIN LATERAL jsonb_array_elements(b.rows) row_item
-        LEFT JOIN draw_results r ON r.draw_date=b.draw_date
-        WHERE r.id IS NULL OR b.created_at >= r.published_at OR NOW() < r.published_at + INTERVAL '72 hours'
-        ORDER BY created_at DESC LIMIT 1000
-      `);
-      res.json({ success: true, reports: result.rows });
-    }));
-
-    // ==========================================
-    // ADMIN: AUDIT LOGS
-    // ==========================================
-
-    app.get(
-      "/api/admin/audit-logs",
-      authenticateToken,
-      requireAdmin,
-      asyncRoute(async (req, res) => {
-        const result = await pool.query(
-          `SELECT id, actor_id, action, target_user_id, details, created_at
-           FROM audit_logs
-           ORDER BY created_at DESC
-           LIMIT 200`
-        );
-
-        res.json({
-          success: true,
-          logs: result.rows
-        });
-      })
-    );
-
-    // ==========================================
-    // 404
-    // ==========================================
-
-    // ==========================================
-    // LIVE SUPPORT
-    // Users can open a conversation by sending the first message.
-    // Only the primary admin can reply, and only after a user message exists.
-    // ==========================================
-
-    fun
+          const discountCents = Math.round(totalCents * discount
