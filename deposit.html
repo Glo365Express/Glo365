@@ -3,237 +3,90 @@
 <html lang="bn">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1">
-<meta name="theme-color" content="#2196e8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="theme-color" content="#17112f">
 <title>GLO 365 - Deposit</title>
-
 <style>
 *{box-sizing:border-box;margin:0;padding:0}
-body{font-family:Arial,sans-serif;background:#f0f7fd;color:#18334d;min-height:100vh}
-.app{max-width:520px;min-height:100vh;margin:auto;background:#fff;padding-bottom:35px;box-shadow:0 0 25px #163c5c0b}
-header{background:linear-gradient(120deg,#1687d5,#2196e8);padding:19px 16px;display:flex;justify-content:space-between;align-items:center;color:#fff}
-.logo{font-size:26px;font-weight:900}.logo span{color:#d9f0ff}
-.balance{background:#ffffff20;border:1px solid #ffffff45;padding:10px 13px;border-radius:25px;font-size:12px;font-weight:bold}
-.page-heading{padding:24px 18px 17px}
-.page-heading h2{font-size:25px;font-weight:900;color:#167fc4}
-.page-heading p{font-size:12px;color:#71869a;margin-top:7px}
-.wallet-card{margin:0 14px 18px;padding:19px;border-radius:16px;background:linear-gradient(130deg,#1687d5,#2196e8);color:white;box-shadow:0 8px 20px #1687d526}
-.wallet-label{font-size:13px;color:#e6f5ff}
-.wallet-amount{margin-top:10px;font-size:32px;font-weight:900}
-.wallet-amount small{font-size:13px}
-.wallet-note{font-size:11px;color:#e2f3ff;margin-top:9px;line-height:1.6}
-.step-card{margin:0 14px 18px;padding:18px 15px;border-radius:16px;background:#fff;border:1px solid #dcecf8;box-shadow:0 5px 20px #17466b0b}
-.step-title{font-size:18px;font-weight:900;color:#167fc4;margin-bottom:7px}
-.step-subtitle{font-size:12px;color:#8295a7;line-height:1.6;margin-bottom:16px}
-.methods{display:grid;grid-template-columns:1fr 1fr;gap:10px}
-.method{min-height:82px;padding:11px 9px;border:1px solid #d4e5f2;border-radius:12px;background:#fff;color:#294760;display:flex;align-items:center;gap:10px;cursor:pointer;text-align:left;position:relative;min-width:0}
-.method:active{transform:scale(.98)}
-.method.active{border:2px solid #2196e8;background:#eaf6ff}
-.method-logo{width:42px;height:42px;min-width:42px;border-radius:11px;display:grid;place-items:center;color:white;font-size:13px;font-weight:900}
-.method-text{min-width:0}
-.method-name{font-size:12px;font-weight:900;overflow-wrap:anywhere}
-.method-account{font-size:9px;color:#8295a7;margin-top:5px;overflow-wrap:anywhere}
-.method-check{position:absolute;right:7px;top:5px;color:#1687d5;font-size:12px;display:none}
-.method.active .method-check{display:block}
-.empty{text-align:center;padding:22px 10px;color:#8b9eaf;font-size:12px;line-height:1.7;grid-column:1/-1}
-.field{margin-bottom:16px}
-.field label{display:block;font-size:13px;font-weight:bold;margin-bottom:8px;color:#294760}
-.field input,.field select{width:100%;height:49px;padding:0 13px;border:1px solid #cbdfee;border-radius:10px;background:#f7fbff;color:#193b56;outline:none;font-size:14px}
-.field input:focus,.field select:focus{border-color:#2196e8;box-shadow:0 0 0 3px #2196e81a}
-.field input::placeholder{color:#9aabba}
-.payment-box{background:#eff8ff;border:1px solid #d1eaff;border-radius:11px;padding:14px;margin-bottom:18px;font-size:12px;line-height:1.8;color:#526f87;overflow-wrap:anywhere}
-.payment-box strong{color:#167fc4}
-.payment-account{font-size:18px;font-weight:900;color:#18334d;margin:7px 0;word-break:break-all}
-.copy-btn{border:0;background:#d9efff;color:#167fc4;border-radius:8px;padding:8px 12px;font-weight:bold;cursor:pointer;margin-top:7px}
-.summary{background:#f4faff;border:1px solid #d7eaf8;border-radius:12px;padding:14px;margin-bottom:16px}
-.summary-line{display:flex;justify-content:space-between;gap:8px;padding:8px 0;font-size:12px;color:#71869a}
-.summary-line strong{color:#294760;text-align:right;overflow-wrap:anywhere}
-.summary-line.final{border-top:1px solid #d5e6f3;margin-top:6px;padding-top:13px;font-size:14px;font-weight:900;color:#294760}
-.summary-line.final strong{color:#1687d5}
-.submit-btn{width:100%;border:0;border-radius:11px;padding:16px;background:linear-gradient(100deg,#1687d5,#2196e8);color:#fff;font-size:14px;font-weight:900;cursor:pointer;box-shadow:0 5px 15px #1687d52b}
-.submit-btn:disabled{opacity:.5;cursor:not-allowed}
-.secondary-btn{width:100%;border:1px solid #cbdfee;border-radius:11px;padding:14px;background:#f1f8fe;color:#2678ad;font-size:13px;font-weight:bold;cursor:pointer;margin-top:10px}
-.back-link{display:block;text-align:center;color:#1687d5;text-decoration:none;font-size:12px;margin:18px auto}
-.loading-area{text-align:center;padding:45px 10px}
-.spinner{width:52px;height:52px;border:5px solid #dceefa;border-top-color:#1687d5;border-radius:50%;animation:spin .8s linear infinite;margin:0 auto 20px}
+body{font-family:Arial,sans-serif;background:#f5f3f3;color:#292929;min-height:100vh}
+.app{max-width:520px;min-height:100vh;margin:auto;background:#fff;padding-bottom:30px}
+header{height:72px;background:linear-gradient(110deg,#100a2c,#211638);color:#fff;display:flex;align-items:center;justify-content:center;position:relative;font-size:22px;font-weight:bold}
+.back{position:absolute;left:20px;color:#fff;text-decoration:none;font-size:30px}
+.page{padding:20px 14px}
+.card{background:#fff;border-radius:18px;padding:17px 15px;margin-bottom:15px;box-shadow:0 5px 24px #0000000d}
+.title{font-size:18px;font-weight:900;margin-bottom:18px}
+.title:before{content:"";display:inline-block;width:10px;height:10px;background:#ef4056;border-radius:50%;margin-right:7px}
+.methods{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px}
+.method{height:88px;border:1px solid #ddd;border-radius:11px;background:#fff;display:flex;align-items:center;justify-content:flex-start;gap:9px;padding:9px;cursor:pointer;position:relative;min-width:0}
+.method.active{border:2px solid #e54b67;background:#fff0f2}
+.method img{width:51px;height:51px;object-fit:contain;flex-shrink:0}
+.method-name{font-size:12px;font-weight:800;text-align:left;overflow-wrap:anywhere}
+.check{display:none;position:absolute;right:7px;top:5px;color:#e63855;font-weight:bold}
+.method.active .check{display:block}
+.field{margin-top:10px}
+label{display:block;font-weight:900;font-size:17px;margin-bottom:12px}
+input{width:100%;height:60px;border:1px solid #ddd;border-radius:9px;padding:0 15px;font-size:16px;outline:none}
+input:focus{border-color:#2196e8;box-shadow:0 0 0 3px #2196e81a}
+.hint{font-size:12px;color:#927e7e;margin-top:9px}
+.bottom{position:sticky;bottom:0;background:#fff;border:1px solid #eee;padding:14px 16px 20px;box-shadow:0 -5px 20px #00000008}
+.summary{display:flex;justify-content:space-around;text-align:center;margin-bottom:18px}
+.summary div{flex:1;border-right:1px solid #ddd;font-size:12px;color:#888}
+.summary div:last-child{border:0}
+.summary strong{display:block;color:#222;font-size:17px;margin-top:6px}
+.btn{width:100%;height:57px;border:0;border-radius:35px;background:linear-gradient(100deg,#ff9eaa,#f17e91);color:#fff;font-size:16px;font-weight:900;cursor:pointer;box-shadow:0 5px 12px #f17e9140}
+.btn:disabled{opacity:.5}
+.toast{display:none;position:fixed;bottom:25px;left:50%;transform:translateX(-50%);background:#211638;color:#fff;padding:13px 18px;border-radius:10px;font-size:13px;z-index:200;max-width:90%;text-align:center}
+.splash{position:fixed;inset:0;background:linear-gradient(140deg,#100a2c,#211638);z-index:100;display:flex;align-items:center;justify-content:center;flex-direction:column;color:#fff}
+.splash img{width:110px;height:110px;object-fit:contain;background:#fff;border-radius:25px;padding:13px;margin-bottom:22px}
+.splash h2{font-size:22px}
+.splash p{font-size:13px;color:#ddd;margin-top:10px}
+.loader{width:42px;height:42px;border:4px solid #ffffff40;border-top-color:#fff;border-radius:50%;animation:spin .8s linear infinite;margin-top:25px}
 @keyframes spin{to{transform:rotate(360deg)}}
-.loading-area strong{font-size:16px;color:#167fc4}
-.loading-area p{font-size:12px;color:#8295a7;margin-top:9px}
-.countdown{font-size:22px;font-weight:900;color:#1687d5;margin-top:12px}
-.confirm-icon{width:65px;height:65px;margin:0 auto 15px;border-radius:50%;display:grid;place-items:center;background:#e4f8ed;color:#16884b;font-size:32px}
-.confirm-heading{text-align:center;font-size:19px;font-weight:900;color:#167fc4;margin-bottom:8px}
-.confirm-note{text-align:center;font-size:12px;color:#8295a7;line-height:1.7;margin-bottom:20px}
-.notice{margin:16px 14px;padding:14px;border-radius:11px;background:#eff8ff;border:1px solid #d3eaff;color:#526f87;font-size:11px;line-height:1.8}
-.notice strong{color:#167fc4;font-size:12px}
-.toast{display:none;position:fixed;left:50%;bottom:25px;transform:translateX(-50%);z-index:1000;background:#173d5b;color:#fff;padding:13px 18px;border-radius:11px;width:max-content;max-width:90%;font-size:12px;box-shadow:0 8px 25px #0003;text-align:center}
 .hidden{display:none!important}
-@media(max-width:360px){.logo{font-size:23px}.method{gap:6px;padding:9px 6px}.method-logo{width:35px;height:35px;min-width:35px}}
+@media(max-width:360px){.method{gap:6px;padding:7px}.method img{width:42px;height:42px}.method-name{font-size:11px}}
 </style>
 </head>
-
 <body>
-<div class="app">
 
+<div class="app">
 <header>
-    <div class="logo">GLO <span>365</span></div>
-    <div class="balance"><span id="headerBalance">0.00</span> Points</div>
+<a class="back" href="profile.html">‹</a>
+Deposit
 </header>
 
-<section class="page-heading">
-    <h2>Deposit</h2>
-    <p>Add funds to your GLO 365 account.</p>
+<div class="page">
+<section class="card">
+<div class="title">Deposit Method</div>
+<div class="methods" id="methods">
+<div style="grid-column:1/-1;text-align:center;padding:20px;color:#888">Loading payment methods...</div>
+</div>
 </section>
 
-<section class="wallet-card">
-    <div class="wallet-label">Current Wallet Balance</div>
-    <div class="wallet-amount"><span id="walletBalance">0.00</span> <small>Points</small></div>
-    <div class="wallet-note">Deposit requests are reviewed by Admin. Points are added only after successful verification.</div>
+<section class="card">
+<div class="title">Deposit Amount</div>
+<div class="field">
+<label for="amount">৳ Deposit Amount</label>
+<input id="amount" type="number" min="0.01" step="0.01" placeholder="Please enter amount" inputmode="decimal">
+<div class="hint" id="limitText">Please enter your deposit amount.</div>
+</div>
 </section>
-
-<!-- STEP 1: PAYMENT CHANNELS -->
-<section class="step-card" id="step1">
-    <div class="step-title">① Select Payment Channel</div>
-    <div class="step-subtitle">আপনার পছন্দের পেমেন্ট চ্যানেল নির্বাচন করুন।</div>
-    <div class="methods" id="methodsGrid">
-        <div class="empty">Loading payment channels...</div>
-    </div>
-    <div class="notice" style="margin:15px 0 0">
-        <strong>নোট:</strong> Admin থেকে চালু করা সব Active Payment Channel এখানে দেখানো হবে।
-    </div>
-</section>
-
-<!-- LOADING STEP -->
-<section class="step-card hidden" id="loadingStep">
-    <div class="loading-area">
-        <div class="spinner"></div>
-        <strong>Payment Channel Loading...</strong>
-        <p>আপনার নির্বাচিত পেমেন্ট চ্যানেল প্রস্তুত করা হচ্ছে।</p>
-        <div class="countdown" id="countdown">5</div>
-    </div>
-</section>
-
-<!-- STEP 2: TRANSACTION DETAILS -->
-<section class="step-card hidden" id="step2">
-    <div class="step-title">② Deposit Information</div>
-    <div class="step-subtitle">পেমেন্ট সম্পন্ন করে নিচের তথ্যগুলো পূরণ করুন।</div>
-
-    <div class="payment-box">
-        <strong>Selected Payment Channel</strong>
-        <div id="selectedMethodName" style="font-size:17px;font-weight:900;color:#18334d;margin-top:5px"></div>
-
-        <div style="margin-top:12px"><strong>Payment Account / Wallet Address</strong></div>
-        <div class="payment-account" id="paymentAccount">Not available</div>
-        <button type="button" class="copy-btn" id="copyAccountBtn">Copy Account</button>
-
-        <div style="margin-top:12px"><strong>Payment Instructions</strong></div>
-        <div id="paymentInstructions">Please follow the payment instructions.</div>
-        <div style="margin-top:8px"><strong>Currency:</strong> <span id="methodCurrency">BDT</span></div>
-    </div>
-
-    <div class="field">
-        <label for="amount">Deposit Amount</label>
-        <input id="amount" type="number" min="0.01" step="0.01" inputmode="decimal" placeholder="Enter deposit amount">
-    </div>
-
-    <div class="field">
-        <label for="currency">Currency</label>
-        <select id="currency">
-            <option value="BDT">BDT (৳)</option>
-            <option value="USDT">USDT</option>
-            <option value="USD">USD</option>
-            <option value="INR">INR</option>
-            <option value="Other">Other</option>
-        </select>
-    </div>
-
-    <div class="field">
-        <label for="senderAccount">Sender Account Number / ID</label>
-        <input id="senderAccount" type="text" maxlength="150" placeholder="Enter the account you paid from" autocomplete="off">
-    </div>
-
-    <div class="field">
-        <label for="transactionId">Transaction ID / Reference Number</label>
-        <input id="transactionId" type="text" maxlength="150" placeholder="Enter transaction reference" autocomplete="off">
-    </div>
-
-    <div class="summary">
-        <div class="summary-line">
-            <span>Payment Method</span>
-            <strong id="summaryMethod">—</strong>
-        </div>
-        <div class="summary-line">
-            <span>Deposit Amount</span>
-            <strong id="requestAmount">0.00 BDT</strong>
-        </div>
-        <div class="summary-line final">
-            <span>Total Amount</span>
-            <strong id="totalAmount">0.00 BDT</strong>
-        </div>
-    </div>
-
-    <button class="submit-btn" type="button" id="reviewBtn">CONFIRM INFORMATION →</button>
-    <button class="secondary-btn" type="button" id="backToChannels">← Change Payment Channel</button>
-</section>
-
-<!-- STEP 3: FINAL CONFIRMATION -->
-<section class="step-card hidden" id="step3">
-    <div class="confirm-icon">✓</div>
-    <div class="confirm-heading">Deposit Confirmation</div>
-    <div class="confirm-note">
-        আপনার জমার তথ্যগুলো ভালোভাবে যাচাই করুন। সব তথ্য সঠিক হলে জমা বাটনে চাপ দিন।
-    </div>
-
-    <div class="summary">
-        <div class="summary-line">
-            <span>Payment Channel</span>
-            <strong id="confirmMethod">—</strong>
-        </div>
-        <div class="summary-line">
-            <span>Deposit Amount</span>
-            <strong id="confirmAmount">—</strong>
-        </div>
-        <div class="summary-line">
-            <span>Currency</span>
-            <strong id="confirmCurrency">—</strong>
-        </div>
-        <div class="summary-line">
-            <span>Sender Account</span>
-            <strong id="confirmSender">—</strong>
-        </div>
-        <div class="summary-line">
-            <span>Transaction ID</span>
-            <strong id="confirmTransaction">—</strong>
-        </div>
-        <div class="summary-line">
-            <span>Payment Account</span>
-            <strong id="confirmPaymentAccount">—</strong>
-        </div>
-        <div class="summary-line final">
-            <span>Total Deposit</span>
-            <strong id="confirmTotal">—</strong>
-        </div>
-    </div>
-
-    <div class="notice" style="margin:0 0 16px">
-        <strong>সতর্কতা:</strong><br>
-        একই Transaction ID দিয়ে একাধিক Deposit Request করবেন না। ভুল তথ্য দিলে আপনার Deposit Request বাতিল হতে পারে।
-        Admin যাচাই না করা পর্যন্ত Points যোগ হবে না।
-    </div>
-
-    <button class="submit-btn" type="button" id="finalSubmitBtn">জমা দিন ✓</button>
-    <button class="secondary-btn" type="button" id="backToDetails">← ফিরে যান</button>
-</section>
-
-<div class="notice">
-    <strong>⚠ IMPORTANT DEPOSIT NOTICE</strong><br>
-    1. সঠিক Payment Channel নির্বাচন করুন।<br>
-    2. পেমেন্ট করার পর সঠিক Transaction ID দিন।<br>
-    3. Admin আপনার পেমেন্ট যাচাই করবেন।<br>
-    4. Approved হওয়ার পর Points যোগ হবে।
 </div>
 
-<a class="back-link" href="profile.html">← Back to Profile</a>
+<div class="bottom">
+<div class="summary">
+<div>DEPOSIT<strong id="depositAmount">0.00</strong></div>
+<div>GET<strong id="getAmount">0.00</strong></div>
+<div>BONUS<strong>-</strong></div>
+</div>
+<button class="btn" id="continueBtn" disabled>Confirm Deposit</button>
+</div>
+</div>
 
+<div class="splash hidden" id="splash">
+<img id="splashLogo" src="" alt="Payment logo">
+<h2 id="splashName">Loading...</h2>
+<p>Preparing secure deposit page</p>
+<div class="loader"></div>
 </div>
 
 <div class="toast" id="toast"></div>
@@ -241,437 +94,234 @@ header{background:linear-gradient(120deg,#1687d5,#2196e8);padding:19px 16px;disp
 <script>
 "use strict";
 
-/* SERVER CONFIGURATION */
-const API_BASE_URL = "https://glo365.onrender.com/api";
-const TOKEN_KEY = "glo365_token";
-const HOME_PAGE = "home.html";
+const API_BASE_URL="https://glo365.onrender.com/api";
+const TOKEN_KEY="glo365_token";
 
-const PRESETS = {
-    "bkash": {short:"bK",color:"#d51b72"},
-    "nagad": {short:"N",color:"#f58220"},
-    "rocket": {short:"R",color:"#8b45a8"},
-    "binance": {short:"B",color:"#d9a400"},
-    "redotpay": {short:"R",color:"#df3154"},
-    "paypal": {short:"P",color:"#1769aa"},
-    "google pay": {short:"G",color:"#4285f4"},
-    "bank transfer": {short:"BK",color:"#287c65"}
+let methods=[];
+let selectedMethod=null;
+let toastTimer=null;
+
+const CHANNELS={
+ bkash:{
+  label:"bKash",
+  aliases:["bkash","b-kash"],
+  logo:"https://cdn.simpleicons.org/bkash/E2136E"
+ },
+ nagad:{
+  label:"Nagad",
+  aliases:["nagad"],
+  logo:"https://cdn.simpleicons.org/nagad/F6921E"
+ },
+ binance:{
+  label:"Binance",
+  aliases:["binance"],
+  logo:"https://cdn.simpleicons.org/binance/F0B90B"
+ },
+ tether:{
+  label:"Tether USDT",
+  aliases:["tether","usdt"],
+  logo:"https://cdn.simpleicons.org/tether/50AF95"
+ },
+ redotpay:{
+  label:"RedotPay",
+  aliases:["redotpay","redot pay"],
+  logo:""
+ }
 };
 
-let currentUser = null;
-let wallet = 0;
-let methods = [];
-let selectedMethod = null;
-let toastTimer = null;
-let loadingTimer = null;
-let formData = null;
-
-/* AUTH */
-function token(){
-    return sessionStorage.getItem(TOKEN_KEY) || "";
+function getToken(){
+ return sessionStorage.getItem(TOKEN_KEY)||"";
 }
 
-/* API */
-async function api(path,options={}){
-    const headers = {...(options.headers || {})};
-
-    if(token()){
-        headers.Authorization = "Bearer " + token();
-    }
-
-    if(options.body && !headers["Content-Type"]){
-        headers["Content-Type"] = "application/json";
-    }
-
-    const response = await fetch(API_BASE_URL + path,{
-        ...options,
-        headers,
-        credentials:"include",
-        cache:"no-store"
-    });
-
-    let data = {};
-    try{
-        data = await response.json();
-    }catch(e){}
-
-    if(response.status === 401){
-        sessionStorage.removeItem(TOKEN_KEY);
-        throw new Error("Session expired. Please login again.");
-    }
-
-    if(!response.ok || data.success === false){
-        throw new Error(data.message || "Server request failed.");
-    }
-
-    return data;
-}
-
-/* TOAST */
 function showToast(message){
-    const el = document.getElementById("toast");
-    el.textContent = message;
-    el.style.display = "block";
-    clearTimeout(toastTimer);
-    toastTimer = setTimeout(()=>{
-        el.style.display = "none";
-    },3500);
+ const el=document.getElementById("toast");
+ el.textContent=message;
+ el.style.display="block";
+ clearTimeout(toastTimer);
+ toastTimer=setTimeout(()=>el.style.display="none",3500);
 }
 
-/* LOGO */
-function getLogoInfo(method){
-    const key = String(method.preset || method.name || "").toLowerCase().trim();
-    return PRESETS[key] || {
-        short:String(method.name || "PM").slice(0,2).toUpperCase(),
-        color:"#287eae"
-    };
+async function api(path,options={}){
+ const headers={...(options.headers||{})};
+ if(getToken())headers.Authorization="Bearer "+getToken();
+ if(options.body)headers["Content-Type"]="application/json";
+
+ const response=await fetch(API_BASE_URL+path,{
+  ...options,
+  headers,
+  credentials:"include",
+  cache:"no-store"
+ });
+
+ let data={};
+ try{data=await response.json()}catch(e){}
+
+ if(response.status===401){
+  sessionStorage.removeItem(TOKEN_KEY);
+  throw new Error("Session expired. Please login again.");
+ }
+
+ if(!response.ok||data.success===false){
+  throw new Error(data.message||"Server request failed.");
+ }
+
+ return data;
 }
 
-/* MASK */
-function maskAccount(value){
-    const s = String(value || "");
-    return s.length <= 4 ? (s || "Not set") : "••••••" + s.slice(-4);
+function identifyChannel(method){
+ const text=(
+  String(method.name||"")+" "+
+  String(method.preset||"")+" "+
+  String(method.label||"")
+ ).toLowerCase().replace(/[^a-z0-9]/g,"");
+
+ for(const [key,config] of Object.entries(CHANNELS)){
+  if(config.aliases.some(alias=>{
+   const normalized=alias.replace(/[^a-z0-9]/g,"");
+   return text.includes(normalized);
+  }))return key;
+ }
+ return "";
 }
 
-/* WALLET */
-function renderWallet(){
-    document.getElementById("walletBalance").textContent = wallet.toFixed(2);
-    document.getElementById("headerBalance").textContent = wallet.toFixed(2);
+function getLogo(method,type){
+ return method.logo_url||
+        method.image_url||
+        method.logo||
+        CHANNELS[type].logo;
 }
 
-/* PAYMENT CHANNEL LIST */
 function renderMethods(){
-    const grid = document.getElementById("methodsGrid");
-    grid.replaceChildren();
+ const box=document.getElementById("methods");
+ box.replaceChildren();
 
-    if(!methods.length){
-        const empty = document.createElement("div");
-        empty.className = "empty";
-        empty.textContent = "কোনো Active Payment Channel পাওয়া যায়নি। Admin-এর সঙ্গে যোগাযোগ করুন।";
-        grid.append(empty);
-        return;
-    }
+ const order=["bkash","nagad","binance","tether","redotpay"];
 
-    methods.forEach(method=>{
-        const button = document.createElement("button");
-        button.type = "button";
-        button.className = "method";
+ order.forEach(type=>{
+  const method=methods.find(m=>identifyChannel(m)===type);
+  if(!method)return;
 
-        const logoInfo = getLogoInfo(method);
+  const button=document.createElement("button");
+  button.type="button";
+  button.className="method";
+  button.setAttribute("aria-label",CHANNELS[type].label);
 
-        const logo = document.createElement("span");
-        logo.className = "method-logo";
-        logo.style.background = logoInfo.color;
-        logo.textContent = logoInfo.short;
+  const img=document.createElement("img");
+  img.src=getLogo(method,type);
+  img.alt=CHANNELS[type].label+" logo";
 
-        const textWrap = document.createElement("span");
-        textWrap.className = "method-text";
+  img.onerror=()=>{
+   img.style.display="none";
+   const fallback=document.createElement("span");
+   fallback.textContent=type==="tether"?"₮":type==="binance"?"B":type==="bkash"?"bK":type==="nagad"?"N":"R";
+   fallback.style.cssText="font-size:25px;font-weight:900;color:#d51b72;min-width:42px;text-align:center";
+   button.insertBefore(fallback,button.firstChild);
+  };
 
-        const name = document.createElement("span");
-        name.className = "method-name";
-        name.textContent = method.name || "Payment Method";
+  const name=document.createElement("span");
+  name.className="method-name";
+  name.textContent=CHANNELS[type].label;
 
-        const account = document.createElement("span");
-        account.className = "method-account";
-        account.textContent =
-            (method.currency || "BDT") +
-            (method.account ? " · " + maskAccount(method.account) : "");
+  const check=document.createElement("span");
+  check.className="check";
+  check.textContent="✓";
 
-        textWrap.append(name,account);
+  button.append(img,name,check);
 
-        const check = document.createElement("span");
-        check.className = "method-check";
-        check.textContent = "✓";
+  button.addEventListener("click",()=>{
+   selectedMethod=method;
+   document.querySelectorAll(".method").forEach(el=>el.classList.remove("active"));
+   button.classList.add("active");
+   updateSummary();
+  });
 
-        button.append(logo,textWrap,check);
+  box.append(button);
+ });
 
-        button.addEventListener("click",()=>{
-            selectMethod(method);
-        });
-
-        grid.append(button);
-    });
+ if(!box.children.length){
+  const empty=document.createElement("div");
+  empty.className="empty";
+  empty.style.cssText="grid-column:1/-1;text-align:center;padding:20px;color:#888";
+  empty.textContent="No active payment channels available.";
+  box.append(empty);
+ }
 }
 
-/* SELECT CHANNEL */
-function selectMethod(method){
-    if(!method || !method.id){
-        showToast("Invalid payment method.");
-        return;
-    }
-
-    selectedMethod = method;
-    startLoading();
+function updateSummary(){
+ const amount=Number(document.getElementById("amount").value)||0;
+ document.getElementById("depositAmount").textContent=amount.toFixed(2);
+ document.getElementById("getAmount").textContent=amount.toFixed(2);
+ document.getElementById("continueBtn").disabled=!(selectedMethod&&amount>0);
 }
 
-/* 5 SECOND LOADING */
-function startLoading(){
-    showPage("loadingStep");
+document.getElementById("amount").addEventListener("input",updateSummary);
 
-    let seconds = 5;
-    document.getElementById("countdown").textContent = seconds;
+document.getElementById("continueBtn").addEventListener("click",()=>{
+ const amount=Number(document.getElementById("amount").value);
 
-    clearInterval(loadingTimer);
+ if(!selectedMethod){
+  showToast("Please select a payment channel.");
+  return;
+ }
 
-    loadingTimer = setInterval(()=>{
-        seconds--;
+ if(!Number.isFinite(amount)||amount<=0){
+  showToast("Please enter a valid amount.");
+  return;
+ }
 
-        document.getElementById("countdown").textContent = seconds;
+ const type=identifyChannel(selectedMethod);
+ const logo=getLogo(selectedMethod,type);
 
-        if(seconds <= 0){
-            clearInterval(loadingTimer);
-            openPaymentDetails();
-        }
-    },1000);
-}
+ const pending={
+  payment_method_id:Number(selectedMethod.id),
+  method_name:CHANNELS[type].label,
+  method_type:type,
+  logo_url:logo,
+  amount:amount,
+  currency:selectedMethod.currency||"BDT",
+  created_at:Date.now()
+ };
 
-/* OPEN SECOND PAGE */
-function openPaymentDetails(){
-    if(!selectedMethod){
-        showPage("step1");
-        return;
-    }
+ sessionStorage.setItem("glo365_pending_deposit",JSON.stringify(pending));
 
-    document.getElementById("selectedMethodName").textContent =
-        selectedMethod.name || "Payment Method";
+ document.getElementById("splashLogo").src=logo||"";
+ document.getElementById("splashName").textContent=CHANNELS[type].label;
+ document.getElementById("splash").classList.remove("hidden");
 
-    document.getElementById("paymentAccount").textContent =
-        selectedMethod.account || "Admin has not configured an account.";
-
-    document.getElementById("paymentInstructions").textContent =
-        selectedMethod.instructions ||
-        "Please complete your payment and enter the correct transaction reference.";
-
-    const currency = selectedMethod.currency || "BDT";
-
-    document.getElementById("methodCurrency").textContent = currency;
-
-    const currencySelect = document.getElementById("currency");
-
-    const supported = ["BDT","USDT","USD","INR","Other"];
-
-    currencySelect.value = supported.includes(currency) ? currency : "Other";
-
-    document.getElementById("summaryMethod").textContent =
-        selectedMethod.name || "Payment Method";
-
-    calculate();
-    showPage("step2");
-}
-
-/* COPY PAYMENT ACCOUNT */
-document.getElementById("copyAccountBtn").addEventListener("click",async()=>{
-    const account = String(selectedMethod?.account || "");
-
-    if(!account){
-        showToast("Payment account is not available.");
-        return;
-    }
-
-    try{
-        await navigator.clipboard.writeText(account);
-        showToast("Payment account copied.");
-    }catch(e){
-        showToast("Copy not supported on this device.");
-    }
+ setTimeout(()=>{
+  location.href="deposit-confarm.html";
+ },3000);
 });
 
-/* PAGE NAVIGATION */
-function showPage(id){
-    ["step1","loadingStep","step2","step3"].forEach(page=>{
-        document.getElementById(page).classList.add("hidden");
-    });
+async function initialize(){
+ try{
+  if(!getToken()){
+   location.href="index.html";
+   return;
+  }
 
-    document.getElementById(id).classList.remove("hidden");
-    window.scrollTo({top:0,behavior:"smooth"});
+  const [me,walletData,methodData]=await Promise.all([
+   api("/auth/me"),
+   api("/wallet"),
+   api("/public/payment-methods")
+  ]);
+
+  const all=Array.isArray(methodData.methods)?methodData.methods:[];
+
+  // Only the five requested active channels are displayed.
+  methods=all.filter(m=>identifyChannel(m)!=="");
+
+  renderMethods();
+
+ }catch(error){
+  showToast(error.message);
+  if(/login|session|token/i.test(error.message)){
+   setTimeout(()=>location.href="index.html",1500);
+  }
+ }
 }
 
-/* AMOUNT CALCULATION */
-function calculate(){
-    const amount = Math.max(0,Number(document.getElementById("amount").value) || 0);
-    const currency = document.getElementById("currency").value;
-    const formatted = amount.toFixed(2) + " " + currency;
-
-    document.getElementById("requestAmount").textContent = formatted;
-    document.getElementById("totalAmount").textContent = formatted;
-}
-
-/* VALIDATE AND SHOW CONFIRMATION */
-function reviewDeposit(){
-    if(!selectedMethod){
-        showToast("Please select a payment channel.");
-        showPage("step1");
-        return;
-    }
-
-    const amount = Number(document.getElementById("amount").value);
-    const currency = document.getElementById("currency").value;
-    const sender = document.getElementById("senderAccount").value.trim();
-    const transaction = document.getElementById("transactionId").value.trim();
-
-    if(!Number.isFinite(amount) || amount <= 0){
-        showToast("Please enter a valid deposit amount.");
-        return;
-    }
-
-    if(!sender){
-        showToast("Please enter your sender account details.");
-        return;
-    }
-
-    if(!transaction){
-        showToast("Please enter the Transaction ID.");
-        return;
-    }
-
-    if(transaction.length < 4){
-        showToast("Please enter a valid Transaction ID.");
-        return;
-    }
-
-    formData = {
-        payment_method_id:Number(selectedMethod.id),
-        amount:amount,
-        sender_account:sender,
-        transaction_id:transaction,
-        currency:currency
-    };
-
-    document.getElementById("confirmMethod").textContent =
-        selectedMethod.name || "—";
-
-    document.getElementById("confirmAmount").textContent =
-        amount.toFixed(2) + " " + currency;
-
-    document.getElementById("confirmCurrency").textContent = currency;
-    document.getElementById("confirmSender").textContent = sender;
-    document.getElementById("confirmTransaction").textContent = transaction;
-
-    document.getElementById("confirmPaymentAccount").textContent =
-        selectedMethod.account || "—";
-
-    document.getElementById("confirmTotal").textContent =
-        amount.toFixed(2) + " " + currency;
-
-    showPage("step3");
-}
-
-/* FINAL SERVER SUBMISSION */
-async function finalSubmit(){
-    const btn = document.getElementById("finalSubmitBtn");
-
-    if(!formData || !selectedMethod){
-        showToast("Deposit information is missing. Please try again.");
-        showPage("step1");
-        return;
-    }
-
-    if(!currentUser){
-        showToast("Please login before submitting.");
-        return;
-    }
-
-    btn.disabled = true;
-    btn.textContent = "SUBMITTING...";
-
-    try{
-        /*
-          Existing backend endpoint is retained.
-          The backend should validate transaction uniqueness,
-          payment method status and amount before saving.
-        */
-        await api("/deposits",{
-            method:"POST",
-            body:JSON.stringify({
-                payment_method_id:formData.payment_method_id,
-                amount:formData.amount,
-                sender_account:formData.sender_account,
-                transaction_id:formData.transaction_id
-            })
-        });
-
-        showToast("Deposit request submitted successfully.");
-
-        formData = null;
-
-        document.getElementById("amount").value = "";
-        document.getElementById("senderAccount").value = "";
-        document.getElementById("transactionId").value = "";
-
-        setTimeout(()=>{
-            location.href = HOME_PAGE;
-        },1000);
-
-    }catch(error){
-        showToast(error.message || "Deposit submission failed.");
-        btn.disabled = false;
-        btn.textContent = "জমা দিন ✓";
-    }
-}
-
-/* LOAD SERVER DATA */
-async function loadAll(){
-    const [me,walletData,methodData] = await Promise.all([
-        api("/auth/me"),
-        api("/wallet"),
-        api("/public/payment-methods")
-    ]);
-
-    currentUser = me.user || null;
-    wallet = Number(walletData.balance) || 0;
-
-    methods = Array.isArray(methodData.methods)
-        ? methodData.methods
-        : [];
-
-    /*
-      The public payment-methods endpoint is expected to return
-      only Admin-enabled/active methods.
-      Do not hardcode a fixed list here.
-    */
-
-    renderWallet();
-    renderMethods();
-}
-
-/* EVENTS */
-document.getElementById("amount").addEventListener("input",calculate);
-document.getElementById("currency").addEventListener("change",calculate);
-
-document.getElementById("reviewBtn").addEventListener("click",reviewDeposit);
-
-document.getElementById("finalSubmitBtn").addEventListener("click",finalSubmit);
-
-document.getElementById("backToChannels").addEventListener("click",()=>{
-    selectedMethod = null;
-    formData = null;
-    showPage("step1");
-});
-
-document.getElementById("backToDetails").addEventListener("click",()=>{
-    showPage("step2");
-});
-
-/* INITIALIZE */
-(async()=>{
-    try{
-        if(!token()){
-            location.href = "index.html";
-            return;
-        }
-
-        await loadAll();
-        showPage("step1");
-
-    }catch(error){
-        showToast(error.message || "Unable to load deposit page.");
-
-        if(/login|session|token/i.test(error.message)){
-            setTimeout(()=>{
-                location.href = "index.html";
-            },1500);
-        }
-    }
-})();
+initialize();
 </script>
 </body>
 </html>
