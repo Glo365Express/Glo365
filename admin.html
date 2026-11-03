@@ -156,6 +156,18 @@ header{
   color:#075c9b;
 }
 
+/* MILLIONAIRE CARD */
+
+.menu a.millionaire-card{
+  background:linear-gradient(135deg,#eaf6ff,#cdeaff);
+  border:1px solid #9dd3f7;
+  box-shadow:0 3px 12px #087acb12;
+}
+
+.menu a.millionaire-card strong{
+  color:#075c9b;
+}
+
 .menu a.live-card{
   background:linear-gradient(135deg,#fff2f3,#ffe6e9);
   border:1px solid #ffd0d6;
@@ -170,7 +182,8 @@ header{
 
 .menu a.message-card strong{color:#0767aa}
 
-/* NEW LIVE SUPPORT CARD */
+/* LIVE SUPPORT CARD */
+
 .menu a.support-card{
   background:linear-gradient(135deg,#e9fff5,#d1f7e5);
   border:1px solid #a8e8c7;
@@ -454,6 +467,14 @@ footer{
       <small>Manage Draw Date, Month, Year and Time</small>
     </a>
 
+    <!-- DAILY MILLIONAIRE ADMIN CARD -->
+
+    <a href="admin-millionaire.html" class="millionaire-card">
+      <span class="emoji">💎</span>
+      <strong>Daily Millionaire</strong>
+      <small>Manage Daily Draw, Publish 3-Digit Results and Edit Previous Results</small>
+    </a>
+
     <a href="#" class="message-card"
        onclick="openMessageSettings();return false;">
       <span class="emoji">📢</span>
@@ -468,7 +489,6 @@ footer{
       <small>Manage YouTube and Facebook Live links</small>
     </a>
 
-    <!-- NEW SUPPORT CARD -->
     <a href="admin-support.html" class="support-card">
       <span class="emoji">💬</span>
       <strong>Live Support</strong>
@@ -862,12 +882,6 @@ async function loadDashboard(){
     setText("totalUsers", stats.total_users);
     setText("totalAffiliates", stats.total_affiliates);
     setText("totalBets", stats.total_demo_bets);
-
-    /*
-      The current backend dashboard endpoint does not return
-      withdrawal, deposit or reward statistics.
-      Do not display invented values.
-    */
 
     setText("totalWithdrawals", null);
     setText("totalDeposits", null);
