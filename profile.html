@@ -2,316 +2,263 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
-<meta name="theme-color" content="#edf4fa">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="theme-color" content="#2196e8">
 <title>GLO 365 - My Profile</title>
 
 <style>
 :root{
   --blue:#2196e8;
   --blue-dark:#087acb;
-  --gold:#d2ad62;
-  --gold-light:#fff4d9;
-  --text:#3e4854;
-  --muted:#84909b;
-  --border:#e8edf1;
+  --blue-light:#eaf5fd;
+  --border:#d8e9f5;
+  --text:#18344b;
+  --muted:#71869a;
+  --bg:#f1f7fc;
   --white:#fff;
+  --red:#e34c59;
 }
-*{box-sizing:border-box}
+
+*{
+  box-sizing:border-box;
+}
+
 body{
   margin:0;
-  padding:0 0 78px;
-  background:#fff;
+  background:var(--bg);
   color:var(--text);
   font-family:Arial,Helvetica,sans-serif;
+  padding-bottom:85px;
 }
-button{font:inherit;cursor:pointer}
-a{-webkit-tap-highlight-color:transparent}
-.app{max-width:650px;margin:auto;min-height:100vh}
 
-/* HEADER */
+button,input,textarea{
+  font:inherit;
+}
+
 .header{
-  height:58px;
-  padding:0 16px;
-  display:flex;
-  align-items:center;
-  justify-content:space-between;
-  background:linear-gradient(120deg,#087acb,#2196e8);
+  background:linear-gradient(135deg,var(--blue),var(--blue-dark));
   color:white;
-  font-size:20px;
+  padding:17px;
+  font-size:21px;
   font-weight:800;
-}
-.header small{
-  font-size:10px;
-  letter-spacing:1px;
-  opacity:.85;
+  box-shadow:0 3px 12px #087acb30;
 }
 
-/* PROFILE CARD */
-.profile-card{
-  position:relative;
-  margin:15px 12px 17px;
-  padding:20px 17px 17px;
-  min-height:290px;
-  overflow:hidden;
-  border-radius:24px;
-  background:
-    radial-gradient(circle at 90% 20%,#ffffffa8 0,transparent 35%),
-    linear-gradient(125deg,#f0f5fa,#d9e4ee 55%,#edf4f9);
-  box-shadow:0 8px 24px #1d45651c;
+.container{
+  max-width:650px;
+  margin:auto;
+  padding:13px;
 }
-.profile-card:before{
+
+.card{
+  background:white;
+  border:1px solid var(--border);
+  border-radius:15px;
+  padding:16px;
+  margin-bottom:13px;
+  box-shadow:0 3px 12px #1c5d8510;
+}
+
+/* COMPACT PROFILE CARD */
+.profile-top{
+  position:relative;
+  overflow:hidden;
+  padding:14px;
+  min-height:0;
+  background:linear-gradient(135deg,#f9fcff,#e4f2fc);
+  border:1px solid #d5e8f6;
+  border-radius:18px;
+}
+
+.profile-top:after{
   content:"";
   position:absolute;
-  width:180px;
-  height:180px;
-  right:-55px;
-  top:25px;
+  width:130px;
+  height:130px;
+  right:-45px;
+  bottom:-65px;
   border-radius:50%;
-  border:17px solid #ffffff38;
-  box-shadow:inset 0 0 0 10px #ffffff22;
-}
-.profile-card:after{
-  content:"♛";
-  position:absolute;
-  right:24px;
-  top:64px;
-  font-size:105px;
-  color:#ffffff36;
+  background:#087acb09;
   pointer-events:none;
 }
-.profile-content{position:relative;z-index:2}
+
 .profile-main{
   display:flex;
   align-items:center;
-  gap:16px;
-  margin-top:12px;
+  gap:13px;
+  position:relative;
+  z-index:1;
 }
-.avatar-wrap{
-  width:124px;
-  height:124px;
-  flex-shrink:0;
-  padding:6px;
-  border-radius:50%;
-  background:#fff;
-  box-shadow:0 4px 15px #45657a20;
-}
+
 .avatar{
+  width:76px;
+  height:76px;
+  flex-shrink:0;
+  border-radius:50%;
+  background:var(--blue-light);
+  border:3px solid white;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  overflow:hidden;
+  box-shadow:0 3px 12px #087acb25;
+}
+
+.avatar img{
   width:100%;
   height:100%;
-  overflow:hidden;
-  border-radius:50%;
-  background:#e7eff6;
-  display:grid;
-  place-items:center;
+  object-fit:cover;
 }
-.avatar img{width:100%;height:100%;object-fit:cover}
-.profile-details{min-width:0;flex:1}
-.vip-badge{
-  display:inline-flex;
-  align-items:center;
-  gap:5px;
-  padding:7px 17px;
-  margin-bottom:14px;
-  color:#fff;
-  font-size:12px;
-  font-weight:900;
-  border-radius:30px;
-  background:linear-gradient(110deg,#697782,#303b46);
-  box-shadow:0 3px 8px #26374635;
-}
-.username-row{
-  display:flex;
-  align-items:center;
-  gap:7px;
-  flex-wrap:wrap;
-}
-.username{
-  font-size:21px;
-  font-weight:900;
-  color:#101820;
-  overflow-wrap:anywhere;
-}
-.copy-btn,.edit-btn,.refresh-btn{
-  border:0;
-  background:transparent;
-  color:#687785;
-  padding:3px;
-  font-size:19px;
-}
-.profile-realname{
-  margin-top:13px;
-  color:#697783;
-  font-size:14px;
-  font-weight:700;
-  overflow-wrap:anywhere;
-}
-.join-date{
-  margin-top:11px;
-  color:#77838d;
-  font-size:13px;
-  font-weight:700;
-}
-.balance-row{
-  display:flex;
-  justify-content:space-between;
-  align-items:center;
-  gap:10px;
-  margin-top:22px;
-}
-.balance{
-  font-size:30px;
-  font-weight:900;
-  color:#414b56;
-}
-.refresh-btn{font-size:27px}
-.profile-actions{
-  display:grid;
-  grid-template-columns:repeat(3,minmax(0,1fr));
-  gap:9px;
-  margin-top:18px;
-}
-.profile-actions button{
-  min-width:0;
-  padding:12px 5px;
-  border:1px solid #d6e0e8;
-  border-radius:30px;
-  background:linear-gradient(#fff,#eaf0f5);
-  color:#4b5864;
-  font-size:12px;
-  font-weight:800;
-  box-shadow:0 3px 7px #26374620;
-}
-.profile-actions button:active{transform:scale(.97)}
 
-/* ACCOUNT MENU */
-.menu-heading{
+.profile-details{
+  flex:1;
+  min-width:0;
+}
+
+.profile-name{
+  font-size:16px;
+  font-weight:800;
+  margin:0 0 5px;
+  overflow-wrap:anywhere;
+}
+
+.user-id{
+  font-size:11px;
+  color:var(--muted);
+  margin-bottom:5px;
+  overflow-wrap:anywhere;
+}
+
+.bio{
+  font-size:11px;
+  color:#64798b;
+  margin:5px 0;
+  line-height:1.4;
+}
+
+.verified{
+  display:inline-block;
+  background:#e7f8ef;
+  color:#13834e;
+  padding:4px 8px;
+  border-radius:20px;
+  font-size:10px;
+  font-weight:700;
+  margin-top:3px;
+}
+
+.unverified{
+  background:#fff5df;
+  color:#a66b00;
+}
+
+.profile-buttons{
+  display:flex;
+  gap:7px;
+  margin-top:13px;
+  position:relative;
+  z-index:1;
+}
+
+.btn{
+  border:0;
+  border-radius:30px;
+  padding:9px 12px;
+  font-size:11px;
+  font-weight:700;
+  cursor:pointer;
+  white-space:nowrap;
+}
+
+.btn:disabled{
+  opacity:.55;
+  cursor:not-allowed;
+}
+
+.btn-blue{
+  background:var(--blue);
+  color:white;
+}
+
+.btn-light{
+  background:white;
+  color:var(--blue-dark);
+  border:1px solid #d9eaf6;
+  box-shadow:0 2px 7px #087acb12;
+}
+
+.btn-red{
+  background:#fff0f1;
+  color:var(--red);
+}
+
+/* MEMBER MENU */
+.member-heading{
   display:flex;
   align-items:center;
   gap:9px;
-  margin:20px 13px 12px;
-  color:#555f69;
-  font-size:13px;
-  font-weight:800;
+  margin:20px 0 12px;
 }
-.menu-heading:after{
+
+.member-heading h3{
+  margin:0;
+  font-size:14px;
+  color:#34495a;
+  white-space:nowrap;
+}
+
+.member-heading:after{
   content:"";
   height:1px;
   flex:1;
-  background:#e8edf1;
+  background:#dce8f0;
 }
-.menu-grid{
+
+.member-menu{
   display:grid;
   grid-template-columns:repeat(4,minmax(0,1fr));
-  gap:20px 5px;
-  padding:8px 8px 15px;
+  gap:17px 7px;
+  padding:8px 0 17px;
 }
-.menu-link{
+
+.member-item{
   min-width:0;
+  text-decoration:none;
+  color:#52616d;
   display:flex;
   flex-direction:column;
   align-items:center;
   text-align:center;
-  text-decoration:none;
-  color:#555b62;
-  gap:9px;
-  padding:4px 2px;
+  gap:7px;
+  cursor:pointer;
 }
-.menu-icon{
-  width:72px;
-  height:72px;
-  display:grid;
-  place-items:center;
+
+.member-icon{
+  width:57px;
+  height:57px;
   border-radius:50%;
-  background:linear-gradient(145deg,#fff7e5,#fff0d0);
-  border:1px solid #f2dfb7;
-  color:#c6a052;
-  font-size:29px;
-  box-shadow:0 2px 5px #b78e4020;
+  background:linear-gradient(145deg,#fff8e8,#fff0cc);
+  border:1px solid #f1dfb8;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  font-size:25px;
+  box-shadow:0 3px 9px #b98b2a12;
+  transition:.15s;
 }
-.menu-link strong{
-  width:100%;
-  font-size:12px;
+
+.member-item:active .member-icon{
+  transform:scale(.94);
+}
+
+.member-item strong{
+  font-size:10px;
   line-height:1.35;
-  font-weight:700;
+  font-weight:600;
   overflow-wrap:anywhere;
 }
-.menu-link:active .menu-icon{transform:scale(.94)}
-.menu-link .count{
-  position:absolute;
-  margin-left:43px;
-  margin-top:-5px;
-  background:#ed3d4b;
-  color:white;
-  border-radius:50%;
-  min-width:23px;
-  height:23px;
-  display:grid;
-  place-items:center;
-  font-size:11px;
-  font-weight:900;
-}
-.menu-icon-wrap{position:relative}
 
-/* ACTIVITY */
-.section-card{
-  margin:12px;
-  padding:16px;
-  border:1px solid #e5edf3;
-  border-radius:17px;
-  background:#fff;
-  box-shadow:0 3px 12px #1c5d850b;
-}
-.section-title{
-  margin:0 0 13px;
-  font-size:15px;
-  font-weight:800;
-}
-.stats{
-  display:grid;
-  grid-template-columns:repeat(3,1fr);
-  gap:8px;
-  text-align:center;
-}
-.stat{
-  padding:12px 4px;
-  border:1px solid #e2edf5;
-  border-radius:12px;
-  background:#f5faff;
-}
-.stat strong{
-  display:block;
-  font-size:20px;
-  color:var(--blue-dark);
-  margin-bottom:5px;
-}
-.stat span{font-size:10px;color:var(--muted)}
-.small-muted{
-  font-size:11px;
-  line-height:1.6;
-  color:var(--muted);
-}
-
-/* WALLET */
-.wallet-card{
-  background:linear-gradient(135deg,#123c60,#087acb);
-  color:#fff;
-  border:0;
-}
-.wallet-label{font-size:13px;opacity:.85}
-.wallet-balance{font-size:28px;font-weight:900;margin:10px 0 15px}
-.wallet-actions{display:flex;gap:9px}
-.wallet-actions button{
-  flex:1;
-  padding:11px;
-  border:0;
-  border-radius:10px;
-  background:white;
-  color:#087acb;
-  font-weight:800;
-}
-
-/* BOTTOM NAV */
+/* BOTTOM NAVIGATION */
 .bottom-nav{
   position:fixed;
   bottom:0;
@@ -319,12 +266,13 @@ a{-webkit-tap-highlight-color:transparent}
   right:0;
   height:67px;
   background:white;
-  border-top:1px solid #e5edf3;
+  border-top:1px solid var(--border);
   display:grid;
   grid-template-columns:repeat(4,1fr);
   z-index:20;
   box-shadow:0 -3px 12px #123c6010;
 }
+
 .nav-item{
   text-decoration:none;
   color:#8295a6;
@@ -333,15 +281,30 @@ a{-webkit-tap-highlight-color:transparent}
   align-items:center;
   justify-content:center;
   gap:4px;
-  font-size:10px;
+  font-size:11px;
 }
-.nav-item span{font-size:20px}
-.nav-item.active{color:var(--blue-dark);font-weight:800}
+
+.nav-item span{
+  font-size:20px;
+}
+
+.nav-item.active{
+  color:var(--blue-dark);
+  font-weight:800;
+}
+
 .nav-profile-img{
-  width:25px;height:25px;
+  width:27px;
+  height:27px;
   border-radius:50%;
   object-fit:cover;
+  display:block;
   border:2px solid #d8e9f5;
+  background:#eaf5fd;
+}
+
+.nav-item.active .nav-profile-img{
+  border:2px solid var(--blue);
 }
 
 /* MODALS */
@@ -355,7 +318,11 @@ a{-webkit-tap-highlight-color:transparent}
   align-items:center;
   justify-content:center;
 }
-.modal.show{display:flex}
+
+.modal.show{
+  display:flex;
+}
+
 .modal-box{
   width:100%;
   max-width:460px;
@@ -366,26 +333,29 @@ a{-webkit-tap-highlight-color:transparent}
   padding:20px;
   box-shadow:0 15px 45px #001c3540;
 }
+
 .modal-head{
   display:flex;
   align-items:center;
   justify-content:space-between;
   margin-bottom:17px;
 }
-.modal-head h3{margin:0;font-size:18px}
+
+.modal-head h3{
+  margin:0;
+  font-size:18px;
+}
+
 .close{
-  border:0;background:#edf5fb;
-  border-radius:50%;width:34px;height:34px;
+  border:0;
+  background:#edf5fb;
+  border-radius:50%;
+  width:34px;
+  height:34px;
   font-size:20px;
+  cursor:pointer;
 }
-.btn{
-  border:0;border-radius:9px;
-  padding:11px 14px;
-  font-size:13px;font-weight:700;
-}
-.btn-blue{background:var(--blue);color:white}
-.btn-light{background:#eaf5fd;color:var(--blue-dark)}
-.btn:disabled{opacity:.55}
+
 .notice{
   background:#eef7ff;
   border:1px solid #cfe7fa;
@@ -396,254 +366,296 @@ a{-webkit-tap-highlight-color:transparent}
   line-height:1.6;
   margin-bottom:14px;
 }
+
+.small-muted{
+  font-size:11px;
+  color:var(--muted);
+  line-height:1.6;
+}
+
 .avatar-grid{
   display:grid;
   grid-template-columns:repeat(2,minmax(0,1fr));
-  gap:13px;margin:15px 0;
+  gap:13px;
+  margin:15px 0;
 }
+
 .avatar-option{
-  border:2px solid #d8e9f5;
+  border:2px solid var(--border);
   border-radius:16px;
-  background:#f5faff;
+  background:linear-gradient(145deg,#f5faff,#fff);
   padding:13px 8px;
-  cursor:pointer;text-align:center;
+  cursor:pointer;
+  text-align:center;
+  position:relative;
 }
+
 .avatar-option.selected{
   border-color:var(--blue);
   background:#eaf5fd;
+  box-shadow:0 0 0 3px #2196e820;
 }
+
 .avatar-option img{
-  width:80px;height:80px;
-  display:block;margin:0 auto 10px;
+  width:90px;
+  height:90px;
+  display:block;
+  margin:0 auto 10px;
   border-radius:50%;
 }
-.avatar-option span{display:block;font-size:12px;font-weight:800}
-.avatar-option small{display:block;color:var(--blue-dark);font-size:10px;margin-top:5px}
+
+.avatar-option span{
+  display:block;
+  font-size:13px;
+  font-weight:800;
+}
+
+.avatar-option small{
+  display:block;
+  color:var(--blue-dark);
+  font-size:11px;
+  margin-top:5px;
+}
+
 .toast{
-  position:fixed;left:50%;bottom:80px;
+  position:fixed;
+  left:50%;
+  bottom:85px;
   transform:translate(-50%,20px);
-  background:#173d5d;color:white;
-  padding:12px 18px;border-radius:12px;
-  font-size:12px;font-weight:700;
-  opacity:0;visibility:hidden;
-  transition:.25s;z-index:120;
-  width:max-content;max-width:90%;
+  background:#173d5d;
+  color:white;
+  padding:12px 18px;
+  border-radius:12px;
+  font-size:13px;
+  font-weight:700;
+  opacity:0;
+  visibility:hidden;
+  transition:.25s;
+  z-index:120;
+  width:max-content;
+  max-width:90%;
   text-align:center;
 }
-.toast.show{opacity:1;visibility:visible;transform:translate(-50%,0)}
+
+.toast.show{
+  opacity:1;
+  visibility:visible;
+  transform:translate(-50%,0);
+}
+
+.loading{
+  opacity:.65;
+  pointer-events:none;
+}
 
 @media(max-width:380px){
-  .profile-card{padding:16px 12px}
-  .avatar-wrap{width:100px;height:100px}
-  .username{font-size:17px}
-  .profile-realname,.join-date{font-size:11px}
-  .balance{font-size:26px}
-  .menu-grid{gap:17px 2px;padding-left:5px;padding-right:5px}
-  .menu-icon{width:62px;height:62px;font-size:25px}
-  .menu-link strong{font-size:10px}
-  .profile-actions button{font-size:10px}
+  .container{padding:10px}
+  .profile-top{padding:12px}
+  .avatar{width:68px;height:68px}
+  .profile-name{font-size:15px}
+  .member-menu{gap:15px 5px}
+  .member-icon{width:53px;height:53px;font-size:23px}
+  .member-item strong{font-size:9px}
+  .avatar-option img{width:82px;height:82px}
+  .btn{padding:8px 10px;font-size:10px}
+}
+
+@media(max-width:320px){
+  .member-icon{width:47px;height:47px;font-size:21px}
+  .member-item strong{font-size:8px}
+  .profile-main{gap:9px}
 }
 </style>
 </head>
 
 <body>
-<div class="app">
 
-<header class="header">
-  <span>GLO 365</span>
-  <small>MY ACCOUNT</small>
-</header>
+<header class="header">👤 My Profile</header>
 
-<!-- PROFILE CARD -->
-<section class="profile-card">
-  <div class="profile-content">
+<main class="container">
+
+  <!-- COMPACT PROFILE CARD -->
+  <section class="card profile-top">
 
     <div class="profile-main">
-      <div class="avatar-wrap">
-        <div class="avatar" id="avatar">👤</div>
-      </div>
+
+      <div class="avatar" id="avatar">👤</div>
 
       <div class="profile-details">
-        <div class="vip-badge">💎 <span id="vipLevel">VIP1</span></div>
+        <div class="profile-name" id="profileName">Loading...</div>
 
-        <div class="username-row">
-          <span class="username" id="profileName">Loading...</span>
-          <button class="copy-btn" onclick="copyUsername()" title="Copy Username">▣</button>
-        </div>
+        <div class="user-id" id="userId">User ID: --</div>
 
-        <div class="profile-realname">
-          <span id="realName">Name: --</span>
-          <button class="edit-btn" onclick="openAvatarPicker()" title="Edit Profile">✎</button>
-        </div>
+        <div id="accountStatus"></div>
 
-        <div class="join-date" id="joinDate">Joined: --</div>
+        <div class="bio" id="profileBio">Loading profile...</div>
       </div>
+
     </div>
 
-    <div class="balance-row">
-      <div class="balance">৳ <span id="walletBalance">--</span></div>
-      <button class="refresh-btn" onclick="refreshProfile()" title="Refresh">↻</button>
+    <div class="profile-buttons">
+      <button class="btn btn-light" onclick="openAvatarPicker()">
+        🎨 Avatar
+      </button>
+
+      <button class="btn btn-blue" onclick="showKycInfo()">
+        ✓ Verify Profile
+      </button>
     </div>
 
-    <div class="profile-actions">
-      <button onclick="location.href='deposit.html'">Deposit</button>
-      <button onclick="location.href='withdraw.html'">Withdraw</button>
-      <button onclick="location.href='wallet.html'">My Wallet</button>
-    </div>
+  </section>
 
+  <!-- MEMBER CENTER -->
+  <div class="member-heading">
+    <h3>MEMBER CENTER</h3>
   </div>
-</section>
 
-<!-- MEMBER CENTER -->
-<div class="menu-heading">MEMBER CENTER</div>
+  <section class="member-menu">
 
-<div class="menu-grid">
+    <a class="member-item" href="rewards.html">
+      <span class="member-icon">🏆</span>
+      <strong>My Rewards</strong>
+    </a>
 
-  <a class="menu-link" href="winners.html">
-    <span class="menu-icon-wrap">
-      <span class="menu-icon">🏆</span>
-    </span>
-    <strong>My Rewards</strong>
-  </a>
+    <a class="member-item" href="history.html">
+      <span class="member-icon">📊</span>
+      <strong>Bet History</strong>
+    </a>
 
-  <a class="menu-link" href="history.html">
-    <span class="menu-icon">📊</span>
-    <strong>Bet History</strong>
-  </a>
+    <a class="member-item" href="profit-loss.html">
+      <span class="member-icon">💰</span>
+      <strong>Profit & Loss</strong>
+    </a>
 
-  <a class="menu-link" href="wallet.html">
-    <span class="menu-icon">💰</span>
-    <strong>Profit & Loss</strong>
-  </a>
+    <a class="member-item" href="deposit-records.html">
+      <span class="member-icon">📥</span>
+      <strong>Deposit Records</strong>
+    </a>
 
-  <a class="menu-link" href="deposit-history.html">
-    <span class="menu-icon">📥</span>
-    <strong>Deposit Records</strong>
-  </a>
+    <a class="member-item" href="withdraw-records.html">
+      <span class="member-icon">📤</span>
+      <strong>Withdrawal Records</strong>
+    </a>
 
-  <a class="menu-link" href="withdraw-history.html">
-    <span class="menu-icon">📤</span>
-    <strong>Withdrawal Records</strong>
-  </a>
+    <a class="member-item" href="transaction-history.html">
+      <span class="member-icon">🧾</span>
+      <strong>Transaction History</strong>
+    </a>
 
-  <a class="menu-link" href="history.html">
-    <span class="menu-icon">🧾</span>
-    <strong>Transaction History</strong>
-  </a>
+    <a class="member-item" href="account.html">
+      <span class="member-icon">👤</span>
+      <strong>My Account</strong>
+    </a>
 
-  <a class="menu-link" href="account.html">
-    <span class="menu-icon">👤</span>
-    <strong>My Account</strong>
-  </a>
+    <a class="member-item" href="security.html">
+      <span class="member-icon">🛡️</span>
+      <strong>Security Center</strong>
+    </a>
 
-  <a class="menu-link" href="security.html">
-    <span class="menu-icon">🛡️</span>
-    <strong>Security Center</strong>
-  </a>
+    <a class="member-item" href="mailto:support@glo365.com">
+      <span class="member-icon">✉️</span>
+      <strong>Email</strong>
+    </a>
 
-  <a class="menu-link" href="email.html">
-    <span class="menu-icon">✉️</span>
-    <strong>Email</strong>
-  </a>
+    <a class="member-item" href="feedback.html">
+      <span class="member-icon">💬</span>
+      <strong>Feedback</strong>
+    </a>
 
-  <a class="menu-link" href="support.html">
-    <span class="menu-icon">💬</span>
-    <strong>Feedback</strong>
-  </a>
+    <a class="member-item" href="download.html">
+      <span class="member-icon">📱</span>
+      <strong>Download App</strong>
+    </a>
 
-  <a class="menu-link" href="app.html">
-    <span class="menu-icon">📱</span>
-    <strong>Download App</strong>
-  </a>
+    <a class="member-item" href="support.html">
+      <span class="member-icon">🎧</span>
+      <strong>Customer Service</strong>
+    </a>
 
-  <a class="menu-link" href="support.html">
-    <span class="menu-icon">🎧</span>
-    <strong>Customer Service</strong>
-  </a>
+    <a class="member-item" href="help.html">
+      <span class="member-icon">❔</span>
+      <strong>Help Center</strong>
+    </a>
 
-  <a class="menu-link" href="help.html">
-    <span class="menu-icon">❔</span>
-    <strong>Help Center</strong>
-  </a>
-
-  <a class="menu-link" href="#" onclick="logout();return false">
-    <span class="menu-icon">🚪</span>
-    <strong>Logout</strong>
-  </a>
-
-</div>
-
-<!-- ACTIVITY -->
-<section class="section-card">
-  <h3 class="section-title">📊 My Activity</h3>
-  <div class="stats">
-    <div class="stat">
-      <strong id="totalBets">--</strong>
-      <span>Total Bets</span>
+    <div class="member-item" onclick="logout()">
+      <span class="member-icon">🚪</span>
+      <strong>Logout</strong>
     </div>
-    <div class="stat">
-      <strong id="totalWins">--</strong>
-      <span>Wins</span>
-    </div>
-    <div class="stat">
-      <strong id="totalLosses">--</strong>
-      <span>Losses</span>
-    </div>
-  </div>
-  <p class="small-muted" id="activityStatus">Activity is loaded from your account.</p>
-</section>
 
-<!-- WALLET DETAILS -->
-<section class="section-card wallet-card">
-  <div class="wallet-label">💰 My Wallet Balance</div>
-  <div class="wallet-balance">৳ <span id="walletBalance2">--</span></div>
-  <div class="wallet-actions">
-    <button onclick="location.href='deposit.html'">＋ Deposit</button>
-    <button onclick="location.href='withdraw.html'">↗ Withdraw</button>
-  </div>
-</section>
+  </section>
 
-<section class="section-card">
-  <h3 class="section-title">Account Information</h3>
-  <p class="small-muted" id="accountInfo">Your account information is loading.</p>
-  <button class="btn btn-light" style="width:100%;margin-top:10px" onclick="showKycInfo()">Profile Verification</button>
-</section>
+</main>
 
+<!-- BOTTOM NAV -->
 <nav class="bottom-nav">
-  <a class="nav-item" href="home.html"><span>🏠</span>Home</a>
-  <a class="nav-item" href="mybets.html"><span>🎯</span>My Bets</a>
-  <a class="nav-item" href="results.html"><span>🏆</span>Results</a>
+
+  <a class="nav-item" href="home.html">
+    <span>🏠</span>
+    Home
+  </a>
+
+  <a class="nav-item" href="mybets.html">
+    <span>🎯</span>
+    My Bets
+  </a>
+
+  <a class="nav-item" href="results.html">
+    <span>🏆</span>
+    Results
+  </a>
+
   <a class="nav-item active" href="profile.html">
     <img class="nav-profile-img" id="navProfileAvatar" alt="Profile">
     Profile
   </a>
+
 </nav>
 
 <!-- AVATAR MODAL -->
 <div class="modal" id="avatarModal">
+
   <div class="modal-box">
+
     <div class="modal-head">
-      <h3>Choose Your Avatar</h3>
+      <h3>🎨 Choose Your Avatar</h3>
       <button class="close" onclick="closeAvatarPicker()">×</button>
     </div>
-    <p class="small-muted">Choose your profile character. Your selection will be saved to your GLO 365 account.</p>
+
+    <p class="small-muted">
+      Choose your profile character. Your selection will be saved to your GLO 365 account.
+    </p>
+
     <div class="avatar-grid" id="avatarGrid"></div>
-    <button class="btn btn-blue" style="width:100%" id="saveAvatarButton" onclick="saveSelectedAvatar()">Save Avatar</button>
-    <button class="btn btn-light" style="width:100%;margin-top:8px" onclick="closeAvatarPicker()">Cancel</button>
+
+    <button class="btn btn-blue" style="width:100%" id="saveAvatarButton" onclick="saveSelectedAvatar()">
+      Save Avatar
+    </button>
+
+    <button class="btn btn-light" style="width:100%;margin-top:8px" onclick="closeAvatarPicker()">
+      Cancel
+    </button>
+
   </div>
 </div>
 
-<!-- INFORMATION MODAL -->
+<!-- VERIFICATION MODAL -->
 <div class="modal" id="infoModal">
+
   <div class="modal-box">
+
     <div class="modal-head">
       <h3>Profile Verification</h3>
       <button class="close" onclick="closeInfoModal()">×</button>
     </div>
+
     <div class="notice">
-      Profile verification is not connected to the GLO 365 server yet. Do not enter or send your NID, Passport number, PIN, OTP, or other sensitive identity information here.
+      Profile verification is not connected to the GLO 365 server yet. Please do not enter or send your NID, Passport number, PIN, OTP, or other sensitive identity information here.
     </div>
-    <button class="btn btn-blue" style="width:100%" onclick="closeInfoModal()">Close</button>
+
+    <button class="btn btn-blue" style="width:100%" onclick="closeInfoModal()">
+      Close
+    </button>
+
   </div>
 </div>
 
@@ -656,9 +668,7 @@ a{-webkit-tap-highlight-color:transparent}
 const API_BASE="https://glo365.onrender.com/api";
 const TOKEN_KEY="glo365_token";
 
-let token="";
-try{token=sessionStorage.getItem(TOKEN_KEY)||""}catch(e){}
-
+let token=sessionStorage.getItem(TOKEN_KEY)||"";
 let currentUser=null;
 let currentProfile={};
 let selectedAvatar=null;
@@ -686,7 +696,9 @@ function toast(message){
 async function api(path,options={}){
  const headers={...(options.headers||{})};
 
- if(token)headers.Authorization="Bearer "+token;
+ if(token){
+  headers.Authorization="Bearer "+token;
+ }
 
  if(options.body&&!headers["Content-Type"]){
   headers["Content-Type"]="application/json";
@@ -695,35 +707,33 @@ async function api(path,options={}){
  const response=await fetch(API_BASE+path,{
   ...options,
   headers,
-  credentials:"include",
-  cache:"no-store"
+  credentials:"include"
  });
 
  let data={};
- try{data=await response.json()}catch(e){}
 
- if(response.status===401){
-  throw new Error("401: Your session has expired. Please log in again.");
- }
- if(response.status===403){
-  throw new Error("403: You do not have permission to access this information.");
- }
+ try{
+  data=await response.json();
+ }catch(e){}
+
  if(!response.ok){
-  throw new Error(data.message||data.error||"Request failed ("+response.status+")");
+  throw new Error(
+   data.message||data.error||"Request failed ("+response.status+")"
+  );
  }
- if(data&&data.success===false){
-  throw new Error(data.message||data.error||"Request was not successful.");
- }
+
  return data;
 }
 
 function avatarSVG(item){
  const svg=`
  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 120 120">
- <defs><linearGradient id="bg" x1="0" y1="0" x2="1" y2="1">
- <stop offset="0%" stop-color="${item.bg}"/>
- <stop offset="100%" stop-color="#fff"/>
- </linearGradient></defs>
+ <defs>
+  <linearGradient id="bg" x1="0" y1="0" x2="1" y2="1">
+   <stop offset="0%" stop-color="${item.bg}"/>
+   <stop offset="100%" stop-color="#fff"/>
+  </linearGradient>
+ </defs>
  <circle cx="60" cy="60" r="60" fill="url(#bg)"/>
  <path d="M10 120 Q14 80 60 80 Q106 80 110 120Z" fill="${item.shirt}"/>
  <path d="M48 75 L48 89 Q60 101 72 89 L72 75Z" fill="${item.skin}"/>
@@ -734,28 +744,36 @@ function avatarSVG(item){
  <path d="M44 48 Q49 45 54 48 M66 48 Q71 45 76 48" fill="none" stroke="${item.hair}" stroke-width="2.5"/>
  <path d="M60 57 L57 65 Q60 68 63 65" fill="none" stroke="#b77d67" stroke-width="1.5"/>
  <path d="M51 72 Q60 78 69 72" fill="none" stroke="#9c5551" stroke-width="2.5"/>
+ <path d="M43 88 L60 101 L77 88" fill="none" stroke="#fff" stroke-width="3" opacity=".7"/>
  </svg>`;
+
  return "data:image/svg+xml;charset=UTF-8,"+encodeURIComponent(svg);
 }
 
-function fallbackAvatar(){
- return avatarSVG(AVATARS[0]);
-}
-
 function setAvatar(source){
- const fallback=fallbackAvatar();
+ const fallback=avatarSVG(AVATARS[0]);
  const main=document.getElementById("avatar");
+
  main.innerHTML="";
 
  const img=document.createElement("img");
  img.alt="Profile picture";
  img.src=source||fallback;
- img.onerror=()=>{img.onerror=null;img.src=fallback};
+
+ img.onerror=()=>{
+  img.onerror=null;
+  img.src=fallback;
+ };
+
  main.appendChild(img);
 
  const nav=document.getElementById("navProfileAvatar");
  nav.src=source||fallback;
- nav.onerror=()=>{nav.onerror=null;nav.src=fallback};
+
+ nav.onerror=()=>{
+  nav.onerror=null;
+  nav.src=fallback;
+ };
 }
 
 function getAvatarId(){
@@ -763,19 +781,11 @@ function getAvatarId(){
  return AVATARS.some(a=>a.id===value)?value:"";
 }
 
-function formatDate(value){
- if(!value)return "--";
- const date=new Date(value);
- if(Number.isNaN(date.getTime()))return String(value);
- return date.toLocaleDateString("en-US",{
-  year:"numeric",month:"short",day:"2-digit"
- });
-}
-
 function renderProfile(){
  if(!currentUser)return;
 
- const username=currentUser.username||currentUser.full_name||"User";
+ const username=currentUser.username||"";
+
  const fullName=
   currentProfile.full_name||
   currentProfile.fullName||
@@ -783,24 +793,24 @@ function renderProfile(){
   currentUser.fullName||
   username;
 
- document.getElementById("profileName").textContent=username;
- document.getElementById("realName").textContent="Name: "+fullName;
+ document.getElementById("profileName").textContent=fullName;
 
- const joined=
-  currentUser.created_at||
-  currentUser.createdAt||
-  currentProfile.created_at||
-  currentProfile.createdAt;
+ document.getElementById("userId").textContent=
+  "User ID: "+username;
 
- document.getElementById("joinDate").textContent="Joined: "+formatDate(joined);
+ document.getElementById("profileBio").textContent=
+  currentProfile.bio||"Welcome to GLO 365";
 
- const vip=
-  currentUser.vip_level||
-  currentUser.vipLevel||
-  currentProfile.vip_level||
-  "VIP1";
+ const status=String(currentUser.status||"active").toLowerCase();
+ const statusEl=document.getElementById("accountStatus");
 
- document.getElementById("vipLevel").textContent=vip;
+ if(status==="active"){
+  statusEl.innerHTML='<span class="verified">✓ Active Account</span>';
+ }else{
+  statusEl.innerHTML=
+   '<span class="verified unverified">'+
+   status.toUpperCase()+'</span>';
+ }
 
  const avatarId=getAvatarId();
  const avatarItem=AVATARS.find(a=>a.id===avatarId);
@@ -810,10 +820,6 @@ function renderProfile(){
  }else{
   setAvatar(currentProfile.avatar||currentUser.avatar||"");
  }
-
- document.getElementById("accountInfo").textContent=
-  "Username: "+username+" | Account Status: "+
-  String(currentUser.status||"Active");
 }
 
 function extractUser(data){
@@ -830,49 +836,15 @@ async function loadProfile(){
  renderProfile();
 }
 
-async function loadWallet(){
- const data=await api("/wallet");
- const wallet=data.wallet||data;
- const balance=Number(wallet.balance??data.balance??0);
- const formatted=Number.isFinite(balance)?balance.toLocaleString("en-US"):"0";
-
- document.getElementById("walletBalance").textContent=formatted;
- document.getElementById("walletBalance2").textContent=formatted;
-}
-
-function getBetsArray(data){
- if(Array.isArray(data))return data;
- if(Array.isArray(data.bets))return data.bets;
- if(Array.isArray(data.records))return data.records;
- if(Array.isArray(data.data))return data.data;
- return [];
-}
-
-async function loadActivity(){
- const data=await api("/demo/bets");
- const bets=getBetsArray(data);
-
- let wins=0,losses=0;
-
- bets.forEach(bet=>{
-  const status=String(bet.status||bet.result||"").toUpperCase();
-  if(["WIN","WON"].includes(status))wins++;
-  if(["LOSS","LOST"].includes(status))losses++;
- });
-
- document.getElementById("totalBets").textContent=bets.length.toLocaleString("en-US");
- document.getElementById("totalWins").textContent=wins.toLocaleString("en-US");
- document.getElementById("totalLosses").textContent=losses.toLocaleString("en-US");
- document.getElementById("activityStatus").textContent="Loaded from your server account.";
-}
-
 function renderAvatarChoices(){
  const grid=document.getElementById("avatarGrid");
  grid.innerHTML="";
 
  AVATARS.forEach(item=>{
   const option=document.createElement("div");
-  option.className="avatar-option"+(selectedAvatar===item.id?" selected":"");
+
+  option.className="avatar-option"+
+   (selectedAvatar===item.id?" selected":"");
 
   const img=document.createElement("img");
   img.src=avatarSVG(item);
@@ -882,13 +854,16 @@ function renderAvatarChoices(){
   name.textContent=item.name;
 
   const label=document.createElement("small");
-  label.textContent=selectedAvatar===item.id?"Selected":"Tap to select";
+  label.textContent=
+   selectedAvatar===item.id?"✓ Selected":"Tap to select";
 
   option.append(img,name,label);
+
   option.onclick=()=>{
    selectedAvatar=item.id;
    renderAvatarChoices();
   };
+
   grid.appendChild(option);
  });
 }
@@ -904,7 +879,10 @@ window.closeAvatarPicker=function(){
 };
 
 window.saveSelectedAvatar=async function(){
- if(!selectedAvatar){toast("Please select an avatar.");return}
+ if(!selectedAvatar){
+  toast("Please select an avatar.");
+  return;
+ }
 
  const button=document.getElementById("saveAvatarButton");
  button.disabled=true;
@@ -919,35 +897,31 @@ window.saveSelectedAvatar=async function(){
      currentProfile.fullName||
      currentUser.full_name||
      currentUser.username,
+
     avatar:selectedAvatar,
     bio:currentProfile.bio||""
    })
   });
 
   const updated=extractProfile(response)||{};
-  currentProfile={...currentProfile,...updated,avatar:updated.avatar||selectedAvatar};
+
+  currentProfile={
+   ...currentProfile,
+   ...updated,
+   avatar:updated.avatar||selectedAvatar
+  };
 
   renderProfile();
   closeAvatarPicker();
   toast("Avatar saved successfully.");
 
  }catch(error){
+  console.error("Avatar save error:",error);
   toast("Could not save avatar: "+error.message);
+
  }finally{
   button.disabled=false;
   button.textContent="Save Avatar";
- }
-};
-
-window.copyUsername=async function(){
- const username=currentUser&&currentUser.username;
- if(!username){toast("Username is not available.");return}
-
- try{
-  await navigator.clipboard.writeText(username);
-  toast("Username copied.");
- }catch(error){
-  toast("Unable to copy username.");
  }
 };
 
@@ -959,13 +933,9 @@ window.closeInfoModal=function(){
  document.getElementById("infoModal").classList.remove("show");
 };
 
-window.refreshProfile=async function(){
- toast("Refreshing account...");
- await Promise.allSettled([loadProfile(),loadWallet(),loadActivity()]);
-};
-
 window.logout=async function(){
  if(isLoggingOut)return;
+
  if(!confirm("Are you sure you want to logout?"))return;
 
  isLoggingOut=true;
@@ -977,19 +947,20 @@ window.logout=async function(){
    headers:token?{Authorization:"Bearer "+token}:{}
   });
  }catch(error){
-  console.warn("Logout request failed:",error);
+  console.warn("Logout request:",error.message);
  }
 
- try{
-  sessionStorage.removeItem(TOKEN_KEY);
-  sessionStorage.removeItem("glo365_user");
-  sessionStorage.removeItem("glo365_session");
- }catch(error){}
+ sessionStorage.removeItem(TOKEN_KEY);
+ sessionStorage.removeItem("glo365_user");
+ sessionStorage.removeItem("glo365_session");
 
  location.replace("login.html");
 };
 
 async function initialize(){
+ document.getElementById("profileName").textContent="Loading...";
+ document.getElementById("profileBio").textContent="Checking your account...";
+
  try{
   const authData=await api("/auth/me");
   currentUser=extractUser(authData);
@@ -998,45 +969,21 @@ async function initialize(){
    throw new Error("Your account information could not be loaded.");
   }
 
-  const results=await Promise.allSettled([
-   loadProfile(),
-   loadWallet(),
-   loadActivity()
-  ]);
-
-  if(results[0].status==="rejected"){
-   currentProfile={
-    full_name:currentUser.full_name||currentUser.username,
-    avatar:currentUser.avatar||"",
-    bio:currentUser.bio||""
-   };
-   renderProfile();
-  }
-
-  if(results[1].status==="rejected"){
-   document.getElementById("walletBalance").textContent="Unavailable";
-   document.getElementById("walletBalance2").textContent="Unavailable";
-  }
-
-  if(results[2].status==="rejected"){
-   document.getElementById("totalBets").textContent="--";
-   document.getElementById("totalWins").textContent="--";
-   document.getElementById("totalLosses").textContent="--";
-   document.getElementById("activityStatus").textContent=
-    "Activity could not be loaded: "+results[2].reason.message;
-  }
+  await loadProfile();
 
  }catch(error){
   console.error("Profile initialization error:",error);
 
-  if(/401|403|unauthorized|token|authentication/i.test(error.message)){
-   try{sessionStorage.removeItem(TOKEN_KEY)}catch(e){}
+  if(
+   /401|403|unauthorized|token|authentication/i.test(error.message)
+  ){
+   sessionStorage.removeItem(TOKEN_KEY);
    location.replace("login.html");
    return;
   }
 
   document.getElementById("profileName").textContent="Unable to load";
-  document.getElementById("realName").textContent=error.message;
+  document.getElementById("profileBio").textContent=error.message;
   toast(error.message||"Could not load your profile.");
  }
 }
@@ -1045,13 +992,12 @@ initialize();
 
 window.addEventListener("pageshow",()=>{
  if(currentUser&&!isLoggingOut){
-  refreshProfile();
+  loadProfile().catch(error=>console.error(error));
  }
 });
 
 })();
 </script>
 
-</div>
 </body>
 </html>
