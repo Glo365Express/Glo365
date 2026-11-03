@@ -8,38 +8,396 @@
 <title>GLO 365 - Confirm Deposit</title>
 
 <style>
-*{box-sizing:border-box;margin:0;padding:0}
-body{font-family:Arial,sans-serif;background:#f5f3f3;color:#292929;min-height:100vh}
-.app{max-width:520px;min-height:100vh;margin:auto;background:#fff;padding-bottom:35px}
-header{height:72px;background:linear-gradient(110deg,#100a2c,#211638);color:#fff;display:flex;align-items:center;justify-content:center;position:relative;font-size:21px;font-weight:bold}
-.back{position:absolute;left:20px;color:#fff;text-decoration:none;font-size:30px}
-.page{padding:20px 14px}
-.card{background:#fff;border-radius:16px;padding:18px 15px;margin-bottom:15px;box-shadow:0 5px 24px #0000000d}
-.brand{display:flex;align-items:center;gap:14px;background:#f7f4f8;border-radius:12px;padding:15px;margin-bottom:18px}
-.brand img{width:65px;height:65px;object-fit:contain;background:#fff;border-radius:12px;padding:8px}
-.brand strong{font-size:18px}
-.brand small{display:block;color:#888;font-size:11px;margin-top:5px}
-.title{font-size:17px;font-weight:900;margin-bottom:14px}
-.info{background:#f4faff;border:1px solid #dcecf8;border-radius:11px;padding:14px;margin-bottom:17px;font-size:12px;line-height:1.8;color:#526f87;overflow-wrap:anywhere}
-.info strong{color:#167fc4}
-.address{font-size:16px;font-weight:900;color:#18334d;word-break:break-all;margin:8px 0}
-.copy{border:0;border-radius:8px;background:#d9efff;color:#167fc4;padding:9px 13px;font-weight:bold;cursor:pointer}
-.field{margin-bottom:16px}
-label{display:block;font-size:13px;font-weight:bold;margin-bottom:8px}
-input{width:100%;height:51px;border:1px solid #cbdfee;border-radius:10px;background:#f7fbff;padding:0 13px;font-size:14px;outline:none}
-input:focus{border-color:#2196e8}
-.row{display:flex;justify-content:space-between;gap:10px;padding:9px 0;font-size:12px;color:#7c8c9b;border-bottom:1px solid #eee}
-.row strong{color:#293f52;text-align:right;overflow-wrap:anywhere}
-.notice{font-size:11px;line-height:1.8;color:#8a5c36;background:#fff7ed;border:1px solid #ffe1bf;padding:13px;border-radius:10px;margin-bottom:17px}
-.btn{width:100%;height:55px;border:0;border-radius:30px;background:linear-gradient(100deg,#1687d5,#2196e8);color:#fff;font-size:15px;font-weight:900;cursor:pointer}
-.btn:disabled{opacity:.5}
-.secondary{width:100%;height:48px;border:1px solid #ddd;border-radius:12px;background:#fff;color:#555;font-weight:bold;margin-top:10px;cursor:pointer}
-.toast{display:none;position:fixed;bottom:25px;left:50%;transform:translateX(-50%);background:#211638;color:#fff;padding:13px 18px;border-radius:10px;font-size:13px;z-index:20;max-width:90%;text-align:center}
+*{
+ box-sizing:border-box;
+ margin:0;
+ padding:0;
+}
+
+body{
+ font-family:Arial,sans-serif;
+ background:#f5f3f3;
+ color:#292929;
+ min-height:100vh;
+}
+
+.app{
+ max-width:520px;
+ min-height:100vh;
+ margin:auto;
+ background:#fff;
+ padding-bottom:35px;
+}
+
+header{
+ height:72px;
+ background:linear-gradient(110deg,#100a2c,#211638);
+ color:#fff;
+ display:flex;
+ align-items:center;
+ justify-content:center;
+ position:relative;
+ font-size:21px;
+ font-weight:bold;
+}
+
+.back{
+ position:absolute;
+ left:20px;
+ color:#fff;
+ text-decoration:none;
+ font-size:30px;
+}
+
+.page{
+ padding:20px 14px;
+}
+
+.card{
+ background:#fff;
+ border-radius:16px;
+ padding:18px 15px;
+ margin-bottom:15px;
+ box-shadow:0 5px 24px #0000000d;
+}
+
+.brand{
+ display:flex;
+ align-items:center;
+ gap:14px;
+ padding:17px;
+ border-radius:12px;
+ margin-bottom:19px;
+ background:#f7f4f8;
+ border:1px solid #eee;
+}
+
+.brand img{
+ width:72px;
+ height:72px;
+ object-fit:contain;
+ background:#fff;
+ border-radius:50%;
+ padding:8px;
+ flex-shrink:0;
+}
+
+.brand strong{
+ font-size:19px;
+}
+
+.brand small{
+ display:block;
+ color:#888;
+ font-size:11px;
+ margin-top:6px;
+}
+
+.title{
+ font-size:17px;
+ font-weight:900;
+ margin-bottom:14px;
+}
+
+.account-box{
+ background:#f3f3f3;
+ border-radius:10px;
+ padding:15px;
+ display:flex;
+ justify-content:space-between;
+ align-items:center;
+ gap:10px;
+ margin-top:9px;
+}
+
+.account{
+ font-size:18px;
+ font-weight:900;
+ color:#252525;
+ overflow-wrap:anywhere;
+ line-height:1.6;
+}
+
+.copy{
+ border:0;
+ border-radius:8px;
+ background:#e4f4ff;
+ color:#167fc4;
+ padding:10px 12px;
+ font-weight:bold;
+ cursor:pointer;
+ flex-shrink:0;
+}
+
+.instructions{
+ font-size:12px;
+ line-height:1.8;
+ color:#777;
+ margin-top:12px;
+ overflow-wrap:anywhere;
+}
+
+.currency{
+ margin-top:10px;
+ font-size:12px;
+ color:#777;
+}
+
+.currency strong{
+ color:#167fc4;
+}
+
+.field{
+ margin-top:18px;
+}
+
+label{
+ display:block;
+ font-size:15px;
+ font-weight:900;
+ margin-bottom:9px;
+}
+
+input{
+ width:100%;
+ height:57px;
+ border:2px solid #e4dfe0;
+ border-radius:9px;
+ background:#fff;
+ padding:0 14px;
+ font-size:15px;
+ outline:none;
+}
+
+input:focus{
+ border-color:#e63855;
+ box-shadow:0 0 0 3px #e6385515;
+}
+
+input::placeholder{
+ color:#aaa;
+}
+
+.timer-card{
+ display:flex;
+ align-items:center;
+ justify-content:space-between;
+ gap:10px;
+ background:#fff6f6;
+ border:1px solid #ffd9df;
+ border-radius:12px;
+ padding:15px;
+ margin-bottom:17px;
+}
+
+.timer-label{
+ font-size:13px;
+ font-weight:bold;
+ color:#725c61;
+}
+
+.timer-label small{
+ display:block;
+ font-size:10px;
+ color:#a28b90;
+ margin-top:5px;
+}
+
+.timer{
+ color:#e63855;
+ font-size:22px;
+ font-weight:900;
+ font-variant-numeric:tabular-nums;
+}
+
+.notice{
+ font-size:12px;
+ line-height:1.9;
+ color:#8a5c36;
+ background:#fff7ed;
+ border:1px solid #ffe1bf;
+ padding:13px;
+ border-radius:10px;
+ margin-top:17px;
+}
+
+.notice strong{
+ color:#bb6032;
+}
+
+.btn{
+ width:100%;
+ height:55px;
+ border:0;
+ border-radius:30px;
+ background:linear-gradient(100deg,#f58b9b,#e95772);
+ color:#fff;
+ font-size:16px;
+ font-weight:900;
+ cursor:pointer;
+ box-shadow:0 5px 12px #e9577240;
+}
+
+.btn:disabled{
+ opacity:.5;
+ cursor:not-allowed;
+}
+
+.secondary{
+ width:100%;
+ height:48px;
+ border:1px solid #ddd;
+ border-radius:12px;
+ background:#fff;
+ color:#555;
+ font-weight:bold;
+ margin-top:10px;
+ cursor:pointer;
+}
+
+/* CONFIRMATION POPUP */
+
+.modal-overlay{
+ position:fixed;
+ inset:0;
+ background:#0007;
+ z-index:500;
+ display:flex;
+ align-items:center;
+ justify-content:center;
+ padding:18px;
+}
+
+.modal{
+ width:100%;
+ max-width:440px;
+ background:#fff;
+ border-radius:12px;
+ padding:25px 19px 22px;
+ box-shadow:0 12px 40px #0003;
+ animation:popup .22s ease;
+}
+
+@keyframes popup{
+ from{transform:scale(.94);opacity:0}
+ to{transform:scale(1);opacity:1}
+}
+
+.modal-icon{
+ width:55px;
+ height:55px;
+ border-radius:50%;
+ background:#e9f8ef;
+ color:#16884b;
+ display:grid;
+ place-items:center;
+ font-size:30px;
+ font-weight:bold;
+ margin:0 auto 13px;
+}
+
+.modal h3{
+ text-align:center;
+ font-size:20px;
+ margin-bottom:10px;
+}
+
+.modal-desc{
+ text-align:center;
+ color:#888;
+ font-size:13px;
+ line-height:1.8;
+ margin-bottom:18px;
+}
+
+.detail-row{
+ display:flex;
+ justify-content:space-between;
+ align-items:flex-start;
+ gap:12px;
+ padding:11px 0;
+ border-bottom:1px solid #eee;
+ font-size:12px;
+}
+
+.detail-row span{
+ color:#888;
+}
+
+.detail-row strong{
+ text-align:right;
+ color:#292929;
+ max-width:65%;
+ overflow-wrap:anywhere;
+}
+
+.modal-actions{
+ display:flex;
+ gap:12px;
+ margin-top:22px;
+}
+
+.cancel-btn,
+.deposit-btn{
+ flex:1;
+ height:49px;
+ border:0;
+ border-radius:30px;
+ font-size:14px;
+ font-weight:900;
+ cursor:pointer;
+}
+
+.cancel-btn{
+ background:#e5e5e5;
+ color:#444;
+}
+
+.deposit-btn{
+ background:#087451;
+ color:#fff;
+ box-shadow:0 4px 10px #08745135;
+}
+
+.hidden{
+ display:none!important;
+}
+
+.toast{
+ display:none;
+ position:fixed;
+ bottom:25px;
+ left:50%;
+ transform:translateX(-50%);
+ background:#211638;
+ color:#fff;
+ padding:13px 18px;
+ border-radius:10px;
+ font-size:13px;
+ z-index:900;
+ max-width:90%;
+ text-align:center;
+}
+
+@media(max-width:360px){
+ .brand img{
+  width:60px;
+  height:60px;
+ }
+ .brand strong{
+  font-size:17px;
+ }
+ .account{
+  font-size:15px;
+ }
+}
 </style>
 </head>
+
 <body>
 
 <div class="app">
+
 <header>
 <a class="back" href="deposit.html">‹</a>
 Confirm Deposit
@@ -47,74 +405,159 @@ Confirm Deposit
 
 <div class="page">
 
+<!-- PAYMENT METHOD -->
+
 <section class="card">
+
 <div class="brand">
 <img id="methodLogo" src="" alt="Payment logo">
+
 <div>
 <strong id="methodName">Payment Method</strong>
-<small>Selected Deposit Channel</small>
+<small>Deposit Payment Channel</small>
 </div>
 </div>
 
 <div class="title">Payment Information</div>
 
-<div class="info">
-<strong>Payment Account / Wallet Address</strong>
-<div class="address" id="paymentAccount">Loading...</div>
-<button class="copy" type="button" id="copyBtn">Copy Account</button>
+<label>Wallet No / Payment Account</label>
 
-<div style="margin-top:12px"><strong>Payment Instructions</strong></div>
-<div id="instructions">Loading payment instructions...</div>
-
-<div style="margin-top:8px">
-<strong>Currency:</strong> <span id="currencyText">—</span>
-</div>
+<div class="account-box">
+<div class="account" id="paymentAccount">Loading...</div>
+<button class="copy" type="button" id="copyBtn">
+Copy
+</button>
 </div>
 
-<div class="title">Your Deposit Details</div>
-<div class="row"><span>Deposit Amount</span><strong id="amountText">—</strong></div>
-<div class="row"><span>Payment Channel</span><strong id="channelText">—</strong></div>
-<div class="row"><span>Currency</span><strong id="currencyRow">—</strong></div>
+<div class="instructions" id="instructions">
+Please complete your payment using the account above.
+</div>
+
+<div class="currency">
+Currency: <strong id="currencyText">—</strong>
+</div>
+
 </section>
 
+<!-- DEPOSIT AMOUNT -->
+
 <section class="card">
+
+<div class="title">Deposit Details</div>
+
+<div class="detail-row">
+<span>Deposit Amount</span>
+<strong id="amountText">—</strong>
+</div>
+
+<div class="detail-row">
+<span>Payment Method</span>
+<strong id="channelText">—</strong>
+</div>
+
+<div class="detail-row">
+<span>Currency</span>
+<strong id="currencyRow">—</strong>
+</div>
+
+</section>
+
+<!-- TRANSACTION -->
+
+<section class="card">
+
 <div class="title">Transaction Information</div>
 
-<div class="field">
-<label for="senderAccount">Sender Account Number / Wallet ID</label>
-<input id="senderAccount" type="text" maxlength="150" placeholder="Enter the account you paid from" autocomplete="off">
+<div class="timer-card">
+<div class="timer-label">
+Complete Your Deposit
+<small>Remaining time (Design only)</small>
+</div>
+<div class="timer" id="timer">15:00</div>
 </div>
 
 <div class="field">
-<label for="transactionId">Transaction ID / TxID / Reference</label>
-<input id="transactionId" type="text" maxlength="150" placeholder="Enter your transaction ID" autocomplete="off">
+<label for="transactionId">
+Transaction ID / TxID / Reference
+</label>
+
+<input
+ id="transactionId"
+ type="text"
+ maxlength="150"
+ placeholder="Enter your Transaction ID"
+ autocomplete="off"
+>
 </div>
 
 <div class="notice">
 <strong>সতর্কতা:</strong><br>
-পেমেন্ট সম্পন্ন করার পর সঠিক Transaction ID লিখুন। ভুল তথ্য দিলে Deposit Request যাচাই করা সম্ভব নাও হতে পারে। Admin যাচাই না করা পর্যন্ত আপনার Wallet Balance-এ Points যোগ হবে না।
+১. সঠিক Payment Account-এ টাকা পাঠান।<br>
+২. পেমেন্ট সম্পন্ন করার পর সঠিক Transaction ID লিখুন।<br>
+৩. একই Transaction ID দিয়ে একাধিক Deposit Request করবেন না।<br>
+৪. Admin যাচাই করার পর আপনার Wallet-এ Points যোগ হবে।
 </div>
 
-<button class="btn" type="button" id="confirmBtn">নিশ্চিত করুন</button>
-<button class="secondary" type="button" onclick="location.href='deposit.html'">← ফিরে যান</button>
+<button class="btn" type="button" id="confirmBtn" style="margin-top:19px">
+নিশ্চিত করুন
+</button>
+
+<button class="secondary" type="button"
+onclick="location.href='deposit.html'">
+← ফিরে যান
+</button>
+
 </section>
 
-<section class="card" id="finalPanel" style="display:none">
-<div style="text-align:center;font-size:42px;color:#16884b;margin-bottom:10px">✓</div>
-<div class="title" style="text-align:center">Final Deposit Confirmation</div>
+</div>
+</div>
 
-<p style="text-align:center;color:#888;font-size:12px;line-height:1.7;margin-bottom:17px">
-আপনার দেওয়া তথ্যগুলো সঠিক কিনা যাচাই করে তারপর জমা দিন।
+<!-- CONFIRMATION POPUP -->
+
+<div class="modal-overlay hidden" id="confirmModal">
+
+<div class="modal">
+
+<div class="modal-icon">✓</div>
+
+<h3>জমা নিশ্চিত করুন</h3>
+
+<p class="modal-desc">
+আপনার Deposit তথ্যগুলো ভালোভাবে যাচাই করুন।
+সঠিক থাকলে জমা বাটনে চাপ দিন।
 </p>
 
-<div class="row"><span>Payment Channel</span><strong id="finalMethod"></strong></div>
-<div class="row"><span>Amount</span><strong id="finalAmount"></strong></div>
-<div class="row"><span>Sender Account</span><strong id="finalSender"></strong></div>
-<div class="row"><span>Transaction ID</span><strong id="finalTransaction"></strong></div>
+<div class="detail-row">
+<span>Payment Method</span>
+<strong id="finalMethod">—</strong>
+</div>
 
-<button class="btn" type="button" id="submitBtn" style="margin-top:20px">জমা দিন ✓</button>
-<button class="secondary" type="button" id="editBtn">তথ্য সংশোধন করুন</button>
-</section>
+<div class="detail-row">
+<span>Deposit Amount</span>
+<strong id="finalAmount">—</strong>
+</div>
+
+<div class="detail-row">
+<span>Payment Account</span>
+<strong id="finalAccount">—</strong>
+</div>
+
+<div class="detail-row">
+<span>Transaction ID</span>
+<strong id="finalTransaction">—</strong>
+</div>
+
+<div class="modal-actions">
+
+<button class="cancel-btn" type="button" id="cancelBtn">
+বাতিল
+</button>
+
+<button class="deposit-btn" type="button" id="submitBtn">
+জমা দিন
+</button>
+
+</div>
 
 </div>
 </div>
@@ -132,24 +575,43 @@ let pending=null;
 let paymentMethod=null;
 let finalData=null;
 let toastTimer=null;
+let timerInterval=null;
+let remainingSeconds=900;
+
+/* AUTH */
 
 function getToken(){
  return sessionStorage.getItem(TOKEN_KEY)||"";
 }
 
+/* TOAST */
+
 function showToast(message){
  const el=document.getElementById("toast");
+
  el.textContent=message;
  el.style.display="block";
+
  clearTimeout(toastTimer);
- toastTimer=setTimeout(()=>el.style.display="none",3500);
+
+ toastTimer=setTimeout(()=>{
+  el.style.display="none";
+ },3500);
 }
 
+/* API */
+
 async function api(path,options={}){
+
  const headers={...(options.headers||{})};
 
- if(getToken())headers.Authorization="Bearer "+getToken();
- if(options.body)headers["Content-Type"]="application/json";
+ if(getToken()){
+  headers.Authorization="Bearer "+getToken();
+ }
+
+ if(options.body){
+  headers["Content-Type"]="application/json";
+ }
 
  const response=await fetch(API_BASE_URL+path,{
   ...options,
@@ -159,7 +621,10 @@ async function api(path,options={}){
  });
 
  let data={};
- try{data=await response.json()}catch(e){}
+
+ try{
+  data=await response.json();
+ }catch(e){}
 
  if(response.status===401){
   sessionStorage.removeItem(TOKEN_KEY);
@@ -173,25 +638,54 @@ async function api(path,options={}){
  return data;
 }
 
+/* LOAD PENDING DEPOSIT */
+
 function loadPending(){
+
  try{
-  pending=JSON.parse(sessionStorage.getItem("glo365_pending_deposit")||"null");
+  pending=JSON.parse(
+   sessionStorage.getItem("glo365_pending_deposit")||"null"
+  );
  }catch(e){
   pending=null;
  }
 
- if(!pending||!pending.payment_method_id||!pending.amount){
+ if(
+  !pending||
+  !pending.payment_method_id||
+  !Number(pending.amount)
+ ){
   showToast("Deposit information not found.");
-  setTimeout(()=>location.href="deposit.html",1500);
+
+  setTimeout(()=>{
+   location.href="deposit.html";
+  },1500);
+
   return false;
  }
 
  return true;
 }
 
+/* PAYMENT LOGO */
+
+function getMethodLogo(){
+
+ return pending.logo_url||
+        paymentMethod.logo_url||
+        paymentMethod.image_url||
+        paymentMethod.logo||
+        "";
+}
+
+/* LOAD PAYMENT METHOD */
+
 async function loadMethod(){
+
  const data=await api("/public/payment-methods");
- const methods=Array.isArray(data.methods)?data.methods:[];
+
+ const methods=Array.isArray(data.methods)
+  ?data.methods:[];
 
  paymentMethod=methods.find(m=>
   String(m.id)===String(pending.payment_method_id)
@@ -201,33 +695,49 @@ async function loadMethod(){
   throw new Error("Selected payment method is no longer active.");
  }
 
- const logo=
-  paymentMethod.logo_url||
-  paymentMethod.image_url||
-  paymentMethod.logo||
-  pending.logo_url||
-  "";
+ const logo=getMethodLogo();
 
- document.getElementById("methodLogo").src=logo;
- document.getElementById("methodName").textContent=pending.method_name;
- document.getElementById("channelText").textContent=pending.method_name;
+ const logoEl=document.getElementById("methodLogo");
+
+ logoEl.src=logo;
+
+ logoEl.onerror=()=>{
+  logoEl.style.display="none";
+ };
+
+ const methodName=
+  pending.method_name||
+  paymentMethod.name||
+  "Payment Method";
+
+ document.getElementById("methodName").textContent=methodName;
+
+ document.getElementById("channelText").textContent=methodName;
+
+ const account=String(paymentMethod.account||"").trim();
 
  document.getElementById("paymentAccount").textContent=
-  paymentMethod.account||"Payment account has not been configured.";
+  account||"Payment account has not been configured.";
 
  document.getElementById("instructions").textContent=
   paymentMethod.instructions||
-  "Please complete your payment and submit the transaction details.";
+  "Please complete your payment and submit the Transaction ID.";
+
+ const currency=pending.currency||paymentMethod.currency||"BDT";
+
+ document.getElementById("currencyText").textContent=currency;
+
+ document.getElementById("currencyRow").textContent=currency;
 
  document.getElementById("amountText").textContent=
-  Number(pending.amount).toFixed(2)+" "+pending.currency;
-
- document.getElementById("currencyText").textContent=pending.currency;
- document.getElementById("currencyRow").textContent=pending.currency;
+  Number(pending.amount).toFixed(2)+" "+currency;
 }
 
+/* COPY ACCOUNT */
+
 document.getElementById("copyBtn").addEventListener("click",async()=>{
- const value=String(paymentMethod?.account||"");
+
+ const value=String(paymentMethod?.account||"").trim();
 
  if(!value){
   showToast("Payment account is not available.");
@@ -235,49 +745,122 @@ document.getElementById("copyBtn").addEventListener("click",async()=>{
  }
 
  try{
+
   await navigator.clipboard.writeText(value);
-  showToast("Payment account copied.");
+
+  showToast("Payment account copied successfully.");
+
  }catch(e){
-  showToast("Copy is not supported.");
+
+  const input=document.createElement("textarea");
+
+  input.value=value;
+  document.body.appendChild(input);
+
+  input.select();
+
+  try{
+   document.execCommand("copy");
+   showToast("Payment account copied.");
+  }catch(err){
+   showToast("Unable to copy account.");
+  }
+
+  input.remove();
  }
 });
 
-document.getElementById("confirmBtn").addEventListener("click",()=>{
- const sender=document.getElementById("senderAccount").value.trim();
- const transaction=document.getElementById("transactionId").value.trim();
+/* 15 MINUTE DESIGN TIMER */
 
- if(!sender){
-  showToast("Please enter your sender account.");
-  return;
- }
+function startTimer(){
+
+ clearInterval(timerInterval);
+
+ remainingSeconds=900;
+
+ renderTimer();
+
+ timerInterval=setInterval(()=>{
+
+  if(remainingSeconds>0){
+   remainingSeconds--;
+   renderTimer();
+  }else{
+   clearInterval(timerInterval);
+
+   document.getElementById("timer").textContent="00:00";
+
+   showToast("১৫ মিনিটের ডিজাইন টাইমার শেষ হয়েছে।");
+  }
+
+ },1000);
+}
+
+function renderTimer(){
+
+ const minutes=Math.floor(remainingSeconds/60);
+ const seconds=remainingSeconds%60;
+
+ document.getElementById("timer").textContent=
+  String(minutes).padStart(2,"0")+":"+
+  String(seconds).padStart(2,"0");
+}
+
+/*
+Timer is visual only.
+It does not block or validate submission.
+*/
+
+/* OPEN CONFIRMATION POPUP */
+
+document.getElementById("confirmBtn").addEventListener("click",()=>{
+
+ const transaction=document
+  .getElementById("transactionId")
+  .value
+  .trim();
 
  if(!transaction||transaction.length<4){
-  showToast("Please enter a valid Transaction ID.");
+  showToast("সঠিক Transaction ID লিখুন।");
+  document.getElementById("transactionId").focus();
   return;
  }
 
  finalData={
   payment_method_id:Number(pending.payment_method_id),
   amount:Number(pending.amount),
-  sender_account:sender,
+  sender_account:"Not provided",
   transaction_id:transaction
  };
 
- document.getElementById("finalMethod").textContent=pending.method_name;
+ document.getElementById("finalMethod").textContent=
+  pending.method_name||paymentMethod.name;
+
  document.getElementById("finalAmount").textContent=
-  Number(pending.amount).toFixed(2)+" "+pending.currency;
- document.getElementById("finalSender").textContent=sender;
- document.getElementById("finalTransaction").textContent=transaction;
+  Number(pending.amount).toFixed(2)+" "+
+  (pending.currency||"BDT");
 
- document.getElementById("finalPanel").style.display="block";
- document.getElementById("finalPanel").scrollIntoView({behavior:"smooth"});
+ document.getElementById("finalAccount").textContent=
+  paymentMethod.account||"—";
+
+ document.getElementById("finalTransaction").textContent=
+  transaction;
+
+ document.getElementById("confirmModal").classList.remove("hidden");
 });
 
-document.getElementById("editBtn").addEventListener("click",()=>{
- document.getElementById("finalPanel").style.display="none";
+/* CANCEL POPUP */
+
+document.getElementById("cancelBtn").addEventListener("click",()=>{
+
+ document.getElementById("confirmModal").classList.add("hidden");
+
 });
+
+/* FINAL SUBMIT */
 
 document.getElementById("submitBtn").addEventListener("click",async()=>{
+
  const btn=document.getElementById("submitBtn");
 
  if(!finalData){
@@ -286,11 +869,13 @@ document.getElementById("submitBtn").addEventListener("click",async()=>{
  }
 
  btn.disabled=true;
- btn.textContent="SUBMITTING...";
+ btn.textContent="জমা হচ্ছে...";
 
  try{
+
   await api("/deposits",{
    method:"POST",
+
    body:JSON.stringify({
     payment_method_id:finalData.payment_method_id,
     amount:finalData.amount,
@@ -300,21 +885,32 @@ document.getElementById("submitBtn").addEventListener("click",async()=>{
   });
 
   sessionStorage.removeItem("glo365_pending_deposit");
-  showToast("Deposit request submitted successfully.");
+
+  clearInterval(timerInterval);
+
+  btn.textContent="সফল হয়েছে ✓";
+
+  showToast("আপনার Deposit Request সফলভাবে জমা হয়েছে।");
 
   setTimeout(()=>{
    location.href=HOME_PAGE;
-  },1000);
+  },1200);
 
  }catch(error){
+
   showToast(error.message||"Deposit submission failed.");
+
   btn.disabled=false;
-  btn.textContent="জমা দিন ✓";
+  btn.textContent="জমা দিন";
  }
 });
 
+/* INITIALIZE */
+
 (async()=>{
+
  try{
+
   if(!getToken()){
    location.href="index.html";
    return;
@@ -324,14 +920,21 @@ document.getElementById("submitBtn").addEventListener("click",async()=>{
 
   await loadMethod();
 
+  startTimer();
+
  }catch(error){
+
   showToast(error.message);
 
   if(/login|session|token/i.test(error.message)){
-   setTimeout(()=>location.href="index.html",1500);
+   setTimeout(()=>{
+    location.href="index.html";
+   },1500);
   }
  }
+
 })();
 </script>
+
 </body>
 </html>
