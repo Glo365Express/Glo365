@@ -2028,6 +2028,66 @@ function updateMillionaireCountdown(){
 
 }
 
+/* DAILY MILLIONAIRE LATEST PUBLISHED RESULT */
+
+function normalizeMillionaireResult(response){
+
+ if(!response||typeof response!=="object")return null;
+
+ const row=response.result||response.latestResult||
+  (Array.isArray(response.results)?response.results[0]:null);
+
+ if(!row||typeof row!=="object")return null;
+
+ let value=row.result??row.number??row.winning_number??row.winningNumber;
+
+ if(value&&typeof value==="object"){
+  value=value.number??value.result??value.value??null;
+ }
+
+ if(value===null||value===undefined||String(value).trim()==="")return null;
+
+ const number=String(value).trim();
+ if(!/^\d{3}$/.test(number))return null;
+
+ return {
+  number,
+  drawNumber:String(row.draw_number||row.drawNumber||""),
+  drawDate:String(row.draw_date||row.drawDate||""),
+  publishedAt:row.published_at||row.publishedAt||null
+ };
+}
+
+async function loadMillionaireResult(){
+
+ const response=await apiRequest("/public/daily-millionaire/result");
+ const result=normalizeMillionaireResult(response);
+
+ if(!result){
+  setText("millionaireFirstResult","--");
+  setText("millionaireSecondResult","--");
+  setText("millionaireThirdResult","--");
+  setText("millionaireResultStatus","RESULT NOT PUBLISHED");
+  return;
+ }
+
+ setText("millionaireFirstResult",result.number);
+ setText("millionaireSecondResult","—");
+ setText("millionaireThirdResult","—");
+
+ let detail="LATEST RESULT";
+ if(result.drawNumber)detail+=" • DRAW #"+result.drawNumber;
+ if(result.drawDate){
+  const date=new Date(result.drawDate+"T00:00:00");
+  if(!Number.isNaN(date.getTime())){
+   detail+=" • "+date.toLocaleDateString("en-GB",{
+    day:"2-digit",month:"short",year:"numeric",timeZone:"UTC"
+   }).toUpperCase();
+  }
+ }
+ setText("millionaireResultStatus",detail);
+}
+
 /* DRAW SETTINGS */
 
 function parseDrawDate(value){
@@ -2882,6 +2942,7 @@ async function loadHome(){
    loadTransactions(),
    loadDrawSettings(),
    loadResults(),
+   loadMillionaireResult(),
    loadAdminMessage(),
    loadLiveEvent()
   ];
@@ -2951,6 +3012,7 @@ async function refreshPublicData(){
   const tasks=[
    loadDrawSettings(),
    loadResults(),
+   loadMillionaireResult(),
    loadAdminMessage(),
    loadLiveEvent()
   ];
