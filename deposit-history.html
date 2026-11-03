@@ -1,0 +1,1074 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="theme-color" content="#1687d5">
+<title>GLO 365 - Deposit Records</title>
+
+<style>
+*{
+ box-sizing:border-box;
+ margin:0;
+ padding:0
+}
+
+body{
+ font-family:Arial,sans-serif;
+ background:#f0f7fd;
+ color:#18334d;
+ min-height:100vh
+}
+
+.app{
+ max-width:520px;
+ min-height:100vh;
+ margin:auto;
+ background:#fff;
+ padding-bottom:25px;
+ box-shadow:0 0 25px #163c5c0b
+}
+
+/* HEADER */
+
+.header{
+ position:sticky;
+ top:0;
+ z-index:20;
+ min-height:64px;
+ padding:10px 14px;
+ display:flex;
+ align-items:center;
+ gap:12px;
+ color:#fff;
+ background:linear-gradient(120deg,#0874bf,#168bdc,#2196e8);
+ box-shadow:0 4px 13px #0874bf30
+}
+
+.back-btn{
+ width:42px;
+ height:42px;
+ flex-shrink:0;
+ display:grid;
+ place-items:center;
+ border:1px solid #ffffff55;
+ border-radius:14px;
+ background:linear-gradient(145deg,#ffffff40,#ffffff12);
+ color:#fff;
+ cursor:pointer;
+ box-shadow:inset 0 1px 1px #ffffff35,0 4px 9px #075a9a30;
+ transition:.2s
+}
+
+.back-btn:active{
+ transform:scale(.92)
+}
+
+.back-btn svg{
+ width:21px;
+ height:21px;
+ fill:none;
+ stroke:currentColor;
+ stroke-width:2.5;
+ stroke-linecap:round;
+ stroke-linejoin:round
+}
+
+.header-title{
+ flex:1;
+ min-width:0
+}
+
+.header-title h1{
+ font-size:17px;
+ font-weight:900
+}
+
+.header-title small{
+ display:block;
+ margin-top:4px;
+ font-size:9px;
+ letter-spacing:1px;
+ color:#e2f3ff
+}
+
+/* PAGE INTRO */
+
+.page-heading{
+ padding:22px 15px 15px
+}
+
+.page-heading h2{
+ color:#167fc4;
+ font-size:22px;
+ font-weight:900
+}
+
+.page-heading p{
+ color:#8195a8;
+ font-size:11px;
+ margin-top:6px
+}
+
+/* SUMMARY */
+
+.summary{
+ display:grid;
+ grid-template-columns:repeat(3,1fr);
+ gap:8px;
+ padding:0 12px 17px
+}
+
+.summary-card{
+ min-width:0;
+ padding:14px 4px;
+ text-align:center;
+ background:#eff8ff;
+ border:1px solid #d9edfb;
+ border-radius:12px
+}
+
+.summary-card strong{
+ display:block;
+ font-size:19px;
+ color:#1687d5;
+ overflow-wrap:anywhere
+}
+
+.summary-card small{
+ display:block;
+ margin-top:6px;
+ color:#8195a8;
+ font-size:10px
+}
+
+.summary-card.approved strong{
+ color:#16884b
+}
+
+.summary-card.pending strong{
+ color:#c28a20
+}
+
+.summary-card.rejected strong{
+ color:#d34c5e
+}
+
+/* SEARCH */
+
+.search{
+ padding:0 12px 13px
+}
+
+.search input{
+ width:100%;
+ height:45px;
+ padding:0 13px;
+ border:1px solid #cbdfee;
+ border-radius:10px;
+ background:#f7fbff;
+ color:#294760;
+ font-size:13px;
+ outline:none
+}
+
+.search input:focus{
+ border-color:#2196e8;
+ box-shadow:0 0 0 3px #2196e817
+}
+
+/* FILTERS */
+
+.filters{
+ padding:0 12px 15px
+}
+
+.filter-row{
+ display:flex;
+ gap:7px;
+ overflow-x:auto;
+ padding-bottom:5px;
+ scrollbar-width:thin
+}
+
+.filter-btn{
+ padding:9px 14px;
+ border:1px solid #cbdfee;
+ border-radius:22px;
+ background:#fff;
+ color:#526f87;
+ font-size:11px;
+ font-weight:bold;
+ white-space:nowrap;
+ cursor:pointer
+}
+
+.filter-btn.active{
+ background:linear-gradient(120deg,#1687d5,#2196e8);
+ border-color:#2196e8;
+ color:#fff;
+ box-shadow:0 3px 8px #2196e830
+}
+
+/* HISTORY LIST */
+
+.history-list{
+ padding:0 12px
+}
+
+.request-card{
+ margin-bottom:12px;
+ overflow:hidden;
+ background:#fff;
+ border:1px solid #dcebf6;
+ border-radius:14px;
+ box-shadow:0 3px 10px #173c5b08
+}
+
+.request-header{
+ padding:13px;
+ display:flex;
+ align-items:center;
+ justify-content:space-between;
+ gap:8px;
+ background:#eff8ff
+}
+
+.method-info{
+ display:flex;
+ align-items:center;
+ gap:9px;
+ min-width:0
+}
+
+.method-logo{
+ width:37px;
+ height:37px;
+ min-width:37px;
+ display:grid;
+ place-items:center;
+ border-radius:11px;
+ color:#fff;
+ background:#1687d5;
+ font-size:12px;
+ font-weight:900
+}
+
+.method-name{
+ font-size:13px;
+ font-weight:900;
+ color:#294760;
+ overflow-wrap:anywhere
+}
+
+.request-id{
+ margin-top:4px;
+ font-size:10px;
+ color:#8195a8;
+ overflow-wrap:anywhere
+}
+
+.status{
+ padding:7px 10px;
+ border-radius:20px;
+ font-size:9px;
+ font-weight:900;
+ white-space:nowrap;
+ background:#fff5dc;
+ color:#a87613
+}
+
+.status.approved{
+ background:#e4f8ed;
+ color:#16884b
+}
+
+.status.rejected{
+ background:#fff0f1;
+ color:#d34c5e
+}
+
+.status.cancelled{
+ background:#edf1f5;
+ color:#718096
+}
+
+.request-body{
+ padding:13px
+}
+
+.amount{
+ font-size:23px;
+ font-weight:900;
+ color:#1687d5;
+ margin-bottom:12px;
+ overflow-wrap:anywhere
+}
+
+.amount small{
+ font-size:11px;
+ color:#8195a8
+}
+
+.details{
+ background:#f7fbff;
+ border:1px solid #e1edf6;
+ border-radius:10px;
+ padding:11px
+}
+
+.detail-row{
+ display:flex;
+ justify-content:space-between;
+ gap:10px;
+ padding:6px 0;
+ font-size:11px;
+ line-height:1.5
+}
+
+.detail-row:not(:last-child){
+ border-bottom:1px solid #edf3f8
+}
+
+.detail-row span:first-child{
+ color:#8195a8;
+ flex-shrink:0
+}
+
+.detail-row span:last-child{
+ color:#294760;
+ font-weight:bold;
+ text-align:right;
+ overflow-wrap:anywhere;
+ min-width:0
+}
+
+.credited{
+ margin-top:11px;
+ padding:11px;
+ border-radius:10px;
+ background:#eaf8ef;
+ border:1px solid #d2efdc;
+ color:#16884b;
+ font-size:11px;
+ font-weight:bold;
+ line-height:1.6
+}
+
+.rejection{
+ margin-top:11px;
+ padding:11px;
+ border-radius:10px;
+ background:#fff3f3;
+ border:1px solid #ffd9dc;
+ color:#c14454;
+ font-size:11px;
+ line-height:1.7;
+ overflow-wrap:anywhere
+}
+
+.admin-note{
+ margin-top:10px;
+ padding:10px;
+ border-radius:9px;
+ background:#f4faff;
+ color:#526f87;
+ font-size:11px;
+ line-height:1.7;
+ overflow-wrap:anywhere
+}
+
+/* EMPTY */
+
+.empty{
+ text-align:center;
+ padding:45px 15px;
+ color:#8b9eaf
+}
+
+.empty-icon{
+ font-size:43px;
+ margin-bottom:12px
+}
+
+.empty strong{
+ display:block;
+ color:#42647d;
+ font-size:16px;
+ margin-bottom:8px
+}
+
+.empty p{
+ font-size:12px;
+ line-height:1.7
+}
+
+/* LOADING */
+
+.loading{
+ text-align:center;
+ padding:40px 15px;
+ color:#8195a8;
+ font-size:13px
+}
+
+/* ERROR */
+
+.error-box{
+ margin:15px 12px;
+ padding:15px;
+ border:1px solid #ffd5d9;
+ border-radius:12px;
+ background:#fff5f5;
+ color:#bd3e4d;
+ font-size:12px;
+ line-height:1.7;
+ text-align:center
+}
+
+.retry-btn{
+ margin-top:11px;
+ padding:10px 20px;
+ border:0;
+ border-radius:22px;
+ background:#2196e8;
+ color:white;
+ font-weight:bold;
+ cursor:pointer
+}
+
+/* BOTTOM */
+
+.footer-note{
+ margin:18px 14px;
+ padding:13px;
+ border-radius:11px;
+ background:#eff8ff;
+ border:1px solid #d3eaff;
+ color:#526f87;
+ font-size:11px;
+ line-height:1.8
+}
+
+.footer-note strong{
+ color:#167fc4
+}
+
+@media(max-width:360px){
+ .summary-card strong{font-size:16px}
+ .filter-btn{padding:8px 11px}
+ .detail-row{font-size:10px}
+ .amount{font-size:20px}
+}
+</style>
+</head>
+
+<body>
+
+<div class="app">
+
+<!-- HEADER -->
+
+<header class="header">
+
+ <button class="back-btn" onclick="goBack()" aria-label="Back">
+  <svg viewBox="0 0 24 24">
+   <path d="M19 12H5"/>
+   <path d="M12 19l-7-7 7-7"/>
+  </svg>
+ </button>
+
+ <div class="header-title">
+  <h1>Deposit Records</h1>
+  <small>YOUR DEPOSIT TRANSACTIONS</small>
+ </div>
+
+</header>
+
+<!-- PAGE HEADING -->
+
+<section class="page-heading">
+ <h2>Deposit History</h2>
+ <p>View all your deposit requests and transaction records.</p>
+</section>
+
+<!-- SUMMARY -->
+
+<section class="summary">
+
+ <div class="summary-card">
+  <strong id="allCount">0</strong>
+  <small>Total Requests</small>
+ </div>
+
+ <div class="summary-card approved">
+  <strong id="approvedCount">0</strong>
+  <small>Approved</small>
+ </div>
+
+ <div class="summary-card pending">
+  <strong id="pendingCount">0</strong>
+  <small>Pending</small>
+ </div>
+
+</section>
+
+<section class="summary" style="padding-top:0">
+
+ <div class="summary-card rejected" style="grid-column:span 3">
+  <strong id="rejectedCount">0</strong>
+  <small>Rejected Requests</small>
+ </div>
+
+</section>
+
+<!-- SEARCH -->
+
+<div class="search">
+ <input
+  type="search"
+  id="searchInput"
+  placeholder="🔍 Search Request ID or Transaction ID..."
+ >
+</div>
+
+<!-- FILTERS -->
+
+<section class="filters">
+
+ <div class="filter-row">
+
+  <button class="filter-btn active" data-status="all">All</button>
+  <button class="filter-btn" data-status="pending">Pending</button>
+  <button class="filter-btn" data-status="approved">Approved</button>
+  <button class="filter-btn" data-status="rejected">Rejected</button>
+  <button class="filter-btn" data-status="cancelled">Cancelled</button>
+
+ </div>
+
+</section>
+
+<!-- RECORDS -->
+
+<section class="history-list" id="requestList">
+ <div class="loading">Loading your deposit records...</div>
+</section>
+
+<!-- NOTICE -->
+
+<div class="footer-note">
+ <strong>IMPORTANT NOTICE</strong>
+ <br>
+ Deposit requests are reviewed by Admin. Points are credited only after successful verification. If your request is rejected, check the rejection reason shown in your record.
+</div>
+
+</div>
+
+<script>
+"use strict";
+
+/* SERVER CONFIGURATION */
+
+const API_BASE_URL="https://glo365.onrender.com/api";
+const TOKEN_KEY="glo365_token";
+
+let requests=[];
+let methods=[];
+let statusFilter="all";
+let searchQuery="";
+let loading=false;
+
+/* BACK BUTTON */
+
+function goBack(){
+ if(window.history.length>1){
+  window.history.back();
+ }else{
+  window.location.href="profile.html";
+ }
+}
+
+/* ELEMENT CREATOR */
+
+function el(tag,cls,text){
+ const node=document.createElement(tag);
+ if(cls)node.className=cls;
+ if(text!==undefined)node.textContent=text;
+ return node;
+}
+
+/* API REQUEST */
+
+async function api(path){
+
+ const authToken=sessionStorage.getItem(TOKEN_KEY)||"";
+
+ const headers={};
+
+ if(authToken){
+  headers.Authorization="Bearer "+authToken;
+ }
+
+ const response=await fetch(API_BASE_URL+path,{
+  method:"GET",
+  headers,
+  credentials:"include",
+  cache:"no-store"
+ });
+
+ let data={};
+
+ try{
+  data=await response.json();
+ }catch(e){}
+
+ if(response.status===401||response.status===403){
+
+  sessionStorage.removeItem(TOKEN_KEY);
+  sessionStorage.removeItem("glo365_user");
+  sessionStorage.removeItem("glo365_session");
+
+  location.replace("index.html");
+
+  throw new Error("Your session has expired. Please login again.");
+ }
+
+ if(!response.ok||data.success===false){
+
+  throw new Error(
+   data.message||data.error||"Server request failed."
+  );
+ }
+
+ return data;
+}
+
+/* LOGO PRESETS */
+
+const PRESETS={
+ bKash:{short:"bK",color:"#d51b72"},
+ Nagad:{short:"N",color:"#f58220"},
+ Rocket:{short:"R",color:"#8b45a8"},
+ Binance:{short:"B",color:"#d9a400"},
+ RedotPay:{short:"R",color:"#df3154"},
+ PayPal:{short:"P",color:"#1769aa"},
+ "Google Pay":{short:"G",color:"#4285f4"},
+ "Bank Transfer":{short:"BK",color:"#287c65"}
+};
+
+function getLogoInfo(method){
+
+ const preset=PRESETS[method]||null;
+
+ return preset||{
+  short:String(method||"PM").slice(0,2).toUpperCase(),
+  color:"#287eae"
+ };
+}
+
+/* MASK ACCOUNT */
+
+function maskAccount(value){
+
+ const s=String(value||"");
+
+ if(!s)return "Not provided";
+
+ return s.length<=4?s:"••••••"+s.slice(-4);
+}
+
+/* DATE */
+
+function formatDate(value){
+
+ if(!value)return "Date unavailable";
+
+ const d=new Date(value);
+
+ return Number.isNaN(d.getTime())
+  ?String(value)
+  :d.toLocaleString("en-GB");
+}
+
+/* STATUS */
+
+function getStatus(request){
+
+ const status=String(request.status||"pending").toLowerCase();
+
+ if(["approved","success","completed"].includes(status)){
+  return "approved";
+ }
+
+ if(["rejected","declined","failed"].includes(status)){
+  return "rejected";
+ }
+
+ if(["cancelled","canceled"].includes(status)){
+  return "cancelled";
+ }
+
+ return "pending";
+}
+
+/* SUMMARY */
+
+function renderSummary(){
+
+ document.getElementById("allCount").textContent=requests.length;
+
+ document.getElementById("approvedCount").textContent=
+  requests.filter(r=>getStatus(r)==="approved").length;
+
+ document.getElementById("pendingCount").textContent=
+  requests.filter(r=>getStatus(r)==="pending").length;
+
+ document.getElementById("rejectedCount").textContent=
+  requests.filter(r=>getStatus(r)==="rejected").length;
+}
+
+/* FILTER */
+
+function filteredRequests(){
+
+ return requests.filter(r=>{
+
+  const statusMatch=
+   statusFilter==="all"||getStatus(r)===statusFilter;
+
+  const searchText=[
+   r.id,
+   r.method,
+   r.currency,
+   r.transaction_id,
+   r.sender_account,
+   r.status
+  ].join(" ").toLowerCase();
+
+  const searchMatch=searchText.includes(searchQuery);
+
+  return statusMatch&&searchMatch;
+
+ });
+}
+
+/* CREATE RECORD CARD */
+
+function createCard(r){
+
+ const card=el("article","request-card");
+
+ const status=getStatus(r);
+
+ const header=el("div","request-header");
+
+ const methodInfo=el("div","method-info");
+
+ const logo=el("div","method-logo");
+
+ const methodName=String(r.method||"Payment Method");
+
+ const logoInfo=getLogoInfo(methodName);
+
+ logo.textContent=logoInfo.short;
+ logo.style.background=logoInfo.color;
+
+ const nameWrap=document.createElement("div");
+
+ nameWrap.append(
+  el("div","method-name",methodName),
+  el("div","request-id","Request ID: "+String(r.id||"—"))
+ );
+
+ methodInfo.append(logo,nameWrap);
+
+ const statusLabel=el(
+  "span",
+  "status "+status,
+  status.toUpperCase()
+ );
+
+ header.append(methodInfo,statusLabel);
+
+ const body=el("div","request-body");
+
+ const amount=el("div","amount");
+
+ amount.textContent=
+  Number(r.amount||0).toFixed(2)+" ";
+
+ amount.appendChild(
+  el("small","",String(r.currency||"BDT"))
+ );
+
+ const details=el("div","details");
+
+ function addDetail(label,value){
+
+  const row=el("div","detail-row");
+
+  row.append(
+   el("span","",label),
+   el("span","",String(value||"—"))
+  );
+
+  details.appendChild(row);
+ }
+
+ addDetail("Payment Method",methodName);
+
+ addDetail(
+  "Sender Account",
+  maskAccount(r.sender_account)
+ );
+
+ addDetail(
+  "Payment Account",
+  maskAccount(r.payment_account)
+ );
+
+ addDetail(
+  "Transaction ID",
+  r.transaction_id
+ );
+
+ addDetail(
+  "Request Date",
+  formatDate(r.created_at)
+ );
+
+ addDetail(
+  "Status",
+  status.toUpperCase()
+ );
+
+ body.append(amount,details);
+
+ /* APPROVED CREDIT */
+
+ if(status==="approved"){
+
+  const credited=Number(r.credited_points)||0;
+
+  if(credited>0){
+
+   const credit=el("div","credited");
+
+   credit.textContent=
+    "✓ Approved Successfully — Credited Points: "+
+    credited.toFixed(2);
+
+   body.appendChild(credit);
+  }
+ }
+
+ /* REJECTION REASON */
+
+ if(status==="rejected"&&r.rejection_reason){
+
+  const rejection=el("div","rejection");
+
+  rejection.textContent=
+   "Rejection Reason: "+r.rejection_reason;
+
+  body.appendChild(rejection);
+ }
+
+ /* ADMIN REMARK */
+
+ if(r.admin_remark){
+
+  const note=el("div","admin-note");
+
+  note.textContent="Admin Remark: "+r.admin_remark;
+
+  body.appendChild(note);
+ }
+
+ card.append(header,body);
+
+ return card;
+}
+
+/* EMPTY */
+
+function showEmpty(){
+
+ const list=document.getElementById("requestList");
+
+ list.replaceChildren();
+
+ const empty=el("div","empty");
+
+ empty.append(
+  el("div","empty-icon","📋"),
+  el("strong","","No Deposit Records Found"),
+  el("p","","You don't have any matching deposit requests yet.")
+ );
+
+ list.appendChild(empty);
+}
+
+/* RENDER */
+
+function render(){
+
+ renderSummary();
+
+ const list=document.getElementById("requestList");
+
+ list.replaceChildren();
+
+ const filtered=filteredRequests();
+
+ if(!filtered.length){
+
+  showEmpty();
+
+  return;
+ }
+
+ filtered.forEach(r=>{
+  list.appendChild(createCard(r));
+ });
+}
+
+/* LOAD SERVER DATA */
+
+async function loadHistory(){
+
+ if(loading)return;
+
+ loading=true;
+
+ const list=document.getElementById("requestList");
+
+ list.innerHTML=
+  '<div class="loading">Loading your deposit records...</div>';
+
+ try{
+
+  const results=await Promise.all([
+
+   api("/public/payment-methods"),
+
+   api("/deposits/me")
+
+  ]);
+
+  const methodData=results[0];
+
+  const historyData=results[1];
+
+  methods=Array.isArray(methodData.methods)
+   ?methodData.methods
+   :[];
+
+  requests=Array.isArray(historyData.requests)
+   ?historyData.requests.slice()
+   :[];
+
+  requests.sort((a,b)=>{
+
+   return new Date(b.created_at||0)-
+          new Date(a.created_at||0);
+
+  });
+
+  render();
+
+ }catch(error){
+
+  console.error("Deposit history error:",error);
+
+  list.replaceChildren();
+
+  const box=el("div","error-box");
+
+  box.append(
+   el("strong","","Could Not Load Deposit Records"),
+   el("p","",error.message||"Please try again.")
+  );
+
+  const retry=el("button","retry-btn","TRY AGAIN");
+
+  retry.onclick=loadHistory;
+
+  box.appendChild(retry);
+
+  list.appendChild(box);
+
+ }finally{
+
+  loading=false;
+ }
+}
+
+/* FILTER BUTTONS */
+
+document.querySelectorAll("[data-status]").forEach(button=>{
+
+ button.addEventListener("click",()=>{
+
+  document.querySelectorAll("[data-status]").forEach(item=>{
+   item.classList.remove("active");
+  });
+
+  button.classList.add("active");
+
+  statusFilter=button.dataset.status;
+
+  render();
+
+ });
+
+});
+
+/* SEARCH */
+
+document.getElementById("searchInput")
+.addEventListener("input",function(){
+
+ searchQuery=this.value.trim().toLowerCase();
+
+ render();
+
+});
+
+/* REFRESH */
+
+window.addEventListener("pageshow",()=>{
+
+ if(!loading){
+  loadHistory();
+ }
+
+});
+
+window.addEventListener("focus",()=>{
+
+ if(!loading){
+  loadHistory();
+ }
+
+});
+
+/* INITIALIZE */
+
+(async()=>{
+
+ if(!sessionStorage.getItem(TOKEN_KEY)){
+
+  location.replace("index.html");
+
+  return;
+ }
+
+ loadHistory();
+
+})();
+
+</script>
+
+</body>
+</html>
