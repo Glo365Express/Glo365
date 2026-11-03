@@ -12,8 +12,6 @@
 
 :root{
  --bg:#dce3ed;
- --light:#f7faff;
- --dark:#aab5c5;
  --blue:#2196e8;
  --blue-dark:#147fc9;
  --text:#26364b;
@@ -36,15 +34,6 @@ body{
  width:100%;
  max-width:440px;
  text-align:center;
-}
-
-.heading{
- font-size:30px;
- font-weight:900;
- color:#a92e3c;
- text-shadow:2px 2px 3px #fff,-2px -2px 3px #aab4c3;
- margin-bottom:28px;
- letter-spacing:.5px;
 }
 
 .login-circle{
@@ -150,8 +139,6 @@ label{
  color:#52647a;
  margin:0 0 7px 12px;
 }
-
-.input-wrap{position:relative}
 
 input{
  width:100%;
@@ -266,29 +253,7 @@ input::placeholder{color:#8b98a9}
 
 @keyframes spin{to{transform:rotate(360deg)}}
 
-.demo-info{
- margin:28px auto 0;
- max-width:380px;
- padding:15px;
- border-radius:15px;
- background:var(--bg);
- box-shadow:6px 6px 13px #b7c1cf,-6px -6px 13px #fff;
- color:#63758b;
- font-size:12px;
- line-height:1.8;
- text-align:left;
-}
-
-.demo-info b{color:var(--blue-dark)}
-
-.footer{
- margin-top:20px;
- color:#8190a2;
- font-size:11px;
-}
-
 @media(max-width:390px){
- .heading{font-size:25px;margin-bottom:22px}
  .login-circle{min-height:430px;padding:30px 23px}
  .logo{font-size:24px}
  h2{font-size:19px}
@@ -305,8 +270,6 @@ input::placeholder{color:#8b98a9}
 
 <body>
 <div class="page">
-
- <div class="heading">Animated Embossed Login</div>
 
  <div class="login-circle">
 
@@ -412,20 +375,10 @@ input::placeholder{color:#8b98a9}
    </div>
 
   </div>
-
  </div>
 
  <div class="loader" id="loader"></div>
-
  <div class="message" id="message" role="status" aria-live="polite"></div>
-
- <div class="demo-info">
-  <b>GLO 365 Account Information</b><br>
-  নতুন User নিজের Username, Email ও Password দিয়ে অ্যাকাউন্ট তৈরি করতে পারবেন।<br>
-  আপনার অ্যাকাউন্ট সার্ভারের ডেটাবেজে সংরক্ষিত হবে।
- </div>
-
- <div class="footer">GLO 365 © 2026</div>
 
 </div>
 
@@ -468,7 +421,6 @@ function showTab(tab){
 
  $("loginPanel").classList.toggle("active",login);
  $("registerPanel").classList.toggle("active",!login);
-
 }
 
 $("loginTab").addEventListener("click",()=>showTab("login"));
@@ -516,7 +468,6 @@ function saveSession(token,user){
  }catch(_){
   throw new Error("Browser could not save your login session.");
  }
-
 }
 
 function redirectByRole(user){
@@ -534,17 +485,16 @@ function redirectByRole(user){
  }
 
  location.replace("home.html");
-
 }
 
 /* USERNAME LIVE CHECK
-   Server API will be added later:
+   Future server endpoint:
    GET /api/auth/check-username?username=example
 
-   Expected response:
-   { success:true, available:true }
+   Expected:
+   {success:true,available:true}
    or
-   { success:true, available:false }
+   {success:true,available:false}
 */
 
 function setUsernameStatus(message,type){
@@ -578,17 +528,10 @@ async function checkUsername(username,version){
     "Live Username Check চালু করতে Server API প্রয়োজন।",
     "status-warning"
    );
-
    return;
   }
 
-  let data;
-
-  try{
-   data=await response.json();
-  }catch(_){
-   throw new Error("Invalid server response");
-  }
+  const data=await response.json();
 
   if(!response.ok||data.success===false){
    throw new Error(data.message||"Username check failed");
@@ -618,9 +561,7 @@ async function checkUsername(username,version){
    "Username check এখন করা যাচ্ছে না। Server API প্রয়োজন।",
    "status-warning"
   );
-
  }
-
 }
 
 $("registerUsername").addEventListener("input",function(){
@@ -653,7 +594,6 @@ $("registerUsername").addEventListener("input",function(){
  usernameTimer=setTimeout(()=>{
   checkUsername(username,version);
  },550);
-
 });
 
 /* LOGIN */
@@ -704,9 +644,7 @@ $("loginForm").addEventListener("submit",async function(event){
   button.disabled=false;
   button.textContent="Login";
   setLoading(false);
-
  }
-
 });
 
 /* CREATE ACCOUNT */
@@ -748,11 +686,6 @@ $("registerForm").addEventListener("submit",async function(event){
   showMessage("দুটি Password মিলছে না।","error");
   return;
  }
-
- /*
-  * Live availability cannot be enforced until the server endpoint
-  * exists. The registration API must still reject duplicate usernames.
-  */
 
  if(usernameCheckReady&&usernameAvailable===false){
   showMessage(
@@ -800,7 +733,6 @@ $("registerForm").addEventListener("submit",async function(event){
     "অ্যাকাউন্ট তৈরি হয়েছে। এখন Login করুন।",
     "success"
    );
-
   }
 
  }catch(error){
@@ -812,9 +744,7 @@ $("registerForm").addEventListener("submit",async function(event){
   button.disabled=false;
   button.textContent="Create Account";
   setLoading(false);
-
  }
-
 });
 </script>
 </body>
