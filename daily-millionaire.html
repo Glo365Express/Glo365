@@ -111,11 +111,6 @@ body{font-family:Arial,sans-serif;background:#f0f7fd;color:#18334d}
 <button class="place-btn" id="placeBet" type="button" disabled>LOADING…</button>
 <button class="back-btn" id="backHome" type="button">← Back to Home</button>
 
-<div class="notice">
- <strong>DEMO MODE ONLY</strong><br>
- Virtual points are used for testing.<br>
- No real-money transactions or cash payouts.
-</div>
 
 </div>
 
@@ -144,7 +139,7 @@ const API_BASE_URL="https://glo365.onrender.com/api";
 const MIN_ROWS=10;
 const MAX_ROWS=50;
 const LOCK_MINUTES=15;
-const PRIZE_RATE=90;
+const PRIZE_RATE=900;
 
 let currentUser=null;
 let wallet=0;
@@ -432,7 +427,7 @@ function applyBettingLock(){
     ?"LOADING…"
     :bettingLocked
      ?"BETTING CLOSED"
-     :"PLACE DEMO BET";
+     :"PLACE BET";
 }
 
 function updateSerials(){
@@ -684,7 +679,7 @@ async function submitBet(){
  }
 
  if(result.totalAmount>wallet){
-  alert("Insufficient demo points.");
+  alert("Insufficient points.");
   return;
  }
 
