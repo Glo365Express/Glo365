@@ -1140,6 +1140,50 @@ nav button.active{color:#087acb}
  .millionaire-result-box.second{min-height:57px}
  .millionaire-result-box.third{min-height:50px}
 }
+
+/* GLO 365 PREMIUM THAILAND LOTTERY GAME CARDS */
+.cards{gap:14px;padding:0 10px}
+.game-card:not(.millionaire){
+ height:clamp(255px,76vw,360px);min-height:255px;border-radius:25px;
+ border:3px solid #eaf8ff;outline:1px solid #78cfff;
+ box-shadow:0 9px 22px #087acb35,inset 0 0 0 2px #ffffff80;
+ justify-content:flex-start;padding:17px 7px 13px;
+ background-image:radial-gradient(ellipse at 50% 47%,#ffffff55 0 2%,transparent 48%),linear-gradient(145deg,#0874d8 0%,#079ce9 54%,#43d5ff 100%);
+}
+.game-card:not(.millionaire)::before{
+ width:150%;height:34%;left:-25%;bottom:27%;border:2px solid #ffffff80;
+ transform:rotate(-12deg);box-shadow:0 0 16px #8ff5ff90;z-index:-1;
+}
+.game-card:not(.millionaire)::after{
+ width:85%;height:45%;top:30%;right:8%;background:#69eaff66;filter:blur(28px);
+}
+.game-card .card-glow{width:70%;height:28%;bottom:28%;right:15%;background:#ffffff60;filter:blur(28px)}
+.card-crown{font-size:clamp(34px,10vw,54px);line-height:1;margin:0 0 5px;filter:drop-shadow(0 4px 3px #002e6b80)}
+.balls{height:auto;min-height:clamp(65px,20vw,100px);gap:clamp(0px,1vw,7px);margin:0 0 5px}
+.ball{width:clamp(42px,13vw,76px);height:clamp(42px,13vw,76px);font-size:clamp(25px,8vw,45px);border-width:5px;border-color:#12c9ff;box-shadow:0 7px 12px #002a6d65,inset 0 -5px 8px #001b4a30,0 0 0 4px #ffffffa8,0 0 18px #75f2ff;}
+.game-card h2{font-size:clamp(27px,8vw,43px);letter-spacing:1px;color:#fff;text-shadow:0 3px 2px #003b91,0 0 12px #fff;margin:7px 0 2px;line-height:1.05}
+.game-card h2::after{display:block;font-size:clamp(10px,3vw,15px);letter-spacing:1.2px;margin-top:6px;color:#fff;text-shadow:0 2px 3px #003c89;content:"1 DIGIT GAME"}
+.two h2::after{content:"2 DIGIT GAME"}
+.three h2::after{content:"3 DIGIT GAME"}
+.six h2::after{content:"6 DIGIT GAME"}
+.play{width:91%;min-height:48px;margin-top:auto;padding:5px 8px 5px 12px;border:2px solid #fff;background:linear-gradient(180deg,#fff,#e8f5ff);box-shadow:0 6px 12px #003c7c55;color:#0756b7;font-size:clamp(11px,3.1vw,16px);letter-spacing:.2px}
+.play-arrow{width:37px;height:37px;min-width:37px;font-size:24px;box-shadow:0 3px 7px #00366c50}
+.single,.two{background-image:radial-gradient(ellipse at 50% 47%,#ffffff55 0 2%,transparent 48%),linear-gradient(145deg,#0755bd 0%,#078de5 55%,#36d1ff 100%)}
+.three{--ball-color:#ff2875;--accent:#ed145b;background-image:radial-gradient(ellipse at 50% 47%,#ffffff55 0 2%,transparent 48%),linear-gradient(145deg,#0755bd 0%,#078de5 55%,#36d1ff 100%);color:#fff}
+.six{--ball-color:#19d34b;--accent:#079a49;background-image:radial-gradient(ellipse at 50% 47%,#ffffff55 0 2%,transparent 48%),linear-gradient(145deg,#0755bd 0%,#078de5 55%,#36d1ff 100%);color:#fff}
+.single .ball,.two .ball{width:clamp(48px,14vw,82px);height:clamp(48px,14vw,82px);font-size:clamp(29px,8vw,48px);border-color:#16c9ff}
+.three .ball{width:clamp(39px,11.5vw,68px);height:clamp(39px,11.5vw,68px);font-size:clamp(23px,7vw,39px);border-color:#ff2875}
+.six .ball{width:clamp(27px,8vw,47px);height:clamp(27px,8vw,47px);font-size:clamp(16px,4.8vw,27px);border-width:4px;border-color:#19d34b}
+@media(max-width:380px){
+ .game-card:not(.millionaire){height:clamp(245px,76vw,300px);min-height:245px;padding:14px 5px 11px;border-radius:22px}
+ .card-crown{font-size:36px}
+ .balls{min-height:65px}
+ .game-card h2{font-size:29px;margin-top:6px}
+ .play{min-height:43px;width:94%;font-size:10px}
+ .play-arrow{width:32px;height:32px;min-width:32px}
+ .six .ball{width:26px;height:26px;font-size:14px}
+}
+
 </style>
 </head>
 
