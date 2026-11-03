@@ -1,0 +1,838 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="theme-color" content="#2196e8">
+<title>GLO 365 - Bet History</title>
+
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+
+body{
+ font-family:Arial,sans-serif;
+ background:#f0f7fd;
+ color:#18334d
+}
+
+.app{
+ max-width:520px;
+ min-height:100vh;
+ margin:auto;
+ background:#fff;
+ padding-bottom:85px;
+ box-shadow:0 0 25px #163c5c0b
+}
+
+.ad-container{
+ width:100%;
+ min-height:58px;
+ padding:4px 0;
+ display:flex;
+ justify-content:center;
+ align-items:center;
+ background:#fff;
+ overflow:hidden;
+ border-bottom:1px solid #edf3f8
+}
+
+.ad-container iframe{max-width:100%;border:0}
+
+.heading{
+ padding:20px 14px 12px;
+ display:flex;
+ justify-content:space-between;
+ align-items:center
+}
+
+.heading h2{font-size:21px;color:#167fc4}
+.heading small{color:#8195a8;font-size:11px}
+
+.summary{
+ display:grid;
+ grid-template-columns:repeat(3,1fr);
+ gap:8px;
+ padding:5px 12px 16px
+}
+
+.summary-card{
+ background:#eff8ff;
+ border:1px solid #d9edfb;
+ border-radius:12px;
+ padding:14px 4px;
+ text-align:center
+}
+
+.summary-card strong{
+ display:block;
+ font-size:18px;
+ color:#1687d5
+}
+
+.summary-card small{
+ display:block;
+ color:#8195a8;
+ font-size:10px;
+ margin-top:6px
+}
+
+.search{padding:0 12px 13px}
+
+.search input{
+ width:100%;
+ height:45px;
+ padding:0 13px;
+ border:1px solid #cbdfee;
+ border-radius:10px;
+ background:#f7fbff;
+ color:#294760;
+ font-size:13px;
+ outline:none
+}
+
+.search input:focus{
+ border-color:#2196e8;
+ box-shadow:0 0 0 3px #2196e817
+}
+
+.filters{padding:0 12px 15px}
+
+.filter-row{
+ display:flex;
+ gap:7px;
+ overflow-x:auto;
+ padding-bottom:5px;
+ scrollbar-width:thin
+}
+
+.filter-btn{
+ padding:9px 14px;
+ border:1px solid #cbdfee;
+ border-radius:22px;
+ background:#fff;
+ color:#526f87;
+ font-size:11px;
+ font-weight:bold;
+ white-space:nowrap;
+ cursor:pointer
+}
+
+.filter-btn.active{
+ background:#2196e8;
+ border-color:#2196e8;
+ color:#fff
+}
+
+.bet-list{padding:0 12px}
+
+.bet-card{
+ border:1px solid #dcebf6;
+ border-radius:13px;
+ margin-bottom:13px;
+ overflow:hidden;
+ background:#fff;
+ box-shadow:0 3px 9px #173c5b08
+}
+
+.bet-header{
+ background:#eff8ff;
+ padding:13px;
+ display:flex;
+ justify-content:space-between;
+ align-items:center;
+ gap:8px
+}
+
+.game-name{
+ font-size:15px;
+ font-weight:900;
+ color:#167fc4
+}
+
+.bet-id{
+ font-size:10px;
+ color:#8195a8;
+ margin-top:5px;
+ overflow-wrap:anywhere
+}
+
+.status{
+ padding:7px 10px;
+ border-radius:20px;
+ font-size:10px;
+ font-weight:bold;
+ white-space:nowrap
+}
+
+.pending{background:#fff5dc;color:#a87613}
+.win{background:#e1f7e9;color:#16884b}
+.loss{background:#fff0f1;color:#d34c5e}
+.cancelled{background:#edf1f5;color:#718096}
+.completed{background:#e3f2ff;color:#167fc4}
+
+.bet-body{padding:12px}
+
+.bet-date{
+ font-size:11px;
+ color:#8195a8;
+ margin-bottom:12px
+}
+
+.selection-box{
+ background:#f7fbff;
+ border:1px solid #e1edf6;
+ border-radius:10px;
+ padding:12px;
+ margin-bottom:12px
+}
+
+.selection-title{
+ font-size:10px;
+ color:#8195a8;
+ font-weight:bold;
+ margin-bottom:7px
+}
+
+.selection-value{
+ font-size:14px;
+ color:#167fc4;
+ font-weight:bold;
+ overflow-wrap:anywhere;
+ white-space:pre-wrap;
+ line-height:1.7
+}
+
+.amount-box{
+ background:#f2f8fd;
+ border:1px solid #e0edf7;
+ border-radius:10px;
+ padding:11px;
+ margin-top:12px
+}
+
+.amount-line{
+ display:flex;
+ justify-content:space-between;
+ gap:10px;
+ font-size:12px;
+ padding:5px 0;
+ color:#71869a
+}
+
+.amount-line.final{
+ border-top:1px solid #d5e6f3;
+ margin-top:5px;
+ padding-top:10px;
+ color:#294760;
+ font-size:14px;
+ font-weight:bold
+}
+
+.amount-line.final span:last-child{color:#1687d5}
+
+.details-btn{
+ width:100%;
+ padding:11px;
+ border:1px solid #b9def7;
+ border-radius:9px;
+ background:#eff8ff;
+ color:#167fc4;
+ font-size:12px;
+ font-weight:bold;
+ margin-top:12px;
+ cursor:pointer
+}
+
+.details-btn:active{background:#dcefff}
+
+.extra{
+ display:none;
+ background:#f4faff;
+ border-top:1px solid #dcebf6;
+ padding:12px;
+ font-size:12px;
+ line-height:1.8;
+ color:#526f87;
+ white-space:pre-wrap;
+ overflow-wrap:anywhere
+}
+
+.extra.show{display:block}
+
+.empty{
+ text-align:center;
+ padding:45px 15px;
+ color:#8b9eaf
+}
+
+.empty-icon{font-size:45px;margin-bottom:12px}
+
+.empty strong{
+ display:block;
+ color:#42647d;
+ font-size:16px;
+ margin-bottom:8px
+}
+
+.empty p{font-size:12px;line-height:1.7}
+
+.loading{
+ text-align:center;
+ padding:35px 15px;
+ color:#8195a8;
+ font-size:13px
+}
+
+.error-box{
+ margin:15px 12px;
+ padding:14px;
+ border:1px solid #ffd5d9;
+ border-radius:12px;
+ background:#fff5f5;
+ color:#bd3e4d;
+ font-size:12px;
+ line-height:1.6;
+ text-align:center
+}
+
+.retry-btn{
+ margin-top:10px;
+ padding:9px 18px;
+ border:0;
+ border-radius:20px;
+ background:#2196e8;
+ color:white;
+ font-weight:bold;
+ cursor:pointer
+}
+
+nav{
+ position:fixed;
+ bottom:0;
+ left:50%;
+ transform:translateX(-50%);
+ width:100%;
+ max-width:520px;
+ background:#fff;
+ border-top:1px solid #dcebf6;
+ display:flex;
+ justify-content:space-around;
+ align-items:center;
+ padding:10px 4px 15px;
+ z-index:10;
+ box-shadow:0 -3px 12px #173c5b08
+}
+
+nav button{
+ flex:1;
+ border:0;
+ background:none;
+ color:#8195a8;
+ font-size:11px;
+ display:flex;
+ flex-direction:column;
+ align-items:center;
+ gap:5px;
+ cursor:pointer
+}
+
+nav button strong{font-size:23px}
+nav button.active{color:#1687d5;font-weight:bold}
+
+@media(max-width:380px){
+ .summary-card{padding:12px 3px}
+ .summary-card strong{font-size:16px}
+ .filter-btn{padding:8px 11px}
+}
+</style>
+</head>
+
+<body>
+<div class="app">
+
+<!-- ADSTERRA AD BANNER -->
+<div class="ad-container">
+ <script>
+  atOptions = {
+   'key' : 'ab837cf0ea9c26ae43b7bc4e05a0b5de',
+   'format' : 'iframe',
+   'height' : 50,
+   'width' : 320,
+   'params' : {}
+  };
+ </script>
+ <script src="https://bicea.org/22/ab837cf0ea9c26ae43b7bc4e05a0b5de"></script>
+</div>
+
+<div class="heading">
+ <h2>Bet History</h2>
+ <small id="totalCount">Loading...</small>
+</div>
+
+<section class="summary">
+ <div class="summary-card">
+  <strong id="allCount">0</strong>
+  <small>Total Bets</small>
+ </div>
+
+ <div class="summary-card">
+  <strong id="totalAmount">0.00</strong>
+  <small>Total Bet Points</small>
+ </div>
+
+ <div class="summary-card">
+  <strong id="winCount">0</strong>
+  <small>Win Records</small>
+ </div>
+</section>
+
+<div class="search">
+ <input id="searchInput" type="search"
+  placeholder="🔍 Search Bet ID or Number...">
+</div>
+
+<section class="filters">
+
+ <div class="filter-row" id="statusFilters">
+  <button class="filter-btn active" data-status="all">All</button>
+  <button class="filter-btn" data-status="pending">Running</button>
+  <button class="filter-btn" data-status="win">Win</button>
+  <button class="filter-btn" data-status="loss">Loss</button>
+  <button class="filter-btn" data-status="cancelled">Cancelled</button>
+  <button class="filter-btn" data-status="completed">Completed</button>
+ </div>
+
+ <div class="filter-row" id="gameFilters" style="margin-top:8px">
+  <button class="filter-btn active" data-game="all">All Games</button>
+  <button class="filter-btn" data-game="single">Single</button>
+  <button class="filter-btn" data-game="2d">2D</button>
+  <button class="filter-btn" data-game="3up">3 UP</button>
+  <button class="filter-btn" data-game="6up">6 UP</button>
+  <button class="filter-btn" data-game="millionaire">Millionaire</button>
+ </div>
+
+</section>
+
+<section class="bet-list" id="betList">
+ <div class="loading">Loading your bet history...</div>
+</section>
+
+<nav>
+ <button onclick="location.href='home.html'">
+  <strong>⌂</strong>
+  Home
+ </button>
+
+ <button onclick="location.href='mybets.html'">
+  <strong>🎯</strong>
+  My Bets
+ </button>
+
+ <button onclick="location.href='results.html'">
+  <strong>🏆</strong>
+  Results
+ </button>
+
+ <button class="active" onclick="location.href='profile.html'">
+  <strong>♙</strong>
+  Profile
+ </button>
+</nav>
+
+</div>
+
+<script>
+"use strict";
+
+const API_BASE="https://glo365.onrender.com/api";
+const TOKEN_KEY="glo365_token";
+
+let bets=[];
+let statusFilter="all";
+let gameFilter="all";
+let searchQuery="";
+let loading=false;
+
+function el(tag,cls,text){
+ const node=document.createElement(tag);
+ if(cls)node.className=cls;
+ if(text!==undefined)node.textContent=text;
+ return node;
+}
+
+function formatPoints(value){
+ return (Number(value)||0).toFixed(2);
+}
+
+function formatDate(value){
+ if(!value)return "Date unavailable";
+
+ const d=new Date(value);
+
+ return Number.isNaN(d.getTime())?
+  String(value):
+  d.toLocaleString("en-GB");
+}
+
+/* API REQUEST */
+
+async function api(path,options={}){
+ const token=sessionStorage.getItem(TOKEN_KEY)||"";
+ const headers={...(options.headers||{})};
+
+ if(token){
+  headers.Authorization="Bearer "+token;
+ }
+
+ const response=await fetch(API_BASE+path,{
+  ...options,
+  headers,
+  credentials:"include",
+  cache:"no-store"
+ });
+
+ let data={};
+
+ try{
+  data=await response.json();
+ }catch(error){}
+
+ if(!response.ok){
+  if(response.status===401||response.status===403){
+   sessionStorage.removeItem(TOKEN_KEY);
+   sessionStorage.removeItem("glo365_user");
+   sessionStorage.removeItem("glo365_session");
+   location.replace("login.html");
+   throw new Error("Your session has expired. Please login again.");
+  }
+
+  throw new Error(
+   data.message||data.error||"Server request failed ("+response.status+")"
+  );
+ }
+
+ return data;
+}
+
+/* GAME NAME */
+
+function normalizeGame(value){
+ const game=String(value||"").toLowerCase().replace(/[\s_-]+/g,"");
+
+ if(game.includes("millionaire"))return "millionaire";
+ if(game==="single")return "single";
+ if(game==="2d")return "2d";
+ if(game==="3up")return "3up";
+ if(game==="6up")return "6up";
+
+ return game||"other";
+}
+
+function gameName(value){
+ const names={
+  single:"SINGLE",
+  "2d":"2D",
+  "3up":"3 UP",
+  "6up":"6 UP",
+  millionaire:"MILLIONAIRE DAILY DRAW"
+ };
+
+ return names[normalizeGame(value)]||String(value||"BET");
+}
+
+/* STATUS */
+
+function getStatus(bet){
+ const value=String(bet.status||"pending").toLowerCase();
+
+ if(["win","won"].includes(value))return "win";
+ if(["loss","lose","lost"].includes(value))return "loss";
+ if(["cancelled","canceled"].includes(value))return "cancelled";
+ if(["completed","complete"].includes(value))return "completed";
+
+ return "pending";
+}
+
+function statusName(status){
+ const names={
+  pending:"RUNNING",
+  win:"WIN",
+  loss:"LOSS",
+  cancelled:"CANCELLED",
+  completed:"COMPLETED"
+ };
+
+ return names[status]||"RUNNING";
+}
+
+/* SELECTION DISPLAY */
+
+function selectionText(selection){
+ if(selection===null||selection===undefined)return "No selection data";
+
+ if(typeof selection==="string")return selection;
+
+ try{
+  return JSON.stringify(selection,null,2);
+ }catch(error){
+  return String(selection);
+ }
+}
+
+/* SUMMARY */
+
+function renderSummary(){
+ const total=bets.reduce(
+  (sum,bet)=>sum+(Number(bet.amount)||0),
+  0
+ );
+
+ document.getElementById("allCount").textContent=bets.length;
+
+ document.getElementById("totalAmount").textContent=
+  formatPoints(total);
+
+ document.getElementById("winCount").textContent=
+  bets.filter(bet=>getStatus(bet)==="win").length;
+
+ document.getElementById("totalCount").textContent=
+  bets.length+" Records";
+}
+
+/* FILTERED DATA */
+
+function filteredBets(){
+ return bets.filter(bet=>{
+  const statusMatch=
+   statusFilter==="all"||getStatus(bet)===statusFilter;
+
+  const gameMatch=
+   gameFilter==="all"||
+   normalizeGame(bet.game_name)===gameFilter;
+
+  const selection=selectionText(bet.selection);
+
+  const searchText=[
+   bet.id,
+   bet.game_name,
+   bet.created_at,
+   bet.status,
+   selection
+  ].join(" ").toLowerCase();
+
+  const searchMatch=searchText.includes(searchQuery);
+
+  return statusMatch&&gameMatch&&searchMatch;
+ });
+}
+
+/* BET CARD */
+
+function createCard(bet,index){
+ const card=el("article","bet-card");
+ const status=getStatus(bet);
+
+ const header=el("div","bet-header");
+ const left=document.createElement("div");
+
+ left.append(
+  el("div","game-name",gameName(bet.game_name)),
+  el("div","bet-id","Bet ID: "+String(bet.id||index+1))
+ );
+
+ header.append(
+  left,
+  el("span","status "+status,statusName(status))
+ );
+
+ const body=el("div","bet-body");
+
+ body.appendChild(
+  el("div","bet-date","📅 "+formatDate(bet.created_at))
+ );
+
+ const selectionBox=el("div","selection-box");
+
+ selectionBox.append(
+  el("div","selection-title","BET SELECTION"),
+  el("div","selection-value",selectionText(bet.selection))
+ );
+
+ body.appendChild(selectionBox);
+
+ const amount=Number(bet.amount)||0;
+ const box=el("div","amount-box");
+
+ const line=el("div","amount-line final");
+
+ line.append(
+  el("span","","Bet Amount"),
+  el("span","",formatPoints(amount)+" Points")
+ );
+
+ box.appendChild(line);
+ body.appendChild(box);
+
+ const extra=el("div","extra");
+
+ extra.textContent=
+  "Bet ID: "+String(bet.id||index+1)+
+  "\nGame: "+gameName(bet.game_name)+
+  "\nStatus: "+statusName(status)+
+  "\nDate: "+formatDate(bet.created_at)+
+  "\nBet Amount: "+formatPoints(amount)+" Points"+
+  "\nSelection: "+selectionText(bet.selection);
+
+ const button=el("button","details-btn","VIEW DETAILS ↓");
+ button.type="button";
+
+ button.onclick=()=>{
+  extra.classList.toggle("show");
+  button.textContent=extra.classList.contains("show")?
+   "HIDE DETAILS ↑":"VIEW DETAILS ↓";
+ };
+
+ body.appendChild(button);
+
+ card.append(header,body,extra);
+
+ return card;
+}
+
+/* EMPTY STATE */
+
+function showEmpty(){
+ const list=document.getElementById("betList");
+ list.replaceChildren();
+
+ const empty=el("div","empty");
+
+ empty.append(
+  el("div","empty-icon","📋"),
+  el("strong","","No History Found"),
+  el("p","","No matching bet records were found in your server account.")
+ );
+
+ list.appendChild(empty);
+}
+
+/* RENDER */
+
+function render(){
+ renderSummary();
+
+ const list=document.getElementById("betList");
+ list.replaceChildren();
+
+ const filtered=filteredBets();
+
+ if(filtered.length===0){
+  showEmpty();
+  return;
+ }
+
+ filtered.forEach((bet,index)=>{
+  list.appendChild(createCard(bet,index));
+ });
+}
+
+/* LOAD SERVER HISTORY */
+
+async function loadBets(){
+ if(loading)return;
+
+ loading=true;
+
+ const list=document.getElementById("betList");
+ list.innerHTML='<div class="loading">Loading your bet history...</div>';
+
+ try{
+  const data=await api("/demo/bets");
+
+  const records=Array.isArray(data)?
+   data:
+   Array.isArray(data.bets)?data.bets:
+   [];
+
+  bets=records.slice().sort((a,b)=>{
+   return new Date(b.created_at||0)-new Date(a.created_at||0);
+  });
+
+  render();
+
+ }catch(error){
+  console.error("Bet history error:",error);
+
+  list.replaceChildren();
+
+  const box=el("div","error-box");
+
+  box.append(
+   el("strong","","Could not load Bet History"),
+   el("p","",error.message||"Please try again.")
+  );
+
+  const retry=el("button","retry-btn","Try Again");
+  retry.onclick=loadBets;
+
+  box.appendChild(retry);
+  list.appendChild(box);
+
+ }finally{
+  loading=false;
+ }
+}
+
+/* STATUS FILTER */
+
+document.querySelectorAll("[data-status]").forEach(button=>{
+ button.addEventListener("click",()=>{
+  document.querySelectorAll("[data-status]")
+   .forEach(item=>item.classList.remove("active"));
+
+  button.classList.add("active");
+  statusFilter=button.dataset.status;
+
+  render();
+ });
+});
+
+/* GAME FILTER */
+
+document.querySelectorAll("[data-game]").forEach(button=>{
+ button.addEventListener("click",()=>{
+  document.querySelectorAll("[data-game]")
+   .forEach(item=>item.classList.remove("active"));
+
+  button.classList.add("active");
+  gameFilter=button.dataset.game;
+
+  render();
+ });
+});
+
+/* SEARCH */
+
+document.getElementById("searchInput")
+.addEventListener("input",function(){
+ searchQuery=this.value.trim().toLowerCase();
+ render();
+});
+
+/* REFRESH WHEN RETURNING TO PAGE */
+
+window.addEventListener("focus",()=>{
+ loadBets();
+});
+
+window.addEventListener("pageshow",()=>{
+ loadBets();
+});
+
+/* INITIALIZE */
+
+loadBets();
+
+</script>
+</body>
+</html>
