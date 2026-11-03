@@ -1315,18 +1315,14 @@ nav button.active{color:#087acb}
   <div class="millionaire-result-row">
    <div class="millionaire-result-box first">
     <div class="millionaire-result-value" id="millionaireFirstResult">--</div>
-    <div class="millionaire-result-label">1 · FIRST</div>
-   </div>
+    </div>
    <div class="millionaire-result-box second">
     <div class="millionaire-result-value" id="millionaireSecondResult">--</div>
-    <div class="millionaire-result-label">2 · SECOND</div>
-   </div>
+    </div>
    <div class="millionaire-result-box third">
     <div class="millionaire-result-value" id="millionaireThirdResult">--</div>
-    <div class="millionaire-result-label">3 · THIRD</div>
-   </div>
+    </div>
   </div>
-  <div class="millionaire-result-status" id="millionaireResultStatus">RESULT NOT PUBLISHED</div>
  </div>
 
 </section>
@@ -2064,28 +2060,16 @@ async function loadMillionaireResult(){
  const result=normalizeMillionaireResult(response);
 
  if(!result){
-  setText("millionaireFirstResult","--");
-  setText("millionaireSecondResult","--");
-  setText("millionaireThirdResult","--");
-  setText("millionaireResultStatus","RESULT NOT PUBLISHED");
+  setText("millionaireFirstResult","—");
+  setText("millionaireSecondResult","—");
+  setText("millionaireThirdResult","—");
   return;
  }
 
- setText("millionaireFirstResult",result.number);
- setText("millionaireSecondResult","—");
- setText("millionaireThirdResult","—");
-
- let detail="LATEST RESULT";
- if(result.drawNumber)detail+=" • DRAW #"+result.drawNumber;
- if(result.drawDate){
-  const date=new Date(result.drawDate+"T00:00:00");
-  if(!Number.isNaN(date.getTime())){
-   detail+=" • "+date.toLocaleDateString("en-GB",{
-    day:"2-digit",month:"short",year:"numeric",timeZone:"UTC"
-   }).toUpperCase();
-  }
- }
- setText("millionaireResultStatus",detail);
+ // Show the 3-digit winning number in three separate boxes.
+ setText("millionaireFirstResult",result.number.charAt(0));
+ setText("millionaireSecondResult",result.number.charAt(1));
+ setText("millionaireThirdResult",result.number.charAt(2));
 }
 
 /* DRAW SETTINGS */
