@@ -1,3 +1,4 @@
+
 <!DOCTYPE html>
 <html lang="bn">
 <head>
@@ -8,302 +9,46 @@
 
 <style>
 *{box-sizing:border-box;margin:0;padding:0}
-
-body{
- font-family:Arial,sans-serif;
- background:#f0f7fd;
- color:#18334d;
-}
-
-.app{
- max-width:520px;
- min-height:100vh;
- margin:auto;
- background:#fff;
- padding-bottom:25px;
- box-shadow:0 0 25px #163c5c0b;
-}
-
-.header{
- background:linear-gradient(120deg,#1687d5,#2196e8);
- padding:17px 15px;
- display:flex;
- justify-content:space-between;
- align-items:center;
-}
-
-.logo{
- font-size:27px;
- font-weight:900;
- color:#fff;
-}
+body{font-family:Arial,sans-serif;background:#f0f7fd;color:#18334d}
+.app{max-width:520px;min-height:100vh;margin:auto;background:#fff;padding-bottom:25px;box-shadow:0 0 25px #163c5c0b}
+.header{background:linear-gradient(120deg,#1687d5,#2196e8);padding:17px 15px;display:flex;justify-content:space-between;align-items:center}
+.logo{font-size:27px;font-weight:900;color:#fff}
 .logo span{color:#d9f0ff}
-
-.balance{
- background:#fff;
- color:#167fc4;
- padding:10px 14px;
- border-radius:30px;
- font-size:13px;
- font-weight:bold;
-}
-
-.page-title{
- background:#2196e8;
- text-align:center;
- padding:15px 10px;
- font-size:19px;
- font-weight:900;
- color:#fff;
-}
-
-.subtitle{
- text-align:center;
- padding:12px 5px;
- background:#eff8ff;
- color:#167fc4;
- font-size:13px;
- font-weight:bold;
-}
-
-.rate-box{
- margin:12px 11px;
- padding:14px 10px;
- text-align:center;
- background:linear-gradient(145deg,#eff8ff,#d9efff);
- border:1px solid #c9e4f7;
- border-radius:12px;
- color:#526f87;
- font-size:13px;
- line-height:1.8;
-}
-
-.rate-box strong{
- color:#0874c5;
- font-size:19px;
-}
-
-.lock-status{
- display:none;
- margin:12px 11px;
- padding:14px 12px;
- border:1px solid #f0b8b8;
- border-radius:10px;
- background:#fff0f0;
- color:#b42332;
- text-align:center;
- font-size:13px;
- font-weight:bold;
- line-height:1.7;
-}
-
-.lock-status.locked,
-.lock-status.open{display:block}
-
-.lock-status strong{
- display:block;
- font-size:14px;
- margin-bottom:3px;
-}
-
-.lock-status.open{
- border-color:#b9e4ca;
- background:#effbf3;
- color:#187344;
-}
-
-.bet-area{
- padding:8px 9px 0;
-}
-
-.column-heading,
-.bet-row{
- display:grid;
- grid-template-columns:25px minmax(0,1.15fr) minmax(0,.9fr) minmax(0,1fr) 20px;
- gap:5px;
-}
-
-.column-heading{
- padding:8px 0;
- font-size:10px;
- font-weight:bold;
- color:#8195a8;
- text-align:center;
-}
-
-.bet-row{
- align-items:center;
- margin-bottom:8px;
-}
-
-.serial{
- text-align:center;
- font-size:14px;
- color:#526f87;
-}
-
-.bet-row input{
- width:100%;
- min-width:0;
- height:49px;
- border:1px solid #cbdfee;
- background:#f7fbff;
- border-radius:10px;
- text-align:center;
- font-size:14px;
- color:#18334d;
- outline:none;
- padding:4px;
-}
-
-.bet-row input:focus{
- border-color:#2196e8;
- background:#fff;
- box-shadow:0 0 0 3px #2196e817;
-}
-
+.balance{background:#fff;color:#167fc4;padding:10px 14px;border-radius:30px;font-size:13px;font-weight:bold}
+.page-title{background:#2196e8;text-align:center;padding:15px 10px;font-size:19px;font-weight:900;color:#fff}
+.subtitle{text-align:center;padding:12px 5px;background:#eff8ff;color:#167fc4;font-size:13px;font-weight:bold}
+.rate-box{margin:12px 11px;padding:14px 10px;text-align:center;background:linear-gradient(145deg,#eff8ff,#d9efff);border:1px solid #c9e4f7;border-radius:12px;color:#526f87;font-size:13px;line-height:1.8}
+.rate-box strong{color:#0874c5;font-size:19px}
+.lock-status{display:none;margin:12px 11px;padding:14px 12px;border:1px solid #f0b8b8;border-radius:10px;background:#fff0f0;color:#b42332;text-align:center;font-size:13px;font-weight:bold;line-height:1.7}
+.lock-status.locked,.lock-status.open{display:block}
+.lock-status strong{display:block;font-size:14px;margin-bottom:3px}
+.lock-status.open{border-color:#b9e4ca;background:#effbf3;color:#187344}
+.bet-area{padding:8px 9px 0}
+.column-heading,.bet-row{display:grid;grid-template-columns:25px minmax(0,1.15fr) minmax(0,.9fr) minmax(0,1fr) 20px;gap:5px}
+.column-heading{padding:8px 0;font-size:10px;font-weight:bold;color:#8195a8;text-align:center}
+.bet-row{align-items:center;margin-bottom:8px}
+.serial{text-align:center;font-size:14px;color:#526f87}
+.bet-row input{width:100%;min-width:0;height:49px;border:1px solid #cbdfee;background:#f7fbff;border-radius:10px;text-align:center;font-size:14px;color:#18334d;outline:none;padding:4px}
+.bet-row input:focus{border-color:#2196e8;background:#fff;box-shadow:0 0 0 3px #2196e817}
 .bet-row input::placeholder{color:#9aabba}
-
-.bet-row input:disabled{
- background:#edf0f3;
- color:#8795a1;
- cursor:not-allowed;
- opacity:.7;
-}
-
-.prize-output{
- width:100%;
- min-width:0;
- height:49px;
- border:1px solid #cbdfee;
- background:#eaf6ff;
- border-radius:10px;
- display:grid;
- place-items:center;
- text-align:center;
- padding:3px;
- font-size:13px;
- font-weight:900;
- color:#0874c5;
- overflow:hidden;
-}
-
-.remove-btn{
- border:0;
- background:transparent;
- color:#d34c5e;
- font-size:20px;
- font-weight:bold;
- padding:3px 0;
- cursor:pointer;
-}
-
-.remove-btn:disabled{
- opacity:.3;
- cursor:not-allowed;
-}
-
-.add-area{
- display:flex;
- justify-content:flex-end;
- padding:5px 3px 17px;
-}
-
-.add-btn{
- width:43px;
- height:43px;
- border-radius:50%;
- background:#eff8ff;
- color:#1687d5;
- border:1px solid #cbdfee;
- font-size:29px;
- font-weight:bold;
- display:grid;
- place-items:center;
- cursor:pointer;
-}
-
-.add-btn:disabled{
- opacity:.4;
- cursor:not-allowed;
-}
-
-.summary{
- padding:5px 11px;
-}
-
-.summary-box{
- background:#eff8ff;
- border:1px solid #dcebf6;
- border-radius:12px;
- padding:16px 7px;
- text-align:center;
- font-size:14px;
- margin-bottom:9px;
- color:#526f87;
-}
-
-.summary-box strong{
- font-weight:900;
- color:#167fc4;
-}
-
-.summary-box.prize-summary{
- background:#eaf6ff;
- border-color:#b9ddf5;
- color:#075da8;
-}
-
-.summary-box.prize-summary strong{
- font-size:19px;
- color:#0874c5;
-}
-
-.place-btn{
- width:calc(100% - 22px);
- margin:17px 11px 0;
- padding:16px 8px;
- background:linear-gradient(90deg,#1687d5,#2196e8);
- border:0;
- border-radius:10px;
- color:#fff;
- font-size:17px;
- font-weight:900;
- box-shadow:0 4px 12px #1687d530;
- cursor:pointer;
-}
-
+.bet-row input:disabled{background:#edf0f3;color:#8795a1;cursor:not-allowed;opacity:.7}
+.prize-output{width:100%;min-width:0;height:49px;border:1px solid #cbdfee;background:#eaf6ff;border-radius:10px;display:grid;place-items:center;text-align:center;padding:3px;font-size:13px;font-weight:900;color:#0874c5;overflow:hidden}
+.remove-btn{border:0;background:transparent;color:#d34c5e;font-size:20px;font-weight:bold;padding:3px 0;cursor:pointer}
+.remove-btn:disabled{opacity:.3;cursor:not-allowed}
+.add-area{display:flex;justify-content:flex-end;padding:5px 3px 17px}
+.add-btn{width:43px;height:43px;border-radius:50%;background:#eff8ff;color:#1687d5;border:1px solid #cbdfee;font-size:29px;font-weight:bold;display:grid;place-items:center;cursor:pointer}
+.add-btn:disabled{opacity:.4;cursor:not-allowed}
+.summary{padding:5px 11px}
+.summary-box{background:#eff8ff;border:1px solid #dcebf6;border-radius:12px;padding:16px 7px;text-align:center;font-size:14px;margin-bottom:9px;color:#526f87}
+.summary-box strong{font-weight:900;color:#167fc4}
+.summary-box.prize-summary{background:#eaf6ff;border-color:#b9ddf5;color:#075da8}
+.summary-box.prize-summary strong{font-size:19px;color:#0874c5}
+.place-btn{width:calc(100% - 22px);margin:17px 11px 0;padding:16px 8px;background:linear-gradient(90deg,#1687d5,#2196e8);border:0;border-radius:10px;color:#fff;font-size:17px;font-weight:900;box-shadow:0 4px 12px #1687d530;cursor:pointer}
 .place-btn:active{transform:scale(.98)}
-.place-btn:disabled{
- opacity:.6;
- cursor:not-allowed;
-}
-
-.back-btn{
- display:block;
- margin:10px auto;
- border:0;
- background:transparent;
- color:#167fc4;
- padding:10px;
- font-size:13px;
- cursor:pointer;
-}
-
-.notice{
- margin:10px 11px;
- padding:12px;
- background:#eff8ff;
- border:1px solid #dcebf6;
- border-radius:9px;
- text-align:center;
- color:#526f87;
- font-size:11px;
- line-height:1.7;
-}
-
+.place-btn:disabled{opacity:.6;cursor:not-allowed}
+.back-btn{display:block;margin:10px auto;border:0;background:transparent;color:#167fc4;padding:10px;font-size:13px;cursor:pointer}
+.notice{margin:10px 11px;padding:12px;background:#eff8ff;border:1px solid #dcebf6;border-radius:9px;text-align:center;color:#526f87;font-size:11px;line-height:1.7}
 .notice strong{color:#167fc4}
-
 @media(max-width:380px){
  .logo{font-size:24px}
  .balance{font-size:11px;padding:9px}
@@ -322,16 +67,12 @@ body{
 
 <header class="header">
  <div class="logo">GLO <span>365</span></div>
- <div class="balance">
-  <span id="balance">0.00</span> Points
- </div>
+ <div class="balance"><span id="balance">0.00</span> Points</div>
 </header>
 
 <div class="page-title">💎 DAILY MILLIONAIRE</div>
 
-<div class="subtitle">
- Enter 3 Digit Number &amp; Virtual Points
-</div>
+<div class="subtitle">Enter 3 Digit Number &amp; Virtual Points</div>
 
 <div class="rate-box">
  Daily Millionaire Prize Rate<br>
@@ -339,13 +80,12 @@ body{
  Enter your Amount to calculate the Prize automatically.
 </div>
 
-<div id="lockStatus" class="lock-status">
+<div id="lockStatus" class="lock-status locked">
  <strong id="lockTitle">LOADING BETTING STATUS</strong>
  <span id="lockMessage">Please wait…</span>
 </div>
 
 <section class="bet-area">
-
  <div class="column-heading">
   <span>#</span>
   <span>NUMBER</span>
@@ -353,38 +93,23 @@ body{
   <span>PRIZE</span>
   <span></span>
  </div>
-
  <div id="betRows"></div>
-
  <div class="add-area">
   <button class="add-btn" id="addRow" type="button" title="Add more rows">+</button>
  </div>
-
 </section>
 
 <section class="summary">
-
  <div class="summary-box">
-  Total Amount =
-  <strong id="totalAmount">0.00</strong>
-  Points
+  Total Amount = <strong id="totalAmount">0.00</strong> Points
  </div>
-
  <div class="summary-box prize-summary">
-  Total Prize =
-  <strong id="totalPrize">0.00</strong>
-  Points
+  Total Prize = <strong id="totalPrize">0.00</strong> Points
  </div>
-
 </section>
 
-<button class="place-btn" id="placeBet" type="button" disabled>
- LOADING…
-</button>
-
-<button class="back-btn" id="backHome" type="button">
- ← Back to Home
-</button>
+<button class="place-btn" id="placeBet" type="button" disabled>LOADING…</button>
+<button class="back-btn" id="backHome" type="button">← Back to Home</button>
 
 <div class="notice">
  <strong>DEMO MODE ONLY</strong><br>
@@ -398,46 +123,45 @@ body{
 "use strict";
 
 /*
- GLO 365 DAILY MILLIONAIRE FRONTEND
+ GLO 365 DAILY MILLIONAIRE
 
- Backend:
+ API:
  https://glo365.onrender.com/api
 
- Authentication:
- Secure server cookie or sessionStorage Bearer token.
+ Daily schedule (Asia/Dhaka):
+ Draw: 12:15 AM
+ Betting closes: 12:00 AM
+ Betting reopens: 03:15 AM
 
- No application data is saved in localStorage.
+ IMPORTANT:
+ Backend must decide whether betting is open.
+ Frontend status is only a display/control layer.
+ No LocalStorage is used.
 */
 
 const API_BASE_URL="https://glo365.onrender.com/api";
 
 const MIN_ROWS=10;
 const MAX_ROWS=50;
-const LOCK_MINUTES=45;
+const LOCK_MINUTES=15;
 const PRIZE_RATE=90;
 
 let currentUser=null;
 let wallet=0;
 let bettingLocked=true;
-let lockReason="";
+let lockReason="Betting status has not been verified by the server.";
 let settingsLoaded=false;
 let submitting=false;
 
 const rowsContainer=document.getElementById("betRows");
 const addButton=document.getElementById("addRow");
-
 const totalElement=document.getElementById("totalAmount");
 const totalPrizeElement=document.getElementById("totalPrize");
-
 const balanceElement=document.getElementById("balance");
 const placeButton=document.getElementById("placeBet");
-
 const lockStatus=document.getElementById("lockStatus");
 const lockTitle=document.getElementById("lockTitle");
 const lockMessage=document.getElementById("lockMessage");
-
-
-/* AUTHENTICATION */
 
 function authHeaders(extra={}){
  const headers={...extra};
@@ -449,7 +173,6 @@ function authHeaders(extra={}){
 
  return headers;
 }
-
 
 async function apiRequest(path,options={}){
  const response=await fetch(API_BASE_URL+path,{
@@ -471,7 +194,6 @@ async function apiRequest(path,options={}){
  }
 
  if(!response.ok||data.success===false){
-
   if(response.status===401){
    throw new Error("Your login session has expired. Please login again.");
   }
@@ -486,17 +208,13 @@ async function apiRequest(path,options={}){
  return data;
 }
 
-
 /* WALLET */
 
 function updateWallet(value){
  const amount=Number(value);
-
  wallet=Number.isFinite(amount)&&amount>=0?amount:0;
-
  balanceElement.textContent=wallet.toFixed(2);
 }
-
 
 async function loadCurrentUser(){
  const data=await apiRequest("/auth/me");
@@ -506,29 +224,56 @@ async function loadCurrentUser(){
  }
 
  currentUser=data.user;
- updateWallet(currentUser.balance);
-}
 
+ const balance=
+  currentUser.balance??
+  currentUser.wallet_balance??
+  currentUser.points??
+  0;
+
+ updateWallet(balance);
+}
 
 /* DRAW SETTINGS */
 
-function parseDrawDate(settings){
- if(!settings||!settings.draw_at)return null;
+function getDrawSettings(data){
+ return data.drawSettings||
+        data.draw_settings||
+        data.settings||
+        data.draw||
+        null;
+}
 
- const date=new Date(settings.draw_at);
+function parseServerDate(value){
+ if(!value)return null;
+
+ const date=new Date(value);
 
  return Number.isNaN(date.getTime())?null:date;
 }
 
+function formatBangladeshDate(value){
+ const date=parseServerDate(value);
 
-function showLock(title,message,open=false){
+ if(!date)return "";
 
- bettingLocked=!open;
+ return new Intl.DateTimeFormat("en-GB",{
+  timeZone:"Asia/Dhaka",
+  day:"2-digit",
+  month:"short",
+  year:"numeric",
+  hour:"2-digit",
+  minute:"2-digit",
+  hour12:true
+ }).format(date);
+}
+
+function showLock(title,message,isOpen=false){
+ bettingLocked=!isOpen;
  lockReason=message||"";
 
- lockStatus.className=open
-  ?"lock-status open"
-  :"lock-status locked";
+ lockStatus.className=
+  isOpen?"lock-status open":"lock-status locked";
 
  lockTitle.textContent=title;
  lockMessage.textContent=message;
@@ -536,97 +281,110 @@ function showLock(title,message,open=false){
  applyBettingLock();
 }
 
-
 function updateLockFromSettings(data){
+ const draw=getDrawSettings(data);
 
- const draw=
-  data.drawSettings||
-  data.draw_settings||
+ /*
+  Backend response should contain:
+  betting_locked: true/false
+  draw_at: ISO date/time with Bangladesh timezone offset
+  next_betting_at: optional ISO date/time
+
+  Backend status is authoritative.
+ */
+
+ const lockedValue=
+  typeof data.betting_locked==="boolean"
+   ?data.betting_locked
+   :typeof data.bettingLocked==="boolean"
+    ?data.bettingLocked
+    :typeof draw?.betting_locked==="boolean"
+     ?draw.betting_locked
+     :null;
+
+ const drawAt=
+  draw?.draw_at||
+  draw?.drawAt||
+  data.draw_at||
+  data.drawAt||
   null;
 
- const drawDate=parseDrawDate(draw);
+ const nextBettingAt=
+  data.next_betting_at||
+  data.nextBettingAt||
+  draw?.next_betting_at||
+  draw?.nextBettingAt||
+  null;
 
- const lockMinutes=
-  Number(data.lock_minutes)||LOCK_MINUTES;
+ const drawDate=parseServerDate(drawAt);
+ const reopenDate=parseServerDate(nextBettingAt);
+
+ if(lockedValue===null){
+  showLock(
+   "BETTING LOCKED",
+   "The server has not confirmed the betting status. Please try again."
+  );
+  settingsLoaded=false;
+  return;
+ }
+
+ if(lockedValue===true){
+  let message=
+   "Betting is currently closed. It closes at 12:00 AM and reopens at 03:15 AM Bangladesh time.";
+
+  if(drawDate){
+   message+=" Next draw: "+formatBangladeshDate(drawDate)+".";
+  }
+
+  if(reopenDate){
+   message+=" Betting reopens: "+formatBangladeshDate(reopenDate)+".";
+  }
+
+  showLock("BETTING CLOSED",message,false);
+  settingsLoaded=true;
+  return;
+ }
 
  if(!drawDate){
   showLock(
    "BETTING LOCKED",
-   "Admin has not configured a valid draw schedule."
+   "The server did not provide a valid draw time."
   );
+  settingsLoaded=false;
   return;
  }
 
- const remaining=drawDate.getTime()-Date.now();
+ const message=
+  "Betting is open. Daily draw: 12:15 AM Bangladesh time. Betting closes 15 minutes before the draw.";
 
- if(data.betting_locked===true||
-    remaining<=lockMinutes*60000){
-
-  if(remaining<=0){
-   showLock(
-    "BETTING CLOSED",
-    "The scheduled draw time has passed."
-   );
-  }else{
-   showLock(
-    "BETTING CLOSED",
-    "Betting closes "+lockMinutes+
-    " minutes before the draw. New entries are not accepted."
-   );
-  }
-
-  return;
- }
-
- const minutes=Math.floor(remaining/60000);
- const hours=Math.floor(minutes/60);
- const mins=minutes%60;
-
- showLock(
-  "BETTING IS OPEN",
-  "Betting is available. It will close "+
-  lockMinutes+
-  " minutes before the draw. Time remaining: "+
-  hours+"h "+mins+"m.",
-  true
- );
+ showLock("BETTING IS OPEN",message,true);
+ settingsLoaded=true;
 }
 
-
 async function loadSettings(){
-
- /*
-  এই endpoint Daily Millionaire-এর জন্য
-  backend-এ তৈরি করতে হবে।
- */
  const data=await apiRequest(
   "/public/daily-millionaire-settings"
  );
 
  updateLockFromSettings(data);
-
- settingsLoaded=true;
-
- applyBettingLock();
 }
 
+/* ACCOUNT AND SETTINGS */
 
 async function refreshAccountAndSettings(){
-
  try{
-
   await Promise.all([
    loadCurrentUser(),
    loadSettings()
   ]);
 
  }catch(error){
-
   settingsLoaded=false;
 
   showLock(
    "UNABLE TO LOAD",
-   error.message||"Could not connect to the server."
+   error.message||"Could not connect to the server.",
+   false
   );
 
   placeButton.disabled=true;
@@ -640,13 +398,10 @@ async function refreshAccountAndSettings(){
  }
 }
 
-
 /* ROW MANAGEMENT */
 
 function applyBettingLock(){
-
  rowsContainer.querySelectorAll(".bet-row").forEach(row=>{
-
   row.querySelectorAll("input").forEach(input=>{
    input.disabled=bettingLocked||submitting;
   });
@@ -656,7 +411,6 @@ function applyBettingLock(){
   if(remove){
    remove.disabled=bettingLocked||submitting;
   }
-
  });
 
  const count=rowsContainer.querySelectorAll(".bet-row").length;
@@ -674,14 +428,14 @@ function applyBettingLock(){
  placeButton.textContent=
   submitting
    ?"SUBMITTING…"
-   :bettingLocked
-    ?"BETTING CLOSED"
-    :"PLACE DEMO BET";
+   :!settingsLoaded
+    ?"LOADING…"
+    :bettingLocked
+     ?"BETTING CLOSED"
+     :"PLACE DEMO BET";
 }
 
-
 function updateSerials(){
-
  rowsContainer.querySelectorAll(".bet-row").forEach((row,index)=>{
   row.querySelector(".serial").textContent=(index+1)+".";
  });
@@ -689,9 +443,7 @@ function updateSerials(){
  updateAddButton();
 }
 
-
 function updateAddButton(){
-
  const count=rowsContainer.querySelectorAll(".bet-row").length;
 
  addButton.disabled=
@@ -705,9 +457,7 @@ function updateAddButton(){
    :"Add row ("+count+"/50)";
 }
 
-
 function addRow(force=false){
-
  if(bettingLocked&&!force){
   alert("Betting is currently closed.");
   return;
@@ -727,7 +477,6 @@ function addRow(force=false){
  serial.className="serial";
 
  const number=document.createElement("input");
-
  number.type="text";
  number.inputMode="numeric";
  number.maxLength=3;
@@ -736,7 +485,6 @@ function addRow(force=false){
  number.autocomplete="off";
 
  const amount=document.createElement("input");
-
  amount.type="number";
  amount.inputMode="decimal";
  amount.min="0";
@@ -745,48 +493,32 @@ function addRow(force=false){
  amount.dataset.field="amount";
 
  const prize=document.createElement("div");
-
  prize.className="prize-output";
  prize.dataset.field="prize";
  prize.textContent="0.00";
 
  const remove=document.createElement("button");
-
  remove.type="button";
  remove.className="remove-btn";
  remove.textContent="×";
  remove.title="Clear or remove row";
 
- row.append(
-  serial,
-  number,
-  amount,
-  prize,
-  remove
- );
-
+ row.append(serial,number,amount,prize,remove);
  rowsContainer.appendChild(row);
-
 
  number.addEventListener("input",()=>{
   if(bettingLocked||submitting)return;
 
   number.value=number.value.replace(/\D/g,"").slice(0,3);
- });
-
-
- amount.addEventListener("input",()=>{
-  if(bettingLocked||submitting)return;
-
   calculate();
  });
 
-
- number.addEventListener("input",calculate);
-
+ amount.addEventListener("input",()=>{
+  if(bettingLocked||submitting)return;
+  calculate();
+ });
 
  remove.addEventListener("click",()=>{
-
   if(bettingLocked||submitting){
    alert("Betting is currently closed.");
    return;
@@ -806,21 +538,17 @@ function addRow(force=false){
   calculate();
  });
 
-
  updateSerials();
  calculate();
  applyBettingLock();
 }
 
-
-/* GET ROWS */
+/* READ ROWS */
 
 function getRows(){
-
  const rows=[];
 
  rowsContainer.querySelectorAll(".bet-row").forEach(row=>{
-
   const number=
    row.querySelector('[data-field="number"]').value.trim();
 
@@ -830,85 +558,64 @@ function getRows(){
   if(number===""&&amountValue==="")return;
 
   rows.push({
-   number:number,
+   number,
    amount:amountValue===""?0:Number(amountValue)
   });
-
  });
 
  return rows;
 }
 
-
 /* CALCULATION */
 
 function calculate(){
-
  let totalAmount=0;
  let totalPrize=0;
 
  rowsContainer.querySelectorAll(".bet-row").forEach(row=>{
-
-  const amountInput=
-   row.querySelector('[data-field="amount"]');
-
-  const prizeOutput=
-   row.querySelector('[data-field="prize"]');
+  const amountInput=row.querySelector('[data-field="amount"]');
+  const prizeOutput=row.querySelector('[data-field="prize"]');
 
   const amountValue=amountInput.value;
-
-  const amount=
-   amountValue===""?0:Number(amountValue);
+  const amount=amountValue===""?0:Number(amountValue);
 
   if(Number.isFinite(amount)&&amount>0){
-
    const prize=amount*PRIZE_RATE;
 
    totalAmount+=amount;
    totalPrize+=prize;
 
-   prizeOutput.textContent=
-    prize.toLocaleString("en-US",{
-     minimumFractionDigits:2,
-     maximumFractionDigits:2
-    });
-
+   prizeOutput.textContent=prize.toLocaleString("en-US",{
+    minimumFractionDigits:2,
+    maximumFractionDigits:2
+   });
   }else{
    prizeOutput.textContent="0.00";
   }
-
  });
 
- totalElement.textContent=
-  totalAmount.toLocaleString("en-US",{
-   minimumFractionDigits:2,
-   maximumFractionDigits:2
-  });
+ totalElement.textContent=totalAmount.toLocaleString("en-US",{
+  minimumFractionDigits:2,
+  maximumFractionDigits:2
+ });
 
- totalPrizeElement.textContent=
-  totalPrize.toLocaleString("en-US",{
-   minimumFractionDigits:2,
-   maximumFractionDigits:2
-  });
+ totalPrizeElement.textContent=totalPrize.toLocaleString("en-US",{
+  minimumFractionDigits:2,
+  maximumFractionDigits:2
+ });
 
- return{
-  totalAmount,
-  totalPrize
- };
+ return{totalAmount,totalPrize};
 }
-
 
 /* VALIDATION */
 
 function validateRows(rows){
-
  if(!rows.length){
   alert("Please enter at least one Number and Amount.");
   return false;
  }
 
  for(let i=0;i<rows.length;i++){
-
   const row=rows[i];
 
   if(!/^\d{3}$/.test(row.number)){
@@ -930,20 +637,23 @@ function validateRows(rows){
    );
    return false;
   }
-
  }
 
  return true;
 }
 
-
 /* SUBMIT BET */
 
 async function submitBet(){
-
  if(submitting)return;
 
+ /*
+  Recheck account and betting status immediately
+  before sending the bet.
+ */
  try{
+  settingsLoaded=false;
+  applyBettingLock();
 
   await Promise.all([
    loadCurrentUser(),
@@ -951,13 +661,14 @@ async function submitBet(){
   ]);
 
  }catch(error){
-
   alert(error.message||"Could not verify your account.");
+  applyBettingLock();
   return;
  }
 
- if(bettingLocked){
+ if(!settingsLoaded||bettingLocked){
   alert(lockReason||"Betting is closed.");
+  applyBettingLock();
   return;
  }
 
@@ -981,15 +692,6 @@ async function submitBet(){
  applyBettingLock();
 
  try{
-
-  /*
-   Daily Millionaire-এর backend route:
-   POST /api/demo/daily-millionaire/bets
-
-   Backend-এ amount, number, wallet debit এবং
-   draw cutoff অবশ্যই server-side যাচাই করতে হবে।
-  */
-
   const response=await apiRequest(
    "/demo/daily-millionaire/bets",
    {
@@ -1003,13 +705,15 @@ async function submitBet(){
 
   if(response.balance!==undefined){
    updateWallet(response.balance);
+  }else if(response.user?.balance!==undefined){
+   updateWallet(response.user.balance);
   }else{
    await loadCurrentUser();
   }
 
   alert(
    "Daily Millionaire demo entry saved successfully!"+
-   "\nUsername: "+(currentUser.username||"")+
+   "\nUsername: "+(currentUser?.username||"")+
    "\nBet Amount: "+result.totalAmount.toFixed(2)+
    "\nTotal Prize: "+result.totalPrize.toFixed(2)+
    "\nRemaining Points: "+wallet.toFixed(2)
@@ -1020,7 +724,6 @@ async function submitBet(){
   await loadSettings();
 
  }catch(error){
-
   alert(
    error.message||
    "Could not submit Daily Millionaire entry."
@@ -1033,20 +736,15 @@ async function submitBet(){
   try{
    await loadSettings();
   }catch(_){}
-
  }finally{
-
   submitting=false;
   applyBettingLock();
-
  }
 }
-
 
 /* RESET ROWS */
 
 function resetRows(){
-
  rowsContainer.replaceChildren();
 
  for(let i=0;i<MIN_ROWS;i++){
@@ -1057,11 +755,9 @@ function resetRows(){
  applyBettingLock();
 }
 
-
 /* EVENTS */
 
 addButton.addEventListener("click",()=>{
-
  if(bettingLocked){
   alert("Betting is currently closed.");
   return;
@@ -1070,14 +766,11 @@ addButton.addEventListener("click",()=>{
  addRow();
 });
 
-
 placeButton.addEventListener("click",submitBet);
-
 
 document.getElementById("backHome").addEventListener("click",()=>{
  location.href="home.html";
 });
-
 
 window.addEventListener("focus",async()=>{
  if(!submitting){
@@ -1085,35 +778,29 @@ window.addEventListener("focus",async()=>{
  }
 });
 
-
 window.addEventListener("pageshow",async()=>{
  if(!submitting){
   await refreshAccountAndSettings();
  }
 });
 
-
-/* SERVER SETTINGS REFRESH */
+/* SERVER STATUS REFRESH */
 
 setInterval(async()=>{
+ if(submitting)return;
 
- if(!submitting){
+ try{
+  await loadSettings();
+ }catch(error){
+  settingsLoaded=false;
 
-  try{
-   await loadSettings();
-  }catch(error){
-
-   showLock(
-    "CONNECTION ISSUE",
-    "Could not refresh draw settings. Betting is temporarily disabled."
-   );
-
-  }
-
+  showLock(
+   "CONNECTION ISSUE",
+   "Could not refresh draw settings. Betting is temporarily disabled.",
+   false
+  );
  }
-
 },30000);
-
 
 /* START */
 
