@@ -3,241 +3,395 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width,initial-scale=1">
-<meta name="theme-color" content="#087acb">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="theme-color" content="#071a35">
 <title>GLO 365 - Admin Dashboard</title>
 
 <style>
+:root{
+  --navy:#071a35;
+  --navy2:#102b50;
+  --blue:#087acb;
+  --blue2:#20b8f2;
+  --light:#eff7ff;
+  --text:#173653;
+  --muted:#8195a9;
+  --border:#dceaf5;
+  --white:#fff;
+  --shadow:0 8px 25px rgba(20,75,120,.07);
+}
 *{box-sizing:border-box;margin:0;padding:0}
-
 body{
   font-family:Arial,sans-serif;
-  background:#f1f7fc;
-  color:#172b45;
+  background:#edf4fb;
+  color:var(--text);
 }
-
+button,input,textarea{font:inherit}
+button{cursor:pointer}
 .app{
-  max-width:520px;
+  max-width:560px;
   margin:auto;
   min-height:100vh;
-  padding-bottom:30px;
+  padding-bottom:35px;
 }
 
+/* HEADER */
 header{
-  background:linear-gradient(120deg,#066bb5,#087acb,#29b7f5);
-  padding:20px 16px;
+  position:relative;
+  overflow:hidden;
+  padding:23px 18px 27px;
+  background:linear-gradient(130deg,#06172e,#0a3970,#087acb);
+  color:white;
+  border-radius:0 0 25px 25px;
+  box-shadow:0 8px 25px #087acb30;
+}
+header:before{
+  content:"";
+  position:absolute;
+  width:220px;height:220px;
+  right:-75px;top:-115px;
+  border-radius:50%;
+  background:#ffffff12;
+}
+.header-top{
   display:flex;
   justify-content:space-between;
   align-items:center;
-  box-shadow:0 5px 18px #087acb20;
+  position:relative;
+  z-index:1;
 }
-
 .logo{
   font-size:25px;
   font-weight:900;
-  color:white;
+  letter-spacing:.5px;
 }
-
-.logo span{color:#d9f5ff}
-
+.logo span{color:#65d9ff}
 .admin-label{
-  font-size:11px;
   background:#fff;
   color:#087acb;
-  padding:7px 10px;
-  border-radius:20px;
+  padding:8px 12px;
+  border-radius:30px;
+  font-size:10px;
   font-weight:900;
+  letter-spacing:.5px;
 }
-
-.welcome{padding:20px 15px}
-
-.welcome h2{
-  font-size:22px;
-  color:#17466d;
+.header-caption{
+  margin-top:25px;
+  position:relative;
+  z-index:1;
 }
-
-.welcome p{
+.header-caption small{
+  color:#a9dcff;
+  font-size:11px;
+  font-weight:bold;
+  letter-spacing:1.5px;
+}
+.header-caption h1{
+  font-size:25px;
+  margin-top:7px;
+}
+.header-caption p{
+  color:#d2eaff;
   font-size:12px;
-  color:#778da0;
+  margin-top:7px;
+  line-height:1.6;
+}
+
+/* WELCOME */
+.welcome{
+  padding:22px 15px 14px;
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+  gap:10px;
+}
+.welcome h2{font-size:19px;color:#173d61}
+.welcome p{
+  color:var(--muted);
+  font-size:11px;
   margin-top:6px;
 }
+.online{
+  display:flex;
+  align-items:center;
+  gap:6px;
+  color:#16834b;
+  background:#e4f8ed;
+  border:1px solid #c5ecd5;
+  padding:7px 9px;
+  border-radius:30px;
+  font-size:10px;
+  font-weight:bold;
+  white-space:nowrap;
+}
+.online i{
+  width:7px;height:7px;
+  background:#21b768;
+  border-radius:50%;
+}
 
+/* NOTICE */
+.notice{
+  display:none;
+  margin:0 13px 13px;
+  padding:13px;
+  background:#fff0f0;
+  color:#a22;
+  border-radius:11px;
+  font-size:12px;
+  line-height:1.6;
+}
+.notice.show{display:block}
+
+/* STATS */
+.stats-heading{
+  padding:8px 15px 12px;
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+}
+.stats-heading h3{
+  font-size:15px;
+  color:#244a6c;
+}
+.stats-heading span{
+  font-size:10px;
+  color:var(--muted);
+}
 .grid{
   display:grid;
-  grid-template-columns:repeat(2,1fr);
-  gap:10px;
-  padding:0 12px;
+  grid-template-columns:repeat(2,minmax(0,1fr));
+  gap:11px;
+  padding:0 13px;
 }
-
 .stat{
+  position:relative;
+  overflow:hidden;
   background:white;
-  border:1px solid #dceaf4;
-  border-radius:14px;
-  padding:17px;
-  box-shadow:0 3px 10px #087acb08;
+  border:1px solid var(--border);
+  border-radius:16px;
+  padding:15px;
+  box-shadow:var(--shadow);
+  min-height:105px;
 }
-
+.stat:after{
+  content:"";
+  position:absolute;
+  width:65px;height:65px;
+  right:-25px;bottom:-28px;
+  background:#eaf6ff;
+  border-radius:50%;
+}
+.stat-top{
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  gap:5px;
+}
 .stat small{
-  color:#8296a8;
-  font-size:12px;
+  color:#8497a9;
+  font-size:11px;
+  line-height:1.4;
 }
-
+.stat-icon{
+  width:29px;height:29px;
+  display:grid;place-items:center;
+  background:#eaf6ff;
+  border-radius:9px;
+  font-size:15px;
+}
 .stat strong{
   display:block;
-  font-size:26px;
-  margin-top:9px;
+  font-size:25px;
   color:#087acb;
+  margin-top:10px;
   font-variant-numeric:tabular-nums;
 }
+.stat:nth-child(2) strong{color:#7652c9}
+.stat:nth-child(3) strong{color:#0c9a9a}
+.stat:nth-child(4) strong{color:#e58a27}
+.stat:nth-child(5) strong{color:#dc5574}
+.stat:nth-child(6) strong{color:#169b64}
+.stat:nth-child(7) strong{color:#536fce}
 
+/* SECTIONS */
 .section{
-  background:white;
-  margin:15px 12px;
+  margin:15px 13px;
   padding:17px;
-  border:1px solid #dceaf4;
-  border-radius:15px;
-  box-shadow:0 3px 10px #087acb08;
+  background:white;
+  border:1px solid var(--border);
+  border-radius:18px;
+  box-shadow:var(--shadow);
 }
-
-.section h3{
-  font-size:17px;
-  margin-bottom:13px;
-  color:#17466d;
+.section-title{
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+  gap:10px;
+  margin-bottom:14px;
 }
-
+.section-title h3{
+  font-size:16px;
+  color:#193e60;
+}
+.section-title span{
+  color:#087acb;
+  font-size:10px;
+  font-weight:bold;
+}
 .muted{
   color:#8296a8;
-  font-size:12px;
-  line-height:1.7;
+  font-size:11px;
+  line-height:1.8;
+}
+.management-intro{
+  background:linear-gradient(120deg,#eaf6ff,#f8fcff);
+  border:1px solid #d8ecfa;
+}
+.intro-row{
+  display:flex;
+  align-items:center;
+  gap:12px;
+}
+.intro-icon{
+  width:43px;height:43px;
+  display:grid;place-items:center;
+  flex-shrink:0;
+  border-radius:13px;
+  background:linear-gradient(135deg,#087acb,#28b8f3);
+  color:white;
+  font-size:21px;
 }
 
+/* MANAGEMENT MENU */
 .menu{
   display:grid;
   grid-template-columns:repeat(2,minmax(0,1fr));
   gap:10px;
 }
-
 .menu a{
+  min-width:0;
+  min-height:116px;
   display:flex;
   flex-direction:column;
+  align-items:flex-start;
   gap:8px;
   text-decoration:none;
   color:#17466d;
-  background:#f4faff;
-  border:1px solid #dceaf4;
-  border-radius:12px;
-  padding:14px;
-  min-height:100px;
+  background:#f5faff;
+  border:1px solid #deebf5;
+  border-radius:14px;
+  padding:13px;
+  transition:transform .15s,box-shadow .15s;
 }
-
-.menu a:active{transform:scale(.98)}
-
-.menu .emoji{font-size:23px}
-
+.menu a:active{transform:scale(.97)}
+.menu .emoji{
+  width:34px;height:34px;
+  display:grid;place-items:center;
+  border-radius:11px;
+  background:#e5f3ff;
+  font-size:19px;
+}
 .menu strong{
-  font-size:13px;
-  color:#17699f;
+  font-size:12px;
+  line-height:1.35;
+  color:#17649a;
 }
-
 .menu small{
-  font-size:10px;
-  color:#8296a8;
+  font-size:9px;
   line-height:1.5;
+  color:#8296a8;
 }
-
 .menu a.deposit-card,
 .menu a.timer-card{
-  background:linear-gradient(135deg,#eaf6ff,#d8edff);
-  border:1px solid #b9def7;
+  background:linear-gradient(140deg,#eaf6ff,#d9efff);
+  border-color:#c1e2f7;
 }
-
-.menu a.deposit-card strong,
-.menu a.timer-card strong{
-  color:#075c9b;
-}
-
-/* MILLIONAIRE CARD */
-
 .menu a.millionaire-card{
-  background:linear-gradient(135deg,#eaf6ff,#cdeaff);
-  border:1px solid #9dd3f7;
-  box-shadow:0 3px 12px #087acb12;
+  background:linear-gradient(140deg,#eaf6ff,#cceaff);
+  border-color:#9ed5f7;
+  box-shadow:0 4px 13px #087acb12;
 }
-
-.menu a.millionaire-card strong{
-  color:#075c9b;
+.menu a.millionaire-card .emoji{
+  background:#d5edff;
 }
-
+.menu a.millionaire-card strong{color:#075c9b}
 .menu a.live-card{
-  background:linear-gradient(135deg,#fff2f3,#ffe6e9);
-  border:1px solid #ffd0d6;
+  background:linear-gradient(140deg,#fff2f3,#ffe5e9);
+  border-color:#ffd0d8;
 }
-
+.menu a.live-card .emoji{background:#ffe0e5}
 .menu a.live-card strong{color:#c51d35}
-
 .menu a.message-card{
-  background:linear-gradient(135deg,#e9f8ff,#ccecff);
-  border:1px solid #a9dafa;
+  background:linear-gradient(140deg,#e9f8ff,#ccecff);
+  border-color:#b5e1fa;
 }
-
 .menu a.message-card strong{color:#0767aa}
-
-/* LIVE SUPPORT CARD */
-
 .menu a.support-card{
-  background:linear-gradient(135deg,#e9fff5,#d1f7e5);
-  border:1px solid #a8e8c7;
+  background:linear-gradient(140deg,#e9fff5,#d1f7e5);
+  border-color:#b4ebcf;
 }
+.menu a.support-card .emoji{background:#d4f6e4}
+.menu a.support-card strong{color:#087a43}
 
-.menu a.support-card strong{
-  color:#087a43;
-}
-
-.notice{
-  display:none;
-  margin:12px;
-  padding:12px;
-  background:#fff0f0;
-  color:#a22;
-  border-radius:9px;
-  font-size:13px;
-  line-height:1.6;
-}
-
-.notice.show{display:block}
-
+/* BUTTONS */
 button{
   border:0;
-  border-radius:9px;
+  border-radius:11px;
   padding:12px;
   font-weight:bold;
-  cursor:pointer;
 }
-
-button:disabled{
-  opacity:.55;
-  cursor:not-allowed;
-}
-
-.dark{
-  background:#087acb;
+button:disabled{opacity:.55;cursor:not-allowed}
+.primary{
+  background:linear-gradient(120deg,#087acb,#20a9ec);
   color:white;
+  width:100%;
+  box-shadow:0 5px 12px #087acb25;
+}
+.logout{
+  background:#fff0f0;
+  color:#c32e3c;
+  border:1px solid #ffd6d9;
   width:100%;
 }
 
+/* SYSTEM */
+.system-card{
+  background:linear-gradient(140deg,#fff,#f3f9ff);
+}
+.system-status{
+  display:flex;
+  align-items:center;
+  gap:8px;
+  margin-bottom:10px;
+  color:#16834b;
+  font-size:12px;
+  font-weight:bold;
+}
+.system-status i{
+  width:8px;height:8px;
+  border-radius:50%;
+  background:#20b56b;
+}
+.system-note{
+  font-size:11px;
+  line-height:1.8;
+  color:#8296a8;
+}
+
+/* MODALS */
 .live-modal{
   display:none;
   position:fixed;
   inset:0;
   z-index:100;
-  background:#071d35b8;
+  background:#061a32c9;
   padding:15px;
   align-items:center;
   justify-content:center;
+  backdrop-filter:blur(4px);
 }
-
 .live-modal.show{display:flex}
-
 .live-modal-box{
   width:100%;
   max-width:460px;
@@ -245,104 +399,90 @@ button:disabled{
   overflow-y:auto;
   background:white;
   border:1px solid #d5e8f5;
-  border-radius:16px;
-  padding:18px;
+  border-radius:19px;
+  padding:19px;
+  box-shadow:0 20px 60px #00152b45;
 }
-
 .live-modal-header{
   display:flex;
   justify-content:space-between;
   align-items:center;
   gap:10px;
-  margin-bottom:15px;
+  margin-bottom:16px;
 }
-
 .live-modal-header h3{
-  font-size:18px;
+  font-size:17px;
   color:#17466d;
 }
-
 .close-btn{
   background:#eaf4fc;
   color:#17699f;
   padding:8px 12px;
 }
-
 .live-label{
   display:block;
-  font-size:13px;
+  font-size:12px;
   font-weight:bold;
-  margin:12px 0 6px;
+  margin:13px 0 7px;
   color:#17466d;
 }
-
 .live-input{
   width:100%;
   padding:13px;
   border:1px solid #d5e5f1;
-  border-radius:9px;
-  font-size:14px;
+  border-radius:10px;
+  font-size:13px;
   outline:none;
   background:white;
   color:#222;
 }
-
 .live-input:focus{border-color:#087acb}
-
 .live-help{
   margin-top:9px;
-  font-size:11px;
+  font-size:10px;
   line-height:1.7;
   color:#8296a8;
 }
-
 .live-status{
   margin-top:13px;
   padding:12px;
-  border-radius:9px;
+  border-radius:10px;
   background:#f1f7fc;
-  font-size:12px;
+  font-size:11px;
   line-height:1.7;
   overflow-wrap:anywhere;
 }
-
 .live-status.active{
   background:#e8f8ed;
   color:#147a36;
 }
-
 .live-status.inactive{
   background:#fff0f0;
   color:#b22;
 }
-
 .live-actions{
   display:flex;
   gap:9px;
   margin-top:15px;
 }
-
 .live-save,.message-save{
   flex:1;
   background:#087acb;
   color:white;
 }
-
 .live-disable,.message-disable{
   background:#ffe6e6;
   color:#b21d2b;
   flex:1;
 }
-
 .message-preview{
   margin-top:14px;
   padding:13px;
-  border-radius:10px;
+  border-radius:11px;
   background:#eaf6ff;
   border:1px solid #c7e4f7;
   overflow:hidden;
 }
-
 .message-preview small{
   display:block;
   color:#5684a4;
@@ -350,99 +490,108 @@ button:disabled{
   font-weight:bold;
   margin-bottom:8px;
 }
-
 .message-preview-text{
   color:#075c9b;
-  font-size:13px;
+  font-size:12px;
   font-weight:bold;
-  line-height:1.6;
+  line-height:1.7;
   overflow-wrap:anywhere;
 }
-
 footer{
   text-align:center;
-  color:#8296a8;
-  font-size:11px;
-  padding:18px;
+  color:#8ca0b2;
+  font-size:10px;
+  padding:20px;
 }
-
 @media(max-width:350px){
   .menu{grid-template-columns:1fr}
-  .stat strong{font-size:23px}
+  .stat{padding:12px}
+  .stat strong{font-size:22px}
   .live-actions{flex-direction:column}
 }
 </style>
 </head>
 
 <body>
-
 <div class="app">
 
 <header>
-  <div class="logo">GLO <span>365</span></div>
-  <div class="admin-label">ADMIN PANEL</div>
+  <div class="header-top">
+    <div class="logo">GLO <span>365</span></div>
+    <div class="admin-label">✦ ADMIN PANEL</div>
+  </div>
+  <div class="header-caption">
+    <small>CONTROL CENTER</small>
+    <h1>Admin Dashboard</h1>
+    <p>Manage your GLO 365 platform from one place.</p>
+  </div>
 </header>
 
 <div class="welcome">
-  <h2>Admin Dashboard</h2>
-  <p id="adminName">Checking administrator access...</p>
+  <div>
+    <h2>Welcome Back 👋</h2>
+    <p id="adminName">Checking administrator access...</p>
+  </div>
+  <div class="online"><i></i> Admin</div>
 </div>
 
 <div id="notice" class="notice"></div>
 
-<div class="grid">
+<div class="stats-heading">
+  <h3>Dashboard Overview</h3>
+  <span>LIVE SERVER DATA</span>
+</div>
 
+<div class="grid">
   <div class="stat">
-    <small>Total Accounts</small>
+    <div class="stat-top"><small>Total Accounts</small><span class="stat-icon">👥</span></div>
     <strong id="totalUsers">—</strong>
   </div>
-
   <div class="stat">
-    <small>Affiliates</small>
+    <div class="stat-top"><small>Affiliates</small><span class="stat-icon">🤝</span></div>
     <strong id="totalAffiliates">—</strong>
   </div>
-
   <div class="stat">
-    <small>Bet Records</small>
+    <div class="stat-top"><small>Bet Records</small><span class="stat-icon">🎯</span></div>
     <strong id="totalBets">—</strong>
   </div>
-
   <div class="stat">
-    <small>Pending Withdrawals</small>
+    <div class="stat-top"><small>Pending Withdrawals</small><span class="stat-icon">💸</span></div>
     <strong id="totalWithdrawals">—</strong>
   </div>
-
   <div class="stat">
-    <small>Pending Deposits</small>
+    <div class="stat-top"><small>Pending Deposits</small><span class="stat-icon">💰</span></div>
     <strong id="totalDeposits">—</strong>
   </div>
-
   <div class="stat">
-    <small>Rewards Given</small>
+    <div class="stat-top"><small>Rewards Given</small><span class="stat-icon">🎁</span></div>
     <strong id="totalRewards">—</strong>
   </div>
-
   <div class="stat">
-    <small>Reward Points</small>
+    <div class="stat-top"><small>Reward Points</small><span class="stat-icon">⭐</span></div>
     <strong id="totalRewardPoints">—</strong>
   </div>
+</div>
 
+<div class="section management-intro">
+  <div class="intro-row">
+    <div class="intro-icon">⚙️</div>
+    <div>
+      <div class="section-title" style="margin:0 0 5px">
+        <h3>Admin Management</h3>
+      </div>
+      <p class="muted">Manage users, results, payments and all platform activities from the control center.</p>
+    </div>
+  </div>
 </div>
 
 <div class="section">
-  <h3>Admin Management</h3>
-  <p class="muted">
-    Manage GLO 365 using the sections below.
-    Dashboard information is loaded from the server.
-  </p>
-</div>
-
-<div class="section">
-
-  <h3>Management Menu</h3>
+  <div class="section-title">
+    <h3>Management Menu</h3>
+    <span>ALL SERVICES</span>
+  </div>
 
   <div class="menu">
-
     <a href="admin-affiliates.html">
       <span class="emoji">🤝</span>
       <strong>Affiliates</strong>
@@ -467,23 +616,19 @@ footer{
       <small>Manage Draw Date, Month, Year and Time</small>
     </a>
 
-    <!-- DAILY MILLIONAIRE ADMIN CARD -->
-
     <a href="admin-millionaire.html" class="millionaire-card">
       <span class="emoji">💎</span>
       <strong>Daily Millionaire</strong>
       <small>Manage Daily Draw, Publish 3-Digit Results and Edit Previous Results</small>
     </a>
 
-    <a href="#" class="message-card"
-       onclick="openMessageSettings();return false;">
+    <a href="#" class="message-card" onclick="openMessageSettings();return false;">
       <span class="emoji">📢</span>
       <strong>Admin Message Management</strong>
       <small>Publish a scrolling Home Page message</small>
     </a>
 
-    <a href="#" class="live-card"
-       onclick="openLiveSettings();return false;">
+    <a href="#" class="live-card" onclick="openLiveSettings();return false;">
       <span class="emoji">🔴</span>
       <strong>Live Event Management</strong>
       <small>Manage YouTube and Facebook Live links</small>
@@ -524,149 +669,75 @@ footer{
       <strong>Withdrawals</strong>
       <small>Withdrawal Request Management</small>
     </a>
-
   </div>
 </div>
 
-<div class="section">
-  <h3>System Information</h3>
-
-  <p class="muted" id="systemInfo">
-    Connecting to GLO 365 backend...
-  </p>
-
-  <button class="dark"
-          style="margin-top:14px"
-          onclick="refreshAll()">
-    Refresh Dashboard
-  </button>
+<div class="section system-card">
+  <div class="section-title">
+    <h3>System Information</h3>
+    <span>SERVER</span>
+  </div>
+  <div class="system-status"><i></i> Backend Connection</div>
+  <p class="system-note" id="systemInfo">Connecting to GLO 365 backend...</p>
+  <button class="primary" style="margin-top:15px" onclick="refreshAll()">↻ Refresh Dashboard</button>
 </div>
 
 <div class="section">
-  <button class="dark"
-          id="logoutButton"
-          onclick="logout()">
-    Logout
-  </button>
+  <button class="logout" id="logoutButton" onclick="logout()">⇥ Logout from Admin</button>
 </div>
 
-<footer>GLO 365 Admin · Server Connected</footer>
-
+<footer>GLO 365 Admin Control Center · Secure Management</footer>
 </div>
 
-<!-- ADMIN MESSAGE SETTINGS -->
-
+<!-- ADMIN MESSAGE MODAL -->
 <div class="live-modal" id="messageModal">
-
   <div class="live-modal-box">
-
     <div class="live-modal-header">
       <h3>📢 Admin Message</h3>
-      <button class="close-btn"
-              onclick="closeMessageSettings()">✕</button>
+      <button class="close-btn" onclick="closeMessageSettings()">✕</button>
     </div>
 
-    <label class="live-label" for="adminMessage">
-      Home Page Message
-    </label>
+    <label class="live-label" for="adminMessage">Home Page Message</label>
+    <textarea class="live-input" id="adminMessage" rows="4" maxlength="300" placeholder="Write your announcement..." style="resize:vertical"></textarea>
 
-    <textarea
-      class="live-input"
-      id="adminMessage"
-      rows="4"
-      maxlength="300"
-      placeholder="Write your announcement..."
-      style="resize:vertical"></textarea>
-
-    <div class="live-help">
-      Maximum 300 characters.
-      The message will be published on the Home Page.
-    </div>
+    <div class="live-help">Maximum 300 characters. The message will be published on the Home Page.</div>
 
     <div class="message-preview">
       <small>MESSAGE PREVIEW</small>
-      <div class="message-preview-text" id="messagePreview">
-        Your message will appear here.
-      </div>
+      <div class="message-preview-text" id="messagePreview">Your message will appear here.</div>
     </div>
 
-    <div id="messageStatus" class="live-status">
-      Loading message status...
-    </div>
+    <div id="messageStatus" class="live-status">Loading message status...</div>
 
     <div class="live-actions">
-      <button class="message-save"
-              id="messageSaveButton"
-              onclick="publishAdminMessage()">
-        📢 Save & Publish
-      </button>
-
-      <button class="message-disable"
-              id="messageDisableButton"
-              onclick="disableAdminMessage()">
-        ⏹ Disable
-      </button>
+      <button class="message-save" id="messageSaveButton" onclick="publishAdminMessage()">📢 Save & Publish</button>
+      <button class="message-disable" id="messageDisableButton" onclick="disableAdminMessage()">⏹ Disable</button>
     </div>
-
   </div>
 </div>
 
-<!-- LIVE EVENT SETTINGS -->
-
+<!-- LIVE EVENT MODAL -->
 <div class="live-modal" id="liveModal">
-
   <div class="live-modal-box">
-
     <div class="live-modal-header">
       <h3>🔴 Live Event Management</h3>
-      <button class="close-btn"
-              onclick="closeLiveSettings()">✕</button>
+      <button class="close-btn" onclick="closeLiveSettings()">✕</button>
     </div>
 
-    <label class="live-label" for="liveTitle">
-      Live Event Title
-    </label>
+    <label class="live-label" for="liveTitle">Live Event Title</label>
+    <input class="live-input" type="text" id="liveTitle" maxlength="80" placeholder="GLO 365 Official Live">
 
-    <input
-      class="live-input"
-      type="text"
-      id="liveTitle"
-      maxlength="80"
-      placeholder="GLO 365 Official Live">
+    <label class="live-label" for="liveUrl">YouTube or Facebook Live Link</label>
+    <input class="live-input" type="url" id="liveUrl" placeholder="https://www.youtube.com/watch?v=...">
 
-    <label class="live-label" for="liveUrl">
-      YouTube or Facebook Live Link
-    </label>
+    <div class="live-help">Enter a public YouTube or Facebook video/live link. Facebook embedding depends on the video's privacy and embed permissions.</div>
 
-    <input
-      class="live-input"
-      type="url"
-      id="liveUrl"
-      placeholder="https://www.youtube.com/watch?v=...">
-
-    <div class="live-help">
-      Enter a public YouTube or Facebook video/live link.
-      Facebook embedding depends on the video's privacy and embed permissions.
-    </div>
-
-    <div id="liveStatus" class="live-status">
-      Loading Live Event status...
-    </div>
+    <div id="liveStatus" class="live-status">Loading Live Event status...</div>
 
     <div class="live-actions">
-      <button class="live-save"
-              id="liveSaveButton"
-              onclick="saveLiveEvent()">
-        💾 Save & Start Live
-      </button>
-
-      <button class="live-disable"
-              id="liveDisableButton"
-              onclick="disableLiveEvent()">
-        ⏹ Disable Live
-      </button>
+      <button class="live-save" id="liveSaveButton" onclick="saveLiveEvent()">💾 Save & Start Live</button>
+      <button class="live-disable" id="liveDisableButton" onclick="disableLiveEvent()">⏹ Disable Live</button>
     </div>
-
   </div>
 </div>
 
@@ -682,19 +753,9 @@ let activeLiveEvent = null;
 let isAuthorized = false;
 let redirecting = false;
 
-/*
-  Authentication:
-  Login/Register page stores glo365_token in sessionStorage.
-  This page uses the same key.
-  No application data is stored in localStorage.
-*/
-
 function getToken(){
-  try{
-    return sessionStorage.getItem(TOKEN_KEY) || "";
-  }catch(error){
-    return "";
-  }
+  try{return sessionStorage.getItem(TOKEN_KEY)||""}
+  catch(error){return ""}
 }
 
 function clearToken(){
@@ -708,703 +769,442 @@ function clearToken(){
 }
 
 function goToLogin(){
-  if(redirecting) return;
-  redirecting = true;
+  if(redirecting)return;
+  redirecting=true;
   clearToken();
   location.replace("login.html");
 }
 
-function showNotice(message, type){
-  const box = document.getElementById("notice");
-
-  box.textContent = message;
-  box.className = "notice show";
-
-  if(type === "success"){
-    box.style.background = "#e8f8ed";
-    box.style.color = "#147a36";
+function showNotice(message,type){
+  const box=document.getElementById("notice");
+  box.textContent=message;
+  box.className="notice show";
+  if(type==="success"){
+    box.style.background="#e8f8ed";
+    box.style.color="#147a36";
   }else{
-    box.style.background = "#fff0f0";
-    box.style.color = "#a22";
+    box.style.background="#fff0f0";
+    box.style.color="#a22";
   }
 }
 
 function clearNotice(){
-  const box = document.getElementById("notice");
-  box.textContent = "";
-  box.className = "notice";
+  const box=document.getElementById("notice");
+  box.textContent="";
+  box.className="notice";
 }
 
-async function api(path, options = {}){
-  const token = getToken();
-
-  const headers = {
+async function api(path,options={}){
+  const token=getToken();
+  const headers={
     "Accept":"application/json",
-    ...(options.body ? {"Content-Type":"application/json"} : {}),
-    ...(token ? {"Authorization":"Bearer " + token} : {}),
-    ...(options.headers || {})
+    ...(options.body?{"Content-Type":"application/json"}:{}),
+    ...(token?{"Authorization":"Bearer "+token}:{}),
+    ...(options.headers||{})
   };
 
   let response;
-
   try{
-    response = await fetch(API_BASE + path, {
-      method:options.method || "GET",
+    response=await fetch(API_BASE+path,{
+      method:options.method||"GET",
       headers,
       credentials:"include",
       cache:"no-store",
-      body:options.body ? JSON.stringify(options.body) : undefined
+      body:options.body?JSON.stringify(options.body):undefined
     });
   }catch(error){
-    throw new Error(
-      "Cannot connect to the server. Please check your internet connection."
-    );
+    throw new Error("Cannot connect to the server. Please check your internet connection.");
   }
 
-  const raw = await response.text();
-  let data = {};
+  const raw=await response.text();
+  let data={};
+  try{data=raw?JSON.parse(raw):{}}
+  catch(error){data={message:raw||"Invalid server response"}}
 
-  try{
-    data = raw ? JSON.parse(raw) : {};
-  }catch(error){
-    data = {message:raw || "Invalid server response"};
-  }
-
-  if(response.status === 401){
+  if(response.status===401){
     goToLogin();
     throw new Error("Your session has expired. Please log in again.");
   }
-
-  if(response.status === 403){
-    throw new Error(
-      data.message ||
-      data.error ||
-      "You do not have permission to perform this action."
-    );
+  if(response.status===403){
+    throw new Error(data.message||data.error||"You do not have permission to perform this action.");
   }
-
   if(!response.ok){
-    throw new Error(
-      data.message ||
-      data.error ||
-      "Server request failed (" + response.status + ")"
-    );
+    throw new Error(data.message||data.error||"Server request failed ("+response.status+")");
   }
-
-  if(data && data.success === false){
-    throw new Error(
-      data.message ||
-      data.error ||
-      "The request was not successful."
-    );
+  if(data&&data.success===false){
+    throw new Error(data.message||data.error||"The request was not successful.");
   }
-
   return data;
 }
 
 function unwrap(data){
-  if(!data || typeof data !== "object") return {};
-
-  return data.data && typeof data.data === "object"
-    ? data.data
-    : data;
+  if(!data||typeof data!=="object")return {};
+  return data.data&&typeof data.data==="object"?data.data:data;
 }
 
-function setText(id, value){
-  const element = document.getElementById(id);
-  if(!element) return;
-
-  if(value === null || value === undefined || value === ""){
-    element.textContent = "—";
+function setText(id,value){
+  const element=document.getElementById(id);
+  if(!element)return;
+  if(value===null||value===undefined||value===""){
+    element.textContent="—";
     return;
   }
-
-  const number = Number(value);
-
-  element.textContent = Number.isFinite(number)
-    ? number.toLocaleString()
-    : String(value);
+  const number=Number(value);
+  element.textContent=Number.isFinite(number)?number.toLocaleString():String(value);
 }
 
 /* ADMIN AUTHENTICATION */
-
 async function requireAdmin(){
-
   if(!getToken()){
     goToLogin();
     return false;
   }
-
   try{
+    const response=await api("/auth/me");
+    const data=unwrap(response);
+    const user=data.user||data.profile||data;
 
-    const response = await api("/auth/me");
-    const data = unwrap(response);
-    const user = data.user || data.profile || data;
-
-    if(!user || String(user.role || "").toLowerCase() !== "admin"){
+    if(!user||String(user.role||"").toLowerCase()!=="admin"){
       alert("Admin access only.");
       clearToken();
       location.replace("login.html");
       return false;
     }
 
-    currentAdmin = user;
-    isAuthorized = true;
-
-    document.getElementById("adminName").textContent =
-      "Welcome, " + (user.username || user.full_name || "Admin");
-
+    currentAdmin=user;
+    isAuthorized=true;
+    document.getElementById("adminName").textContent=
+      "Welcome, "+(user.username||user.full_name||"Admin");
     return true;
 
   }catch(error){
-
     if(!redirecting){
-      document.getElementById("adminName").textContent =
-        "Administrator verification failed.";
-
+      document.getElementById("adminName").textContent="Administrator verification failed.";
       showNotice(error.message);
     }
-
     return false;
   }
 }
 
 /* DASHBOARD STATISTICS */
-
 async function loadDashboard(){
-
   try{
+    const response=await api("/admin/dashboard");
+    const data=unwrap(response);
+    const stats=data.dashboard||data.stats||data;
 
-    const response = await api("/admin/dashboard");
-    const data = unwrap(response);
-    const stats = data.dashboard || data.stats || data;
+    setText("totalUsers",stats.total_users);
+    setText("totalAffiliates",stats.total_affiliates);
+    setText("totalBets",stats.total_demo_bets);
 
-    setText("totalUsers", stats.total_users);
-    setText("totalAffiliates", stats.total_affiliates);
-    setText("totalBets", stats.total_demo_bets);
+    setText("totalWithdrawals",null);
+    setText("totalDeposits",null);
+    setText("totalRewards",null);
+    setText("totalRewardPoints",null);
 
-    setText("totalWithdrawals", null);
-    setText("totalDeposits", null);
-    setText("totalRewards", null);
-    setText("totalRewardPoints", null);
-
-    document.getElementById("systemInfo").textContent =
+    document.getElementById("systemInfo").textContent=
       "Connected to PostgreSQL. User, affiliate and demo bet statistics are loaded from the server. Other statistics are not provided by the current dashboard API.";
 
   }catch(error){
-
     [
-      "totalUsers",
-      "totalAffiliates",
-      "totalBets",
-      "totalWithdrawals",
-      "totalDeposits",
-      "totalRewards",
+      "totalUsers","totalAffiliates","totalBets",
+      "totalWithdrawals","totalDeposits","totalRewards",
       "totalRewardPoints"
-    ].forEach(id => setText(id, null));
+    ].forEach(id=>setText(id,null));
 
-    showNotice("Dashboard could not load: " + error.message);
+    document.getElementById("systemInfo").textContent=
+      "Dashboard data could not be loaded: "+error.message;
+    showNotice("Dashboard could not load: "+error.message);
   }
 }
 
 /* ADMIN MESSAGE */
-
 function extractMessage(response){
+  if(!response||typeof response!=="object")return null;
+  if(response.message&&typeof response.message==="object")return response.message;
 
-  if(!response || typeof response !== "object") return null;
+  const data=unwrap(response);
+  if(data.message&&typeof data.message==="object")return data.message;
 
-  if(response.message && typeof response.message === "object"){
-    return response.message;
+  if(data.messages&&Array.isArray(data.messages)){
+    return data.messages.find(item=>item&&item.active===true)||null;
   }
-
-  const data = unwrap(response);
-
-  if(data.message && typeof data.message === "object"){
-    return data.message;
-  }
-
-  if(data.messages && Array.isArray(data.messages)){
-    return data.messages.find(
-      item => item && item.active === true
-    ) || null;
-  }
-
   if(Array.isArray(data)){
-    return data.find(
-      item => item && item.active === true
-    ) || null;
+    return data.find(item=>item&&item.active===true)||null;
   }
-
-  if(typeof data.text === "string"){
-    return data;
-  }
-
+  if(typeof data.text==="string")return data;
   return null;
 }
 
 async function loadAdminMessage(){
-
-  const status = document.getElementById("messageStatus");
-
-  status.className = "live-status";
-  status.textContent = "Loading message status...";
+  const status=document.getElementById("messageStatus");
+  status.className="live-status";
+  status.textContent="Loading message status...";
 
   try{
+    const response=await api("/admin/messages");
+    activeMessage=extractMessage(response);
 
-    const response = await api("/admin/messages");
-    activeMessage = extractMessage(response);
-
-    document.getElementById("adminMessage").value =
-      activeMessage ? (activeMessage.text || "") : "";
+    document.getElementById("adminMessage").value=
+      activeMessage?(activeMessage.text||""):"";
 
     updateMessagePreview();
 
-    if(activeMessage && activeMessage.active === true){
-
-      status.className = "live-status active";
-      status.textContent =
-        "🟢 An Admin Message is currently published.";
-
+    if(activeMessage&&activeMessage.active===true){
+      status.className="live-status active";
+      status.textContent="🟢 An Admin Message is currently published.";
     }else{
-
-      status.className = "live-status inactive";
-      status.textContent = "🔴 No active Admin Message.";
+      status.className="live-status inactive";
+      status.textContent="🔴 No active Admin Message.";
     }
-
   }catch(error){
-
-    activeMessage = null;
-    status.className = "live-status inactive";
-
-    status.textContent =
-      "Could not load message status: " + error.message;
+    activeMessage=null;
+    status.className="live-status inactive";
+    status.textContent="Could not load message status: "+error.message;
   }
 }
 
 function openMessageSettings(){
-
-  if(!isAuthorized) return;
-
+  if(!isAuthorized)return;
   document.getElementById("messageModal").classList.add("show");
-
   loadAdminMessage();
 }
-
 function closeMessageSettings(){
   document.getElementById("messageModal").classList.remove("show");
 }
-
 function updateMessagePreview(){
-
-  const value =
-    document.getElementById("adminMessage").value.trim();
-
-  document.getElementById("messagePreview").textContent =
-    value || "Your message will appear here.";
+  const value=document.getElementById("adminMessage").value.trim();
+  document.getElementById("messagePreview").textContent=
+    value||"Your message will appear here.";
 }
 
-document.getElementById("adminMessage").addEventListener(
-  "input",
-  updateMessagePreview
-);
+document.getElementById("adminMessage").addEventListener("input",updateMessagePreview);
 
 async function publishAdminMessage(){
+  if(!isAuthorized)return;
+  const text=document.getElementById("adminMessage").value.trim();
 
-  if(!isAuthorized) return;
+  if(!text){alert("Please write a message first.");return}
+  if(text.length>300){alert("Message cannot exceed 300 characters.");return}
 
-  const text =
-    document.getElementById("adminMessage").value.trim();
-
-  if(!text){
-    alert("Please write a message first.");
-    return;
-  }
-
-  if(text.length > 300){
-    alert("Message cannot exceed 300 characters.");
-    return;
-  }
-
-  const button =
-    document.getElementById("messageSaveButton");
-
-  button.disabled = true;
+  const button=document.getElementById("messageSaveButton");
+  button.disabled=true;
 
   try{
-
-    await api("/admin/messages", {
-      method:"POST",
-      body:{text}
-    });
-
+    await api("/admin/messages",{method:"POST",body:{text}});
     await loadAdminMessage();
-
     alert("Admin Message published successfully.");
-
     closeMessageSettings();
-
   }catch(error){
-
-    alert("Message could not be published: " + error.message);
-
+    alert("Message could not be published: "+error.message);
   }finally{
-
-    button.disabled = false;
+    button.disabled=false;
   }
 }
 
 async function disableAdminMessage(){
+  if(!isAuthorized)return;
+  if(!confirm("Disable the Admin Message on the Home Page?"))return;
 
-  if(!isAuthorized) return;
-
-  if(!confirm("Disable the Admin Message on the Home Page?")){
-    return;
-  }
-
-  const button =
-    document.getElementById("messageDisableButton");
-
-  button.disabled = true;
+  const button=document.getElementById("messageDisableButton");
+  button.disabled=true;
 
   try{
-
-    await api("/admin/messages/disable", {
-      method:"POST"
-    });
-
+    await api("/admin/messages/disable",{method:"POST"});
     await loadAdminMessage();
-
     alert("Admin Message has been disabled.");
-
     closeMessageSettings();
-
   }catch(error){
-
-    alert("Message could not be disabled: " + error.message);
-
+    alert("Message could not be disabled: "+error.message);
   }finally{
-
-    button.disabled = false;
+    button.disabled=false;
   }
 }
 
 /* LIVE EVENT */
-
 function getVideoInfo(url){
-
   try{
+    const parsed=new URL(url);
+    if(parsed.protocol!=="https:")return null;
+    const host=parsed.hostname.toLowerCase();
 
-    const parsed = new URL(url);
-
-    if(parsed.protocol !== "https:") return null;
-
-    const host = parsed.hostname.toLowerCase();
-
-    if([
-      "youtube.com",
-      "www.youtube.com",
-      "m.youtube.com",
-      "youtu.be",
-      "www.youtu.be"
-    ].includes(host)){
-
-      let videoId = "";
-
-      if(host === "youtu.be" || host === "www.youtu.be"){
-
-        videoId =
-          parsed.pathname.split("/").filter(Boolean)[0] || "";
-
+    if(["youtube.com","www.youtube.com","m.youtube.com","youtu.be","www.youtu.be"].includes(host)){
+      let videoId="";
+      if(host==="youtu.be"||host==="www.youtu.be"){
+        videoId=parsed.pathname.split("/").filter(Boolean)[0]||"";
       }else if(parsed.searchParams.get("v")){
-
-        videoId = parsed.searchParams.get("v");
-
+        videoId=parsed.searchParams.get("v");
       }else{
-
-        const parts =
-          parsed.pathname.split("/").filter(Boolean);
-
-        if(
-          parts.length >= 2 &&
-          ["live","embed","shorts"].includes(parts[0])
-        ){
-          videoId = parts[1];
+        const parts=parsed.pathname.split("/").filter(Boolean);
+        if(parts.length>=2&&["live","embed","shorts"].includes(parts[0])){
+          videoId=parts[1];
         }
       }
-
-      if(!/^[a-zA-Z0-9_-]{6,20}$/.test(videoId)){
-        return null;
-      }
-
-      return {
-        platform:"youtube",
-        url:parsed.href
-      };
+      if(!/^[a-zA-Z0-9_-]{6,20}$/.test(videoId))return null;
+      return {platform:"youtube",url:parsed.href};
     }
 
-    if([
-      "facebook.com",
-      "www.facebook.com",
-      "m.facebook.com",
-      "fb.watch"
-    ].includes(host)){
-
-      return {
-        platform:"facebook",
-        url:parsed.href
-      };
+    if(["facebook.com","www.facebook.com","m.facebook.com","fb.watch"].includes(host)){
+      return {platform:"facebook",url:parsed.href};
     }
-
     return null;
-
-  }catch(error){
-
-    return null;
-  }
+  }catch(error){return null}
 }
 
 async function loadLiveEvent(){
-
-  const status = document.getElementById("liveStatus");
-
-  status.className = "live-status";
-  status.textContent = "Loading Live Event status...";
+  const status=document.getElementById("liveStatus");
+  status.className="live-status";
+  status.textContent="Loading Live Event status...";
 
   try{
+    const response=await api("/admin/live-event");
+    const data=unwrap(response);
+    activeLiveEvent=data.event||data.liveEvent||data.live_event||null;
 
-    const response = await api("/admin/live-event");
-    const data = unwrap(response);
-
-    activeLiveEvent =
-      data.event ||
-      data.liveEvent ||
-      data.live_event ||
-      null;
-
-    document.getElementById("liveTitle").value =
-      activeLiveEvent && activeLiveEvent.title
-        ? activeLiveEvent.title
-        : "";
-
-    document.getElementById("liveUrl").value =
-      activeLiveEvent && activeLiveEvent.url
-        ? activeLiveEvent.url
-        : "";
+    document.getElementById("liveTitle").value=
+      activeLiveEvent&&activeLiveEvent.title?activeLiveEvent.title:"";
+    document.getElementById("liveUrl").value=
+      activeLiveEvent&&activeLiveEvent.url?activeLiveEvent.url:"";
 
     updateLiveStatus();
-
   }catch(error){
-
-    activeLiveEvent = null;
-    status.className = "live-status inactive";
-
-    status.textContent =
-      "Could not load Live Event: " + error.message;
+    activeLiveEvent=null;
+    status.className="live-status inactive";
+    status.textContent="Could not load Live Event: "+error.message;
   }
 }
 
 function openLiveSettings(){
-
-  if(!isAuthorized) return;
-
+  if(!isAuthorized)return;
   document.getElementById("liveModal").classList.add("show");
-
   loadLiveEvent();
 }
-
 function closeLiveSettings(){
   document.getElementById("liveModal").classList.remove("show");
 }
 
 function updateLiveStatus(){
+  const status=document.getElementById("liveStatus");
+  status.className="live-status";
 
-  const status = document.getElementById("liveStatus");
-
-  status.className = "live-status";
-
-  if(activeLiveEvent && activeLiveEvent.active === true){
-
-    const platform =
-      activeLiveEvent.platform === "youtube"
-        ? "YouTube"
-        : "Facebook";
-
+  if(activeLiveEvent&&activeLiveEvent.active===true){
+    const platform=activeLiveEvent.platform==="youtube"?"YouTube":"Facebook";
     status.classList.add("active");
-
-    status.textContent =
-      "🟢 Live Event is active. Platform: " +
-      platform +
-      " | Title: " +
-      (activeLiveEvent.title || "GLO 365 Live");
-
+    status.textContent=
+      "🟢 Live Event is active. Platform: "+platform+
+      " | Title: "+(activeLiveEvent.title||"GLO 365 Live");
   }else{
-
     status.classList.add("inactive");
-
-    status.textContent = "🔴 No active Live Event.";
+    status.textContent="🔴 No active Live Event.";
   }
 }
 
 async function saveLiveEvent(){
+  if(!isAuthorized)return;
 
-  if(!isAuthorized) return;
+  const title=document.getElementById("liveTitle").value.trim()||"GLO 365 Official Live";
+  const url=document.getElementById("liveUrl").value.trim();
 
-  const title =
-    document.getElementById("liveTitle").value.trim() ||
-    "GLO 365 Official Live";
+  if(!url){alert("Please enter a YouTube or Facebook link.");return}
 
-  const url =
-    document.getElementById("liveUrl").value.trim();
-
-  if(!url){
-    alert("Please enter a YouTube or Facebook link.");
-    return;
-  }
-
-  const video = getVideoInfo(url);
-
+  const video=getVideoInfo(url);
   if(!video){
-    alert(
-      "Please enter a valid HTTPS YouTube or Facebook video link."
-    );
+    alert("Please enter a valid HTTPS YouTube or Facebook video link.");
     return;
   }
 
-  const button =
-    document.getElementById("liveSaveButton");
-
-  button.disabled = true;
+  const button=document.getElementById("liveSaveButton");
+  button.disabled=true;
 
   try{
-
-    await api("/admin/live-event", {
+    await api("/admin/live-event",{
       method:"POST",
-      body:{
-        title,
-        url:video.url,
-        platform:video.platform
-      }
+      body:{title,url:video.url,platform:video.platform}
     });
-
     await loadLiveEvent();
-
     alert("Live Event saved successfully.");
-
     closeLiveSettings();
-
   }catch(error){
-
-    alert("Live Event could not be saved: " + error.message);
-
+    alert("Live Event could not be saved: "+error.message);
   }finally{
-
-    button.disabled = false;
+    button.disabled=false;
   }
 }
 
 async function disableLiveEvent(){
+  if(!isAuthorized)return;
+  if(!confirm("Are you sure you want to disable the Live Event?"))return;
 
-  if(!isAuthorized) return;
-
-  if(!confirm("Are you sure you want to disable the Live Event?")){
-    return;
-  }
-
-  const button =
-    document.getElementById("liveDisableButton");
-
-  button.disabled = true;
+  const button=document.getElementById("liveDisableButton");
+  button.disabled=true;
 
   try{
-
-    await api("/admin/live-event/disable", {
-      method:"POST"
-    });
-
+    await api("/admin/live-event/disable",{method:"POST"});
     await loadLiveEvent();
-
     alert("Live Event has been disabled.");
-
     closeLiveSettings();
-
   }catch(error){
-
-    alert("Live Event could not be disabled: " + error.message);
-
+    alert("Live Event could not be disabled: "+error.message);
   }finally{
-
-    button.disabled = false;
+    button.disabled=false;
   }
 }
 
 /* REFRESH */
-
 async function refreshAll(){
-
-  if(!isAuthorized) return;
-
+  if(!isAuthorized)return;
   clearNotice();
-
-  await loadDashboard();
+  const button=document.querySelector(".system-card .primary");
+  if(button){
+    button.disabled=true;
+    button.textContent="⏳ Loading...";
+  }
+  try{
+    await loadDashboard();
+  }finally{
+    if(button){
+      button.disabled=false;
+      button.textContent="↻ Refresh Dashboard";
+    }
+  }
 }
 
 /* LOGOUT */
-
 async function logout(){
-
-  const button =
-    document.getElementById("logoutButton");
-
-  button.disabled = true;
+  const button=document.getElementById("logoutButton");
+  button.disabled=true;
+  button.textContent="Logging out...";
 
   try{
-
-    await api("/auth/logout", {
-      method:"POST"
-    });
-
-  }catch(error){
-
-    /* Local session is still cleared below. */
-  }
+    await api("/auth/logout",{method:"POST"});
+  }catch(error){}
 
   clearToken();
-
   location.replace("login.html");
 }
 
-/* CLOSE MODALS WHEN CLICKING OUTSIDE */
+/* MODAL OUTSIDE CLICK */
+document.getElementById("messageModal").addEventListener("click",function(event){
+  if(event.target===this)closeMessageSettings();
+});
+document.getElementById("liveModal").addEventListener("click",function(event){
+  if(event.target===this)closeLiveSettings();
+});
 
-document.getElementById("messageModal").addEventListener(
-  "click",
-  function(event){
-    if(event.target === this){
-      closeMessageSettings();
-    }
+/* ESC KEY */
+document.addEventListener("keydown",function(event){
+  if(event.key==="Escape"){
+    closeMessageSettings();
+    closeLiveSettings();
   }
-);
-
-document.getElementById("liveModal").addEventListener(
-  "click",
-  function(event){
-    if(event.target === this){
-      closeLiveSettings();
-    }
-  }
-);
+});
 
 /* INITIALIZE */
-
 (async function init(){
-
-  const allowed = await requireAdmin();
-
-  if(!allowed) return;
-
+  const allowed=await requireAdmin();
+  if(!allowed)return;
   await refreshAll();
-
 })();
 </script>
-
 </body>
 </html>
