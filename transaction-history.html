@@ -8,14 +8,17 @@
 <title>GLO 365 - Transaction History</title>
 
 <style>
-*{box-sizing:border-box;margin:0;padding:0}
+*{
+ box-sizing:border-box;
+ margin:0;
+ padding:0;
+}
 
 body{
  font-family:Arial,sans-serif;
  background:#eff6fc;
  color:#263b4d;
  min-height:100vh;
- padding-bottom:85px;
 }
 
 .app{
@@ -23,15 +26,19 @@ body{
  min-height:100vh;
  margin:auto;
  background:#f1f7fd;
+ padding-bottom:25px;
 }
+
+/* HEADER */
 
 header{
  background:linear-gradient(120deg,#1687d5,#2196e8);
  color:#fff;
- padding:20px 17px;
+ padding:19px 17px;
  display:flex;
  align-items:center;
  gap:15px;
+ box-shadow:0 3px 12px #1687d526;
 }
 
 .back{
@@ -39,19 +46,26 @@ header{
  text-decoration:none;
  font-size:30px;
  line-height:1;
+ width:28px;
 }
 
 .header-title{
- font-size:22px;
+ font-size:21px;
  font-weight:900;
 }
 
-.page{padding:16px 14px}
+/* PAGE */
+
+.page{
+ padding:16px 14px;
+}
+
+/* WALLET CARD */
 
 .wallet-card{
  background:linear-gradient(130deg,#1687d5,#0879c7);
  color:#fff;
- padding:19px;
+ padding:20px;
  border-radius:17px;
  box-shadow:0 7px 20px #1687d52b;
  margin-bottom:17px;
@@ -76,7 +90,42 @@ header{
  font-size:11px;
  margin-top:7px;
  color:#e1f3ff;
+ line-height:1.6;
 }
+
+/* SUMMARY */
+
+.summary{
+ display:grid;
+ grid-template-columns:repeat(3,1fr);
+ gap:9px;
+ margin-bottom:19px;
+}
+
+.summary-card{
+ background:#fff;
+ border:1px solid #e0edf7;
+ border-radius:12px;
+ padding:13px 7px;
+ text-align:center;
+ min-width:0;
+}
+
+.summary-card span{
+ display:block;
+ font-size:10px;
+ color:#8193a4;
+}
+
+.summary-card strong{
+ display:block;
+ margin-top:7px;
+ font-size:15px;
+ color:#294760;
+ overflow-wrap:anywhere;
+}
+
+/* SECTION TITLE */
 
 .section-title{
  font-size:17px;
@@ -85,12 +134,19 @@ header{
  color:#30495d;
 }
 
+/* FILTER BUTTONS */
+
 .filters{
  display:flex;
  gap:8px;
  overflow-x:auto;
- padding-bottom:5px;
+ padding-bottom:7px;
  margin-bottom:12px;
+ scrollbar-width:none;
+}
+
+.filters::-webkit-scrollbar{
+ display:none;
 }
 
 .filter{
@@ -111,34 +167,7 @@ header{
  color:#fff;
 }
 
-.summary{
- display:grid;
- grid-template-columns:repeat(3,1fr);
- gap:9px;
- margin-bottom:17px;
-}
-
-.summary-card{
- background:#fff;
- border:1px solid #e0edf7;
- border-radius:12px;
- padding:13px 7px;
- text-align:center;
-}
-
-.summary-card span{
- display:block;
- font-size:10px;
- color:#8193a4;
-}
-
-.summary-card strong{
- display:block;
- margin-top:7px;
- font-size:15px;
- color:#294760;
- overflow-wrap:anywhere;
-}
+/* TRANSACTION CARD */
 
 .transaction-card{
  background:#fff;
@@ -185,7 +214,10 @@ header{
  font-size:10px;
  color:#91a0ad;
  margin-top:5px;
+ line-height:1.5;
 }
+
+/* STATUS */
 
 .status{
  padding:6px 9px;
@@ -212,6 +244,8 @@ header{
  color:#a87613;
 }
 
+/* AMOUNT */
+
 .transaction-bottom{
  border-top:1px solid #f0f3f6;
  margin-top:12px;
@@ -236,8 +270,13 @@ header{
  white-space:nowrap;
 }
 
-.transaction-amount.credit{color:#15935c}
-.transaction-amount.debit{color:#dc5262}
+.transaction-amount.credit{
+ color:#15935c;
+}
+
+.transaction-amount.debit{
+ color:#dc5262;
+}
 
 .reference{
  margin-top:8px;
@@ -245,6 +284,8 @@ header{
  color:#9aa8b4;
  overflow-wrap:anywhere;
 }
+
+/* EMPTY STATE */
 
 .empty{
  background:#fff;
@@ -261,6 +302,8 @@ header{
  font-size:38px;
  margin-bottom:10px;
 }
+
+/* LOADING */
 
 .loading{
  text-align:center;
@@ -280,8 +323,12 @@ header{
 }
 
 @keyframes spin{
- to{transform:rotate(360deg)}
+ to{
+  transform:rotate(360deg);
+ }
 }
+
+/* ERROR */
 
 .error{
  background:#fff0f1;
@@ -294,55 +341,32 @@ header{
  text-align:center;
 }
 
+/* REFRESH */
+
 .refresh{
  display:block;
- margin:15px auto;
- border:0;
+ margin:18px auto;
+ border:1px solid #cce6f8;
  background:#e1f2ff;
  color:#167fc4;
- border-radius:20px;
- padding:10px 18px;
+ border-radius:22px;
+ padding:11px 20px;
+ font-size:12px;
  font-weight:bold;
  cursor:pointer;
 }
 
-.bottom-nav{
- position:fixed;
- bottom:0;
- left:50%;
- transform:translateX(-50%);
- width:100%;
- max-width:520px;
- height:75px;
- background:#fff;
- border-top:1px solid #dce9f3;
- display:flex;
- justify-content:space-around;
- align-items:center;
- z-index:20;
+.refresh:disabled{
+ opacity:.5;
+ cursor:not-allowed;
 }
 
-.nav-item{
- text-decoration:none;
- color:#8495a4;
- text-align:center;
- font-size:10px;
- font-weight:bold;
- flex:1;
-}
-
-.nav-item .emoji{
- display:block;
- font-size:23px;
- margin-bottom:5px;
-}
-
-.nav-item.active{color:#1687d5}
+/* TOAST */
 
 .toast{
  display:none;
  position:fixed;
- bottom:90px;
+ bottom:25px;
  left:50%;
  transform:translateX(-50%);
  background:#173d5b;
@@ -353,13 +377,39 @@ header{
  font-size:12px;
  max-width:90%;
  text-align:center;
+ box-shadow:0 5px 20px #0002;
 }
 
+/* MOBILE */
+
 @media(max-width:360px){
- .wallet-balance{font-size:27px}
- .transaction-card{padding:11px}
- .transaction-icon{width:37px;height:37px;min-width:37px}
- .transaction-amount{font-size:14px}
+
+ .wallet-balance{
+  font-size:27px;
+ }
+
+ .transaction-card{
+  padding:11px;
+ }
+
+ .transaction-icon{
+  width:37px;
+  height:37px;
+  min-width:37px;
+ }
+
+ .transaction-amount{
+  font-size:14px;
+ }
+
+ .summary-card strong{
+  font-size:13px;
+ }
+
+ .header-title{
+  font-size:19px;
+ }
+
 }
 </style>
 </head>
@@ -368,9 +418,18 @@ header{
 
 <div class="app">
 
+<!-- HEADER -->
+
 <header>
-<a class="back" href="profile.html">‹</a>
-<div class="header-title">Transaction History</div>
+
+<a class="back" href="profile.html" aria-label="Back">
+‹
+</a>
+
+<div class="header-title">
+Transaction History
+</div>
+
 </header>
 
 <main class="page">
@@ -378,7 +437,10 @@ header{
 <!-- WALLET BALANCE -->
 
 <section class="wallet-card">
-<div class="wallet-label">Current Wallet Balance</div>
+
+<div class="wallet-label">
+Current Wallet Balance
+</div>
 
 <div class="wallet-balance">
 <span id="walletBalance">0.00</span>
@@ -388,6 +450,7 @@ header{
 <div class="wallet-note">
 Your complete wallet transaction records.
 </div>
+
 </section>
 
 <!-- SUMMARY -->
@@ -413,7 +476,9 @@ Your complete wallet transaction records.
 
 <!-- FILTER -->
 
-<div class="section-title">Transaction Records</div>
+<div class="section-title">
+Transaction Records
+</div>
 
 <div class="filters" id="filters">
 
@@ -454,6 +519,8 @@ Loading transactions...
 
 </div>
 
+<!-- REFRESH -->
+
 <button class="refresh" id="refreshBtn">
 ↻ Refresh Transactions
 </button>
@@ -462,36 +529,14 @@ Loading transactions...
 
 </div>
 
-<!-- BOTTOM NAVIGATION -->
-
-<nav class="bottom-nav">
-
-<a class="nav-item" href="home.html">
-<span class="emoji">🏠</span>
-Home
-</a>
-
-<a class="nav-item" href="my-bets.html">
-<span class="emoji">🎯</span>
-My Bets
-</a>
-
-<a class="nav-item" href="results.html">
-<span class="emoji">🏆</span>
-Results
-</a>
-
-<a class="nav-item active" href="profile.html">
-<span class="emoji">👤</span>
-Profile
-</a>
-
-</nav>
+<!-- TOAST -->
 
 <div class="toast" id="toast"></div>
 
 <script>
 "use strict";
+
+/* SERVER CONFIGURATION */
 
 const API_BASE_URL="https://glo365.onrender.com/api";
 const TOKEN_KEY="glo365_token";
@@ -500,9 +545,13 @@ let transactions=[];
 let currentFilter="all";
 let toastTimer=null;
 
+/* AUTHENTICATION */
+
 function getToken(){
  return sessionStorage.getItem(TOKEN_KEY)||"";
 }
+
+/* TOAST */
 
 function showToast(message){
 
@@ -549,13 +598,16 @@ async function api(path){
  }
 
  if(!response.ok||data.success===false){
-  throw new Error(data.message||"Unable to load transactions.");
+
+  throw new Error(
+   data.message||"Unable to load transactions."
+  );
  }
 
  return data;
 }
 
-/* FORMAT DATE */
+/* DATE FORMAT */
 
 function formatDate(value){
 
@@ -580,15 +632,24 @@ function getType(type){
 
  const value=String(type||"other").toLowerCase();
 
- if(value.includes("deposit")||value.includes("credit")){
+ if(
+  value.includes("deposit")||
+  value.includes("credit")
+ ){
   return "deposit";
  }
 
- if(value.includes("withdraw")||value.includes("payout")){
+ if(
+  value.includes("withdraw")||
+  value.includes("payout")
+ ){
   return "withdraw";
  }
 
- if(value.includes("bonus")||value.includes("reward")){
+ if(
+  value.includes("bonus")||
+  value.includes("reward")
+ ){
   return "bonus";
  }
 
@@ -599,7 +660,7 @@ function getType(type){
  return "other";
 }
 
-/* TRANSACTION ICON */
+/* ICON */
 
 function getIcon(type){
 
@@ -614,7 +675,7 @@ function getIcon(type){
  return icons[type]||"💳";
 }
 
-/* TRANSACTION TITLE */
+/* TITLE */
 
 function getTitle(transaction,type){
 
@@ -643,45 +704,64 @@ function getStatus(transaction){
   "completed"
  ).toLowerCase();
 
- if(
-  ["approved","success","successful","completed","complete"].includes(status)
- ){
-  return {
+ if([
+  "approved",
+  "success",
+  "successful",
+  "completed",
+  "complete"
+ ].includes(status)){
+
+  return{
    text:"SUCCESS",
    className:"success"
   };
  }
 
- if(
-  ["rejected","failed","cancelled","canceled"].includes(status)
- ){
-  return {
+ if([
+  "rejected",
+  "failed",
+  "cancelled",
+  "canceled"
+ ].includes(status)){
+
+  return{
    text:"FAILED",
    className:"failed"
   };
  }
 
- return {
+ return{
   text:"PENDING",
   className:"pending"
  };
 }
 
-/* FILTER */
+/* CREDIT / DEBIT DETECTION */
 
-function filterTransactions(){
+function isCredit(transaction){
 
- const filtered=transactions.filter(t=>{
+ const type=String(transaction.type||"").toLowerCase();
 
-  const type=getType(t.type);
+ if(
+  type.includes("credit")||
+  type.includes("deposit")||
+  type.includes("bonus")||
+  type.includes("reward")
+ ){
+  return true;
+ }
 
-  return currentFilter==="all"||
-         type===currentFilter||
-         (currentFilter==="other"&&type==="other");
+ if(
+  type.includes("debit")||
+  type.includes("withdraw")||
+  type.includes("bet")||
+  type.includes("purchase")
+ ){
+  return false;
+ }
 
- });
-
- renderTransactions(filtered);
+ return Number(transaction.amount)>=0;
 }
 
 /* SUMMARY */
@@ -694,12 +774,8 @@ function renderSummary(){
  transactions.forEach(t=>{
 
   const amount=Math.abs(Number(t.amount)||0);
-  const type=getType(t.type);
 
-  if(
-   ["deposit","bonus"].includes(type)||
-   String(t.type).toLowerCase().includes("credit")
-  ){
+  if(isCredit(t)){
    credit+=amount;
   }else{
    debit+=amount;
@@ -715,6 +791,22 @@ function renderSummary(){
 
  document.getElementById("totalDebit").textContent=
   debit.toFixed(2);
+}
+
+/* FILTER */
+
+function filterTransactions(){
+
+ const filtered=transactions.filter(t=>{
+
+  const type=getType(t.type);
+
+  return currentFilter==="all"||
+         type===currentFilter;
+
+ });
+
+ renderTransactions(filtered);
 }
 
 /* RENDER TRANSACTIONS */
@@ -752,10 +844,13 @@ function renderTransactions(list){
 
   const type=getType(t.type);
   const amount=Number(t.amount)||0;
+  const credit=isCredit(t);
   const status=getStatus(t);
 
   const card=document.createElement("div");
   card.className="transaction-card";
+
+  /* TOP */
 
   const top=document.createElement("div");
   top.className="transaction-top";
@@ -775,7 +870,9 @@ function renderTransactions(list){
 
   const date=document.createElement("div");
   date.className="transaction-date";
-  date.textContent=formatDate(t.created_at);
+  date.textContent=formatDate(
+   t.created_at||t.createdAt||t.date
+  );
 
   titleWrap.append(title,date);
   left.append(icon,titleWrap);
@@ -785,6 +882,8 @@ function renderTransactions(list){
   badge.textContent=status.text;
 
   top.append(left,badge);
+
+  /* BOTTOM */
 
   const bottom=document.createElement("div");
   bottom.className="transaction-bottom";
@@ -796,16 +895,11 @@ function renderTransactions(list){
 
   const amountEl=document.createElement("div");
 
-  const isCredit=
-   type==="deposit"||
-   type==="bonus"||
-   String(t.type||"").toLowerCase().includes("credit");
-
   amountEl.className=
-   "transaction-amount "+(isCredit?"credit":"debit");
+   "transaction-amount "+(credit?"credit":"debit");
 
   amountEl.textContent=
-   (isCredit?"+":"-")+
+   (credit?"+":"-")+
    Math.abs(amount).toFixed(2)+
    " "+(t.currency||"Points");
 
@@ -813,13 +907,22 @@ function renderTransactions(list){
 
   card.append(top,bottom);
 
-  if(t.reference){
+  /* REFERENCE */
+
+  const referenceValue=
+   t.reference||
+   t.reference_id||
+   t.transaction_id||
+   t.transactionId||
+   "";
+
+  if(referenceValue){
 
    const reference=document.createElement("div");
 
    reference.className="reference";
 
-   reference.textContent="Reference: "+t.reference;
+   reference.textContent="Reference: "+referenceValue;
 
    card.append(reference);
   }
@@ -829,11 +932,14 @@ function renderTransactions(list){
  });
 }
 
-/* LOAD WALLET AND TRANSACTIONS */
+/* LOAD DATA */
 
 async function loadTransactions(){
 
  const container=document.getElementById("transactionList");
+ const refreshBtn=document.getElementById("refreshBtn");
+
+ refreshBtn.disabled=true;
 
  container.innerHTML=
   '<div class="loading"><div class="spinner"></div>Loading transactions...</div>';
@@ -861,6 +967,7 @@ async function loadTransactions(){
    :[];
 
   renderSummary();
+
   filterTransactions();
 
  }catch(error){
@@ -868,6 +975,7 @@ async function loadTransactions(){
   container.replaceChildren();
 
   const errorBox=document.createElement("div");
+
   errorBox.className="error";
   errorBox.textContent=error.message;
 
@@ -880,10 +988,17 @@ async function loadTransactions(){
    },1500);
 
   }else{
+
    showToast("Unable to load transaction history.");
+
   }
 
+ }finally{
+
+  refreshBtn.disabled=false;
+
  }
+
 }
 
 /* FILTER EVENTS */
@@ -899,7 +1014,9 @@ document.getElementById("filters").addEventListener(
   currentFilter=button.dataset.filter;
 
   document.querySelectorAll(".filter").forEach(el=>{
+
    el.classList.toggle("active",el===button);
+
   });
 
   filterTransactions();
