@@ -6,6 +6,7 @@
 <meta name="viewport" content="width=device-width,initial-scale=1">
 <meta name="theme-color" content="#17112f">
 <title>GLO 365 - Deposit</title>
+
 <style>
 *{box-sizing:border-box;margin:0;padding:0}
 body{font-family:Arial,sans-serif;background:#f5f3f3;color:#292929;min-height:100vh}
@@ -19,7 +20,7 @@ header{height:72px;background:linear-gradient(110deg,#100a2c,#211638);color:#fff
 .methods{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px}
 .method{height:88px;border:1px solid #ddd;border-radius:11px;background:#fff;display:flex;align-items:center;justify-content:flex-start;gap:9px;padding:9px;cursor:pointer;position:relative;min-width:0}
 .method.active{border:2px solid #e54b67;background:#fff0f2}
-.method img{width:51px;height:51px;object-fit:contain;flex-shrink:0}
+.method img{width:55px;height:55px;object-fit:contain;flex-shrink:0}
 .method-name{font-size:12px;font-weight:800;text-align:left;overflow-wrap:anywhere}
 .check{display:none;position:absolute;right:7px;top:5px;color:#e63855;font-weight:bold}
 .method.active .check{display:block}
@@ -37,28 +38,37 @@ input:focus{border-color:#2196e8;box-shadow:0 0 0 3px #2196e81a}
 .btn:disabled{opacity:.5}
 .toast{display:none;position:fixed;bottom:25px;left:50%;transform:translateX(-50%);background:#211638;color:#fff;padding:13px 18px;border-radius:10px;font-size:13px;z-index:200;max-width:90%;text-align:center}
 .splash{position:fixed;inset:0;background:linear-gradient(140deg,#100a2c,#211638);z-index:100;display:flex;align-items:center;justify-content:center;flex-direction:column;color:#fff}
-.splash img{width:110px;height:110px;object-fit:contain;background:#fff;border-radius:25px;padding:13px;margin-bottom:22px}
+.splash img{width:115px;height:115px;object-fit:contain;background:#fff;border-radius:22px;padding:10px;margin-bottom:22px}
 .splash h2{font-size:22px}
 .splash p{font-size:13px;color:#ddd;margin-top:10px}
 .loader{width:42px;height:42px;border:4px solid #ffffff40;border-top-color:#fff;border-radius:50%;animation:spin .8s linear infinite;margin-top:25px}
 @keyframes spin{to{transform:rotate(360deg)}}
 .hidden{display:none!important}
-@media(max-width:360px){.method{gap:6px;padding:7px}.method img{width:42px;height:42px}.method-name{font-size:11px}}
+@media(max-width:360px){
+ .method{gap:6px;padding:7px}
+ .method img{width:45px;height:45px}
+ .method-name{font-size:11px}
+}
 </style>
 </head>
+
 <body>
 
 <div class="app">
+
 <header>
 <a class="back" href="profile.html">‹</a>
 Deposit
 </header>
 
 <div class="page">
+
 <section class="card">
 <div class="title">Deposit Method</div>
 <div class="methods" id="methods">
-<div style="grid-column:1/-1;text-align:center;padding:20px;color:#888">Loading payment methods...</div>
+<div style="grid-column:1/-1;text-align:center;padding:20px;color:#888">
+Loading payment methods...
+</div>
 </div>
 </section>
 
@@ -66,10 +76,12 @@ Deposit
 <div class="title">Deposit Amount</div>
 <div class="field">
 <label for="amount">৳ Deposit Amount</label>
-<input id="amount" type="number" min="0.01" step="0.01" placeholder="Please enter amount" inputmode="decimal">
+<input id="amount" type="number" min="0.01" step="0.01"
+placeholder="Please enter amount" inputmode="decimal">
 <div class="hint" id="limitText">Please enter your deposit amount.</div>
 </div>
 </section>
+
 </div>
 
 <div class="bottom">
@@ -80,6 +92,7 @@ Deposit
 </div>
 <button class="btn" id="continueBtn" disabled>Confirm Deposit</button>
 </div>
+
 </div>
 
 <div class="splash hidden" id="splash">
@@ -97,37 +110,42 @@ Deposit
 const API_BASE_URL="https://glo365.onrender.com/api";
 const TOKEN_KEY="glo365_token";
 
+/*
+================================================
+ORIGINAL PAYMENT LOGOS
+চারটি লোগো আপনার আপলোড করা ছবি থেকে তৈরি।
+এগুলো সরাসরি এই HTML ফাইলের মধ্যেই সংরক্ষিত।
+================================================
+*/
+
+const LOGOS={
+
+ binance:
+ "data:image/webp;base64,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",
+
+ redotpay:
+ "data:image/webp;base64,UklGRmIDAABXRUJQVlA4IFYDAADQEwCdASq0AFwAPqlUpE4mJKOiIrVZOMAVCWdu4XSWyXi5ehL0n3lAZoB2Ed6/iUSjvo+9pNTzE0kdJ3NB8j31T7BH61CUBrhW+TWsbrWN1rGrEHzR8EiDzhhiSrkoyV1qoobb6/9mzN2ajNKDP3ADkkZtYBl0VPYvOPVD8aFaac/yfLkCnwVzrwWj8UbL8G5wjmYuh6MHS2XWst7fkTCt8mtY3WsNAAD+/0X4CmWDmGobf5d3L5jonYmtDZA9ZA84yWgK3GEk/DGiHrV5ZprNrfArIatGD3xLST93FD/7vp1lQz93/zrx+zyY5ZcNQ3frastNKG6ziL0Ti3xObTVzg18AuFmKw/CHFN/WPkDBeqkGLbfQDNMP39SCN7fsNHg8EJIrpR8fFnsT/iY8+YlG9pLqO/kJJn+2+6arQnwUGUeEmQKKVKfJ3Lsw5Djcens0fFFb/Mtv6rmmmIdN7SJRnVZNrH08qd8CIO/bEn77nXL422kly2nFl37Y+1X6G3jaoVHFOmlYN56xObRKp7sq25V/ykYBxl79mv3XTpAAfFSW/lB2DK11nHtM1QF3MkcRpAAbuF+qhrv3xBpqs/pBrGmLqy3zE7RQgapZNVFhKZ4NmP+hkDTCpoY4xQtfv5cLow64hrr49rTDWp6CO6MyiR8Ym06o7VAd3vLdPD5+Ry0fp1vTPY6hopkso7w0RWMJDL3TaxhFuLgp8yGXlUQOOw68wi79xdYIGMX/B0y1JyZdeltIkPDexk1xFNY3zyqVdsg6sMhpyL5E24R5PsY7aFPD1aN4GZmoT+XnXpusSSeyI8ZA7oriB8Q7N4P+MUjJr/K7UrxJoXwAtP/+Pu7Nhcepjqiu7n9c9vLA+vymddk75G3Z+oopg5O7NJyz5GVsoKoGZH8bp3Fpx+rUJxKu7sMmULoH7OxvGRjwKHidSaBFa9ty+Rucdx0NgbuEV5uAMXo/jjkX2k/d4joGGwjuvA5ICtpCy1rxLhIz3LQUmwtlz85MwgTNbfvGCGQwhobF+oNZ/L2YBSFRilM1vxxC1EQqE1z294CV1oiP66R3KY2JosBXORxnO6wbY6XnN73tee4JiTAx7wRpWj/bbKE7egLcAvHLFvA6eX27FRYRepwAAAAAAA==",
+
+ nagad:
+ "data:image/webp;base64,UklGRrYFAABXRUJQVlA4IKoFAABQIACdASqlAG4APqlSo0wmJKMiKFWY2MAVCWRu4XPr6tFqfUeaBVH7lsoRa+1jHt6ifMA/VTzjP0z9ynmA/Zv1gP8r6u/QA/ZLrOPQA/ar05P23+GD+4/8f9mfgA/dK8JT/fLl3aA4+08OwWIyPagbX8kvMzrs2XGekREQ5bWGXDDhM/gQQry3wiZp7q/GyKvpPS6B+Go1zA7nW1tQwmfVljh83vwUd8p7I1NvVlcpXBj4xqOtwaOb9L09FArCuUfBpvWQeInQ8m/IWxtLHU+1NchU00N5uAnPpi61u8u8WRh4uZFNiefg34kvE65DHV2I+9Qa563PRJeX0rdL8kQxYB88MFBu/UbX7oAA/v+NCBTJQLLkASfi8+IOqKpm0zfI0HxtfH6V4v8YaoMQAbCq+a4b7bcxJSH4YAT+t38Vx7PKlBOKIneB3Qor/4tgDK1fy9/Jiy2S/QYfiPXCrPxAWonMhBhToFqO/lWetLJ8tJ8moelQYY1YvOsnYn4VT/e+zndEIjDIuBt5Ko1WHXL5wdQMzD/8i5kr0zG6rT3dLTkpOhHa/vvl4YePpdcHV77V7AeQLfQrLbWSqphoefKsqhfUzWoS86E+GEy4NtoUq8AGlCiYrIg0mouPoCF4vcKenm0M3fyrhPNVNHAaxIvjs4S+KrDjidcim1SJkrexmHNDfyTnfLVOCYeMSvhQWCAUde5vlCZ8N+3F91NEXr/PPj5tcGDG4ifleSrfhUzHbUax98GLE3EgJgQSj3P3Hv34Hyq/AsFUSzQ5g63Jx0e1wHFnHuc2Z16e/SBTjD3RFNosLzJVE0HUcFJ5kLkAJSe9ylAReCoq+0v8isOtab7dA3Nd0SxvOwzcThjGWLhdjkbD0YReiCkmTAMRlaBMXrETKV5SvDcH2Cp1AbI51TuAR6bbKbcsuFMsA7kJqD4zvLxly5SgEc26EbK6fApjxbwrxQLnEToi4FdVcwmzw8vZ5yLz7PbNx0uTVjae0LIJLPeACBi76nD5OSe1iGmwEISpTMhJ1b8bmt3y9Ulrr0e+XQy7Z0h5lGfwmq9u/D6AMipE8kZdy0gvg5uMgsdCn2PfLuqw5+Dg3cDhjd+rMZF+z8gGVRamOcFoBmkPmeUkBlKTji0iD41RBz26z6vpA9Y5MbRF55SG9laf+jOiGchX9lCpg/9/Ohn7bduBvCXO/mIGn4ctlFSdd1v6koRmEhaIjTalwk4U5Mn6Cb2wQo43r1GhcZoWuLegH4kA5dEkkRv/rnCY2MlS+uuDcv79WrO/+tr4UKt+FNAx9/9KgIWu12jV4H5c5JnzVTWXU8nADHZmuU7ju1TDSDw+BPtJFaqR+gfrojep5h4/lGcEXR6Xep0HpTtUvnxKvLO7sgAszf/dHR/ZAhCRXml9ceDUpINRplGO4Zl4PcKjgBMnbY789xxb3KRYS0OVqJb2JycmpzL5qIXG/MAcujUXewu37a1nkbUbVZ4IN9Q8iK5zSmlMM1ag15OyRH5Y+GQA7F1bEp9MSCeORv1g+D4tFreLn35TNEenU7nNCP5N2cwp9GzBEAqB3IUot9Ku1gMaIbrz8QFYEDv3XNIZZKse5O1i/kzquyOUvGQY8XZClQI1EX9RcL6r/2hnLyQDvEUv1sZga7BkGQr8ZVutQ0G2Dnc2x1ajrzgSPYHnHMfCmEwoWZb54Xf0zQ7cJ3DA3InedsIkUexrXFUceeIs2pXh2SbOVPv0HO3C3eJciWBKdvaJ+zpfq+kftpYwzd7e9tt4L/BXNciOJyAfjtev4cNFTnAX+wPa7t1mc8+FvBai57PApEfgTB+lyiqrwFei3wIQfshB30l67wSqDrTymeI2IWaDfKk9fCMcF4BYDwg93So5umA4DuB4mQu7lqBLTzVHJmAgzQJqJ08fNcAqsJMGWKoUaFO6+QowAAAAAAAA",
+
+ bkash:
+ "data:image/webp;base64,UklGRjwEAABXRUJQVlA4WAoAAAAQAAAAbQAAbQAAQUxQSN0AAAABgLNt2/nl+TO7voJrarJrtW3Pxkdwa1urMf3HbNu2zb/93lOKiAkgpcLQ5unrTzGDv+4WWsJNSU1+yuinmOXzxSYqOYnEzB/3UCH0WAzwLkVJyJ0Y4nuqAvsTMchHLyLii8Qw582J4sVAS0g4imTH2v8DiTitVgy1axTL0RmWrxcs4td///3775vHC5gLLF8TWE4asfQFf0LJNphCsm9HaUhqiAz6caxZEZHbJYqXYJIPe8bwVUCKI64QPOeTcvdh9i0Gk6pGRQts26ywIjXNols3Xtn0vtuWaktKAQBWUDggOAMAAHASAJ0BKm4AbgA+qVCcSyYlIqGr2ckIwBUJQBo+oZ/iBtcXiN8BMoevucBtkPMB0J/9pvkHoAdJ+vwVoMtHSBTPfKStXjno8amaV7+6opC9N7B7HS3sxwZaAgyOFPJ95hHqumd0nJwPoZfL7DuEGQsygb/a+tGiXsB5dxfu3W1Bu4OLj0RH85FfxOAepnJuX0LIxtXRTFK0JZ5+AAD+6mXDMZ5HPgxrXB+wu279/4T/hPmwkj+OYFS2W/AeF8iGP76pP5DrIJ4VUPK43acEvICtRJjDwUmg9JbChy73Er48lL8u+tXkkbtjCVX/D5x9F4czra09uszyNhVX0HkK5xhRsPXhie05gO/MmU7zr+0Yx9viqSAIMwAQiTYzBixUepLQ8zzx+ntPEnmZ8lw9mMNy6s9Sq4/ZXIh+UIxFxjs7+WlixKpyEBx8+lBpbhE7HgDXOf0GEKk8GVXa0PEXe8wWqXg8uQ5IH0iL5P+8qlRQVngvEe3EU5WUMvGCBYqgb3IxLfN88LfBY/LceAYzvIt7dRviNWLnTy9KialN/54a3V2n13g5T0ODo3vW0LJjWu+Tzjof0/PuEf6Xo4gzVxR3clSYfZderYyRgjtpzpkA5gcrRUVBOZe+F7jsgrQY9Pc9k+H6NiHAf7Hj2JvWniT2SwltEkGQpF2Ar5Jfb40vxMBOIzpmbbIrIyMyIjGo6eEXR8jsf29Y7rnrK2Dfo2cZAFxo2l/T9Mw4R1LgyMMKP3t3NPa6T8I9IrHYF6afQkfGlwr3m64GuqFj9Da+WtNMlVctbnFscHcIlGtiaO9ic5LLQIOFux0EGEQ/bGb+IczEXUVF06AS3Wh3dF6GuKC8+1JCQNgilwF5NmrJs3o6CvTWdx/dFYKxM55Nn5jMKpyAfe3gurROfZL3Mzrg70vQco0ecbQvjIdoJpdB64liZfz40nvFOhXLxuaXMRjkkRWnyxSaoRfOu8NfvSgvFiaYfFIvJkQU6Mb/9dd4rE2l3BnYDgLQfgrPmDCaV8JLoTq62V9yVRlPFppryhMpOefSM9ES2Zoufx63gvtci0hh/e//lxYAb95lahgAG5F60GZP9rIKduAA"
+};
+
+/* CHANNELS */
+
+const CHANNELS={
+ bkash:{label:"bKash"},
+ nagad:{label:"Nagad"},
+ binance:{label:"Binance"},
+ tether:{label:"Tether USDT"},
+ redotpay:{label:"RedotPay"}
+};
+
 let methods=[];
 let selectedMethod=null;
 let toastTimer=null;
-
-const CHANNELS={
- bkash:{
-  label:"bKash",
-  aliases:["bkash","b-kash"],
-  logo:"https://cdn.simpleicons.org/bkash/E2136E"
- },
- nagad:{
-  label:"Nagad",
-  aliases:["nagad"],
-  logo:"https://cdn.simpleicons.org/nagad/F6921E"
- },
- binance:{
-  label:"Binance",
-  aliases:["binance"],
-  logo:"https://cdn.simpleicons.org/binance/F0B90B"
- },
- tether:{
-  label:"Tether USDT",
-  aliases:["tether","usdt"],
-  logo:"https://cdn.simpleicons.org/tether/50AF95"
- },
- redotpay:{
-  label:"RedotPay",
-  aliases:["redotpay","redot pay"],
-  logo:""
- }
-};
 
 function getToken(){
  return sessionStorage.getItem(TOKEN_KEY)||"";
@@ -143,6 +161,7 @@ function showToast(message){
 
 async function api(path,options={}){
  const headers={...(options.headers||{})};
+
  if(getToken())headers.Authorization="Bearer "+getToken();
  if(options.body)headers["Content-Type"]="application/json";
 
@@ -168,6 +187,8 @@ async function api(path,options={}){
  return data;
 }
 
+/* IDENTIFY PAYMENT CHANNEL */
+
 function identifyChannel(method){
  const text=(
   String(method.name||"")+" "+
@@ -175,21 +196,22 @@ function identifyChannel(method){
   String(method.label||"")
  ).toLowerCase().replace(/[^a-z0-9]/g,"");
 
- for(const [key,config] of Object.entries(CHANNELS)){
-  if(config.aliases.some(alias=>{
-   const normalized=alias.replace(/[^a-z0-9]/g,"");
-   return text.includes(normalized);
-  }))return key;
- }
+ if(text.includes("bkash"))return "bkash";
+ if(text.includes("nagad"))return "nagad";
+ if(text.includes("binance"))return "binance";
+ if(text.includes("tether")||text.includes("usdt"))return "tether";
+ if(text.includes("redotpay"))return "redotpay";
+
  return "";
 }
 
-function getLogo(method,type){
- return method.logo_url||
-        method.image_url||
-        method.logo||
-        CHANNELS[type].logo;
+/* USE THE UPLOADED ORIGINAL LOGO */
+
+function getLogo(type){
+ return LOGOS[type]||"";
 }
+
+/* RENDER PAYMENT CHANNELS */
 
 function renderMethods(){
  const box=document.getElementById("methods");
@@ -207,16 +229,8 @@ function renderMethods(){
   button.setAttribute("aria-label",CHANNELS[type].label);
 
   const img=document.createElement("img");
-  img.src=getLogo(method,type);
-  img.alt=CHANNELS[type].label+" logo";
-
-  img.onerror=()=>{
-   img.style.display="none";
-   const fallback=document.createElement("span");
-   fallback.textContent=type==="tether"?"₮":type==="binance"?"B":type==="bkash"?"bK":type==="nagad"?"N":"R";
-   fallback.style.cssText="font-size:25px;font-weight:900;color:#d51b72;min-width:42px;text-align:center";
-   button.insertBefore(fallback,button.firstChild);
-  };
+  img.src=getLogo(type);
+  img.alt=CHANNELS[type].label+" original logo";
 
   const name=document.createElement("span");
   name.className="method-name";
@@ -230,7 +244,11 @@ function renderMethods(){
 
   button.addEventListener("click",()=>{
    selectedMethod=method;
-   document.querySelectorAll(".method").forEach(el=>el.classList.remove("active"));
+
+   document.querySelectorAll(".method").forEach(el=>{
+    el.classList.remove("active");
+   });
+
    button.classList.add("active");
    updateSummary();
   });
@@ -240,21 +258,27 @@ function renderMethods(){
 
  if(!box.children.length){
   const empty=document.createElement("div");
-  empty.className="empty";
   empty.style.cssText="grid-column:1/-1;text-align:center;padding:20px;color:#888";
   empty.textContent="No active payment channels available.";
   box.append(empty);
  }
 }
 
+/* UPDATE AMOUNT */
+
 function updateSummary(){
  const amount=Number(document.getElementById("amount").value)||0;
+
  document.getElementById("depositAmount").textContent=amount.toFixed(2);
  document.getElementById("getAmount").textContent=amount.toFixed(2);
- document.getElementById("continueBtn").disabled=!(selectedMethod&&amount>0);
+
+ document.getElementById("continueBtn").disabled=
+  !(selectedMethod&&amount>0);
 }
 
 document.getElementById("amount").addEventListener("input",updateSummary);
+
+/* CONTINUE AND SPLASH */
 
 document.getElementById("continueBtn").addEventListener("click",()=>{
  const amount=Number(document.getElementById("amount").value);
@@ -270,28 +294,38 @@ document.getElementById("continueBtn").addEventListener("click",()=>{
  }
 
  const type=identifyChannel(selectedMethod);
- const logo=getLogo(selectedMethod,type);
+
+ if(!type){
+  showToast("Invalid payment channel.");
+  return;
+ }
 
  const pending={
   payment_method_id:Number(selectedMethod.id),
   method_name:CHANNELS[type].label,
   method_type:type,
-  logo_url:logo,
+  logo_url:getLogo(type),
   amount:amount,
   currency:selectedMethod.currency||"BDT",
   created_at:Date.now()
  };
 
- sessionStorage.setItem("glo365_pending_deposit",JSON.stringify(pending));
+ sessionStorage.setItem(
+  "glo365_pending_deposit",
+  JSON.stringify(pending)
+ );
 
- document.getElementById("splashLogo").src=logo||"";
+ document.getElementById("splashLogo").src=getLogo(type);
  document.getElementById("splashName").textContent=CHANNELS[type].label;
+
  document.getElementById("splash").classList.remove("hidden");
 
  setTimeout(()=>{
   location.href="deposit-confarm.html";
  },3000);
 });
+
+/* LOAD ACTIVE METHODS */
 
 async function initialize(){
  try{
@@ -306,15 +340,17 @@ async function initialize(){
    api("/public/payment-methods")
   ]);
 
-  const all=Array.isArray(methodData.methods)?methodData.methods:[];
+  const all=Array.isArray(methodData.methods)
+   ?methodData.methods:[ ];
 
-  // Only the five requested active channels are displayed.
+  // Only the five selected channels are shown.
   methods=all.filter(m=>identifyChannel(m)!=="");
 
   renderMethods();
 
  }catch(error){
   showToast(error.message);
+
   if(/login|session|token/i.test(error.message)){
    setTimeout(()=>location.href="index.html",1500);
   }
@@ -322,6 +358,7 @@ async function initialize(){
 }
 
 initialize();
+
 </script>
 </body>
 </html>
