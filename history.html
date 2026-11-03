@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
-<meta name="theme-color" content="#2196e8">
+<meta name="theme-color" content="#1687d5">
 <title>GLO 365 - Bet History</title>
 
 <style>
@@ -20,9 +20,97 @@ body{
  min-height:100vh;
  margin:auto;
  background:#fff;
- padding-bottom:85px;
+ padding-bottom:24px;
  box-shadow:0 0 25px #163c5c0b
 }
+
+/* PREMIUM HEADER */
+
+.top-header{
+ position:sticky;
+ top:0;
+ z-index:20;
+ width:100%;
+ min-height:62px;
+ padding:9px 14px;
+ display:flex;
+ align-items:center;
+ gap:13px;
+ background:linear-gradient(120deg,#0874bf,#168bdc,#2196e8);
+ box-shadow:0 4px 13px #0874bf30;
+ color:#fff
+}
+
+.back-btn{
+ width:42px;
+ height:42px;
+ flex-shrink:0;
+ display:flex;
+ align-items:center;
+ justify-content:center;
+ border:1px solid rgba(255,255,255,.38);
+ border-radius:14px;
+ background:linear-gradient(
+  145deg,
+  rgba(255,255,255,.27),
+  rgba(255,255,255,.10)
+ );
+ color:#fff;
+ cursor:pointer;
+ box-shadow:
+  inset 0 1px 1px rgba(255,255,255,.25),
+  0 4px 9px rgba(0,55,100,.15);
+ transition:all .2s ease
+}
+
+.back-btn:active{
+ transform:scale(.92);
+ background:rgba(255,255,255,.32)
+}
+
+.back-btn svg{
+ width:21px;
+ height:21px;
+ stroke:currentColor;
+ stroke-width:2.5;
+ stroke-linecap:round;
+ stroke-linejoin:round;
+ fill:none
+}
+
+.header-text{
+ flex:1;
+ min-width:0
+}
+
+.header-text h1{
+ font-size:17px;
+ font-weight:900;
+ letter-spacing:.3px;
+ color:#fff
+}
+
+.header-text small{
+ display:block;
+ margin-top:4px;
+ font-size:9px;
+ font-weight:bold;
+ letter-spacing:1.1px;
+ color:rgba(255,255,255,.78)
+}
+
+.header-count{
+ flex-shrink:0;
+ padding:7px 10px;
+ border:1px solid rgba(255,255,255,.25);
+ border-radius:20px;
+ background:rgba(255,255,255,.15);
+ color:#fff;
+ font-size:10px;
+ font-weight:bold
+}
+
+/* AD BANNER */
 
 .ad-container{
  width:100%;
@@ -38,21 +126,13 @@ body{
 
 .ad-container iframe{max-width:100%;border:0}
 
-.heading{
- padding:20px 14px 12px;
- display:flex;
- justify-content:space-between;
- align-items:center
-}
-
-.heading h2{font-size:21px;color:#167fc4}
-.heading small{color:#8195a8;font-size:11px}
+/* SUMMARY */
 
 .summary{
  display:grid;
  grid-template-columns:repeat(3,1fr);
  gap:8px;
- padding:5px 12px 16px
+ padding:16px 12px
 }
 
 .summary-card{
@@ -76,6 +156,8 @@ body{
  margin-top:6px
 }
 
+/* SEARCH */
+
 .search{padding:0 12px 13px}
 
 .search input{
@@ -94,6 +176,8 @@ body{
  border-color:#2196e8;
  box-shadow:0 0 0 3px #2196e817
 }
+
+/* FILTERS */
 
 .filters{padding:0 12px 15px}
 
@@ -114,14 +198,20 @@ body{
  font-size:11px;
  font-weight:bold;
  white-space:nowrap;
- cursor:pointer
+ cursor:pointer;
+ transition:all .2s ease
 }
 
 .filter-btn.active{
- background:#2196e8;
+ background:linear-gradient(135deg,#1687d5,#2196e8);
  border-color:#2196e8;
- color:#fff
+ color:#fff;
+ box-shadow:0 3px 8px #2196e830
 }
+
+.filter-btn:active{transform:scale(.96)}
+
+/* BET LIST */
 
 .bet-list{padding:0 12px}
 
@@ -259,6 +349,8 @@ body{
 
 .extra.show{display:block}
 
+/* EMPTY STATE */
+
 .empty{
  text-align:center;
  padding:45px 15px;
@@ -276,12 +368,16 @@ body{
 
 .empty p{font-size:12px;line-height:1.7}
 
+/* LOADING */
+
 .loading{
  text-align:center;
  padding:35px 15px;
  color:#8195a8;
  font-size:13px
 }
+
+/* ERROR */
 
 .error-box{
  margin:15px 12px;
@@ -306,43 +402,12 @@ body{
  cursor:pointer
 }
 
-nav{
- position:fixed;
- bottom:0;
- left:50%;
- transform:translateX(-50%);
- width:100%;
- max-width:520px;
- background:#fff;
- border-top:1px solid #dcebf6;
- display:flex;
- justify-content:space-around;
- align-items:center;
- padding:10px 4px 15px;
- z-index:10;
- box-shadow:0 -3px 12px #173c5b08
-}
-
-nav button{
- flex:1;
- border:0;
- background:none;
- color:#8195a8;
- font-size:11px;
- display:flex;
- flex-direction:column;
- align-items:center;
- gap:5px;
- cursor:pointer
-}
-
-nav button strong{font-size:23px}
-nav button.active{color:#1687d5;font-weight:bold}
-
 @media(max-width:380px){
  .summary-card{padding:12px 3px}
  .summary-card strong{font-size:16px}
  .filter-btn{padding:8px 11px}
+ .header-text h1{font-size:15px}
+ .header-count{font-size:9px;padding:6px 8px}
 }
 </style>
 </head>
@@ -350,7 +415,35 @@ nav button.active{color:#1687d5;font-weight:bold}
 <body>
 <div class="app">
 
+<!-- PREMIUM HEADER -->
+
+<header class="top-header">
+
+ <button class="back-btn"
+  type="button"
+  onclick="goBack()"
+  aria-label="Go back">
+
+  <svg viewBox="0 0 24 24">
+   <path d="M19 12H5"/>
+   <path d="M12 19l-7-7 7-7"/>
+  </svg>
+
+ </button>
+
+ <div class="header-text">
+  <h1>Bet History</h1>
+  <small>YOUR GAME RECORDS</small>
+ </div>
+
+ <div class="header-count" id="totalCount">
+  Loading...
+ </div>
+
+</header>
+
 <!-- ADSTERRA AD BANNER -->
+
 <div class="ad-container">
  <script>
   atOptions = {
@@ -364,12 +457,10 @@ nav button.active{color:#1687d5;font-weight:bold}
  <script src="https://bicea.org/22/ab837cf0ea9c26ae43b7bc4e05a0b5de"></script>
 </div>
 
-<div class="heading">
- <h2>Bet History</h2>
- <small id="totalCount">Loading...</small>
-</div>
+<!-- SUMMARY -->
 
 <section class="summary">
+
  <div class="summary-card">
   <strong id="allCount">0</strong>
   <small>Total Bets</small>
@@ -384,12 +475,17 @@ nav button.active{color:#1687d5;font-weight:bold}
   <strong id="winCount">0</strong>
   <small>Win Records</small>
  </div>
+
 </section>
+
+<!-- SEARCH -->
 
 <div class="search">
  <input id="searchInput" type="search"
   placeholder="🔍 Search Bet ID or Number...">
 </div>
+
+<!-- FILTERS -->
 
 <section class="filters">
 
@@ -413,31 +509,11 @@ nav button.active{color:#1687d5;font-weight:bold}
 
 </section>
 
+<!-- BET HISTORY -->
+
 <section class="bet-list" id="betList">
  <div class="loading">Loading your bet history...</div>
 </section>
-
-<nav>
- <button onclick="location.href='home.html'">
-  <strong>⌂</strong>
-  Home
- </button>
-
- <button onclick="location.href='mybets.html'">
-  <strong>🎯</strong>
-  My Bets
- </button>
-
- <button onclick="location.href='results.html'">
-  <strong>🏆</strong>
-  Results
- </button>
-
- <button class="active" onclick="location.href='profile.html'">
-  <strong>♙</strong>
-  Profile
- </button>
-</nav>
 
 </div>
 
@@ -452,6 +528,18 @@ let statusFilter="all";
 let gameFilter="all";
 let searchQuery="";
 let loading=false;
+
+/* BACK BUTTON */
+
+function goBack(){
+ if(window.history.length>1){
+  window.history.back();
+ }else{
+  window.location.href="profile.html";
+ }
+}
+
+/* ELEMENT CREATOR */
 
 function el(tag,cls,text){
  const node=document.createElement(tag);
