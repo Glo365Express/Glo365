@@ -360,11 +360,11 @@ header{
 
 .millionaire-panel{
  min-width:0;
- min-height:190px;
- border-radius:25px;
+ min-height:132px;
+ border-radius:18px;
  background:linear-gradient(145deg,#f5fbff,#e5f4ff);
  border:1px solid #cfe6f8;
- padding:12px 8px;
+ padding:7px 6px;
  display:flex;
  flex-direction:column;
  align-items:center;
@@ -374,10 +374,10 @@ header{
 
 .millionaire-panel h3{
  color:#075da8;
- font-size:clamp(12px,3.5vw,16px);
- line-height:1.35;
+ font-size:clamp(11px,3.2vw,15px);
+ line-height:1.25;
  font-weight:900;
- margin-bottom:13px;
+ margin-bottom:6px;
 }
 
 .millionaire-draw-number{
@@ -385,20 +385,20 @@ header{
  color:#1976b9;
  font-size:clamp(12px,3.5vw,16px);
  font-weight:900;
- padding:7px 3px;
+ padding:5px 3px;
  border-radius:25px;
  border:1px solid #d8eaf8;
  background:#fff;
- margin-bottom:10px;
+ margin-bottom:6px;
  white-space:nowrap;
 }
 
 .millionaire-timer{
  width:100%;
  display:grid;
- grid-template-columns:1.35fr 1fr 1fr;
+ grid-template-columns:1.25fr 1fr .85fr;
  gap:5px;
- align-items:stretch;
+ align-items:end;
 }
 
 .millionaire-time-box{
@@ -411,11 +411,11 @@ header{
  flex-direction:column;
  justify-content:center;
  align-items:center;
- min-height:82px;
+ min-height:48px;
 }
 
 .millionaire-time-box.hours{
- min-height:96px;
+ min-height:76px;
  border-radius:19px;
 }
 
@@ -431,6 +431,11 @@ header{
  font-size:clamp(30px,9vw,46px);
 }
 
+.millionaire-time-box.minutes{min-height:61px}
+.millionaire-time-box.seconds{min-height:48px}
+.millionaire-time-box.minutes .millionaire-time-value{font-size:clamp(23px,6vw,34px)}
+.millionaire-time-box.seconds .millionaire-time-value{font-size:clamp(20px,5.5vw,29px)}
+
 .millionaire-time-label{
  width:100%;
  background:#0874c5;
@@ -440,13 +445,6 @@ header{
  padding:5px 1px;
 }
 
-.millionaire-status{
- color:#0874c5;
- font-size:10px;
- font-weight:900;
- margin-top:11px;
- line-height:1.4;
-}
 
 .millionaire-result-number{
  min-width:115px;
@@ -1130,23 +1128,23 @@ nav button.active{color:#087acb}
  }
 
  .millionaire-panel{
-  min-height:178px;
-  padding:10px 5px;
+  min-height:130px;
+  padding:7px 5px;
   border-radius:19px;
  }
 
  .millionaire-panel h3{
   font-size:11px;
-  margin-bottom:10px;
+  margin-bottom:7px;
  }
 
  .millionaire-time-box{
-  min-height:70px;
+  min-height:44px;
   border-radius:13px;
  }
 
  .millionaire-time-box.hours{
-  min-height:85px;
+  min-height:68px;
   border-radius:15px;
  }
 
@@ -1160,7 +1158,7 @@ nav button.active{color:#087acb}
   font-size:28px;
  }
 
- .millionaire-status,.millionaire-result-status{font-size:8px}
+ .millionaire-result-status{font-size:8px}
  .live-bubble{width:82px;height:82px}
 }
 
@@ -1174,8 +1172,10 @@ nav button.active{color:#087acb}
  .millionaire-panel h3{font-size:10px}
  .millionaire-time-value{font-size:20px}
  .millionaire-time-box.hours .millionaire-time-value{font-size:27px}
- .millionaire-time-box{min-height:65px}
- .millionaire-time-box.hours{min-height:78px}
+ .millionaire-time-box{min-height:44px}
+ .millionaire-time-box.hours{min-height:68px}
+ .millionaire-time-box.minutes{min-height:53px}
+ .millionaire-time-box.seconds{min-height:44px}
  .millionaire-result-number{min-width:80px;font-size:24px}
 }
 </style>
@@ -1333,21 +1333,18 @@ nav button.active{color:#087acb}
     <div class="millionaire-time-label">HR</div>
    </div>
 
-   <div class="millionaire-time-box">
+   <div class="millionaire-time-box minutes">
     <div class="millionaire-time-value" id="millionaireMinutes">--</div>
     <div class="millionaire-time-label">MIN</div>
    </div>
 
-   <div class="millionaire-time-box">
+   <div class="millionaire-time-box seconds">
     <div class="millionaire-time-value" id="millionaireSeconds">--</div>
     <div class="millionaire-time-label">SEC</div>
    </div>
 
   </div>
 
-  <div class="millionaire-status" id="millionaireStatus">
-   NEXT DRAW SCHEDULED
-  </div>
  </div>
 
  <div class="millionaire-panel">
@@ -2059,7 +2056,6 @@ function updateMillionaireCountdown(){
  setText("millionaireMinutes",String(minutes).padStart(2,"0"));
  setText("millionaireSeconds",String(seconds).padStart(2,"0"));
 
- setText("millionaireStatus","NEXT DRAW SCHEDULED");
 }
 
 /* DRAW SETTINGS */
