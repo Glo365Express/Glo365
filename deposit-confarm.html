@@ -8,11 +8,7 @@
 <title>GLO 365 - Confirm Deposit</title>
 
 <style>
-*{
- box-sizing:border-box;
- margin:0;
- padding:0;
-}
+*{box-sizing:border-box;margin:0;padding:0}
 
 body{
  font-family:Arial,sans-serif;
@@ -26,7 +22,7 @@ body{
  min-height:100vh;
  margin:auto;
  background:#fff;
- padding-bottom:35px;
+ padding-bottom:30px;
 }
 
 header{
@@ -49,73 +45,70 @@ header{
  font-size:30px;
 }
 
-.page{
- padding:20px 14px;
-}
+.page{padding:17px 14px}
 
 .card{
  background:#fff;
- border-radius:16px;
- padding:18px 15px;
- margin-bottom:15px;
- box-shadow:0 5px 24px #0000000d;
+ border-radius:14px;
+ padding:15px 14px;
+ margin-bottom:12px;
+ box-shadow:0 4px 18px #0000000b;
+ border:1px solid #f1eeee;
 }
 
 .brand{
  display:flex;
  align-items:center;
- gap:14px;
- padding:17px;
- border-radius:12px;
- margin-bottom:19px;
+ gap:13px;
+ padding:13px;
+ border-radius:11px;
+ margin-bottom:15px;
  background:#f7f4f8;
  border:1px solid #eee;
 }
 
 .brand img{
- width:72px;
- height:72px;
+ width:64px;
+ height:64px;
  object-fit:contain;
  background:#fff;
  border-radius:50%;
- padding:8px;
+ padding:7px;
  flex-shrink:0;
 }
 
-.brand strong{
- font-size:19px;
-}
+.brand strong{font-size:18px}
 
 .brand small{
  display:block;
  color:#888;
  font-size:11px;
- margin-top:6px;
+ margin-top:5px;
 }
 
 .title{
- font-size:17px;
+ font-size:16px;
  font-weight:900;
- margin-bottom:14px;
+ margin-bottom:11px;
 }
 
 .account-box{
  background:#f3f3f3;
- border-radius:10px;
- padding:15px;
+ border-radius:9px;
+ padding:12px;
  display:flex;
  justify-content:space-between;
  align-items:center;
  gap:10px;
- margin-top:9px;
+ margin-top:7px;
 }
 
 .account{
- font-size:18px;
+ font-size:17px;
  font-weight:900;
  color:#252525;
  overflow-wrap:anywhere;
- line-height:1.6;
+ line-height:1.5;
 }
 
 .copy{
@@ -123,48 +116,77 @@ header{
  border-radius:8px;
  background:#e4f4ff;
  color:#167fc4;
- padding:10px 12px;
+ padding:9px 11px;
  font-weight:bold;
  cursor:pointer;
  flex-shrink:0;
 }
 
 .instructions{
- font-size:12px;
- line-height:1.8;
+ font-size:11px;
+ line-height:1.7;
  color:#777;
- margin-top:12px;
+ margin-top:9px;
  overflow-wrap:anywhere;
 }
 
 .currency{
- margin-top:10px;
- font-size:12px;
+ margin-top:7px;
+ font-size:11px;
  color:#777;
 }
 
-.currency strong{
- color:#167fc4;
+.currency strong{color:#167fc4}
+
+/* COMPACT DEPOSIT DETAILS */
+
+.details-card{
+ padding:12px 14px;
 }
 
-.field{
- margin-top:18px;
+.details-card .title{
+ margin-bottom:6px;
 }
+
+.detail-row{
+ display:flex;
+ justify-content:space-between;
+ align-items:center;
+ gap:10px;
+ padding:7px 0;
+ border-bottom:1px solid #f0eeee;
+ font-size:12px;
+}
+
+.detail-row:last-child{border-bottom:0}
+
+.detail-row span{color:#888}
+
+.detail-row strong{
+ text-align:right;
+ color:#293f52;
+ max-width:65%;
+ overflow-wrap:anywhere;
+}
+
+/* TRANSACTION INPUT */
+
+.field{margin-top:8px}
 
 label{
  display:block;
- font-size:15px;
+ font-size:14px;
  font-weight:900;
- margin-bottom:9px;
+ margin-bottom:8px;
 }
 
 input{
  width:100%;
- height:57px;
+ height:54px;
  border:2px solid #e4dfe0;
  border-radius:9px;
  background:#fff;
- padding:0 14px;
+ padding:0 13px;
  font-size:15px;
  outline:none;
 }
@@ -174,9 +196,9 @@ input:focus{
  box-shadow:0 0 0 3px #e6385515;
 }
 
-input::placeholder{
- color:#aaa;
-}
+input::placeholder{color:#aaa}
+
+/* TIMER BELOW TRANSACTION INPUT */
 
 .timer-card{
  display:flex;
@@ -185,13 +207,13 @@ input::placeholder{
  gap:10px;
  background:#fff6f6;
  border:1px solid #ffd9df;
- border-radius:12px;
- padding:15px;
- margin-bottom:17px;
+ border-radius:9px;
+ padding:10px 12px;
+ margin-top:10px;
 }
 
 .timer-label{
- font-size:13px;
+ font-size:12px;
  font-weight:bold;
  color:#725c61;
 }
@@ -200,58 +222,58 @@ input::placeholder{
  display:block;
  font-size:10px;
  color:#a28b90;
- margin-top:5px;
+ margin-top:3px;
 }
 
 .timer{
  color:#e63855;
- font-size:22px;
+ font-size:20px;
  font-weight:900;
  font-variant-numeric:tabular-nums;
 }
 
+/* SLIM WARNING CARD */
+
 .notice{
- font-size:12px;
- line-height:1.9;
+ font-size:11px;
+ line-height:1.65;
  color:#8a5c36;
  background:#fff7ed;
  border:1px solid #ffe1bf;
- padding:13px;
- border-radius:10px;
- margin-top:17px;
+ padding:10px 12px;
+ border-radius:9px;
+ margin-top:12px;
 }
 
-.notice strong{
- color:#bb6032;
-}
+.notice strong{color:#bb6032}
 
 .btn{
  width:100%;
- height:55px;
+ height:53px;
  border:0;
  border-radius:30px;
  background:linear-gradient(100deg,#f58b9b,#e95772);
  color:#fff;
- font-size:16px;
+ font-size:15px;
  font-weight:900;
  cursor:pointer;
  box-shadow:0 5px 12px #e9577240;
 }
 
 .btn:disabled{
- opacity:.5;
+ opacity:.6;
  cursor:not-allowed;
 }
 
 .secondary{
  width:100%;
- height:48px;
+ height:45px;
  border:1px solid #ddd;
  border-radius:12px;
  background:#fff;
  color:#555;
  font-weight:bold;
- margin-top:10px;
+ margin-top:9px;
  cursor:pointer;
 }
 
@@ -265,7 +287,7 @@ input::placeholder{
  display:flex;
  align-items:center;
  justify-content:center;
- padding:18px;
+ padding:17px;
 }
 
 .modal{
@@ -273,7 +295,7 @@ input::placeholder{
  max-width:440px;
  background:#fff;
  border-radius:12px;
- padding:25px 19px 22px;
+ padding:23px 17px 19px;
  box-shadow:0 12px 40px #0003;
  animation:popup .22s ease;
 }
@@ -284,63 +306,43 @@ input::placeholder{
 }
 
 .modal-icon{
- width:55px;
- height:55px;
+ width:51px;
+ height:51px;
  border-radius:50%;
  background:#e9f8ef;
  color:#16884b;
  display:grid;
  place-items:center;
- font-size:30px;
+ font-size:28px;
  font-weight:bold;
- margin:0 auto 13px;
+ margin:0 auto 12px;
 }
 
 .modal h3{
  text-align:center;
- font-size:20px;
- margin-bottom:10px;
+ font-size:19px;
+ margin-bottom:9px;
 }
 
 .modal-desc{
  text-align:center;
  color:#888;
- font-size:13px;
- line-height:1.8;
- margin-bottom:18px;
-}
-
-.detail-row{
- display:flex;
- justify-content:space-between;
- align-items:flex-start;
- gap:12px;
- padding:11px 0;
- border-bottom:1px solid #eee;
  font-size:12px;
+ line-height:1.7;
+ margin-bottom:14px;
 }
 
-.detail-row span{
- color:#888;
-}
-
-.detail-row strong{
- text-align:right;
- color:#292929;
- max-width:65%;
- overflow-wrap:anywhere;
-}
+.modal .detail-row{padding:9px 0}
 
 .modal-actions{
  display:flex;
- gap:12px;
- margin-top:22px;
+ gap:11px;
+ margin-top:19px;
 }
 
-.cancel-btn,
-.deposit-btn{
+.cancel-btn,.deposit-btn{
  flex:1;
- height:49px;
+ height:47px;
  border:0;
  border-radius:30px;
  font-size:14px;
@@ -359,9 +361,54 @@ input::placeholder{
  box-shadow:0 4px 10px #08745135;
 }
 
-.hidden{
- display:none!important;
+/* LOADING */
+
+.loading-content{
+ display:none;
+ text-align:center;
+ padding:17px 0 8px;
 }
+
+.spinner{
+ width:42px;
+ height:42px;
+ border:4px solid #e7e7e7;
+ border-top-color:#087451;
+ border-radius:50%;
+ margin:0 auto 13px;
+ animation:spin .75s linear infinite;
+}
+
+@keyframes spin{
+ to{transform:rotate(360deg)}
+}
+
+.loading-content strong{
+ display:block;
+ font-size:15px;
+ color:#087451;
+}
+
+.loading-content small{
+ display:block;
+ margin-top:6px;
+ font-size:11px;
+ color:#888;
+}
+
+.modal.is-loading .modal-icon,
+.modal.is-loading h3,
+.modal.is-loading .modal-desc,
+.modal.is-loading .modal-details,
+.modal.is-loading .modal-actions{
+ display:none;
+}
+
+.modal.is-loading .loading-content{
+ display:block;
+}
+
+.hidden{display:none!important}
 
 .toast{
  display:none;
@@ -380,16 +427,10 @@ input::placeholder{
 }
 
 @media(max-width:360px){
- .brand img{
-  width:60px;
-  height:60px;
- }
- .brand strong{
-  font-size:17px;
- }
- .account{
-  font-size:15px;
- }
+ .brand img{width:58px;height:58px}
+ .brand strong{font-size:16px}
+ .account{font-size:15px}
+ .card{padding:13px 12px}
 }
 </style>
 </head>
@@ -405,13 +446,12 @@ Confirm Deposit
 
 <div class="page">
 
-<!-- PAYMENT METHOD -->
+<!-- PAYMENT INFORMATION -->
 
 <section class="card">
 
 <div class="brand">
 <img id="methodLogo" src="" alt="Payment logo">
-
 <div>
 <strong id="methodName">Payment Method</strong>
 <small>Deposit Payment Channel</small>
@@ -424,9 +464,7 @@ Confirm Deposit
 
 <div class="account-box">
 <div class="account" id="paymentAccount">Loading...</div>
-<button class="copy" type="button" id="copyBtn">
-Copy
-</button>
+<button class="copy" type="button" id="copyBtn">Copy</button>
 </div>
 
 <div class="instructions" id="instructions">
@@ -439,9 +477,9 @@ Currency: <strong id="currencyText">—</strong>
 
 </section>
 
-<!-- DEPOSIT AMOUNT -->
+<!-- COMPACT DEPOSIT DETAILS -->
 
-<section class="card">
+<section class="card details-card">
 
 <div class="title">Deposit Details</div>
 
@@ -462,24 +500,14 @@ Currency: <strong id="currencyText">—</strong>
 
 </section>
 
-<!-- TRANSACTION -->
+<!-- TRANSACTION INFORMATION -->
 
 <section class="card">
 
 <div class="title">Transaction Information</div>
 
-<div class="timer-card">
-<div class="timer-label">
-Complete Your Deposit
-<small>Remaining time (Design only)</small>
-</div>
-<div class="timer" id="timer">15:00</div>
-</div>
-
 <div class="field">
-<label for="transactionId">
-Transaction ID / TxID / Reference
-</label>
+<label for="transactionId">Transaction ID / TxID / Reference</label>
 
 <input
  id="transactionId"
@@ -490,20 +518,32 @@ Transaction ID / TxID / Reference
 >
 </div>
 
+<!-- TIMER DIRECTLY UNDER TRANSACTION ID -->
+
+<div class="timer-card">
+
+<div class="timer-label">
+Complete Your Deposit
+<small>Remaining time</small>
+</div>
+
+<div class="timer" id="timer">15:00</div>
+
+</div>
+
 <div class="notice">
 <strong>সতর্কতা:</strong><br>
 ১. সঠিক Payment Account-এ টাকা পাঠান।<br>
-২. পেমেন্ট সম্পন্ন করার পর সঠিক Transaction ID লিখুন।<br>
+২. পেমেন্টের পর সঠিক Transaction ID লিখুন।<br>
 ৩. একই Transaction ID দিয়ে একাধিক Deposit Request করবেন না।<br>
-৪. Admin যাচাই করার পর আপনার Wallet-এ Points যোগ হবে।
+৪. Admin যাচাই করার পর Wallet-এ Points যোগ হবে।
 </div>
 
-<button class="btn" type="button" id="confirmBtn" style="margin-top:19px">
+<button class="btn" type="button" id="confirmBtn" style="margin-top:15px">
 নিশ্চিত করুন
 </button>
 
-<button class="secondary" type="button"
-onclick="location.href='deposit.html'">
+<button class="secondary" type="button" onclick="location.href='deposit.html'">
 ← ফিরে যান
 </button>
 
@@ -516,7 +556,7 @@ onclick="location.href='deposit.html'">
 
 <div class="modal-overlay hidden" id="confirmModal">
 
-<div class="modal">
+<div class="modal" id="modalBox">
 
 <div class="modal-icon">✓</div>
 
@@ -526,6 +566,8 @@ onclick="location.href='deposit.html'">
 আপনার Deposit তথ্যগুলো ভালোভাবে যাচাই করুন।
 সঠিক থাকলে জমা বাটনে চাপ দিন।
 </p>
+
+<div class="modal-details">
 
 <div class="detail-row">
 <span>Payment Method</span>
@@ -545,6 +587,16 @@ onclick="location.href='deposit.html'">
 <div class="detail-row">
 <span>Transaction ID</span>
 <strong id="finalTransaction">—</strong>
+</div>
+
+</div>
+
+<!-- TWO SECOND LOADING DISPLAY -->
+
+<div class="loading-content">
+<div class="spinner"></div>
+<strong>আপনার জমা প্রসেস হচ্ছে...</strong>
+<small>অনুগ্রহ করে অপেক্ষা করুন</small>
 </div>
 
 <div class="modal-actions">
@@ -577,18 +629,14 @@ let finalData=null;
 let toastTimer=null;
 let timerInterval=null;
 let remainingSeconds=900;
-
-/* AUTH */
+let submitting=false;
 
 function getToken(){
  return sessionStorage.getItem(TOKEN_KEY)||"";
 }
 
-/* TOAST */
-
 function showToast(message){
  const el=document.getElementById("toast");
-
  el.textContent=message;
  el.style.display="block";
 
@@ -598,8 +646,6 @@ function showToast(message){
   el.style.display="none";
  },3500);
 }
-
-/* API */
 
 async function api(path,options={}){
 
@@ -638,7 +684,7 @@ async function api(path,options={}){
  return data;
 }
 
-/* LOAD PENDING DEPOSIT */
+/* LOAD PENDING DATA */
 
 function loadPending(){
 
@@ -667,7 +713,7 @@ function loadPending(){
  return true;
 }
 
-/* PAYMENT LOGO */
+/* LOGO */
 
 function getMethodLogo(){
 
@@ -678,7 +724,7 @@ function getMethodLogo(){
         "";
 }
 
-/* LOAD PAYMENT METHOD */
+/* LOAD METHOD */
 
 async function loadMethod(){
 
@@ -695,11 +741,9 @@ async function loadMethod(){
   throw new Error("Selected payment method is no longer active.");
  }
 
- const logo=getMethodLogo();
-
  const logoEl=document.getElementById("methodLogo");
 
- logoEl.src=logo;
+ logoEl.src=getMethodLogo();
 
  logoEl.onerror=()=>{
   logoEl.style.display="none";
@@ -711,13 +755,10 @@ async function loadMethod(){
   "Payment Method";
 
  document.getElementById("methodName").textContent=methodName;
-
  document.getElementById("channelText").textContent=methodName;
 
- const account=String(paymentMethod.account||"").trim();
-
  document.getElementById("paymentAccount").textContent=
-  account||"Payment account has not been configured.";
+  paymentMethod.account||"Payment account has not been configured.";
 
  document.getElementById("instructions").textContent=
   paymentMethod.instructions||
@@ -726,7 +767,6 @@ async function loadMethod(){
  const currency=pending.currency||paymentMethod.currency||"BDT";
 
  document.getElementById("currencyText").textContent=currency;
-
  document.getElementById("currencyRow").textContent=currency;
 
  document.getElementById("amountText").textContent=
@@ -745,18 +785,13 @@ document.getElementById("copyBtn").addEventListener("click",async()=>{
  }
 
  try{
-
   await navigator.clipboard.writeText(value);
-
   showToast("Payment account copied successfully.");
-
  }catch(e){
 
   const input=document.createElement("textarea");
-
   input.value=value;
   document.body.appendChild(input);
-
   input.select();
 
   try{
@@ -770,14 +805,13 @@ document.getElementById("copyBtn").addEventListener("click",async()=>{
  }
 });
 
-/* 15 MINUTE DESIGN TIMER */
+/* TIMER - FRONTEND DESIGN ONLY */
 
 function startTimer(){
 
  clearInterval(timerInterval);
 
  remainingSeconds=900;
-
  renderTimer();
 
  timerInterval=setInterval(()=>{
@@ -787,9 +821,7 @@ function startTimer(){
    renderTimer();
   }else{
    clearInterval(timerInterval);
-
    document.getElementById("timer").textContent="00:00";
-
    showToast("১৫ মিনিটের ডিজাইন টাইমার শেষ হয়েছে।");
   }
 
@@ -806,12 +838,7 @@ function renderTimer(){
   String(seconds).padStart(2,"0");
 }
 
-/*
-Timer is visual only.
-It does not block or validate submission.
-*/
-
-/* OPEN CONFIRMATION POPUP */
+/* CONFIRM DETAILS */
 
 document.getElementById("confirmBtn").addEventListener("click",()=>{
 
@@ -843,33 +870,44 @@ document.getElementById("confirmBtn").addEventListener("click",()=>{
  document.getElementById("finalAccount").textContent=
   paymentMethod.account||"—";
 
- document.getElementById("finalTransaction").textContent=
-  transaction;
+ document.getElementById("finalTransaction").textContent=transaction;
 
  document.getElementById("confirmModal").classList.remove("hidden");
 });
 
-/* CANCEL POPUP */
+/* CANCEL */
 
 document.getElementById("cancelBtn").addEventListener("click",()=>{
 
- document.getElementById("confirmModal").classList.add("hidden");
+ if(submitting)return;
 
+ document.getElementById("confirmModal").classList.add("hidden");
 });
 
-/* FINAL SUBMIT */
+/* FINAL SUBMIT WITH 2 SECOND LOADING */
 
 document.getElementById("submitBtn").addEventListener("click",async()=>{
 
- const btn=document.getElementById("submitBtn");
-
- if(!finalData){
-  showToast("Please confirm your information.");
+ if(!finalData||submitting){
   return;
  }
 
+ submitting=true;
+
+ const btn=document.getElementById("submitBtn");
+ const modal=document.getElementById("modalBox");
+
  btn.disabled=true;
- btn.textContent="জমা হচ্ছে...";
+ document.getElementById("cancelBtn").disabled=true;
+
+ modal.classList.add("is-loading");
+
+ /*
+ 2 second visual loading first.
+ Then submit the actual API request.
+ */
+
+ await new Promise(resolve=>setTimeout(resolve,2000));
 
  try{
 
@@ -888,20 +926,24 @@ document.getElementById("submitBtn").addEventListener("click",async()=>{
 
   clearInterval(timerInterval);
 
-  btn.textContent="সফল হয়েছে ✓";
-
   showToast("আপনার Deposit Request সফলভাবে জমা হয়েছে।");
 
   setTimeout(()=>{
    location.href=HOME_PAGE;
-  },1200);
+  },1000);
 
  }catch(error){
+
+  modal.classList.remove("is-loading");
 
   showToast(error.message||"Deposit submission failed.");
 
   btn.disabled=false;
-  btn.textContent="জমা দিন";
+  document.getElementById("cancelBtn").disabled=false;
+
+  btn.textContent="আবার জমা দিন";
+
+  submitting=false;
  }
 });
 
