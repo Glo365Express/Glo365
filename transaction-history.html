@@ -1,0 +1,924 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="theme-color" content="#2196e8">
+<title>GLO 365 - Transaction History</title>
+
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+
+body{
+ font-family:Arial,sans-serif;
+ background:#eff6fc;
+ color:#263b4d;
+ min-height:100vh;
+ padding-bottom:85px;
+}
+
+.app{
+ max-width:520px;
+ min-height:100vh;
+ margin:auto;
+ background:#f1f7fd;
+}
+
+header{
+ background:linear-gradient(120deg,#1687d5,#2196e8);
+ color:#fff;
+ padding:20px 17px;
+ display:flex;
+ align-items:center;
+ gap:15px;
+}
+
+.back{
+ color:#fff;
+ text-decoration:none;
+ font-size:30px;
+ line-height:1;
+}
+
+.header-title{
+ font-size:22px;
+ font-weight:900;
+}
+
+.page{padding:16px 14px}
+
+.wallet-card{
+ background:linear-gradient(130deg,#1687d5,#0879c7);
+ color:#fff;
+ padding:19px;
+ border-radius:17px;
+ box-shadow:0 7px 20px #1687d52b;
+ margin-bottom:17px;
+}
+
+.wallet-label{
+ font-size:12px;
+ color:#e1f3ff;
+}
+
+.wallet-balance{
+ font-size:31px;
+ font-weight:900;
+ margin-top:8px;
+}
+
+.wallet-balance small{
+ font-size:13px;
+}
+
+.wallet-note{
+ font-size:11px;
+ margin-top:7px;
+ color:#e1f3ff;
+}
+
+.section-title{
+ font-size:17px;
+ font-weight:900;
+ margin:20px 2px 13px;
+ color:#30495d;
+}
+
+.filters{
+ display:flex;
+ gap:8px;
+ overflow-x:auto;
+ padding-bottom:5px;
+ margin-bottom:12px;
+}
+
+.filter{
+ flex-shrink:0;
+ border:1px solid #d4e5f3;
+ background:#fff;
+ color:#62798c;
+ border-radius:25px;
+ padding:10px 16px;
+ font-size:12px;
+ font-weight:bold;
+ cursor:pointer;
+}
+
+.filter.active{
+ background:#1687d5;
+ border-color:#1687d5;
+ color:#fff;
+}
+
+.summary{
+ display:grid;
+ grid-template-columns:repeat(3,1fr);
+ gap:9px;
+ margin-bottom:17px;
+}
+
+.summary-card{
+ background:#fff;
+ border:1px solid #e0edf7;
+ border-radius:12px;
+ padding:13px 7px;
+ text-align:center;
+}
+
+.summary-card span{
+ display:block;
+ font-size:10px;
+ color:#8193a4;
+}
+
+.summary-card strong{
+ display:block;
+ margin-top:7px;
+ font-size:15px;
+ color:#294760;
+ overflow-wrap:anywhere;
+}
+
+.transaction-card{
+ background:#fff;
+ border:1px solid #e0edf7;
+ border-radius:13px;
+ padding:13px;
+ margin-bottom:10px;
+ box-shadow:0 3px 12px #173c5b07;
+}
+
+.transaction-top{
+ display:flex;
+ justify-content:space-between;
+ align-items:center;
+ gap:8px;
+}
+
+.transaction-left{
+ display:flex;
+ align-items:center;
+ gap:10px;
+ min-width:0;
+}
+
+.transaction-icon{
+ width:42px;
+ height:42px;
+ min-width:42px;
+ border-radius:12px;
+ display:grid;
+ place-items:center;
+ background:#e9f5ff;
+ font-size:21px;
+}
+
+.transaction-name{
+ font-size:13px;
+ font-weight:900;
+ color:#294760;
+ overflow-wrap:anywhere;
+}
+
+.transaction-date{
+ font-size:10px;
+ color:#91a0ad;
+ margin-top:5px;
+}
+
+.status{
+ padding:6px 9px;
+ border-radius:20px;
+ font-size:9px;
+ font-weight:900;
+ white-space:nowrap;
+ background:#fff5dc;
+ color:#a87613;
+}
+
+.status.success{
+ background:#e4f8ed;
+ color:#16884b;
+}
+
+.status.failed{
+ background:#fff0f1;
+ color:#d34c5e;
+}
+
+.status.pending{
+ background:#fff5dc;
+ color:#a87613;
+}
+
+.transaction-bottom{
+ border-top:1px solid #f0f3f6;
+ margin-top:12px;
+ padding-top:11px;
+ display:flex;
+ justify-content:space-between;
+ align-items:center;
+ gap:8px;
+}
+
+.transaction-description{
+ font-size:11px;
+ color:#8293a2;
+ line-height:1.6;
+ overflow-wrap:anywhere;
+ min-width:0;
+}
+
+.transaction-amount{
+ font-size:16px;
+ font-weight:900;
+ white-space:nowrap;
+}
+
+.transaction-amount.credit{color:#15935c}
+.transaction-amount.debit{color:#dc5262}
+
+.reference{
+ margin-top:8px;
+ font-size:10px;
+ color:#9aa8b4;
+ overflow-wrap:anywhere;
+}
+
+.empty{
+ background:#fff;
+ border:1px solid #e0edf7;
+ border-radius:13px;
+ text-align:center;
+ padding:35px 15px;
+ color:#91a0ad;
+ font-size:13px;
+ line-height:1.8;
+}
+
+.empty-icon{
+ font-size:38px;
+ margin-bottom:10px;
+}
+
+.loading{
+ text-align:center;
+ padding:35px 10px;
+ color:#7f95a8;
+ font-size:12px;
+}
+
+.spinner{
+ width:34px;
+ height:34px;
+ border:4px solid #dcecf8;
+ border-top-color:#1687d5;
+ border-radius:50%;
+ margin:0 auto 12px;
+ animation:spin .8s linear infinite;
+}
+
+@keyframes spin{
+ to{transform:rotate(360deg)}
+}
+
+.error{
+ background:#fff0f1;
+ color:#c74658;
+ border:1px solid #ffd8dd;
+ border-radius:11px;
+ padding:15px;
+ font-size:12px;
+ line-height:1.7;
+ text-align:center;
+}
+
+.refresh{
+ display:block;
+ margin:15px auto;
+ border:0;
+ background:#e1f2ff;
+ color:#167fc4;
+ border-radius:20px;
+ padding:10px 18px;
+ font-weight:bold;
+ cursor:pointer;
+}
+
+.bottom-nav{
+ position:fixed;
+ bottom:0;
+ left:50%;
+ transform:translateX(-50%);
+ width:100%;
+ max-width:520px;
+ height:75px;
+ background:#fff;
+ border-top:1px solid #dce9f3;
+ display:flex;
+ justify-content:space-around;
+ align-items:center;
+ z-index:20;
+}
+
+.nav-item{
+ text-decoration:none;
+ color:#8495a4;
+ text-align:center;
+ font-size:10px;
+ font-weight:bold;
+ flex:1;
+}
+
+.nav-item .emoji{
+ display:block;
+ font-size:23px;
+ margin-bottom:5px;
+}
+
+.nav-item.active{color:#1687d5}
+
+.toast{
+ display:none;
+ position:fixed;
+ bottom:90px;
+ left:50%;
+ transform:translateX(-50%);
+ background:#173d5b;
+ color:#fff;
+ padding:12px 17px;
+ border-radius:10px;
+ z-index:100;
+ font-size:12px;
+ max-width:90%;
+ text-align:center;
+}
+
+@media(max-width:360px){
+ .wallet-balance{font-size:27px}
+ .transaction-card{padding:11px}
+ .transaction-icon{width:37px;height:37px;min-width:37px}
+ .transaction-amount{font-size:14px}
+}
+</style>
+</head>
+
+<body>
+
+<div class="app">
+
+<header>
+<a class="back" href="profile.html">‹</a>
+<div class="header-title">Transaction History</div>
+</header>
+
+<main class="page">
+
+<!-- WALLET BALANCE -->
+
+<section class="wallet-card">
+<div class="wallet-label">Current Wallet Balance</div>
+
+<div class="wallet-balance">
+<span id="walletBalance">0.00</span>
+<small>Points</small>
+</div>
+
+<div class="wallet-note">
+Your complete wallet transaction records.
+</div>
+</section>
+
+<!-- SUMMARY -->
+
+<div class="summary">
+
+<div class="summary-card">
+<span>Total Transactions</span>
+<strong id="totalCount">0</strong>
+</div>
+
+<div class="summary-card">
+<span>Total Credit</span>
+<strong id="totalCredit">0.00</strong>
+</div>
+
+<div class="summary-card">
+<span>Total Debit</span>
+<strong id="totalDebit">0.00</strong>
+</div>
+
+</div>
+
+<!-- FILTER -->
+
+<div class="section-title">Transaction Records</div>
+
+<div class="filters" id="filters">
+
+<button class="filter active" data-filter="all">
+All
+</button>
+
+<button class="filter" data-filter="deposit">
+Deposit
+</button>
+
+<button class="filter" data-filter="withdraw">
+Withdraw
+</button>
+
+<button class="filter" data-filter="bonus">
+Bonus
+</button>
+
+<button class="filter" data-filter="bet">
+Bet
+</button>
+
+<button class="filter" data-filter="other">
+Others
+</button>
+
+</div>
+
+<!-- TRANSACTION LIST -->
+
+<div id="transactionList">
+
+<div class="loading">
+<div class="spinner"></div>
+Loading transactions...
+</div>
+
+</div>
+
+<button class="refresh" id="refreshBtn">
+↻ Refresh Transactions
+</button>
+
+</main>
+
+</div>
+
+<!-- BOTTOM NAVIGATION -->
+
+<nav class="bottom-nav">
+
+<a class="nav-item" href="home.html">
+<span class="emoji">🏠</span>
+Home
+</a>
+
+<a class="nav-item" href="my-bets.html">
+<span class="emoji">🎯</span>
+My Bets
+</a>
+
+<a class="nav-item" href="results.html">
+<span class="emoji">🏆</span>
+Results
+</a>
+
+<a class="nav-item active" href="profile.html">
+<span class="emoji">👤</span>
+Profile
+</a>
+
+</nav>
+
+<div class="toast" id="toast"></div>
+
+<script>
+"use strict";
+
+const API_BASE_URL="https://glo365.onrender.com/api";
+const TOKEN_KEY="glo365_token";
+
+let transactions=[];
+let currentFilter="all";
+let toastTimer=null;
+
+function getToken(){
+ return sessionStorage.getItem(TOKEN_KEY)||"";
+}
+
+function showToast(message){
+
+ const el=document.getElementById("toast");
+
+ el.textContent=message;
+ el.style.display="block";
+
+ clearTimeout(toastTimer);
+
+ toastTimer=setTimeout(()=>{
+  el.style.display="none";
+ },3000);
+}
+
+/* API REQUEST */
+
+async function api(path){
+
+ const headers={};
+
+ if(getToken()){
+  headers.Authorization="Bearer "+getToken();
+ }
+
+ const response=await fetch(API_BASE_URL+path,{
+  method:"GET",
+  headers,
+  credentials:"include",
+  cache:"no-store"
+ });
+
+ let data={};
+
+ try{
+  data=await response.json();
+ }catch(e){}
+
+ if(response.status===401){
+
+  sessionStorage.removeItem(TOKEN_KEY);
+
+  throw new Error("Session expired. Please login again.");
+ }
+
+ if(!response.ok||data.success===false){
+  throw new Error(data.message||"Unable to load transactions.");
+ }
+
+ return data;
+}
+
+/* FORMAT DATE */
+
+function formatDate(value){
+
+ const date=new Date(value);
+
+ if(Number.isNaN(date.getTime())){
+  return "Date unavailable";
+ }
+
+ return date.toLocaleString("en-GB",{
+  day:"2-digit",
+  month:"short",
+  year:"numeric",
+  hour:"2-digit",
+  minute:"2-digit"
+ });
+}
+
+/* NORMALIZE TRANSACTION TYPE */
+
+function getType(type){
+
+ const value=String(type||"other").toLowerCase();
+
+ if(value.includes("deposit")||value.includes("credit")){
+  return "deposit";
+ }
+
+ if(value.includes("withdraw")||value.includes("payout")){
+  return "withdraw";
+ }
+
+ if(value.includes("bonus")||value.includes("reward")){
+  return "bonus";
+ }
+
+ if(value.includes("bet")){
+  return "bet";
+ }
+
+ return "other";
+}
+
+/* TRANSACTION ICON */
+
+function getIcon(type){
+
+ const icons={
+  deposit:"📥",
+  withdraw:"📤",
+  bonus:"🎁",
+  bet:"🎯",
+  other:"💳"
+ };
+
+ return icons[type]||"💳";
+}
+
+/* TRANSACTION TITLE */
+
+function getTitle(transaction,type){
+
+ if(transaction.description){
+  return transaction.description;
+ }
+
+ const titles={
+  deposit:"Deposit",
+  withdraw:"Withdrawal",
+  bonus:"Bonus",
+  bet:"Game Transaction",
+  other:"Wallet Transaction"
+ };
+
+ return titles[type]||"Transaction";
+}
+
+/* STATUS */
+
+function getStatus(transaction){
+
+ const status=String(
+  transaction.status||
+  transaction.state||
+  "completed"
+ ).toLowerCase();
+
+ if(
+  ["approved","success","successful","completed","complete"].includes(status)
+ ){
+  return {
+   text:"SUCCESS",
+   className:"success"
+  };
+ }
+
+ if(
+  ["rejected","failed","cancelled","canceled"].includes(status)
+ ){
+  return {
+   text:"FAILED",
+   className:"failed"
+  };
+ }
+
+ return {
+  text:"PENDING",
+  className:"pending"
+ };
+}
+
+/* FILTER */
+
+function filterTransactions(){
+
+ const filtered=transactions.filter(t=>{
+
+  const type=getType(t.type);
+
+  return currentFilter==="all"||
+         type===currentFilter||
+         (currentFilter==="other"&&type==="other");
+
+ });
+
+ renderTransactions(filtered);
+}
+
+/* SUMMARY */
+
+function renderSummary(){
+
+ let credit=0;
+ let debit=0;
+
+ transactions.forEach(t=>{
+
+  const amount=Math.abs(Number(t.amount)||0);
+  const type=getType(t.type);
+
+  if(
+   ["deposit","bonus"].includes(type)||
+   String(t.type).toLowerCase().includes("credit")
+  ){
+   credit+=amount;
+  }else{
+   debit+=amount;
+  }
+
+ });
+
+ document.getElementById("totalCount").textContent=
+  transactions.length;
+
+ document.getElementById("totalCredit").textContent=
+  credit.toFixed(2);
+
+ document.getElementById("totalDebit").textContent=
+  debit.toFixed(2);
+}
+
+/* RENDER TRANSACTIONS */
+
+function renderTransactions(list){
+
+ const container=document.getElementById("transactionList");
+
+ container.replaceChildren();
+
+ if(!list.length){
+
+  const empty=document.createElement("div");
+
+  empty.className="empty";
+
+  const icon=document.createElement("div");
+  icon.className="empty-icon";
+  icon.textContent="📋";
+
+  const message=document.createElement("div");
+
+  message.textContent=
+   transactions.length
+    ?"No transactions found in this category."
+    :"No transaction records available yet.";
+
+  empty.append(icon,message);
+  container.append(empty);
+
+  return;
+ }
+
+ list.forEach(t=>{
+
+  const type=getType(t.type);
+  const amount=Number(t.amount)||0;
+  const status=getStatus(t);
+
+  const card=document.createElement("div");
+  card.className="transaction-card";
+
+  const top=document.createElement("div");
+  top.className="transaction-top";
+
+  const left=document.createElement("div");
+  left.className="transaction-left";
+
+  const icon=document.createElement("div");
+  icon.className="transaction-icon";
+  icon.textContent=getIcon(type);
+
+  const titleWrap=document.createElement("div");
+
+  const title=document.createElement("div");
+  title.className="transaction-name";
+  title.textContent=getTitle(t,type);
+
+  const date=document.createElement("div");
+  date.className="transaction-date";
+  date.textContent=formatDate(t.created_at);
+
+  titleWrap.append(title,date);
+  left.append(icon,titleWrap);
+
+  const badge=document.createElement("span");
+  badge.className="status "+status.className;
+  badge.textContent=status.text;
+
+  top.append(left,badge);
+
+  const bottom=document.createElement("div");
+  bottom.className="transaction-bottom";
+
+  const description=document.createElement("div");
+  description.className="transaction-description";
+  description.textContent=
+   t.description||"Wallet transaction";
+
+  const amountEl=document.createElement("div");
+
+  const isCredit=
+   type==="deposit"||
+   type==="bonus"||
+   String(t.type||"").toLowerCase().includes("credit");
+
+  amountEl.className=
+   "transaction-amount "+(isCredit?"credit":"debit");
+
+  amountEl.textContent=
+   (isCredit?"+":"-")+
+   Math.abs(amount).toFixed(2)+
+   " "+(t.currency||"Points");
+
+  bottom.append(description,amountEl);
+
+  card.append(top,bottom);
+
+  if(t.reference){
+
+   const reference=document.createElement("div");
+
+   reference.className="reference";
+
+   reference.textContent="Reference: "+t.reference;
+
+   card.append(reference);
+  }
+
+  container.append(card);
+
+ });
+}
+
+/* LOAD WALLET AND TRANSACTIONS */
+
+async function loadTransactions(){
+
+ const container=document.getElementById("transactionList");
+
+ container.innerHTML=
+  '<div class="loading"><div class="spinner"></div>Loading transactions...</div>';
+
+ try{
+
+  if(!getToken()){
+   location.href="index.html";
+   return;
+  }
+
+  const [walletData,transactionData]=await Promise.all([
+
+   api("/wallet"),
+
+   api("/wallet/transactions")
+
+  ]);
+
+  document.getElementById("walletBalance").textContent=
+   (Number(walletData.balance)||0).toFixed(2);
+
+  transactions=Array.isArray(transactionData.transactions)
+   ?transactionData.transactions
+   :[];
+
+  renderSummary();
+  filterTransactions();
+
+ }catch(error){
+
+  container.replaceChildren();
+
+  const errorBox=document.createElement("div");
+  errorBox.className="error";
+  errorBox.textContent=error.message;
+
+  container.append(errorBox);
+
+  if(/login|session|token/i.test(error.message)){
+
+   setTimeout(()=>{
+    location.href="index.html";
+   },1500);
+
+  }else{
+   showToast("Unable to load transaction history.");
+  }
+
+ }
+}
+
+/* FILTER EVENTS */
+
+document.getElementById("filters").addEventListener(
+ "click",
+ event=>{
+
+  const button=event.target.closest("[data-filter]");
+
+  if(!button)return;
+
+  currentFilter=button.dataset.filter;
+
+  document.querySelectorAll(".filter").forEach(el=>{
+   el.classList.toggle("active",el===button);
+  });
+
+  filterTransactions();
+
+ }
+);
+
+/* REFRESH */
+
+document.getElementById("refreshBtn").addEventListener(
+ "click",
+ loadTransactions
+);
+
+/* INITIALIZE */
+
+loadTransactions();
+
+</script>
+
+</body>
+</html>
