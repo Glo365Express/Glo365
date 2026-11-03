@@ -1,110 +1,820 @@
+
 <!DOCTYPE html>
 <html lang="bn">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width,initial-scale=1">
-<meta name="theme-color" content="#2196e8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="theme-color" content="#dce3ed">
 <title>GLO 365 - Login & Create Account</title>
+
 <style>
 *{box-sizing:border-box;margin:0;padding:0}
-body{font-family:Arial,sans-serif;background:#f3f8fc;min-height:100vh;display:flex;justify-content:center;align-items:center;padding:18px;color:#17233d}
-.login-box{width:100%;max-width:420px;background:#fff;border:1px solid #d9eaf6;border-radius:20px;padding:28px 22px;box-shadow:0 8px 30px rgba(24,100,160,.10)}
-.logo{text-align:center;font-size:37px;font-weight:900;color:#17233d;letter-spacing:1px;margin-bottom:6px}.logo span{color:#2196e8}
-.subtitle{text-align:center;color:#71869a;font-size:13px;margin-bottom:25px}
-.tabs{display:grid;grid-template-columns:1fr 1fr;gap:7px;padding:5px;background:#edf6fc;border:1px solid #d9eaf6;border-radius:12px;margin-bottom:25px}
-.tabs button{border:0;padding:12px 5px;border-radius:9px;background:transparent;color:#668096;font-size:13px;font-weight:bold;cursor:pointer}
-.tabs button.active{background:#2196e8;color:#fff;box-shadow:0 3px 9px #2196e833}
-h2{font-size:21px;color:#172f4b;margin-bottom:21px}.form-group{margin-bottom:17px}
-label{display:block;font-size:13px;font-weight:bold;color:#294762;margin-bottom:8px}
-input{width:100%;padding:14px;border:1px solid #cbddea;border-radius:10px;font-size:15px;color:#172f4b;background:#fbfdff;outline:none}
-input:focus{border-color:#2196e8;background:#fff;box-shadow:0 0 0 3px #2196e81a}
-.action-btn{width:100%;border:0;padding:15px;border-radius:10px;background:#2196e8;color:white;font-size:16px;font-weight:900;cursor:pointer;margin-top:5px;box-shadow:0 4px 12px #2196e833}
-.action-btn:disabled{opacity:.65;cursor:not-allowed}
-.message{display:none;margin-top:15px;padding:12px;border-radius:9px;font-size:13px;text-align:center;line-height:1.6;overflow-wrap:anywhere}
-.message.error{background:#fff0f0;color:#c62828;border:1px solid #ffd1d1}.message.success{background:#eaf8ef;color:#247a40;border:1px solid #ccebd5}
-.demo-info{margin-top:22px;padding:14px;background:#edf7ff;border:1px solid #cfe8fa;border-radius:11px;font-size:12px;line-height:1.9;color:#315c7b}.demo-info b{color:#147fc9;font-size:13px}
-.footer{text-align:center;margin-top:21px;font-size:11px;color:#91a2b1}
-.form-panel{display:none}.form-panel.active{display:block}
-@media(max-width:360px){.login-box{padding:24px 17px}.logo{font-size:33px}h2{font-size:19px}.tabs button{font-size:11px}}
+
+:root{
+ --bg:#dce3ed;
+ --light:#f7faff;
+ --dark:#aab5c5;
+ --blue:#2196e8;
+ --blue-dark:#147fc9;
+ --text:#26364b;
+ --muted:#718096;
+}
+
+body{
+ font-family:Arial,sans-serif;
+ background:var(--bg);
+ min-height:100vh;
+ display:flex;
+ align-items:center;
+ justify-content:center;
+ padding:24px 16px;
+ color:var(--text);
+ overflow-x:hidden;
+}
+
+.page{
+ width:100%;
+ max-width:440px;
+ text-align:center;
+}
+
+.heading{
+ font-size:30px;
+ font-weight:900;
+ color:#a92e3c;
+ text-shadow:2px 2px 3px #fff,-2px -2px 3px #aab4c3;
+ margin-bottom:28px;
+ letter-spacing:.5px;
+}
+
+.login-circle{
+ width:100%;
+ max-width:390px;
+ min-height:450px;
+ margin:auto;
+ padding:35px 28px;
+ border-radius:50%;
+ background:var(--bg);
+ box-shadow:
+  18px 18px 35px #aeb8c7,
+  -18px -18px 35px #ffffff;
+ display:flex;
+ flex-direction:column;
+ justify-content:center;
+ position:relative;
+ transition:.4s ease;
+}
+
+.login-circle:before{
+ content:"";
+ position:absolute;
+ inset:12px;
+ border-radius:50%;
+ box-shadow:
+  inset 5px 5px 12px #c0c9d6,
+  inset -5px -5px 12px #f5f8ff;
+ pointer-events:none;
+}
+
+.form-content{
+ position:relative;
+ z-index:1;
+ width:100%;
+}
+
+.logo{
+ font-size:27px;
+ font-weight:900;
+ letter-spacing:2px;
+ margin-bottom:7px;
+ color:#26364b;
+}
+
+.logo span{color:var(--blue)}
+
+.subtitle{
+ font-size:12px;
+ color:var(--muted);
+ margin-bottom:22px;
+}
+
+.tabs{
+ display:grid;
+ grid-template-columns:1fr 1fr;
+ gap:10px;
+ margin-bottom:25px;
+}
+
+.tab{
+ border:0;
+ padding:11px 5px;
+ border-radius:25px;
+ background:var(--bg);
+ color:#718096;
+ font-weight:bold;
+ font-size:12px;
+ box-shadow:5px 5px 10px #b6c0ce,-5px -5px 10px #fff;
+ cursor:pointer;
+}
+
+.tab.active{
+ color:#fff;
+ background:var(--blue);
+ box-shadow:inset 3px 3px 7px #1475b7,inset -3px -3px 7px #42b0ff;
+}
+
+h2{
+ font-size:22px;
+ font-weight:900;
+ margin-bottom:22px;
+ color:#26364b;
+}
+
+.form-panel{display:none}
+.form-panel.active{display:block;animation:fadeIn .35s ease}
+
+@keyframes fadeIn{
+ from{opacity:0;transform:translateY(9px)}
+ to{opacity:1;transform:translateY(0)}
+}
+
+.form-group{
+ margin-bottom:16px;
+ text-align:left;
+}
+
+label{
+ display:block;
+ font-size:12px;
+ font-weight:bold;
+ color:#52647a;
+ margin:0 0 7px 12px;
+}
+
+.input-wrap{position:relative}
+
+input{
+ width:100%;
+ height:49px;
+ padding:0 17px;
+ border:0;
+ outline:none;
+ border-radius:30px;
+ background:var(--bg);
+ color:#26364b;
+ font-size:14px;
+ box-shadow:
+  inset 5px 5px 10px #b9c3d0,
+  inset -5px -5px 10px #fff;
+ transition:.25s;
+}
+
+input:focus{
+ box-shadow:
+  inset 3px 3px 7px #b9c3d0,
+  inset -3px -3px 7px #fff,
+  0 0 0 2px #2196e855;
+}
+
+input::placeholder{color:#8b98a9}
+
+.username-status{
+ min-height:18px;
+ padding:5px 12px 0;
+ font-size:11px;
+ font-weight:bold;
+ text-align:left;
+}
+
+.status-available{color:#168a49}
+.status-taken{color:#d32f2f}
+.status-checking{color:#147fc9}
+.status-warning{color:#9b741b}
+
+.action-btn{
+ width:100%;
+ min-height:49px;
+ border:0;
+ border-radius:30px;
+ margin-top:9px;
+ background:var(--bg);
+ color:var(--blue-dark);
+ font-size:16px;
+ font-weight:900;
+ cursor:pointer;
+ box-shadow:
+  7px 7px 13px #b4becc,
+  -7px -7px 13px #fff;
+ transition:.2s;
+}
+
+.action-btn:active{
+ box-shadow:
+  inset 5px 5px 9px #b4becc,
+  inset -5px -5px 9px #fff;
+ transform:scale(.98);
+}
+
+.action-btn:disabled{
+ opacity:.55;
+ cursor:not-allowed;
+}
+
+.message{
+ display:none;
+ position:relative;
+ z-index:2;
+ max-width:350px;
+ margin:20px auto 0;
+ padding:12px 15px;
+ border-radius:14px;
+ font-size:12px;
+ line-height:1.6;
+ overflow-wrap:anywhere;
+}
+
+.message.error{
+ display:block;
+ background:#ffe8e8;
+ color:#bd2525;
+ box-shadow:3px 3px 8px #c5b8b8,-3px -3px 8px #fff;
+}
+
+.message.success{
+ display:block;
+ background:#e2f8e9;
+ color:#19783d;
+ box-shadow:3px 3px 8px #b8c8bc,-3px -3px 8px #fff;
+}
+
+.message.info{
+ display:block;
+ background:#e7f3ff;
+ color:#1769a5;
+}
+
+.loader{
+ width:35px;
+ height:35px;
+ border:5px solid #bbc5d2;
+ border-top-color:var(--blue);
+ border-radius:50%;
+ margin:20px auto 0;
+ animation:spin 1s linear infinite;
+ display:none;
+}
+
+@keyframes spin{to{transform:rotate(360deg)}}
+
+.demo-info{
+ margin:28px auto 0;
+ max-width:380px;
+ padding:15px;
+ border-radius:15px;
+ background:var(--bg);
+ box-shadow:6px 6px 13px #b7c1cf,-6px -6px 13px #fff;
+ color:#63758b;
+ font-size:12px;
+ line-height:1.8;
+ text-align:left;
+}
+
+.demo-info b{color:var(--blue-dark)}
+
+.footer{
+ margin-top:20px;
+ color:#8190a2;
+ font-size:11px;
+}
+
+@media(max-width:390px){
+ .heading{font-size:25px;margin-bottom:22px}
+ .login-circle{min-height:430px;padding:30px 23px}
+ .logo{font-size:24px}
+ h2{font-size:19px}
+ input{height:46px;font-size:13px}
+ .action-btn{min-height:46px}
+}
+
+@media(max-height:700px){
+ body{align-items:flex-start}
+ .login-circle{min-height:410px}
+}
 </style>
 </head>
+
 <body>
-<div class="login-box">
- <div class="logo">GLO <span>365</span></div>
- <div class="subtitle">Welcome to GLO 365</div>
- <div class="tabs">
-  <button type="button" id="loginTab" class="active">LOGIN</button>
-  <button type="button" id="registerTab">CREATE ACCOUNT</button>
+<div class="page">
+
+ <div class="heading">Animated Embossed Login</div>
+
+ <div class="login-circle">
+
+  <div class="form-content">
+
+   <div class="logo">GLO <span>365</span></div>
+   <div class="subtitle">Welcome to GLO 365</div>
+
+   <div class="tabs">
+    <button type="button" class="tab active" id="loginTab">SIGN IN</button>
+    <button type="button" class="tab" id="registerTab">SIGN UP</button>
+   </div>
+
+   <!-- LOGIN -->
+   <div class="form-panel active" id="loginPanel">
+
+    <h2>SIGN IN</h2>
+
+    <form id="loginForm">
+
+     <div class="form-group">
+      <input
+       id="loginUsername"
+       type="text"
+       placeholder="Username or Email"
+       autocomplete="username"
+       required>
+     </div>
+
+     <div class="form-group">
+      <input
+       id="loginPassword"
+       type="password"
+       placeholder="Password"
+       autocomplete="current-password"
+       required>
+     </div>
+
+     <button class="action-btn" id="loginButton" type="submit">
+      Login
+     </button>
+
+    </form>
+   </div>
+
+   <!-- REGISTER -->
+   <div class="form-panel" id="registerPanel">
+
+    <h2>CREATE ACCOUNT</h2>
+
+    <form id="registerForm">
+
+     <div class="form-group">
+      <input
+       id="registerUsername"
+       type="text"
+       placeholder="Choose Username"
+       minlength="3"
+       maxlength="30"
+       autocomplete="username"
+       required>
+
+      <div id="usernameStatus" class="username-status"></div>
+     </div>
+
+     <div class="form-group">
+      <input
+       id="registerEmail"
+       type="email"
+       placeholder="Email Address"
+       maxlength="150"
+       autocomplete="email"
+       required>
+     </div>
+
+     <div class="form-group">
+      <input
+       id="registerPassword"
+       type="password"
+       placeholder="Create Password (8+ characters)"
+       minlength="8"
+       maxlength="128"
+       autocomplete="new-password"
+       required>
+     </div>
+
+     <div class="form-group">
+      <input
+       id="confirmPassword"
+       type="password"
+       placeholder="Confirm Password"
+       minlength="8"
+       maxlength="128"
+       autocomplete="new-password"
+       required>
+     </div>
+
+     <button class="action-btn" id="registerButton" type="submit">
+      Create Account
+     </button>
+
+    </form>
+   </div>
+
+  </div>
+
  </div>
- <div class="form-panel active" id="loginPanel">
-  <h2>Login to your account</h2>
-  <form id="loginForm">
-   <div class="form-group"><label>Username or Email</label><input id="loginUsername" type="text" placeholder="Enter username or email" autocomplete="username" required></div>
-   <div class="form-group"><label>Password</label><input id="loginPassword" type="password" placeholder="Enter password" autocomplete="current-password" required></div>
-   <button class="action-btn" id="loginButton" type="submit">LOGIN</button>
-  </form>
- </div>
- <div class="form-panel" id="registerPanel">
-  <h2>Create New Account</h2>
-  <form id="registerForm">
-   <div class="form-group"><label>Username</label><input id="registerUsername" type="text" placeholder="Choose username" minlength="3" maxlength="30" autocomplete="username" required></div>
-   <div class="form-group"><label>Email Address</label><input id="registerEmail" type="email" placeholder="Enter your email address" maxlength="150" autocomplete="email" required></div>
-   <div class="form-group"><label>Password</label><input id="registerPassword" type="password" placeholder="Create password (minimum 8 characters)" minlength="8" maxlength="128" autocomplete="new-password" required></div>
-   <div class="form-group"><label>Confirm Password</label><input id="confirmPassword" type="password" placeholder="Enter password again" minlength="8" maxlength="128" autocomplete="new-password" required></div>
-   <button class="action-btn" id="registerButton" type="submit">CREATE ACCOUNT</button>
-  </form>
- </div>
+
+ <div class="loader" id="loader"></div>
+
  <div class="message" id="message" role="status" aria-live="polite"></div>
- <div class="demo-info"><b>Account Information</b><br>নতুন User নিজের Username, Email ও Password দিয়ে অ্যাকাউন্ট তৈরি করতে পারবেন।<br><br>আপনার অ্যাকাউন্ট সার্ভারের ডেটাবেজে সংরক্ষিত হবে।</div>
+
+ <div class="demo-info">
+  <b>GLO 365 Account Information</b><br>
+  নতুন User নিজের Username, Email ও Password দিয়ে অ্যাকাউন্ট তৈরি করতে পারবেন।<br>
+  আপনার অ্যাকাউন্ট সার্ভারের ডেটাবেজে সংরক্ষিত হবে।
+ </div>
+
  <div class="footer">GLO 365 © 2026</div>
+
 </div>
+
 <script>
 "use strict";
+
 const API_BASE_URL="https://glo365.onrender.com/api";
 const TOKEN_KEY="glo365_token";
-function showMessage(message,type){const box=document.getElementById("message");box.textContent=message;box.className="message "+type;box.style.display="block"}
-function clearMessage(){const box=document.getElementById("message");box.textContent="";box.style.display="none";box.className="message"}
+
+const $=id=>document.getElementById(id);
+
+let usernameTimer=null;
+let usernameCheckVersion=0;
+let usernameAvailable=null;
+let usernameCheckReady=false;
+
+function showMessage(message,type){
+ const box=$("message");
+ box.textContent=message;
+ box.className="message "+type;
+}
+
+function clearMessage(){
+ const box=$("message");
+ box.textContent="";
+ box.className="message";
+}
+
+function setLoading(loading){
+ $("loader").style.display=loading?"block":"none";
+}
+
+function showTab(tab){
+ clearMessage();
+
+ const login=tab==="login";
+
+ $("loginTab").classList.toggle("active",login);
+ $("registerTab").classList.toggle("active",!login);
+
+ $("loginPanel").classList.toggle("active",login);
+ $("registerPanel").classList.toggle("active",!login);
+
+}
+
+$("loginTab").addEventListener("click",()=>showTab("login"));
+$("registerTab").addEventListener("click",()=>showTab("register"));
+
 async function apiRequest(endpoint,data){
- const response=await fetch(API_BASE_URL+endpoint,{method:"POST",credentials:"include",headers:{"Content-Type":"application/json","Accept":"application/json"},body:JSON.stringify(data)});
- let result;try{result=await response.json()}catch(_){throw new Error("Server returned an invalid response.")}
- if(!response.ok||result.success===false)throw new Error(result.message||result.error||"Request failed. Please try again.");
+ const response=await fetch(API_BASE_URL+endpoint,{
+  method:"POST",
+  credentials:"include",
+  headers:{
+   "Content-Type":"application/json",
+   "Accept":"application/json"
+  },
+  body:JSON.stringify(data)
+ });
+
+ let result;
+
+ try{
+  result=await response.json();
+ }catch(_){
+  throw new Error("Server returned an invalid response.");
+ }
+
+ if(!response.ok||result.success===false){
+  throw new Error(
+   result.message||
+   result.error||
+   "Request failed. Please try again."
+  );
+ }
+
  return result;
 }
-function showTab(tab){clearMessage();document.getElementById("loginTab").classList.toggle("active",tab==="login");document.getElementById("registerTab").classList.toggle("active",tab==="register");document.getElementById("loginPanel").classList.toggle("active",tab==="login");document.getElementById("registerPanel").classList.toggle("active",tab==="register")}
-document.getElementById("loginTab").addEventListener("click",()=>showTab("login"));
-document.getElementById("registerTab").addEventListener("click",()=>showTab("register"));
+
 function saveSession(token,user){
- if(!token||!user||!user.id)throw new Error("Server did not return valid account information.");
- try{sessionStorage.setItem(TOKEN_KEY,token);sessionStorage.setItem("glo365_user",JSON.stringify(user));}
- catch(_){throw new Error("This browser could not save your login session. Please enable site storage and try again.")}
-}
-function redirectByRole(user){const role=String(user.role||"user").toLowerCase();if(role==="admin"){location.replace("admin.html");return}if(role==="affiliate"){location.replace("affiliate.html");return}location.replace("home.html")}
-document.getElementById("loginForm").addEventListener("submit",async function(event){
- event.preventDefault();clearMessage();const button=document.getElementById("loginButton");
- const loginValue=document.getElementById("loginUsername").value.trim().toLowerCase();
- const password=document.getElementById("loginPassword").value;
- if(!loginValue||!password){showMessage("Username/Email ও Password লিখুন।","error");return}
- button.disabled=true;button.textContent="PLEASE WAIT...";
- try{const result=await apiRequest("/auth/login",{email:loginValue,password});saveSession(result.token,result.user);showMessage("Login successful. Opening your account...","success");setTimeout(()=>redirectByRole(result.user),500)}
- catch(error){showMessage(error.message,"error")}
- finally{button.disabled=false;button.textContent="LOGIN"}
-});
-document.getElementById("registerForm").addEventListener("submit",async function(event){
- event.preventDefault();clearMessage();const button=document.getElementById("registerButton");
- const username=document.getElementById("registerUsername").value.trim().toLowerCase();
- const email=document.getElementById("registerEmail").value.trim().toLowerCase();
- const password=document.getElementById("registerPassword").value;const confirm=document.getElementById("confirmPassword").value;
- if(!/^[a-z0-9_]{3,30}$/.test(username)){showMessage("Username 3-30 অক্ষরের হতে হবে। শুধু English letter, number ও underscore ব্যবহার করুন।","error");return}
- if(!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)){showMessage("সঠিক Email Address লিখুন।","error");return}
- if(password.length<8||password.length>128){showMessage("Password কমপক্ষে ৮ এবং সর্বোচ্চ ১২৮ অক্ষরের হতে হবে।","error");return}
- if(password!==confirm){showMessage("দুটি Password মিলছে না।","error");return}
- button.disabled=true;button.textContent="CREATING ACCOUNT...";
+
+ if(!token||!user||!user.id){
+  throw new Error("Server did not return valid account information.");
+ }
+
  try{
-  const result=await apiRequest("/auth/register",{username,email,password});
-  if(result.token&&result.user){saveSession(result.token,result.user);showMessage("অ্যাকাউন্ট সফলভাবে তৈরি হয়েছে। আপনার Home Page খুলছে...","success");document.getElementById("registerForm").reset();setTimeout(()=>redirectByRole(result.user),700)}
-  else{document.getElementById("registerForm").reset();document.getElementById("loginUsername").value=username;showTab("login");showMessage("অ্যাকাউন্ট তৈরি হয়েছে। এখন Login করুন।","success")}
- }catch(error){showMessage(error.message,"error")}
- finally{button.disabled=false;button.textContent="CREATE ACCOUNT"}
+  sessionStorage.setItem(TOKEN_KEY,token);
+  sessionStorage.setItem("glo365_user",JSON.stringify(user));
+ }catch(_){
+  throw new Error("Browser could not save your login session.");
+ }
+
+}
+
+function redirectByRole(user){
+
+ const role=String(user.role||"user").toLowerCase();
+
+ if(role==="admin"){
+  location.replace("admin.html");
+  return;
+ }
+
+ if(role==="affiliate"){
+  location.replace("affiliate.html");
+  return;
+ }
+
+ location.replace("home.html");
+
+}
+
+/* USERNAME LIVE CHECK
+   Server API will be added later:
+   GET /api/auth/check-username?username=example
+
+   Expected response:
+   { success:true, available:true }
+   or
+   { success:true, available:false }
+*/
+
+function setUsernameStatus(message,type){
+ const box=$("usernameStatus");
+ box.textContent=message;
+ box.className="username-status "+type;
+}
+
+async function checkUsername(username,version){
+
+ try{
+
+  const url=API_BASE_URL+
+   "/auth/check-username?username="+
+   encodeURIComponent(username);
+
+  const response=await fetch(url,{
+   method:"GET",
+   credentials:"include",
+   headers:{"Accept":"application/json"},
+   cache:"no-store"
+  });
+
+  if(version!==usernameCheckVersion)return;
+
+  if(response.status===404){
+   usernameAvailable=null;
+   usernameCheckReady=false;
+
+   setUsernameStatus(
+    "Live Username Check চালু করতে Server API প্রয়োজন।",
+    "status-warning"
+   );
+
+   return;
+  }
+
+  let data;
+
+  try{
+   data=await response.json();
+  }catch(_){
+   throw new Error("Invalid server response");
+  }
+
+  if(!response.ok||data.success===false){
+   throw new Error(data.message||"Username check failed");
+  }
+
+  if(typeof data.available!=="boolean"){
+   throw new Error("Invalid username availability response");
+  }
+
+  usernameAvailable=data.available;
+  usernameCheckReady=true;
+
+  if(data.available){
+   setUsernameStatus("✓ Username Available","status-available");
+  }else{
+   setUsernameStatus("✕ Username Already Taken","status-taken");
+  }
+
+ }catch(error){
+
+  if(version!==usernameCheckVersion)return;
+
+  usernameAvailable=null;
+  usernameCheckReady=false;
+
+  setUsernameStatus(
+   "Username check এখন করা যাচ্ছে না। Server API প্রয়োজন।",
+   "status-warning"
+  );
+
+ }
+
+}
+
+$("registerUsername").addEventListener("input",function(){
+
+ clearTimeout(usernameTimer);
+
+ const username=this.value.trim().toLowerCase();
+
+ usernameCheckVersion++;
+ usernameAvailable=null;
+ usernameCheckReady=false;
+
+ if(!username){
+  setUsernameStatus("Username লিখুন।","");
+  return;
+ }
+
+ if(!/^[a-z0-9_]{3,30}$/.test(username)){
+  setUsernameStatus(
+   "৩-৩০ অক্ষর। শুধু English letter, number ও underscore ব্যবহার করুন।",
+   "status-taken"
+  );
+  return;
+ }
+
+ setUsernameStatus("Checking Username...","status-checking");
+
+ const version=usernameCheckVersion;
+
+ usernameTimer=setTimeout(()=>{
+  checkUsername(username,version);
+ },550);
+
+});
+
+/* LOGIN */
+
+$("loginForm").addEventListener("submit",async function(event){
+
+ event.preventDefault();
+ clearMessage();
+
+ const button=$("loginButton");
+
+ const loginValue=$("loginUsername").value.trim().toLowerCase();
+ const password=$("loginPassword").value;
+
+ if(!loginValue||!password){
+  showMessage("Username/Email ও Password লিখুন।","error");
+  return;
+ }
+
+ button.disabled=true;
+ button.textContent="PLEASE WAIT...";
+ setLoading(true);
+
+ try{
+
+  const result=await apiRequest("/auth/login",{
+   email:loginValue,
+   password:password
+  });
+
+  saveSession(result.token,result.user);
+
+  showMessage(
+   "Login successful. Opening your account...",
+   "success"
+  );
+
+  setTimeout(()=>{
+   redirectByRole(result.user);
+  },600);
+
+ }catch(error){
+
+  showMessage(error.message,"error");
+
+ }finally{
+
+  button.disabled=false;
+  button.textContent="Login";
+  setLoading(false);
+
+ }
+
+});
+
+/* CREATE ACCOUNT */
+
+$("registerForm").addEventListener("submit",async function(event){
+
+ event.preventDefault();
+ clearMessage();
+
+ const button=$("registerButton");
+
+ const username=$("registerUsername").value.trim().toLowerCase();
+ const email=$("registerEmail").value.trim().toLowerCase();
+ const password=$("registerPassword").value;
+ const confirm=$("confirmPassword").value;
+
+ if(!/^[a-z0-9_]{3,30}$/.test(username)){
+  showMessage(
+   "Username 3-30 অক্ষরের হতে হবে। শুধু English letter, number ও underscore ব্যবহার করুন।",
+   "error"
+  );
+  return;
+ }
+
+ if(!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)){
+  showMessage("সঠিক Email Address লিখুন।","error");
+  return;
+ }
+
+ if(password.length<8||password.length>128){
+  showMessage(
+   "Password কমপক্ষে ৮ এবং সর্বোচ্চ ১২৮ অক্ষরের হতে হবে।",
+   "error"
+  );
+  return;
+ }
+
+ if(password!==confirm){
+  showMessage("দুটি Password মিলছে না।","error");
+  return;
+ }
+
+ /*
+  * Live availability cannot be enforced until the server endpoint
+  * exists. The registration API must still reject duplicate usernames.
+  */
+
+ if(usernameCheckReady&&usernameAvailable===false){
+  showMessage(
+   "এই Username আগে থেকেই ব্যবহার করা হয়েছে। অন্য Username দিন।",
+   "error"
+  );
+  return;
+ }
+
+ button.disabled=true;
+ button.textContent="CREATING ACCOUNT...";
+ setLoading(true);
+
+ try{
+
+  const result=await apiRequest("/auth/register",{
+   username:username,
+   email:email,
+   password:password
+  });
+
+  if(result.token&&result.user){
+
+   saveSession(result.token,result.user);
+
+   showMessage(
+    "অ্যাকাউন্ট সফলভাবে তৈরি হয়েছে। আপনার Home Page খুলছে...",
+    "success"
+   );
+
+   $("registerForm").reset();
+
+   setTimeout(()=>{
+    redirectByRole(result.user);
+   },700);
+
+  }else{
+
+   $("registerForm").reset();
+   $("loginUsername").value=username;
+
+   showTab("login");
+
+   showMessage(
+    "অ্যাকাউন্ট তৈরি হয়েছে। এখন Login করুন।",
+    "success"
+   );
+
+  }
+
+ }catch(error){
+
+  showMessage(error.message,"error");
+
+ }finally{
+
+  button.disabled=false;
+  button.textContent="Create Account";
+  setLoading(false);
+
+ }
+
 });
 </script>
 </body>
