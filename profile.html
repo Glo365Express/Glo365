@@ -19,9 +19,7 @@
   --red:#e34c59;
 }
 
-*{
-  box-sizing:border-box;
-}
+*{box-sizing:border-box}
 
 body{
   margin:0;
@@ -31,15 +29,13 @@ body{
   padding-bottom:85px;
 }
 
-button,input,textarea{
-  font:inherit;
-}
+button{font:inherit}
 
 .header{
   background:linear-gradient(135deg,var(--blue),var(--blue-dark));
   color:white;
-  padding:17px;
-  font-size:21px;
+  padding:14px 16px;
+  font-size:20px;
   font-weight:800;
   box-shadow:0 3px 12px #087acb30;
 }
@@ -47,36 +43,37 @@ button,input,textarea{
 .container{
   max-width:650px;
   margin:auto;
-  padding:13px;
+  padding:11px;
 }
 
 .card{
   background:white;
   border:1px solid var(--border);
   border-radius:15px;
-  padding:16px;
-  margin-bottom:13px;
+  padding:14px;
+  margin-bottom:12px;
   box-shadow:0 3px 12px #1c5d8510;
 }
 
 /* COMPACT PROFILE CARD */
+
 .profile-top{
   position:relative;
   overflow:hidden;
-  padding:14px;
-  min-height:0;
+  padding:10px 12px;
   background:linear-gradient(135deg,#f9fcff,#e4f2fc);
   border:1px solid #d5e8f6;
-  border-radius:18px;
+  border-radius:17px;
+  box-shadow:0 3px 12px #087acb12;
 }
 
 .profile-top:after{
   content:"";
   position:absolute;
-  width:130px;
-  height:130px;
-  right:-45px;
-  bottom:-65px;
+  width:100px;
+  height:100px;
+  right:-40px;
+  bottom:-55px;
   border-radius:50%;
   background:#087acb09;
   pointer-events:none;
@@ -85,14 +82,14 @@ button,input,textarea{
 .profile-main{
   display:flex;
   align-items:center;
-  gap:13px;
+  gap:10px;
   position:relative;
   z-index:1;
 }
 
 .avatar{
-  width:76px;
-  height:76px;
+  width:58px;
+  height:58px;
   flex-shrink:0;
   border-radius:50%;
   background:var(--blue-light);
@@ -101,7 +98,7 @@ button,input,textarea{
   align-items:center;
   justify-content:center;
   overflow:hidden;
-  box-shadow:0 3px 12px #087acb25;
+  box-shadow:0 3px 10px #087acb25;
 }
 
 .avatar img{
@@ -116,35 +113,35 @@ button,input,textarea{
 }
 
 .profile-name{
-  font-size:16px;
+  font-size:15px;
   font-weight:800;
-  margin:0 0 5px;
+  margin:0 0 3px;
   overflow-wrap:anywhere;
 }
 
 .user-id{
-  font-size:11px;
+  font-size:10px;
   color:var(--muted);
-  margin-bottom:5px;
+  margin-bottom:3px;
   overflow-wrap:anywhere;
 }
 
 .bio{
-  font-size:11px;
+  font-size:10px;
   color:#64798b;
-  margin:5px 0;
-  line-height:1.4;
+  margin:3px 0;
+  line-height:1.3;
 }
 
 .verified{
   display:inline-block;
   background:#e7f8ef;
   color:#13834e;
-  padding:4px 8px;
+  padding:3px 7px;
   border-radius:20px;
-  font-size:10px;
+  font-size:9px;
   font-weight:700;
-  margin-top:3px;
+  margin-top:2px;
 }
 
 .unverified{
@@ -152,32 +149,37 @@ button,input,textarea{
   color:#a66b00;
 }
 
+/* DEPOSIT AND WITHDRAW BUTTONS */
+
 .profile-buttons{
   display:flex;
-  gap:7px;
-  margin-top:13px;
+  gap:8px;
+  margin-top:9px;
   position:relative;
   z-index:1;
 }
 
 .btn{
+  flex:1;
   border:0;
-  border-radius:30px;
-  padding:9px 12px;
+  border-radius:25px;
+  padding:8px 10px;
   font-size:11px;
-  font-weight:700;
+  font-weight:800;
   cursor:pointer;
+  text-align:center;
+  text-decoration:none;
   white-space:nowrap;
-}
-
-.btn:disabled{
-  opacity:.55;
-  cursor:not-allowed;
+  display:flex;
+  justify-content:center;
+  align-items:center;
+  min-height:32px;
 }
 
 .btn-blue{
-  background:var(--blue);
+  background:linear-gradient(135deg,var(--blue),var(--blue-dark));
   color:white;
+  box-shadow:0 3px 8px #087acb25;
 }
 
 .btn-light{
@@ -187,17 +189,17 @@ button,input,textarea{
   box-shadow:0 2px 7px #087acb12;
 }
 
-.btn-red{
-  background:#fff0f1;
-  color:var(--red);
+.btn:active{
+  transform:scale(.97);
 }
 
-/* MEMBER MENU */
+/* MEMBER CENTER */
+
 .member-heading{
   display:flex;
   align-items:center;
   gap:9px;
-  margin:20px 0 12px;
+  margin:18px 0 10px;
 }
 
 .member-heading h3{
@@ -217,7 +219,7 @@ button,input,textarea{
 .member-menu{
   display:grid;
   grid-template-columns:repeat(4,minmax(0,1fr));
-  gap:17px 7px;
+  gap:16px 7px;
   padding:8px 0 17px;
 }
 
@@ -229,8 +231,9 @@ button,input,textarea{
   flex-direction:column;
   align-items:center;
   text-align:center;
-  gap:7px;
+  gap:6px;
   cursor:pointer;
+  -webkit-tap-highlight-color:transparent;
 }
 
 .member-icon{
@@ -259,6 +262,7 @@ button,input,textarea{
 }
 
 /* BOTTOM NAVIGATION */
+
 .bottom-nav{
   position:fixed;
   bottom:0;
@@ -284,9 +288,7 @@ button,input,textarea{
   font-size:11px;
 }
 
-.nav-item span{
-  font-size:20px;
-}
+.nav-item span{font-size:20px}
 
 .nav-item.active{
   color:var(--blue-dark);
@@ -307,115 +309,7 @@ button,input,textarea{
   border:2px solid var(--blue);
 }
 
-/* MODALS */
-.modal{
-  display:none;
-  position:fixed;
-  inset:0;
-  background:#071c2dcc;
-  z-index:50;
-  padding:15px;
-  align-items:center;
-  justify-content:center;
-}
-
-.modal.show{
-  display:flex;
-}
-
-.modal-box{
-  width:100%;
-  max-width:460px;
-  max-height:90vh;
-  overflow-y:auto;
-  background:white;
-  border-radius:20px;
-  padding:20px;
-  box-shadow:0 15px 45px #001c3540;
-}
-
-.modal-head{
-  display:flex;
-  align-items:center;
-  justify-content:space-between;
-  margin-bottom:17px;
-}
-
-.modal-head h3{
-  margin:0;
-  font-size:18px;
-}
-
-.close{
-  border:0;
-  background:#edf5fb;
-  border-radius:50%;
-  width:34px;
-  height:34px;
-  font-size:20px;
-  cursor:pointer;
-}
-
-.notice{
-  background:#eef7ff;
-  border:1px solid #cfe7fa;
-  color:#315d7d;
-  padding:11px;
-  border-radius:9px;
-  font-size:12px;
-  line-height:1.6;
-  margin-bottom:14px;
-}
-
-.small-muted{
-  font-size:11px;
-  color:var(--muted);
-  line-height:1.6;
-}
-
-.avatar-grid{
-  display:grid;
-  grid-template-columns:repeat(2,minmax(0,1fr));
-  gap:13px;
-  margin:15px 0;
-}
-
-.avatar-option{
-  border:2px solid var(--border);
-  border-radius:16px;
-  background:linear-gradient(145deg,#f5faff,#fff);
-  padding:13px 8px;
-  cursor:pointer;
-  text-align:center;
-  position:relative;
-}
-
-.avatar-option.selected{
-  border-color:var(--blue);
-  background:#eaf5fd;
-  box-shadow:0 0 0 3px #2196e820;
-}
-
-.avatar-option img{
-  width:90px;
-  height:90px;
-  display:block;
-  margin:0 auto 10px;
-  border-radius:50%;
-}
-
-.avatar-option span{
-  display:block;
-  font-size:13px;
-  font-weight:800;
-}
-
-.avatar-option small{
-  display:block;
-  color:var(--blue-dark);
-  font-size:11px;
-  margin-top:5px;
-}
+/* TOAST */
 
 .toast{
   position:fixed;
@@ -443,27 +337,46 @@ button,input,textarea{
   transform:translate(-50%,0);
 }
 
-.loading{
-  opacity:.65;
-  pointer-events:none;
-}
-
 @media(max-width:380px){
-  .container{padding:10px}
-  .profile-top{padding:12px}
-  .avatar{width:68px;height:68px}
-  .profile-name{font-size:15px}
-  .member-menu{gap:15px 5px}
-  .member-icon{width:53px;height:53px;font-size:23px}
+
+  .container{padding:9px}
+
+  .profile-top{padding:9px 10px}
+
+  .avatar{
+    width:54px;
+    height:54px;
+  }
+
+  .profile-name{font-size:14px}
+
+  .member-menu{gap:14px 5px}
+
+  .member-icon{
+    width:53px;
+    height:53px;
+    font-size:23px;
+  }
+
   .member-item strong{font-size:9px}
-  .avatar-option img{width:82px;height:82px}
-  .btn{padding:8px 10px;font-size:10px}
+
+  .btn{
+    padding:7px 8px;
+    font-size:10px;
+  }
 }
 
 @media(max-width:320px){
-  .member-icon{width:47px;height:47px;font-size:21px}
+
+  .member-icon{
+    width:47px;
+    height:47px;
+    font-size:21px;
+  }
+
   .member-item strong{font-size:8px}
-  .profile-main{gap:9px}
+
+  .profile-main{gap:8px}
 }
 </style>
 </head>
@@ -475,6 +388,7 @@ button,input,textarea{
 <main class="container">
 
   <!-- COMPACT PROFILE CARD -->
+
   <section class="card profile-top">
 
     <div class="profile-main">
@@ -482,30 +396,41 @@ button,input,textarea{
       <div class="avatar" id="avatar">👤</div>
 
       <div class="profile-details">
-        <div class="profile-name" id="profileName">Loading...</div>
 
-        <div class="user-id" id="userId">User ID: --</div>
+        <div class="profile-name" id="profileName">
+          Loading...
+        </div>
+
+        <div class="user-id" id="userId">
+          User ID: --
+        </div>
 
         <div id="accountStatus"></div>
 
-        <div class="bio" id="profileBio">Loading profile...</div>
+        <div class="bio" id="profileBio">
+          Loading profile...
+        </div>
+
       </div>
 
     </div>
 
     <div class="profile-buttons">
-      <button class="btn btn-light" onclick="openAvatarPicker()">
-        🎨 Avatar
-      </button>
 
-      <button class="btn btn-blue" onclick="showKycInfo()">
-        ✓ Verify Profile
-      </button>
+      <a class="btn btn-light" href="deposit.html">
+        ＋ Deposit
+      </a>
+
+      <a class="btn btn-blue" href="withdraw.html">
+        ↗ Withdraw
+      </a>
+
     </div>
 
   </section>
 
   <!-- MEMBER CENTER -->
+
   <div class="member-heading">
     <h3>MEMBER CENTER</h3>
   </div>
@@ -587,6 +512,7 @@ button,input,textarea{
 </main>
 
 <!-- BOTTOM NAV -->
+
 <nav class="bottom-nav">
 
   <a class="nav-item" href="home.html">
@@ -611,54 +537,6 @@ button,input,textarea{
 
 </nav>
 
-<!-- AVATAR MODAL -->
-<div class="modal" id="avatarModal">
-
-  <div class="modal-box">
-
-    <div class="modal-head">
-      <h3>🎨 Choose Your Avatar</h3>
-      <button class="close" onclick="closeAvatarPicker()">×</button>
-    </div>
-
-    <p class="small-muted">
-      Choose your profile character. Your selection will be saved to your GLO 365 account.
-    </p>
-
-    <div class="avatar-grid" id="avatarGrid"></div>
-
-    <button class="btn btn-blue" style="width:100%" id="saveAvatarButton" onclick="saveSelectedAvatar()">
-      Save Avatar
-    </button>
-
-    <button class="btn btn-light" style="width:100%;margin-top:8px" onclick="closeAvatarPicker()">
-      Cancel
-    </button>
-
-  </div>
-</div>
-
-<!-- VERIFICATION MODAL -->
-<div class="modal" id="infoModal">
-
-  <div class="modal-box">
-
-    <div class="modal-head">
-      <h3>Profile Verification</h3>
-      <button class="close" onclick="closeInfoModal()">×</button>
-    </div>
-
-    <div class="notice">
-      Profile verification is not connected to the GLO 365 server yet. Please do not enter or send your NID, Passport number, PIN, OTP, or other sensitive identity information here.
-    </div>
-
-    <button class="btn btn-blue" style="width:100%" onclick="closeInfoModal()">
-      Close
-    </button>
-
-  </div>
-</div>
-
 <div class="toast" id="toast"></div>
 
 <script>
@@ -671,29 +549,47 @@ const TOKEN_KEY="glo365_token";
 let token=sessionStorage.getItem(TOKEN_KEY)||"";
 let currentUser=null;
 let currentProfile={};
-let selectedAvatar=null;
 let isLoggingOut=false;
 
-const AVATARS=[
- {id:"royal-blue",name:"Royal Blue",bg:"#dceeff",skin:"#e9b58f",hair:"#172d4c",shirt:"#1878ce"},
- {id:"pink-star",name:"Pink Star",bg:"#ffe4f0",skin:"#f0c09e",hair:"#542b45",shirt:"#d94e91"},
- {id:"green-pro",name:"Green Pro",bg:"#dff8e9",skin:"#c98e68",hair:"#282c2a",shirt:"#15996d"},
- {id:"purple-elite",name:"Purple Elite",bg:"#eee5ff",skin:"#f0c5a3",hair:"#39295e",shirt:"#7654c8"},
- {id:"gold-king",name:"Gold King",bg:"#fff0c9",skin:"#d69c72",hair:"#35251c",shirt:"#bd8423"},
- {id:"red-champion",name:"Red Champion",bg:"#ffe2df",skin:"#edb28b",hair:"#392322",shirt:"#d94b43"},
- {id:"silver-gentle",name:"Silver Gentle",bg:"#e9eff5",skin:"#e8bd9f",hair:"#7b8793",shirt:"#536d83"},
- {id:"black-premium",name:"Black Premium",bg:"#e4e7ef",skin:"#9c684d",hair:"#171b25",shirt:"#292e42"}
-];
+const DEFAULT_AVATAR=`
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 120 120">
+<defs>
+<linearGradient id="bg" x1="0" y1="0" x2="1" y2="1">
+<stop offset="0%" stop-color="#dceeff"/>
+<stop offset="100%" stop-color="#ffffff"/>
+</linearGradient>
+</defs>
+<circle cx="60" cy="60" r="60" fill="url(#bg)"/>
+<path d="M10 120 Q14 80 60 80 Q106 80 110 120Z" fill="#1878ce"/>
+<path d="M48 75 L48 89 Q60 101 72 89 L72 75Z" fill="#e9b58f"/>
+<ellipse cx="60" cy="52" rx="26" ry="31" fill="#e9b58f"/>
+<path d="M34 48 Q28 13 59 12 Q91 12 86 49 L79 35 Q60 26 42 37Z" fill="#172d4c"/>
+<ellipse cx="49" cy="55" rx="3" ry="2.7" fill="#25364a"/>
+<ellipse cx="71" cy="55" rx="3" ry="2.7" fill="#25364a"/>
+<path d="M44 48 Q49 45 54 48 M66 48 Q71 45 76 48" fill="none" stroke="#172d4c" stroke-width="2.5"/>
+<path d="M60 57 L57 65 Q60 68 63 65" fill="none" stroke="#b77d67" stroke-width="1.5"/>
+<path d="M51 72 Q60 78 69 72" fill="none" stroke="#9c5551" stroke-width="2.5"/>
+<path d="M43 88 L60 101 L77 88" fill="none" stroke="#fff" stroke-width="3" opacity=".7"/>
+</svg>`;
+
+const FALLBACK_AVATAR=
+"data:image/svg+xml;charset=UTF-8,"+
+encodeURIComponent(DEFAULT_AVATAR);
 
 function toast(message){
  const el=document.getElementById("toast");
  el.textContent=message;
  el.classList.add("show");
+
  clearTimeout(toast.timer);
- toast.timer=setTimeout(()=>el.classList.remove("show"),2800);
+
+ toast.timer=setTimeout(()=>{
+  el.classList.remove("show");
+ },2800);
 }
 
 async function api(path,options={}){
+
  const headers={...(options.headers||{})};
 
  if(token){
@@ -718,70 +614,55 @@ async function api(path,options={}){
 
  if(!response.ok){
   throw new Error(
-   data.message||data.error||"Request failed ("+response.status+")"
+   data.message||
+   data.error||
+   "Request failed ("+response.status+")"
   );
  }
 
  return data;
 }
 
-function avatarSVG(item){
- const svg=`
- <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 120 120">
- <defs>
-  <linearGradient id="bg" x1="0" y1="0" x2="1" y2="1">
-   <stop offset="0%" stop-color="${item.bg}"/>
-   <stop offset="100%" stop-color="#fff"/>
-  </linearGradient>
- </defs>
- <circle cx="60" cy="60" r="60" fill="url(#bg)"/>
- <path d="M10 120 Q14 80 60 80 Q106 80 110 120Z" fill="${item.shirt}"/>
- <path d="M48 75 L48 89 Q60 101 72 89 L72 75Z" fill="${item.skin}"/>
- <ellipse cx="60" cy="52" rx="26" ry="31" fill="${item.skin}"/>
- <path d="M34 48 Q28 13 59 12 Q91 12 86 49 L79 35 Q60 26 42 37Z" fill="${item.hair}"/>
- <ellipse cx="49" cy="55" rx="3" ry="2.7" fill="#25364a"/>
- <ellipse cx="71" cy="55" rx="3" ry="2.7" fill="#25364a"/>
- <path d="M44 48 Q49 45 54 48 M66 48 Q71 45 76 48" fill="none" stroke="${item.hair}" stroke-width="2.5"/>
- <path d="M60 57 L57 65 Q60 68 63 65" fill="none" stroke="#b77d67" stroke-width="1.5"/>
- <path d="M51 72 Q60 78 69 72" fill="none" stroke="#9c5551" stroke-width="2.5"/>
- <path d="M43 88 L60 101 L77 88" fill="none" stroke="#fff" stroke-width="3" opacity=".7"/>
- </svg>`;
-
- return "data:image/svg+xml;charset=UTF-8,"+encodeURIComponent(svg);
-}
-
 function setAvatar(source){
- const fallback=avatarSVG(AVATARS[0]);
+
+ const imageSource=source||FALLBACK_AVATAR;
+
  const main=document.getElementById("avatar");
 
  main.innerHTML="";
 
  const img=document.createElement("img");
+
  img.alt="Profile picture";
- img.src=source||fallback;
+ img.src=imageSource;
 
  img.onerror=()=>{
   img.onerror=null;
-  img.src=fallback;
+  img.src=FALLBACK_AVATAR;
  };
 
  main.appendChild(img);
 
  const nav=document.getElementById("navProfileAvatar");
- nav.src=source||fallback;
+
+ nav.src=imageSource;
 
  nav.onerror=()=>{
   nav.onerror=null;
-  nav.src=fallback;
+  nav.src=FALLBACK_AVATAR;
  };
 }
 
-function getAvatarId(){
- const value=currentProfile.avatar||currentProfile.selectedAvatar||"";
- return AVATARS.some(a=>a.id===value)?value:"";
+function extractUser(data){
+ return data.user||data.profile||data.account||data;
+}
+
+function extractProfile(data){
+ return data.profile||data.user||data;
 }
 
 function renderProfile(){
+
  if(!currentUser)return;
 
  const username=currentUser.username||"";
@@ -793,7 +674,8 @@ function renderProfile(){
   currentUser.fullName||
   username;
 
- document.getElementById("profileName").textContent=fullName;
+ document.getElementById("profileName").textContent=
+  fullName;
 
  document.getElementById("userId").textContent=
   "User ID: "+username;
@@ -801,153 +683,68 @@ function renderProfile(){
  document.getElementById("profileBio").textContent=
   currentProfile.bio||"Welcome to GLO 365";
 
- const status=String(currentUser.status||"active").toLowerCase();
+ const status=String(
+  currentUser.status||"active"
+ ).toLowerCase();
+
  const statusEl=document.getElementById("accountStatus");
 
  if(status==="active"){
-  statusEl.innerHTML='<span class="verified">✓ Active Account</span>';
- }else{
+
   statusEl.innerHTML=
-   '<span class="verified unverified">'+
-   status.toUpperCase()+'</span>';
- }
+   '<span class="verified">✓ Active Account</span>';
 
- const avatarId=getAvatarId();
- const avatarItem=AVATARS.find(a=>a.id===avatarId);
-
- if(avatarItem){
-  setAvatar(avatarSVG(avatarItem));
  }else{
-  setAvatar(currentProfile.avatar||currentUser.avatar||"");
+
+  const statusText=document.createElement("span");
+
+  statusText.className="verified unverified";
+  statusText.textContent=status.toUpperCase();
+
+  statusEl.innerHTML="";
+  statusEl.appendChild(statusText);
  }
-}
 
-function extractUser(data){
- return data.user||data.profile||data.account||data;
-}
-
-function extractProfile(data){
- return data.profile||data.user||data;
+ setAvatar(
+  currentProfile.avatar||
+  currentUser.avatar||
+  FALLBACK_AVATAR
+ );
 }
 
 async function loadProfile(){
+
  const data=await api("/profile");
+
  currentProfile=extractProfile(data)||{};
+
  renderProfile();
 }
 
-function renderAvatarChoices(){
- const grid=document.getElementById("avatarGrid");
- grid.innerHTML="";
-
- AVATARS.forEach(item=>{
-  const option=document.createElement("div");
-
-  option.className="avatar-option"+
-   (selectedAvatar===item.id?" selected":"");
-
-  const img=document.createElement("img");
-  img.src=avatarSVG(item);
-  img.alt=item.name;
-
-  const name=document.createElement("span");
-  name.textContent=item.name;
-
-  const label=document.createElement("small");
-  label.textContent=
-   selectedAvatar===item.id?"✓ Selected":"Tap to select";
-
-  option.append(img,name,label);
-
-  option.onclick=()=>{
-   selectedAvatar=item.id;
-   renderAvatarChoices();
-  };
-
-  grid.appendChild(option);
- });
-}
-
-window.openAvatarPicker=function(){
- selectedAvatar=getAvatarId()||"royal-blue";
- renderAvatarChoices();
- document.getElementById("avatarModal").classList.add("show");
-};
-
-window.closeAvatarPicker=function(){
- document.getElementById("avatarModal").classList.remove("show");
-};
-
-window.saveSelectedAvatar=async function(){
- if(!selectedAvatar){
-  toast("Please select an avatar.");
-  return;
- }
-
- const button=document.getElementById("saveAvatarButton");
- button.disabled=true;
- button.textContent="Saving...";
-
- try{
-  const response=await api("/profile",{
-   method:"PUT",
-   body:JSON.stringify({
-    full_name:
-     currentProfile.full_name||
-     currentProfile.fullName||
-     currentUser.full_name||
-     currentUser.username,
-
-    avatar:selectedAvatar,
-    bio:currentProfile.bio||""
-   })
-  });
-
-  const updated=extractProfile(response)||{};
-
-  currentProfile={
-   ...currentProfile,
-   ...updated,
-   avatar:updated.avatar||selectedAvatar
-  };
-
-  renderProfile();
-  closeAvatarPicker();
-  toast("Avatar saved successfully.");
-
- }catch(error){
-  console.error("Avatar save error:",error);
-  toast("Could not save avatar: "+error.message);
-
- }finally{
-  button.disabled=false;
-  button.textContent="Save Avatar";
- }
-};
-
-window.showKycInfo=function(){
- document.getElementById("infoModal").classList.add("show");
-};
-
-window.closeInfoModal=function(){
- document.getElementById("infoModal").classList.remove("show");
-};
-
 window.logout=async function(){
+
  if(isLoggingOut)return;
 
- if(!confirm("Are you sure you want to logout?"))return;
+ if(!confirm("Are you sure you want to logout?")){
+  return;
+ }
 
  isLoggingOut=true;
 
  try{
+
   await fetch(API_BASE+"/auth/logout",{
    method:"POST",
    credentials:"include",
-   headers:token?{Authorization:"Bearer "+token}:{}
+   headers:token
+    ?{Authorization:"Bearer "+token}
+    :{}
   });
+
  }catch(error){
+
   console.warn("Logout request:",error.message);
+
  }
 
  sessionStorage.removeItem(TOKEN_KEY);
@@ -958,42 +755,75 @@ window.logout=async function(){
 };
 
 async function initialize(){
- document.getElementById("profileName").textContent="Loading...";
- document.getElementById("profileBio").textContent="Checking your account...";
+
+ document.getElementById("profileName").textContent=
+  "Loading...";
+
+ document.getElementById("profileBio").textContent=
+  "Checking your account...";
+
+ setAvatar(FALLBACK_AVATAR);
 
  try{
+
   const authData=await api("/auth/me");
+
   currentUser=extractUser(authData);
 
   if(!currentUser||!currentUser.username){
-   throw new Error("Your account information could not be loaded.");
+
+   throw new Error(
+    "Your account information could not be loaded."
+   );
+
   }
 
   await loadProfile();
 
  }catch(error){
-  console.error("Profile initialization error:",error);
+
+  console.error(
+   "Profile initialization error:",
+   error
+  );
 
   if(
-   /401|403|unauthorized|token|authentication/i.test(error.message)
+   /401|403|unauthorized|token|authentication/i.test(
+    error.message
+   )
   ){
+
    sessionStorage.removeItem(TOKEN_KEY);
+
    location.replace("login.html");
+
    return;
   }
 
-  document.getElementById("profileName").textContent="Unable to load";
-  document.getElementById("profileBio").textContent=error.message;
-  toast(error.message||"Could not load your profile.");
+  document.getElementById("profileName").textContent=
+   "Unable to load";
+
+  document.getElementById("profileBio").textContent=
+   error.message;
+
+  toast(
+   error.message||"Could not load your profile."
+  );
  }
 }
 
 initialize();
 
 window.addEventListener("pageshow",()=>{
+
  if(currentUser&&!isLoggingOut){
-  loadProfile().catch(error=>console.error(error));
+
+  loadProfile().catch(error=>{
+   console.error(error);
+  });
+
  }
+
 });
 
 })();
