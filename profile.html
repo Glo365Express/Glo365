@@ -1,3 +1,4 @@
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -55,7 +56,7 @@ button{font:inherit}
   box-shadow:0 3px 12px #1c5d8510;
 }
 
-/* COMPACT PROFILE CARD */
+/* PROFILE CARD */
 
 .profile-top{
   position:relative;
@@ -149,7 +150,81 @@ button{font:inherit}
   color:#a66b00;
 }
 
-/* DEPOSIT AND WITHDRAW BUTTONS */
+/* WALLET BALANCE */
+
+.balance-box{
+  position:relative;
+  z-index:2;
+  margin-top:11px;
+  padding:10px 12px;
+  border:1px solid #d4e7f6;
+  background:#ffffffd9;
+  border-radius:12px;
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+  gap:8px;
+}
+
+.balance-info{
+  display:flex;
+  align-items:center;
+  gap:9px;
+  min-width:0;
+}
+
+.balance-icon{
+  width:34px;
+  height:34px;
+  flex-shrink:0;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  border-radius:10px;
+  background:#fff3d9;
+  font-size:21px;
+}
+
+.balance-label{
+  font-size:10px;
+  color:#71869a;
+  font-weight:700;
+}
+
+.balance-value{
+  font-size:17px;
+  font-weight:900;
+  color:#087acb;
+  margin-top:3px;
+  overflow-wrap:anywhere;
+}
+
+.refresh-balance{
+  border:1px solid #cce4f5;
+  background:#eaf5fd;
+  color:#087acb;
+  padding:8px 11px;
+  border-radius:20px;
+  font-size:11px;
+  font-weight:800;
+  cursor:pointer;
+  flex-shrink:0;
+}
+
+.refresh-balance:disabled{
+  opacity:.5;
+}
+
+.refresh-balance.loading span{
+  display:inline-block;
+  animation:refreshSpin .8s linear infinite;
+}
+
+@keyframes refreshSpin{
+  to{transform:rotate(360deg)}
+}
+
+/* PROFILE BUTTONS */
 
 .profile-buttons{
   display:flex;
@@ -261,7 +336,7 @@ button{font:inherit}
   overflow-wrap:anywhere;
 }
 
-/* BOTTOM NAVIGATION */
+/* BOTTOM NAV */
 
 .bottom-nav{
   position:fixed;
@@ -307,6 +382,101 @@ button{font:inherit}
 
 .nav-item.active .nav-profile-img{
   border:2px solid var(--blue);
+}
+
+/* LOGOUT POPUP */
+
+.modal-overlay{
+  position:fixed;
+  inset:0;
+  background:rgba(12,30,48,.58);
+  backdrop-filter:blur(4px);
+  -webkit-backdrop-filter:blur(4px);
+  z-index:100;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  padding:20px;
+  opacity:0;
+  visibility:hidden;
+  transition:.25s;
+}
+
+.modal-overlay.show{
+  opacity:1;
+  visibility:visible;
+}
+
+.logout-modal{
+  width:100%;
+  max-width:340px;
+  background:#fff;
+  border-radius:21px;
+  padding:24px 20px 20px;
+  text-align:center;
+  box-shadow:0 18px 55px #0003;
+  transform:translateY(18px) scale(.96);
+  transition:.25s;
+}
+
+.modal-overlay.show .logout-modal{
+  transform:translateY(0) scale(1);
+}
+
+.logout-icon{
+  width:72px;
+  height:72px;
+  border-radius:22px;
+  margin:0 auto 15px;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  background:linear-gradient(145deg,#fff0e9,#ffe0d8);
+  font-size:34px;
+}
+
+.logout-modal h3{
+  margin:0;
+  color:#243c50;
+  font-size:20px;
+  font-weight:900;
+}
+
+.logout-modal p{
+  margin:10px 0 21px;
+  color:#8393a0;
+  font-size:12px;
+  line-height:1.7;
+}
+
+.logout-actions{
+  display:flex;
+  gap:10px;
+}
+
+.modal-btn{
+  flex:1;
+  border:0;
+  border-radius:25px;
+  min-height:44px;
+  font-size:13px;
+  font-weight:900;
+  cursor:pointer;
+}
+
+.cancel-btn{
+  color:#587084;
+  background:#edf3f8;
+}
+
+.confirm-logout{
+  color:white;
+  background:linear-gradient(135deg,#ef6871,#d83c50);
+  box-shadow:0 4px 12px #df526044;
+}
+
+.confirm-logout:disabled{
+  opacity:.6;
 }
 
 /* TOAST */
@@ -377,6 +547,8 @@ button{font:inherit}
   .member-item strong{font-size:8px}
 
   .profile-main{gap:8px}
+
+  .balance-value{font-size:15px}
 }
 </style>
 </head>
@@ -387,7 +559,7 @@ button{font:inherit}
 
 <main class="container">
 
-  <!-- COMPACT PROFILE CARD -->
+  <!-- PROFILE CARD -->
 
   <section class="card profile-top">
 
@@ -414,6 +586,37 @@ button{font:inherit}
       </div>
 
     </div>
+
+    <!-- WALLET BALANCE -->
+
+    <div class="balance-box">
+
+      <div class="balance-info">
+
+        <div class="balance-icon">💵</div>
+
+        <div>
+          <div class="balance-label">WALLET BALANCE</div>
+          <div class="balance-value">
+            <span id="walletBalance">0.00</span>
+            <small style="font-size:10px">Points</small>
+          </div>
+        </div>
+
+      </div>
+
+      <button
+        class="refresh-balance"
+        id="refreshBalanceBtn"
+        type="button"
+        onclick="refreshBalance()"
+      >
+        <span>↻</span> Refresh
+      </button>
+
+    </div>
+
+    <!-- DEPOSIT AND WITHDRAW -->
 
     <div class="profile-buttons">
 
@@ -453,9 +656,9 @@ button{font:inherit}
     </a>
 
     <a class="member-item" href="deposit-history.html">
-  <span class="member-icon">📥</span>
-  <strong>Deposit Records</strong>
-</a>
+      <span class="member-icon">📥</span>
+      <strong>Deposit Records</strong>
+    </a>
 
     <a class="member-item" href="withdraw-records.html">
       <span class="member-icon">📤</span>
@@ -537,6 +740,46 @@ button{font:inherit}
 
 </nav>
 
+<!-- LOGOUT POPUP -->
+
+<div class="modal-overlay" id="logoutModal">
+
+  <div class="logout-modal">
+
+    <div class="logout-icon">🚪</div>
+
+    <h3>Logout Account?</h3>
+
+    <p>
+      Are you sure you want to logout from your GLO 365 account?
+      You will need to login again to access your account.
+    </p>
+
+    <div class="logout-actions">
+
+      <button
+        class="modal-btn cancel-btn"
+        type="button"
+        onclick="closeLogoutModal()"
+      >
+        Cancel
+      </button>
+
+      <button
+        class="modal-btn confirm-logout"
+        id="confirmLogoutBtn"
+        type="button"
+        onclick="confirmLogout()"
+      >
+        Logout
+      </button>
+
+    </div>
+
+  </div>
+
+</div>
+
 <div class="toast" id="toast"></div>
 
 <script>
@@ -550,6 +793,7 @@ let token=sessionStorage.getItem(TOKEN_KEY)||"";
 let currentUser=null;
 let currentProfile={};
 let isLoggingOut=false;
+let isRefreshingBalance=false;
 
 const DEFAULT_AVATAR=`
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 120 120">
@@ -576,8 +820,12 @@ const FALLBACK_AVATAR=
 "data:image/svg+xml;charset=UTF-8,"+
 encodeURIComponent(DEFAULT_AVATAR);
 
+/* TOAST */
+
 function toast(message){
+
  const el=document.getElementById("toast");
+
  el.textContent=message;
  el.classList.add("show");
 
@@ -587,6 +835,8 @@ function toast(message){
   el.classList.remove("show");
  },2800);
 }
+
+/* API */
 
 async function api(path,options={}){
 
@@ -603,7 +853,8 @@ async function api(path,options={}){
  const response=await fetch(API_BASE+path,{
   ...options,
   headers,
-  credentials:"include"
+  credentials:"include",
+  cache:"no-store"
  });
 
  let data={};
@@ -612,7 +863,15 @@ async function api(path,options={}){
   data=await response.json();
  }catch(e){}
 
- if(!response.ok){
+ if(response.status===401){
+
+  sessionStorage.removeItem(TOKEN_KEY);
+
+  throw new Error("Session expired. Please login again.");
+ }
+
+ if(!response.ok||data.success===false){
+
   throw new Error(
    data.message||
    data.error||
@@ -622,6 +881,8 @@ async function api(path,options={}){
 
  return data;
 }
+
+/* AVATAR */
 
 function setAvatar(source){
 
@@ -653,6 +914,8 @@ function setAvatar(source){
  };
 }
 
+/* USER DATA */
+
 function extractUser(data){
  return data.user||data.profile||data.account||data;
 }
@@ -660,6 +923,8 @@ function extractUser(data){
 function extractProfile(data){
  return data.profile||data.user||data;
 }
+
+/* RENDER PROFILE */
 
 function renderProfile(){
 
@@ -712,6 +977,8 @@ function renderProfile(){
  );
 }
 
+/* LOAD PROFILE */
+
 async function loadProfile(){
 
  const data=await api("/profile");
@@ -721,15 +988,105 @@ async function loadProfile(){
  renderProfile();
 }
 
-window.logout=async function(){
+/* LOAD WALLET BALANCE */
+
+async function loadBalance(){
+
+ const data=await api("/wallet");
+
+ const wallet=data.wallet||data;
+
+ const balance=
+  wallet.balance??
+  wallet.wallet_balance??
+  wallet.points??
+  0;
+
+ const numericBalance=Number(balance);
+
+ if(!Number.isFinite(numericBalance)){
+  throw new Error("Invalid wallet balance received.");
+ }
+
+ document.getElementById("walletBalance").textContent=
+  numericBalance.toFixed(2);
+
+}
+
+/* REFRESH BALANCE */
+
+window.refreshBalance=async function(){
+
+ if(isRefreshingBalance)return;
+
+ const btn=document.getElementById("refreshBalanceBtn");
+
+ isRefreshingBalance=true;
+
+ btn.disabled=true;
+ btn.classList.add("loading");
+ btn.innerHTML="<span>↻</span> Loading";
+
+ try{
+
+  await loadBalance();
+
+  toast("Wallet balance updated successfully.");
+
+ }catch(error){
+
+  toast(error.message||"Unable to refresh balance.");
+
+  if(/session|login|token/i.test(error.message)){
+   setTimeout(()=>{
+    location.replace("login.html");
+   },1200);
+  }
+
+ }finally{
+
+  isRefreshingBalance=false;
+
+  btn.disabled=false;
+  btn.classList.remove("loading");
+  btn.innerHTML="<span>↻</span> Refresh";
+
+ }
+
+};
+
+/* LOGOUT POPUP */
+
+window.logout=function(){
 
  if(isLoggingOut)return;
 
- if(!confirm("Are you sure you want to logout?")){
-  return;
- }
+ document.getElementById("logoutModal")
+  .classList.add("show");
+
+};
+
+window.closeLogoutModal=function(){
+
+ if(isLoggingOut)return;
+
+ document.getElementById("logoutModal")
+  .classList.remove("show");
+
+};
+
+/* CONFIRM LOGOUT */
+
+window.confirmLogout=async function(){
+
+ if(isLoggingOut)return;
 
  isLoggingOut=true;
+
+ const btn=document.getElementById("confirmLogoutBtn");
+
+ btn.disabled=true;
+ btn.textContent="Logging out...";
 
  try{
 
@@ -750,9 +1107,34 @@ window.logout=async function(){
  sessionStorage.removeItem(TOKEN_KEY);
  sessionStorage.removeItem("glo365_user");
  sessionStorage.removeItem("glo365_session");
+ sessionStorage.removeItem("glo365_pending_deposit");
 
  location.replace("login.html");
+
 };
+
+/* CLOSE POPUP ON BACKGROUND CLICK */
+
+document.getElementById("logoutModal")
+ .addEventListener("click",function(event){
+
+  if(event.target===this){
+   closeLogoutModal();
+  }
+
+ });
+
+/* ESCAPE KEY */
+
+document.addEventListener("keydown",function(event){
+
+ if(event.key==="Escape"){
+  closeLogoutModal();
+ }
+
+});
+
+/* INITIALIZE */
 
 async function initialize(){
 
@@ -766,6 +1148,11 @@ async function initialize(){
 
  try{
 
+  if(!token){
+   location.replace("login.html");
+   return;
+  }
+
   const authData=await api("/auth/me");
 
   currentUser=extractUser(authData);
@@ -778,7 +1165,10 @@ async function initialize(){
 
   }
 
-  await loadProfile();
+  await Promise.all([
+   loadProfile(),
+   loadBalance()
+  ]);
 
  }catch(error){
 
@@ -788,7 +1178,7 @@ async function initialize(){
   );
 
   if(
-   /401|403|unauthorized|token|authentication/i.test(
+   /401|403|unauthorized|token|authentication|session/i.test(
     error.message
    )
   ){
@@ -809,10 +1199,12 @@ async function initialize(){
   toast(
    error.message||"Could not load your profile."
   );
+
  }
+
 }
 
-initialize();
+/* PAGE RESTORE */
 
 window.addEventListener("pageshow",()=>{
 
@@ -822,9 +1214,15 @@ window.addEventListener("pageshow",()=>{
    console.error(error);
   });
 
+  loadBalance().catch(error=>{
+   console.error(error);
+  });
+
  }
 
 });
+
+initialize();
 
 })();
 </script>
