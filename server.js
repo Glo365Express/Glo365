@@ -3756,4 +3756,479 @@
           const discountPercent = Number(
             settingsResult.rows[0]?.discount_percent || 0
           );
-          const discountCents = Math.round(totalCents * discount
+          const discountCents = Math.round(totalCents * discountPercent / 100);
+          const payableCents = totalCents - discountCents;
+
+          if (payableCents <= 0) {
+            await client.query("ROLLBACK");
+            return sendError(res, 400, "Payable amount must be greater than zero.");
+          }
+
+          const userResult = await client.query(
+            `SELECT balance
+             FROM users
+             WHERE id = $1
+             FOR UPDATE`,
+            [req.user.id]
+          );
+
+          if (!userResult.rows.length) {
+            await client.query("ROLLBACK");
+            return sendError(res, 404, "User not found.");
+          }
+
+          const balanceCents = Math.round(Number(userResult.rows[0].balance) * 100);
+
+          if (balanceCents < payableCents) {
+            await client.query("ROLLBACK");
+            return sendError(res, 400, "Insufficient demo balance.");
+          }
+
+          await client.query(
+            `UPDATE users
+             SET balance = balance - $1,
+                 updated_at = NOW()
+             WHERE id = $2`,
+            [centsToAmount(payableCents), req.user.id]
+          );
+
+          const betResult = await client.query(
+            `INSERT INTO demo_6up_bets
+             (user_id, draw_number, rows, total_amount,
+              discount_percent, discount_amount, payable_amount, draw_date)
+             VALUES ($1, $2, $3::jsonb, $4, $5, $6, $7,
+                     ($8::timestamptz AT TIME ZONE 'Asia/Dhaka')::date)
+             RETURNING id, user_id, draw_number, rows, total_amount,
+                       discount_percent, discount_amount, payable_amount,
+                       status, created_at`,
+            [
+              req.user.id,
+              draw.draw_number || "",
+              JSON.stringify(cleanRows),
+              centsToAmount(totalCents),
+              discountPercent,
+              centsToAmount(discountCents),
+              centsToAmount(payableCents),
+              draw.draw_at
+            ]
+          );
+
+          await client.query(
+            `INSERT INTO wallet_transactions
+             (user_id, type, amount, currency, description, reference)
+             VALUES ($1, 'demo_6up_bet', $2, 'DEMO', $3, $4)`,
+            [
+              req.user.id,
+              -Number(centsToAmount(payableCents)),
+              "6UP Demo Entry",
+              "6UP-" + betResult.rows[0].id
+            ]
+          );
+
+          const updatedBalance = await client.query(
+            "SELECT balance FROM users WHERE id = $1",
+            [req.user.id]
+          );
+
+          await client.query("COMMIT");
+
+          res.status(201).json({
+            success: true,
+            message: "6UP demo entry submitted successfully.",
+            currency: "DEMO",
+            is_demo: true,
+            bet: betResult.rows[0],
+            balance: updatedBalance.rows[0].balance
+          });
+        } catch (error) {
+          await client.query("ROLLBACK");
+          console.error("6UP demo entry error:", error.message);
+          return sendError(res, 500, "Could not submit 6UP demo entry.");
+        } finally {
+          client.release();
+        }
+      })
+    );
+
+    // Each user can see only their own 6UP entries.
+    app.get(
+      "/api/demo/6up/bets",
+      authenticateToken,
+      asyncRoute(async (req, res) => {
+        const result = await pool.query(
+          `SELECT id, draw_number, rows, total_amount,
+                  discount_percent, discount_amount, payable_amount,
+                  status, created_at
+           FROM demo_6up_bets
+           WHERE user_id = $1
+           ORDER BY created_at DESC
+           LIMIT 100`,
+          [req.user.id]
+        );
+
+        res.json({
+          success: true,
+          currency: "DEMO",
+          bets: result.rows
+        });
+      })
+    );
+
+    // ==========================================
+    // STRUCTURED DRAW RESULTS + SERVER SETTLEMENT
+    // ==========================================
+
+    function resultMatches(game, selection, result) {
+      const g = String(game || "").toLowerCase().replace(/[\s_-]/g, "");
+      const n = String(selection || "").trim();
+      const first = String(result.first_prize || "").padStart(6, "0");
+      const last = String(result.last_two || "").padStart(2, "0");
+      const fronts = Array.isArray(result.front_three) ? result.front_three : [];
+      if (g.includes("single")) return /^\d$/.test(n) && n === first.slice(-1);
+      if (g === "2d" || g.includes("2d")) return /^\d{1,2}$/.test(n) && n.padStart(2, "0") === last;
+      if (g.includes("3up")) return /^\d{1,3}$/.test(n) && fronts.includes(n.padStart(3, "0"));
+      if (g.includes("6up")) return /^\d{1,6}$/.test(n) && n.padStart(6, "0") === first;
+      return false;
+    }
+
+    async function settleDrawBets(client, result) {
+      let checked = 0, won = 0, lost = 0;
+      const singleRows = await client.query(
+        `SELECT id, game_name, selection FROM demo_bets
+         WHERE draw_date = $1 AND LOWER(status) NOT IN ('win','won','loss','lose','lost','cancelled','canceled')
+         FOR UPDATE`, [result.draw_date]
+      );
+      for (const bet of singleRows.rows) {
+        const isWin = resultMatches(bet.game_name, bet.selection, result);
+        await client.query(`UPDATE demo_bets SET status=$1, result_id=$2 WHERE id=$3`, [isWin ? 'win' : 'loss', result.id, bet.id]);
+        checked++; if (isWin) won++; else lost++;
+      }
+
+      for (const [table, game] of [['demo_3up_bets','3up'], ['demo_6up_bets','6up']]) {
+        const rows = await client.query(
+          `SELECT id, rows FROM ${table}
+           WHERE draw_date=$1 AND LOWER(status) NOT IN ('win','won','loss','lose','lost','cancelled','canceled')
+           FOR UPDATE`, [result.draw_date]
+        );
+        for (const bet of rows.rows) {
+          const selections = Array.isArray(bet.rows) ? bet.rows : [];
+          const isWin = selections.some(row => {
+            const n = String(row.number || '').trim();
+            return game === '3up'
+              ? /^\d{3}$/.test(n) && result.front_three.includes(n)
+              : /^\d{6}$/.test(n) && n === result.first_prize;
+          });
+          await client.query(`UPDATE ${table} SET status=$1, result_id=$2 WHERE id=$3`, [isWin ? 'win' : 'loss', result.id, bet.id]);
+          checked++; if (isWin) won++; else lost++;
+        }
+      }
+      return { checked, won, lost };
+    }
+
+    app.get('/api/results', asyncRoute(async (req, res) => {
+      const result = await pool.query(
+        `SELECT id, TO_CHAR(draw_date, 'YYYY-MM-DD') AS date,
+                first_prize AS "firstPrize", last_two AS "lastTwo",
+                front_three AS "frontThree", published_at AS "publishedAt",
+                updated_at AS "updatedAt"
+         FROM draw_results ORDER BY draw_date DESC LIMIT 100`
+      );
+      res.json({ success: true, results: result.rows });
+    }));
+
+    app.get('/api/admin/results', authenticateToken, requireAdmin, asyncRoute(async (req, res) => {
+      const result = await pool.query(
+        `SELECT id, TO_CHAR(draw_date, 'YYYY-MM-DD') AS date,
+                first_prize AS "firstPrize", last_two AS "lastTwo",
+                front_three AS "frontThree", published_at AS "publishedAt",
+                updated_at AS "updatedAt"
+         FROM draw_results ORDER BY draw_date DESC LIMIT 100`
+      );
+      res.json({ success: true, results: result.rows });
+    }));
+
+    app.post('/api/admin/results', authenticateToken, requireAdmin, asyncRoute(async (req, res) => {
+      const date = String(req.body.drawDate || req.body.date || '').trim();
+      const firstRaw = String(req.body.firstPrize ?? '').trim();
+      const lastRaw = String(req.body.lastTwo ?? '').trim();
+      const frontRaw = req.body.frontThree;
+      if (!/^\d{4}-\d{2}-\d{2}$/.test(date) || !/^\d{1,6}$/.test(firstRaw) || !/^\d{1,2}$/.test(lastRaw)) {
+        return sendError(res, 400, 'Enter a valid Draw Date, First Prize and Last Two.');
+      }
+      const fronts = Array.isArray(frontRaw)
+        ? frontRaw.map(x => String(x).trim())
+        : String(frontRaw || '').split(',').map(x => x.trim()).filter(Boolean);
+      if (fronts.some(x => !/^\d{3}$/.test(x))) return sendError(res, 400, 'Every Front Three number must contain exactly 3 digits.');
+      const uniqueFronts = [...new Set(fronts)];
+      const client = await pool.connect();
+      try {
+        await client.query('BEGIN');
+        const saved = await client.query(
+          `INSERT INTO draw_results
+           (draw_date, first_prize, last_two, front_three, published_at, updated_at, updated_by)
+           VALUES ($1::date, $2, $3, $4::jsonb, NOW(), NOW(), $5)
+           ON CONFLICT (draw_date) DO UPDATE SET
+             first_prize=EXCLUDED.first_prize, last_two=EXCLUDED.last_two,
+             front_three=EXCLUDED.front_three, updated_at=NOW(), updated_by=EXCLUDED.updated_by
+           RETURNING id, TO_CHAR(draw_date, 'YYYY-MM-DD') AS date,
+             first_prize AS "firstPrize", last_two AS "lastTwo", front_three AS "frontThree",
+             published_at AS "publishedAt", updated_at AS "updatedAt"`,
+          [date, firstRaw.padStart(6,'0'), lastRaw.padStart(2,'0'), JSON.stringify(uniqueFronts), req.user.id]
+        );
+        const result = saved.rows[0];
+        // On re-publish, retain the original published_at timestamp.
+        const settled = await settleDrawBets(client, { ...result, draw_date: date, first_prize: result.firstPrize, last_two: result.lastTwo, front_three: result.frontThree });
+        await client.query('COMMIT');
+        await audit(req.user.id, 'draw_result_published', null, { result_id: result.id, draw_date: date, ...settled });
+        res.status(201).json({ success: true, message: 'Result published and bets settled.', result, settlement: settled });
+      } catch (error) {
+        await client.query('ROLLBACK');
+        console.error('Draw result publish error:', error.message);
+        return sendError(res, 500, 'Could not publish or settle this result.');
+      } finally { client.release(); }
+    }));
+
+    // Submission-number report: hide entries submitted before publication once 72h have elapsed.
+    app.get('/api/admin/number-reports', authenticateToken, requireAdmin, asyncRoute(async (req, res) => {
+      const result = await pool.query(`
+        SELECT 'single' AS game, b.id, b.game_name, b.selection AS number, b.amount,
+               b.status, b.draw_date, b.created_at, u.username
+        FROM demo_bets b JOIN users u ON u.id=b.user_id
+        LEFT JOIN draw_results r ON r.draw_date=b.draw_date
+        WHERE r.id IS NULL OR b.created_at >= r.published_at OR NOW() < r.published_at + INTERVAL '72 hours'
+        UNION ALL
+        SELECT '3up', b.id, '3UP', row_item->>'number',
+               COALESCE((row_item->>'straight')::numeric,0)+COALESCE((row_item->>'rumble')::numeric,0),
+               b.status, b.draw_date, b.created_at, u.username
+        FROM demo_3up_bets b JOIN users u ON u.id=b.user_id
+        CROSS JOIN LATERAL jsonb_array_elements(b.rows) row_item
+        LEFT JOIN draw_results r ON r.draw_date=b.draw_date
+        WHERE r.id IS NULL OR b.created_at >= r.published_at OR NOW() < r.published_at + INTERVAL '72 hours'
+        UNION ALL
+        SELECT '6up', b.id, '6UP', row_item->>'number',
+               COALESCE((row_item->>'straight')::numeric,0)+COALESCE((row_item->>'rumble')::numeric,0),
+               b.status, b.draw_date, b.created_at, u.username
+        FROM demo_6up_bets b JOIN users u ON u.id=b.user_id
+        CROSS JOIN LATERAL jsonb_array_elements(b.rows) row_item
+        LEFT JOIN draw_results r ON r.draw_date=b.draw_date
+        WHERE r.id IS NULL OR b.created_at >= r.published_at OR NOW() < r.published_at + INTERVAL '72 hours'
+        UNION ALL
+        SELECT 'millionaire', b.id, 'Millionaire', b.selection, b.amount,
+               b.status, d.draw_date, b.created_at, u.username
+        FROM millionaire_bets b
+        JOIN millionaire_draws d ON d.id=b.draw_id
+        JOIN users u ON u.id=b.user_id
+        ORDER BY created_at DESC LIMIT 1000
+      `);
+      res.json({ success: true, reports: result.rows });
+    }));
+
+    // ==========================================
+    // ADMIN: AUDIT LOGS
+    // ==========================================
+
+    app.get(
+      "/api/admin/audit-logs",
+      authenticateToken,
+      requireAdmin,
+      asyncRoute(async (req, res) => {
+        const result = await pool.query(
+          `SELECT id, actor_id, action, target_user_id, details, created_at
+           FROM audit_logs
+           ORDER BY created_at DESC
+           LIMIT 200`
+        );
+
+        res.json({
+          success: true,
+          logs: result.rows
+        });
+      })
+    );
+
+    // ==========================================
+    // 404
+    // ==========================================
+
+    // ==========================================
+    // LIVE SUPPORT
+    // Users can open a conversation by sending the first message.
+    // Only the primary admin can reply, and only after a user message exists.
+    // ==========================================
+
+    function normalizeSupportMessage(row) {
+      return {
+        id: row.id,
+        conversation_id: row.conversation_id,
+        sender_id: row.sender_id,
+        sender_role: row.sender_role,
+        message: row.message,
+        created_at: row.created_at
+      };
+    }
+
+    app.get("/api/support/messages", authenticateToken, asyncRoute(async (req, res) => {
+      let userId;
+      if (isPrimaryAdmin(req.user)) {
+        userId = req.query.user_id;
+        if (!userId) return sendError(res, 400, "user_id is required for Admin.");
+      } else {
+        userId = req.user.id;
+      }
+
+      const conversation = await pool.query(
+        `SELECT id, user_id, created_at, updated_at
+         FROM support_conversations WHERE user_id = $1`, [userId]
+      );
+      if (!conversation.rows.length) {
+        return res.json({ success: true, conversation: null, messages: [] });
+      }
+      const conv = conversation.rows[0];
+      const result = await pool.query(
+        `SELECT id, conversation_id, sender_id, sender_role, message, created_at
+         FROM support_messages WHERE conversation_id = $1
+         ORDER BY created_at ASC, id ASC`, [conv.id]
+      );
+      return res.json({ success: true, conversation: conv, messages: result.rows.map(normalizeSupportMessage) });
+    }));
+
+    app.post("/api/support/messages", authenticateToken, asyncRoute(async (req, res) => {
+      const message = typeof req.body.message === "string" ? req.body.message.trim() : "";
+      if (!message || message.length > 5000) {
+        return sendError(res, 400, "Message must contain 1 to 5000 characters.");
+      }
+
+      const adminSending = isPrimaryAdmin(req.user);
+      const targetUserId = adminSending ? req.body.user_id : req.user.id;
+      if (adminSending && !targetUserId) {
+        return sendError(res, 400, "user_id is required when Admin replies.");
+      }
+
+      const client = await pool.connect();
+      try {
+        await client.query("BEGIN");
+        let conversation;
+        if (adminSending) {
+          const found = await client.query(
+            `SELECT id, user_id FROM support_conversations
+             WHERE user_id = $1 FOR UPDATE`, [targetUserId]
+          );
+          if (!found.rows.length) {
+            await client.query("ROLLBACK");
+            return sendError(res, 404, "The user has not started a support conversation.");
+          }
+          conversation = found.rows[0];
+          const firstUserMessage = await client.query(
+            `SELECT id FROM support_messages
+             WHERE conversation_id = $1 AND sender_role = 'user' LIMIT 1`, [conversation.id]
+          );
+          if (!firstUserMessage.rows.length) {
+            await client.query("ROLLBACK");
+            return sendError(res, 403, "Admin can reply only after the user sends a message.");
+          }
+        } else {
+          const created = await client.query(
+            `INSERT INTO support_conversations (user_id) VALUES ($1)
+             ON CONFLICT (user_id) DO UPDATE SET updated_at = NOW()
+             RETURNING id, user_id`, [req.user.id]
+          );
+          conversation = created.rows[0];
+          await client.query(
+            `SELECT id FROM support_conversations WHERE id = $1 FOR UPDATE`, [conversation.id]
+          );
+        }
+
+        const inserted = await client.query(
+          `INSERT INTO support_messages
+             (conversation_id, sender_id, sender_role, message)
+           VALUES ($1, $2, $3, $4)
+           RETURNING id, conversation_id, sender_id, sender_role, message, created_at`,
+          [conversation.id, req.user.id, adminSending ? "admin" : "user", message]
+        );
+        await client.query(
+          `UPDATE support_conversations SET updated_at = NOW() WHERE id = $1`, [conversation.id]
+        );
+        await client.query("COMMIT");
+        return res.status(201).json({ success: true, message: normalizeSupportMessage(inserted.rows[0]) });
+      } catch (error) {
+        await client.query("ROLLBACK").catch(() => {});
+        throw error;
+      } finally {
+        client.release();
+      }
+    }));
+
+    app.get("/api/admin/support/conversations", authenticateToken, requireAdmin, asyncRoute(async (req, res) => {
+      const result = await pool.query(
+        `SELECT c.id, c.user_id, u.username, u.email, c.created_at, c.updated_at,
+                (SELECT m.message FROM support_messages m
+                 WHERE m.conversation_id = c.id
+                 ORDER BY m.created_at DESC, m.id DESC LIMIT 1) AS last_message,
+                (SELECT m.sender_role FROM support_messages m
+                 WHERE m.conversation_id = c.id
+                 ORDER BY m.created_at DESC, m.id DESC LIMIT 1) AS last_sender_role
+         FROM support_conversations c
+         JOIN users u ON u.id = c.user_id
+         ORDER BY c.updated_at DESC, c.id DESC`
+      );
+      return res.json({ success: true, conversations: result.rows });
+    }));
+
+    app.use((req, res) => {
+      res.status(404).json({
+        success: false,
+        message: "API endpoint not found."
+      });
+    });
+
+    // ==========================================
+    // GLOBAL ERROR HANDLER
+    // ==========================================
+
+    app.use((error, req, res, next) => {
+      console.error("Server error:", error.message);
+
+      if (error.type === "entity.parse.failed") {
+        return sendError(res, 400, "Invalid JSON request.");
+      }
+
+      if (error.message === "Origin not allowed.") {
+        return sendError(res, 403, "Origin not allowed.");
+      }
+
+      if (error.code === "23505") {
+        return sendError(res, 409, "A record with this information already exists.");
+      }
+
+      res.status(500).json({
+        success: false,
+        message: "Internal server error."
+      });
+    });
+
+    // ==========================================
+    // START SERVER
+    // ==========================================
+
+    async function startServer() {
+      try {
+        await initializeDatabase();
+
+        await bootstrapAdmin();
+
+        await installPrimaryAdminProtection();
+
+        app.listen(PORT, "0.0.0.0", () => {
+          console.log(
+            "GLO 365 API v2.6.0 running on port " + PORT
+          );
+          console.log("Primary Admin username: adminglo365");
+        });
+
+      } catch (error) {
+        console.error("Server startup failed:", error.message);
+        process.exit(1);
+      }
+    }
+
+    startServer();
