@@ -1,0 +1,120 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="theme-color" content="#1688df">
+<title>GLO 365 - My Account</title>
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+:root{--blue:#1688df;--dark:#075da8;--bg:#f1f7fc;--text:#263b50;--muted:#8193a3;--line:#dceaf4}
+body{font-family:Arial,sans-serif;background:var(--bg);color:var(--text);min-height:100vh}
+.app{max-width:560px;min-height:100vh;margin:auto;background:#fff;padding-bottom:84px}
+header{background:linear-gradient(120deg,#0755a5,#1688df,#45b5f5);color:#fff;padding:17px 15px;display:flex;align-items:center;gap:12px;box-shadow:0 4px 15px #1688df25}
+.back{width:38px;height:38px;border:0;border-radius:50%;background:#ffffff25;color:#fff;font-size:23px;cursor:pointer}
+.header-title{flex:1}.header-title h1{font-size:19px}.header-title p{font-size:11px;color:#e5f5ff;margin-top:4px}
+.hero{padding:22px 17px 16px;background:linear-gradient(180deg,#eff8ff,#fff)}
+.hero h2{font-size:21px;color:#17466d}.hero p{font-size:12px;color:var(--muted);line-height:1.6;margin-top:6px}
+.card{margin:0 13px 14px;padding:17px 15px;background:#fff;border:1px solid var(--line);border-radius:15px;box-shadow:0 4px 14px #087acb0a}
+.card h3{font-size:15px;color:#17466d;margin-bottom:15px;display:flex;align-items:center;gap:8px}
+.field{margin-bottom:14px}.field:last-child{margin-bottom:0}
+label{display:block;font-size:11px;font-weight:700;color:#526b80;margin:0 0 7px 3px}
+input,select{width:100%;height:45px;border:1px solid #d5e5f1;border-radius:10px;padding:0 12px;font-size:13px;color:var(--text);background:#f9fcff;outline:none}
+input:focus,select:focus{border-color:var(--blue);box-shadow:0 0 0 3px #1688df18}
+input:disabled,select:disabled{background:#f0f4f7;color:#8293a1;opacity:1}
+.hint{font-size:10px;color:#8799a8;line-height:1.5;margin:6px 3px 0}
+.locked{position:relative}.locked:after{content:'SERVER SETUP REQUIRED';display:block;font-size:9px;color:#9a741d;margin:5px 3px 0;font-weight:bold;letter-spacing:.3px}
+.row{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.masked-wrap{position:relative}.masked-wrap input{padding-right:72px}.reveal{position:absolute;right:8px;top:8px;border:0;background:#e8f4fd;color:#17699f;border-radius:7px;padding:7px 9px;font-size:10px;font-weight:bold}
+.privacy{font-size:11px;color:#718697;line-height:1.65;background:#f1f8fd;border:1px solid #dcecf7;border-radius:10px;padding:12px;margin-top:12px}
+.notice{display:none;margin:0 13px 13px;padding:11px 12px;border-radius:10px;font-size:12px;line-height:1.5}.notice.show{display:block}.notice.error{background:#fff0f0;color:#b52b2b}.notice.success{background:#eaf8ef;color:#19783d}.notice.info{background:#eaf4fc;color:#17699f}
+.actions{padding:0 13px 16px}.save{width:100%;height:48px;border:0;border-radius:11px;background:linear-gradient(120deg,#087acb,#29a8ed);color:#fff;font-size:14px;font-weight:900;cursor:pointer}.save:disabled{opacity:.55;cursor:not-allowed}
+.bottom-nav{position:fixed;bottom:0;left:50%;transform:translateX(-50%);width:100%;max-width:560px;background:#fff;border-top:1px solid var(--line);display:flex;justify-content:space-around;padding:9px 4px calc(10px + env(safe-area-inset-bottom));z-index:5}.bottom-nav a{flex:1;text-decoration:none;color:#8295a5;font-size:10px;display:flex;flex-direction:column;align-items:center;gap:4px}.bottom-nav strong{font-size:21px}.bottom-nav a.active{color:#087acb;font-weight:bold}
+@media(max-width:380px){.row{grid-template-columns:1fr}.card{padding:15px 12px}}
+</style>
+</head>
+<body>
+<div class="app">
+<header>
+ <button class="back" type="button" onclick="history.back()" aria-label="Go back">‹</button>
+ <div class="header-title"><h1>My Account</h1><p>Manage your personal information</p></div>
+</header>
+<section class="hero"><h2>Account Information</h2><p>Keep your account details up to date. Your username cannot be changed.</p></section>
+<div id="notice" class="notice" role="status" aria-live="polite"></div>
+<form id="accountForm" novalidate>
+ <section class="card">
+  <h3>👤 Personal Information</h3>
+  <div class="field"><label for="username">Username</label><input id="username" autocomplete="username" disabled><div class="hint">Username is permanent and cannot be changed.</div></div>
+  <div class="field"><label for="email">Email Address</label><input id="email" type="email" disabled><div class="hint">Email is shown for account identification. Email changing is not enabled yet.</div></div>
+  <div class="field"><label for="fullName">Full Name</label><input id="fullName" type="text" maxlength="100" autocomplete="name" placeholder="Enter your full name"></div>
+  <div class="row">
+   <div class="field locked"><label for="dob">Date of Birth</label><input id="dob" type="date" disabled></div>
+   <div class="field locked"><label for="googleAccount">Google Account</label><input id="googleAccount" type="text" disabled placeholder="Not connected"></div>
+  </div>
+ </section>
+ <section class="card">
+  <h3>🪪 Identity Verification</h3>
+  <div class="field"><label for="documentType">Document Type</label><select id="documentType" disabled><option value="">Select NID or Passport</option><option value="nid">National ID (NID)</option><option value="passport">Passport</option></select></div>
+  <div class="field locked"><label for="documentNumber">NID / Passport Number</label><div class="masked-wrap"><input id="documentNumber" type="password" disabled placeholder="Not submitted"><button class="reveal" type="button" disabled>Show</button></div><div class="hint">Your full document number must be encrypted and visible only to authorized administrators. This field will be enabled after the secure backend is ready.</div></div>
+ </section>
+ <section class="card">
+  <h3>📱 Contact Information</h3>
+  <div class="field locked"><label for="whatsapp">WhatsApp Number</label><input id="whatsapp" type="tel" maxlength="30" disabled placeholder="Enter WhatsApp number"></div>
+  <div class="field locked"><label for="telegram">Telegram Username / Number</label><input id="telegram" type="text" maxlength="50" disabled placeholder="Enter Telegram details"></div>
+ </section>
+ <div class="privacy"><strong>Privacy Notice</strong><br>Your personal information should only be used to manage your GLO 365 account and verification. Never share your password, transaction PIN, card details or OTP with anyone. Identity document information must be protected by the server and masked in your normal profile.</div>
+ <div class="actions"><button class="save" id="saveButton" type="submit">Save Personal Information</button></div>
+</form>
+<nav class="bottom-nav">
+ <a href="home.html"><strong>⌂</strong>Home</a>
+ <a href="mybets.html"><strong>🎯</strong>My Bets</a>
+ <a href="results.html"><strong>🏆</strong>Results</a>
+ <a href="profile.html" class="active"><strong>♙</strong>Profile</a>
+</nav>
+</div>
+<script>
+"use strict";
+const API_BASE_URL="https://glo365.onrender.com/api";
+const TOKEN_KEY="glo365_token";
+const $=id=>document.getElementById(id);
+let loading=false;
+function token(){try{return sessionStorage.getItem(TOKEN_KEY)||"";}catch(_){return "";}}
+function showNotice(message,type="info"){$("notice").textContent=message;$ ("notice").className="notice show "+type;}
+function clearNotice(){$("notice").textContent="";$ ("notice").className="notice";}
+async function api(path,options={}){
+ const t=token();
+ const response=await fetch(API_BASE_URL+path,{method:options.method||"GET",credentials:"include",cache:"no-store",headers:{"Accept":"application/json",...(options.body?{"Content-Type":"application/json"}:{}),...(t?{"Authorization":"Bearer "+t}:{})},body:options.body?JSON.stringify(options.body):undefined});
+ let data={};try{data=await response.json();}catch(_){}
+ if(response.status===401){try{sessionStorage.removeItem(TOKEN_KEY);sessionStorage.removeItem("glo365_user");}catch(_){}location.replace("login.html");throw new Error("Your session expired. Please log in again.");}
+ if(!response.ok||data.success===false)throw new Error(data.message||data.error||"Server request failed.");
+ return data;
+}
+function maskEmail(value){const email=String(value||"");const at=email.indexOf("@");if(at<1)return email;const name=email.slice(0,at);return name.slice(0,Math.min(2,name.length))+"***"+email.slice(at);}
+async function loadAccount(){
+ if(!token()){location.replace("login.html");return;}
+ try{
+  const data=await api("/profile");
+  const profile=data.profile||data.user||{};
+  if(!profile.id)throw new Error("Account information was not returned by the server.");
+  $("username").value=profile.username||"";
+  $("email").value=maskEmail(profile.email||"");
+  $("fullName").value=profile.full_name||"";
+ }catch(error){showNotice(error.message,"error");}
+}
+$("accountForm").addEventListener("submit",async event=>{
+ event.preventDefault();if(loading)return;clearNotice();
+ const fullName=$("fullName").value.trim();
+ if(fullName.length>100){showNotice("Full Name cannot exceed 100 characters.","error");return;}
+ const button=$("saveButton");loading=true;button.disabled=true;button.textContent="SAVING...";
+ try{
+  const result=await api("/profile",{method:"PUT",body:{full_name:fullName}});
+  const profile=result.profile||{};
+  if(profile.full_name!==undefined)$("fullName").value=profile.full_name||"";
+  showNotice("Your Full Name has been saved successfully. Other account fields will be enabled after their secure server APIs are added.","success");
+ }catch(error){showNotice(error.message,"error");}
+ finally{loading=false;button.disabled=false;button.textContent="Save Personal Information";}
+});
+loadAccount();
+</script>
+</body>
+</html>
