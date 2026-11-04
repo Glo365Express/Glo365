@@ -1,395 +1,58 @@
-
 <!DOCTYPE html>
 <html lang="en">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
 <meta name="theme-color" content="#1688df">
 <title>GLO 365 - Live Support</title>
-
 <style>
 *{box-sizing:border-box;margin:0;padding:0}
-
-body{
- font-family:Arial,sans-serif;
- background:#f1f7fc;
- color:#30343b;
-}
-
-.app{
- max-width:520px;
- min-height:100vh;
- margin:auto;
- background:#fff;
- display:flex;
- flex-direction:column;
- position:relative;
-}
-
-header{
- background:linear-gradient(120deg,#0755a5,#1688df,#45b5f5);
- color:white;
- padding:17px 15px;
- display:flex;
- align-items:center;
- gap:12px;
- box-shadow:0 4px 15px #1688df25;
-}
-
-.back{
- width:38px;
- height:38px;
- border:0;
- border-radius:50%;
- background:#ffffff25;
- color:white;
- font-size:22px;
- cursor:pointer;
-}
-
-.header-info{flex:1}
-
-.header-info h2{
- font-size:19px;
- margin-bottom:4px;
-}
-
-.header-info p{
- font-size:12px;
- color:#e5f5ff;
-}
-
-.status{
- display:flex;
- align-items:center;
- gap:5px;
- font-size:11px;
- font-weight:bold;
-}
-
-.status-dot{
- width:8px;
- height:8px;
- border-radius:50%;
- background:#35f18b;
-}
-
-.support-info{
- margin:13px 12px;
- padding:13px;
- background:#edf7ff;
- border:1px solid #cfe6f8;
- border-radius:12px;
- color:#28648f;
- font-size:12px;
- line-height:1.6;
-}
-
-.support-info strong{
- color:#075da8;
-}
-
-.chat-area{
- flex:1;
- min-height:300px;
- padding:12px;
- overflow-y:auto;
- background:#f8fbff;
- display:flex;
- flex-direction:column;
- gap:12px;
-}
-
-.welcome{
- text-align:center;
- padding:22px 12px;
-}
-
-.welcome-icon{
- width:62px;
- height:62px;
- border-radius:50%;
- background:#e2f2ff;
- display:grid;
- place-items:center;
- font-size:29px;
- margin:0 auto 12px;
-}
-
-.welcome h3{
- color:#075da8;
- font-size:17px;
- margin-bottom:7px;
-}
-
-.welcome p{
- color:#718697;
- font-size:13px;
- line-height:1.6;
-}
-
-.message{
- max-width:82%;
- display:flex;
- flex-direction:column;
- gap:5px;
-}
-
-.message.user{
- align-self:flex-end;
- align-items:flex-end;
-}
-
-.message.admin{
- align-self:flex-start;
- align-items:flex-start;
-}
-
-.sender{
- font-size:10px;
- font-weight:bold;
- color:#718697;
- padding:0 5px;
-}
-
-.bubble{
- padding:11px 13px;
- border-radius:15px;
- font-size:13px;
- line-height:1.55;
- overflow-wrap:anywhere;
- white-space:pre-wrap;
-}
-
-.user .bubble{
- background:#1688df;
- color:white;
- border-bottom-right-radius:4px;
-}
-
-.admin .bubble{
- background:white;
- color:#354b5c;
- border:1px solid #dcebf6;
- border-bottom-left-radius:4px;
-}
-
-.message-time{
- font-size:9px;
- color:#91a2af;
- padding:0 5px;
-}
-
-.system-message{
- align-self:center;
- max-width:90%;
- text-align:center;
- color:#7891a3;
- font-size:11px;
- line-height:1.5;
- padding:9px 12px;
- background:#edf5fb;
- border-radius:20px;
-}
-
-.chat-bottom{
- background:white;
- border-top:1px solid #dcebf6;
- padding:12px;
-}
-
-.first-message-note{
- color:#718697;
- font-size:11px;
- line-height:1.5;
- margin-bottom:9px;
-}
-
-.composer{
- display:flex;
- align-items:flex-end;
- gap:8px;
-}
-
-.composer textarea{
- flex:1;
- min-width:0;
- min-height:43px;
- max-height:110px;
- resize:none;
- border:1px solid #cfe2f2;
- border-radius:22px;
- padding:12px 14px;
- font-family:Arial,sans-serif;
- font-size:13px;
- outline:none;
- background:#f8fbff;
-}
-
-.composer textarea:focus{
- border-color:#1688df;
- background:white;
-}
-
-.send-btn{
- width:44px;
- height:44px;
- flex-shrink:0;
- border:0;
- border-radius:50%;
- background:#1688df;
- color:white;
- font-size:20px;
- cursor:pointer;
-}
-
-.send-btn:disabled{
- opacity:.5;
- cursor:not-allowed;
-}
-
-.chat-footer{
- text-align:center;
- color:#9aabb8;
- font-size:10px;
- padding:8px 0 0;
-}
-
-.notice{
- display:none;
- margin:0 12px 10px;
- padding:10px;
- border-radius:9px;
- font-size:12px;
- line-height:1.5;
-}
-
-.notice.show{display:block}
-.notice.error{background:#fff0f0;color:#c33}
-.notice.success{background:#eaf8ef;color:#21834b}
-
-.loading,.empty{
- text-align:center;
- padding:25px 10px;
- color:#8195a5;
- font-size:13px;
-}
-
-.bottom-nav{
- position:sticky;
- bottom:0;
- background:white;
- border-top:1px solid #dcebf6;
- display:flex;
- justify-content:space-around;
- padding:10px 4px 14px;
-}
-
-.bottom-nav button{
- flex:1;
- border:0;
- background:none;
- color:#8295a5;
- font-size:11px;
- display:flex;
- flex-direction:column;
- align-items:center;
- gap:4px;
- cursor:pointer;
-}
-
-.bottom-nav strong{font-size:22px}
-.bottom-nav button.active{color:#087acb}
-
-@media(max-width:360px){
- header{padding:14px 10px}
- .chat-area{padding:9px}
- .chat-bottom{padding:9px}
- .message{max-width:88%}
-}
+body{font-family:Arial,sans-serif;background:#f1f7fc;color:#30343b}
+.app{max-width:520px;min-height:100vh;min-height:100dvh;margin:auto;background:#fff;display:flex;flex-direction:column;position:relative}
+header{background:linear-gradient(120deg,#0755a5,#1688df,#45b5f5);color:#fff;padding:17px 15px;display:flex;align-items:center;gap:12px;box-shadow:0 4px 15px #1688df25}
+.back{width:38px;height:38px;border:0;border-radius:50%;background:#ffffff25;color:#fff;font-size:22px;cursor:pointer}
+.header-info{flex:1}.header-info h2{font-size:19px;margin-bottom:4px}.header-info p{font-size:12px;color:#e5f5ff}
+.status{display:flex;align-items:center;gap:5px;font-size:11px;font-weight:bold}.status-dot{width:8px;height:8px;border-radius:50%;background:#35f18b}
+.support-info{margin:13px 12px;padding:13px;background:#edf7ff;border:1px solid #cfe6f8;border-radius:12px;color:#28648f;font-size:12px;line-height:1.6}.support-info strong{color:#075da8}
+.chat-area{flex:1;min-height:300px;padding:12px;overflow-y:auto;background:#f8fbff;display:flex;flex-direction:column;gap:12px}
+.welcome{text-align:center;padding:22px 12px}.welcome-icon{width:62px;height:62px;border-radius:50%;background:#e2f2ff;display:grid;place-items:center;font-size:29px;margin:0 auto 12px}.welcome h3{color:#075da8;font-size:17px;margin-bottom:7px}.welcome p{color:#718697;font-size:13px;line-height:1.6}
+.message{max-width:85%;display:flex;flex-direction:column;gap:5px}.message.user{align-self:flex-end;align-items:flex-end}.message.admin{align-self:flex-start;align-items:flex-start}.sender{font-size:10px;font-weight:bold;color:#718697;padding:0 5px}.bubble{padding:11px 13px;border-radius:15px;font-size:13px;line-height:1.55;overflow-wrap:anywhere;white-space:pre-wrap}.user .bubble{background:#1688df;color:#fff;border-bottom-right-radius:4px}.admin .bubble{background:#fff;color:#354b5c;border:1px solid #dcebf6;border-bottom-left-radius:4px}.message-time{font-size:9px;color:#91a2af;padding:0 5px}
+.chat-bottom{background:#fff;border-top:1px solid #dcebf6;padding:12px}.first-message-note{color:#718697;font-size:11px;line-height:1.5;margin-bottom:9px}.composer{display:flex;align-items:flex-end;gap:8px}.composer textarea{flex:1;min-width:0;min-height:43px;max-height:110px;resize:vertical;border:1px solid #cfe2f2;border-radius:22px;padding:12px 14px;font-family:Arial,sans-serif;font-size:13px;outline:none;background:#f8fbff}.composer textarea:focus{border-color:#1688df;background:#fff}.send-btn{width:44px;height:44px;flex-shrink:0;border:0;border-radius:50%;background:#1688df;color:#fff;font-size:20px;cursor:pointer}.send-btn:disabled{opacity:.5;cursor:not-allowed}.chat-footer{text-align:center;color:#9aabb8;font-size:10px;padding:8px 0 0}
+.notice{display:none;margin:0 12px 10px;padding:10px;border-radius:9px;font-size:12px;line-height:1.5}.notice.show{display:block}.notice.error{background:#fff0f0;color:#c33}.notice.success{background:#eaf8ef;color:#21834b}.notice.info{background:#eaf4ff;color:#1769a5}.loading,.empty{text-align:center;padding:25px 10px;color:#8195a5;font-size:13px}
+.bottom-nav{position:sticky;bottom:0;background:#fff;border-top:1px solid #dcebf6;display:flex;justify-content:space-around;padding:10px 4px 14px}.bottom-nav button{flex:1;border:0;background:none;color:#8295a5;font-size:11px;display:flex;flex-direction:column;align-items:center;gap:4px;cursor:pointer}.bottom-nav strong{font-size:22px}.bottom-nav button.active{color:#087acb}
+@media(max-width:360px){header{padding:14px 10px}.chat-area{padding:9px}.chat-bottom{padding:9px}.message{max-width:90%}}
 </style>
 </head>
-
 <body>
-
 <div class="app">
-
 <header>
- <button class="back" onclick="history.back()" aria-label="Go back">‹</button>
-
- <div class="header-info">
-  <h2>GLO 365 Support</h2>
-  <p>Customer Support Chat</p>
- </div>
-
- <div class="status">
-  <span class="status-dot"></span>
-  Support
- </div>
+ <button class="back" id="backButton" type="button" aria-label="Go back">‹</button>
+ <div class="header-info"><h2>GLO 365 Support</h2><p>Customer Support Chat</p></div>
+ <div class="status"><span class="status-dot"></span>Support</div>
 </header>
-
-<div class="support-info">
- <strong>💬 Live Support</strong><br>
- Send us a message if you need help. Our admin will be able to reply after you send your first message.
-</div>
-
-<div class="chat-area" id="chatArea">
- <div class="loading">Loading support messages...</div>
-</div>
-
-<div class="notice" id="notice"></div>
-
+<div class="support-info"><strong>💬 Live Support</strong><br>Send your message and our support team can reply after your first message. Please do not share your password, transaction PIN or OTP.</div>
+<div class="chat-area" id="chatArea" aria-live="polite"><div class="loading">Loading support messages...</div></div>
+<div class="notice" id="notice" role="status" aria-live="polite"></div>
 <div class="chat-bottom">
- <div class="first-message-note" id="firstMessageNote">
-  Send your first message to start a support conversation.
- </div>
-
+ <div class="first-message-note" id="firstMessageNote">Send your first message to start a support conversation.</div>
  <form class="composer" id="messageForm">
-  <textarea
-   id="messageInput"
-   maxlength="2000"
-   rows="1"
-   placeholder="Write your message..."
-   required
-  ></textarea>
-
-  <button class="send-btn" id="sendButton" type="submit" aria-label="Send message">
-   ➤
-  </button>
+  <textarea id="messageInput" maxlength="5000" rows="1" placeholder="Write your message..." required></textarea>
+  <button class="send-btn" id="sendButton" type="submit" aria-label="Send message">➤</button>
  </form>
-
- <div class="chat-footer">
-  GLO 365 Customer Support
- </div>
+ <div class="chat-footer">GLO 365 Customer Support · Text messages only</div>
 </div>
-
-<nav class="bottom-nav">
- <button onclick="location.href='home.html'">
-  <strong>⌂</strong>Home
- </button>
-
- <button onclick="location.href='mybets.html'">
-  <strong>🎯</strong>My Bets
- </button>
-
- <button onclick="location.href='results.html'">
-  <strong>🏆</strong>Results
- </button>
-
- <button onclick="location.href='profile.html'">
-  <strong>♙</strong>Profile
- </button>
+<nav class="bottom-nav" aria-label="Main navigation">
+ <button type="button" onclick="location.href='home.html'"><strong>⌂</strong>Home</button>
+ <button type="button" onclick="location.href='mybets.html'"><strong>🎯</strong>My Bets</button>
+ <button type="button" onclick="location.href='results.html'"><strong>🏆</strong>Results</button>
+ <button type="button" onclick="location.href='profile.html'"><strong>♙</strong>Profile</button>
 </nav>
-
 </div>
-
 <script>
 "use strict";
-
-/* SERVER CONFIGURATION */
 const API_BASE_URL="https://glo365.onrender.com/api";
 const TOKEN_KEY="glo365_token";
-
+const $=id=>document.getElementById(id);
 let currentUser=null;
 let messages=[];
 let conversationId=null;
@@ -398,423 +61,97 @@ let sending=false;
 let loading=false;
 let refreshTimer=null;
 let lastMessageSignature="";
+let initialLoadDone=false;
 
-/* API REQUEST */
-function getToken(){
- try{
-  return sessionStorage.getItem(TOKEN_KEY)||"";
- }catch(error){
-  return "";
- }
-}
+function getToken(){try{return sessionStorage.getItem(TOKEN_KEY)||"";}catch(_){return "";}}
+function showNotice(message,type="error"){$("notice").textContent=message;$ ("notice").className="notice show "+type;}
+function hideNotice(){$("notice").textContent="";$ ("notice").className="notice";}
+function setSending(value){sending=value;$ ("sendButton").disabled=value;$ ("messageInput").disabled=value;$ ("sendButton").textContent=value?"…":"➤";}
 
 async function apiRequest(path,options={}){
  const token=getToken();
-
- const headers={
-  "Accept":"application/json",
-  ...(options.body?{"Content-Type":"application/json"}:{}),
-  ...(token?{"Authorization":"Bearer "+token}:{})
- };
-
- const response=await fetch(API_BASE_URL+path,{
-  method:options.method||"GET",
-  headers,
-  credentials:"include",
-  cache:"no-store",
-  body:options.body?JSON.stringify(options.body):undefined
- });
-
- let data={};
- try{
-  data=await response.json();
- }catch(error){}
-
- if(!response.ok){
-  const error=new Error(
-   data.message||data.error||"Request failed ("+response.status+")"
-  );
-  error.status=response.status;
-  throw error;
- }
-
+ const headers={"Accept":"application/json",...(options.body?{"Content-Type":"application/json"}:{}),...(token?{"Authorization":"Bearer "+token}:{})};
+ const response=await fetch(API_BASE_URL+path,{method:options.method||"GET",headers,credentials:"include",cache:"no-store",body:options.body?JSON.stringify(options.body):undefined});
+ let data={};try{data=await response.json();}catch(_){}
+ if(!response.ok||data.success===false){const error=new Error(data.message||data.error||"Request failed ("+response.status+")");error.status=response.status;throw error;}
  return data;
 }
-
-/* ELEMENT HELPERS */
-function showNotice(message,type="error"){
- const notice=document.getElementById("notice");
- notice.textContent=message;
- notice.className="notice show "+type;
-}
-
-function hideNotice(){
- const notice=document.getElementById("notice");
- notice.textContent="";
- notice.className="notice";
-}
-
-function setSending(value){
- sending=value;
- document.getElementById("sendButton").disabled=value;
- document.getElementById("messageInput").disabled=value;
- document.getElementById("sendButton").textContent=value?"…":"➤";
-}
-
-/* AUTHENTICATION */
 async function checkLogin(){
  const data=await apiRequest("/auth/me");
-
- if(!data||data.success!==true||!data.user){
-  const error=new Error("Please log in to continue.");
-  error.status=401;
-  throw error;
- }
-
+ if(!data||data.success!==true||!data.user){const error=new Error("Please log in to continue.");error.status=401;throw error;}
  currentUser=data.user;
-
- if(
-  currentUser.status&&
-  String(currentUser.status).toLowerCase()!=="active"
- ){
-  throw new Error("Your account is not active.");
- }
-
+ if(currentUser.status&&String(currentUser.status).toLowerCase()!=="active")throw new Error("Your account is not active.");
+ if(String(currentUser.role||"user").toLowerCase()==="admin"){location.replace("admin.html");return null;}
  return currentUser;
 }
-
-function redirectToLogin(){
- try{
-  sessionStorage.removeItem(TOKEN_KEY);
- }catch(error){}
-
- location.replace("login.html");
-}
-
-/*
- SUPPORT API INTEGRATION
-
- The frontend expects these authenticated endpoints:
-
- GET  /api/support/messages
- POST /api/support/messages
-
- GET response example:
- {
-   "success": true,
-   "conversation": {"id": 1},
-   "messages": [
-     {
-       "id": 1,
-       "sender_role": "user",
-       "message": "I need help",
-       "created_at": "2026-11-02T10:00:00Z"
-     }
-   ]
- }
-
- POST request:
- {
-   "message": "I need help"
- }
-
- POST response:
- {
-   "success": true,
-   "message": {
-     "id": 1,
-     "sender_role": "user",
-     "message": "I need help",
-     "created_at": "2026-11-02T10:00:00Z"
-   }
- }
-
- IMPORTANT:
- The server must enforce that an admin cannot send a
- message until the user has sent the first message.
-*/
-
-function normalizeMessage(item){
- return {
-  id:item.id??item.message_id??"",
-  sender_role:String(
-   item.sender_role||
-   item.senderRole||
-   item.role||
-   ""
-  ).toLowerCase(),
-  message:String(
-   item.message||
-   item.content||
-   item.text||
-   ""
-  ),
-  created_at:item.created_at||item.createdAt||null
- };
-}
-
-function isUserMessage(item){
- const role=String(item.sender_role||"").toLowerCase();
- return ["user","customer","member"].includes(role);
-}
-
-function formatMessageTime(value){
- if(!value)return "";
-
- const date=new Date(value);
- if(Number.isNaN(date.getTime()))return "";
-
- return date.toLocaleString("en-GB",{
-  day:"2-digit",
-  month:"short",
-  hour:"2-digit",
-  minute:"2-digit"
- });
-}
-
+function redirectToLogin(){try{sessionStorage.removeItem(TOKEN_KEY);sessionStorage.removeItem("glo365_user");}catch(_){}location.replace("login.html");}
+function normalizeMessage(item){return{id:item.id??item.message_id??"",sender_role:String(item.sender_role||item.senderRole||item.role||"").toLowerCase(),message:String(item.message||item.content||item.text||""),created_at:item.created_at||item.createdAt||null};}
+function isUserMessage(item){return["user","customer","member"].includes(String(item.sender_role||"").toLowerCase());}
+function formatMessageTime(value){if(!value)return"";const date=new Date(value);if(Number.isNaN(date.getTime()))return"";return date.toLocaleString("en-GB",{day:"2-digit",month:"short",hour:"2-digit",minute:"2-digit"});}
+function updateComposerNote(){$("firstMessageNote").textContent=hasUserSentMessage?"You can send another message. Our support team can reply in this conversation.":"Send your first message to start a support conversation.";}
 function renderMessages(){
- const area=document.getElementById("chatArea");
- area.replaceChildren();
-
+ const area=$("chatArea");area.replaceChildren();
  if(!messages.length){
-  const welcome=document.createElement("div");
-  welcome.className="welcome";
-
-  const icon=document.createElement("div");
-  icon.className="welcome-icon";
-  icon.textContent="💬";
-
-  const title=document.createElement("h3");
-  title.textContent="Welcome to GLO 365 Support";
-
-  const paragraph=document.createElement("p");
-  paragraph.textContent=
-   "Tell us how we can help. Send your first message to start your support conversation.";
-
-  welcome.append(icon,title,paragraph);
-  area.appendChild(welcome);
-
-  hasUserSentMessage=false;
-  updateComposerNote();
-  return;
+  const welcome=document.createElement("div");welcome.className="welcome";
+  const icon=document.createElement("div");icon.className="welcome-icon";icon.textContent="💬";
+  const title=document.createElement("h3");title.textContent="Welcome to GLO 365 Support";
+  const paragraph=document.createElement("p");paragraph.textContent="Tell us how we can help. Send your first message to start your support conversation.";
+  welcome.append(icon,title,paragraph);area.appendChild(welcome);hasUserSentMessage=false;conversationId=null;updateComposerNote();return;
  }
-
  messages.forEach(item=>{
-  const row=document.createElement("div");
-  const userMessage=isUserMessage(item);
-
-  row.className="message "+(userMessage?"user":"admin");
-
-  const sender=document.createElement("div");
-  sender.className="sender";
-  sender.textContent=userMessage?"You":"GLO 365 Support";
-
-  const bubble=document.createElement("div");
-  bubble.className="bubble";
-  bubble.textContent=item.message;
-
-  const time=document.createElement("div");
-  time.className="message-time";
-  time.textContent=formatMessageTime(item.created_at);
-
-  row.append(sender,bubble,time);
-  area.appendChild(row);
+  const row=document.createElement("div");const userMessage=isUserMessage(item);row.className="message "+(userMessage?"user":"admin");
+  const sender=document.createElement("div");sender.className="sender";sender.textContent=userMessage?"You":"GLO 365 Support";
+  const bubble=document.createElement("div");bubble.className="bubble";bubble.textContent=item.message;
+  const time=document.createElement("div");time.className="message-time";time.textContent=formatMessageTime(item.created_at);
+  row.append(sender,bubble,time);area.appendChild(row);
  });
-
- area.scrollTop=area.scrollHeight;
-
- hasUserSentMessage=messages.some(isUserMessage);
- updateComposerNote();
+ area.scrollTop=area.scrollHeight;hasUserSentMessage=messages.some(isUserMessage);updateComposerNote();
 }
-
-function updateComposerNote(){
- const note=document.getElementById("firstMessageNote");
-
- if(hasUserSentMessage){
-  note.textContent="You can send another message. Our support admin can reply in this conversation.";
- }else{
-  note.textContent="Send your first message to start a support conversation.";
- }
-}
-
-/* LOAD CHAT */
 async function loadMessages(options={}){
- if(loading)return;
- loading=true;
-
+ if(loading)return;loading=true;
  try{
   const data=await apiRequest("/support/messages");
-
-  if(!data||data.success!==true){
-   throw new Error("Unable to load support messages.");
-  }
-
-  const incoming=Array.isArray(data.messages)
-   ?data.messages
-   :Array.isArray(data.data)
-    ?data.data
-    :[];
-
+  if(!data||data.success!==true)throw new Error("Unable to load support messages.");
+  const incoming=Array.isArray(data.messages)?data.messages:[];
   const normalized=incoming.map(normalizeMessage);
-
-  const signature=normalized.map(item=>
-   String(item.id)+"|"+item.sender_role+"|"+item.message+"|"+item.created_at
-  ).join("||");
-
-  conversationId=
-   data.conversation?.id||
-   data.conversationId||
-   conversationId;
-
-  if(signature!==lastMessageSignature){
-   messages=normalized;
-   lastMessageSignature=signature;
-   renderMessages();
-  }
-
-  if(!normalized.length){
-   messages=[];
-   renderMessages();
-  }
-
+  const signature=normalized.map(item=>String(item.id)+"|"+item.sender_role+"|"+item.message+"|"+item.created_at).join("||");
+  conversationId=data.conversation?.id||null;
+  if(signature!==lastMessageSignature){messages=normalized;lastMessageSignature=signature;renderMessages();}
+  else if(!normalized.length&&messages.length){messages=[];renderMessages();}
+  initialLoadDone=true;
  }catch(error){
   console.error("Support message loading failed:",error);
-
-  if(options.initial){
-   const area=document.getElementById("chatArea");
-   area.replaceChildren();
-
-   const message=document.createElement("div");
-   message.className="empty";
-   message.textContent=error.message||"Unable to load support chat.";
-   area.appendChild(message);
-  }
- }finally{
-  loading=false;
- }
+  if(options.initial){const area=$("chatArea");area.replaceChildren();const item=document.createElement("div");item.className="empty";item.textContent=error.message||"Unable to load support chat.";area.appendChild(item);}
+  if(error.status===401)redirectToLogin();
+ }finally{loading=false;}
 }
-
-/* SEND MESSAGE */
 async function sendMessage(event){
- event.preventDefault();
-
- if(sending)return;
-
- const input=document.getElementById("messageInput");
- const message=input.value.trim();
-
- if(!message){
-  showNotice("Please write a message first.");
-  return;
- }
-
- if(message.length>2000){
-  showNotice("Message cannot exceed 2000 characters.");
-  return;
- }
-
- hideNotice();
- setSending(true);
-
+ event.preventDefault();if(sending)return;
+ const input=$("messageInput");const message=input.value.trim();
+ if(!message){showNotice("Please write a message first.");return;}
+ if(message.length>5000){showNotice("Message cannot exceed 5000 characters.");return;}
+ hideNotice();setSending(true);
  try{
-  const data=await apiRequest("/support/messages",{
-   method:"POST",
-   body:{message}
-  });
-
-  if(!data||data.success!==true){
-   throw new Error(data.message||"Message could not be sent.");
-  }
-
+  const data=await apiRequest("/support/messages",{method:"POST",body:{message}});
+  if(!data||data.success!==true)throw new Error(data.message||"Message could not be sent.");
   input.value="";
-
-  if(data.message){
-   const newMessage=normalizeMessage(data.message);
-   messages.push(newMessage);
-   lastMessageSignature="";
-   renderMessages();
-  }
-
-  await loadMessages();
-
-  showNotice("Your message has been sent successfully.","success");
-
- }catch(error){
-  console.error("Sending support message failed:",error);
-
-  if(error.status===401){
-   redirectToLogin();
-   return;
-  }
-
-  showNotice(error.message||"Unable to send your message.");
- }finally{
-  setSending(false);
- }
+  if(data.message){messages.push(normalizeMessage(data.message));lastMessageSignature="";renderMessages();}
+  await loadMessages();showNotice("Your message has been sent successfully.","success");
+ }catch(error){console.error("Sending support message failed:",error);if(error.status===401){redirectToLogin();return;}showNotice(error.message||"Unable to send your message.");}
+ finally{setSending(false);}
 }
+function startAutoRefresh(){if(refreshTimer)clearInterval(refreshTimer);refreshTimer=setInterval(()=>{if(!document.hidden&&!sending)loadMessages();},5000);}
 
-/* AUTO REFRESH */
-function startAutoRefresh(){
- if(refreshTimer)clearInterval(refreshTimer);
-
- refreshTimer=setInterval(()=>{
-  if(!document.hidden){
-   loadMessages();
-  }
- },5000);
-}
-
-document.addEventListener("visibilitychange",()=>{
- if(!document.hidden){
-  loadMessages();
- }
-});
-
-document.getElementById("messageForm").addEventListener(
- "submit",
- sendMessage
-);
-
-document.getElementById("messageInput").addEventListener(
- "keydown",
- event=>{
-  if(event.key==="Enter"&&!event.shiftKey){
-   event.preventDefault();
-   document.getElementById("messageForm").requestSubmit();
-  }
- }
-);
-
-/* START */
+document.addEventListener("visibilitychange",()=>{if(!document.hidden)loadMessages();});
+$("messageForm").addEventListener("submit",sendMessage);
+$("messageInput").addEventListener("keydown",event=>{if(event.key==="Enter"&&!event.shiftKey){event.preventDefault();$("messageForm").requestSubmit();}});
+$("backButton").addEventListener("click",()=>{if(history.length>1)history.back();else location.href="profile.html";});
 async function initializeSupport(){
- try{
-  await checkLogin();
-  await loadMessages({initial:true});
-  startAutoRefresh();
- }catch(error){
-  console.error("Support initialization failed:",error);
-
-  if(error.status===401){
-   redirectToLogin();
-   return;
-  }
-
-  const area=document.getElementById("chatArea");
-  area.replaceChildren();
-
-  const message=document.createElement("div");
-  message.className="empty";
-  message.textContent=error.message||"Unable to open support.";
-  area.appendChild(message);
- }
+ try{const user=await checkLogin();if(!user)return;await loadMessages({initial:true});startAutoRefresh();}
+ catch(error){console.error("Support initialization failed:",error);if(error.status===401){redirectToLogin();return;}const area=$("chatArea");area.replaceChildren();const item=document.createElement("div");item.className="empty";item.textContent=error.message||"Unable to open support.";area.appendChild(item);}
 }
-
 initializeSupport();
-
-window.addEventListener("beforeunload",()=>{
- if(refreshTimer)clearInterval(refreshTimer);
-});
+window.addEventListener("beforeunload",()=>{if(refreshTimer)clearInterval(refreshTimer);});
 </script>
-
 </body>
 </html>
