@@ -1,0 +1,246 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="theme-color" content="#1688df">
+<title>GLO 365 - Security Center</title>
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+:root{--blue:#1688df;--deep:#075da8;--bg:#f1f7fc;--text:#20364b;--muted:#8295a5;--line:#e2edf5;--green:#16834a;--amber:#a56b13}
+body{font-family:Arial,sans-serif;background:var(--bg);color:var(--text);min-height:100vh}
+.app{max-width:560px;min-height:100vh;margin:auto;background:#fff;display:flex;flex-direction:column}
+header{padding:18px 16px;background:linear-gradient(120deg,#0755a5,#1688df,#45b5f5);color:#fff;display:flex;align-items:center;gap:12px;box-shadow:0 4px 14px #1688df25}
+.back{width:38px;height:38px;border:0;border-radius:50%;background:#ffffff25;color:white;font-size:22px;cursor:pointer}
+.header-title{flex:1}.header-title h1{font-size:19px}.header-title p{font-size:11px;color:#e4f5ff;margin-top:4px}
+.content{padding:16px 14px 22px;flex:1}
+.intro{padding:16px;border-radius:15px;background:linear-gradient(135deg,#eaf6ff,#f6fbff);border:1px solid #d7ebfa;margin-bottom:16px}
+.intro-row{display:flex;align-items:center;gap:12px}
+.shield{width:48px;height:48px;flex-shrink:0;border-radius:14px;background:#d7efff;display:grid;place-items:center;font-size:25px}
+.intro h2{font-size:16px;color:#075da8;margin-bottom:5px}
+.intro p{font-size:12px;line-height:1.55;color:#648198}
+.section-title{font-size:14px;color:#17466d;margin:19px 2px 10px;font-weight:800}
+.card{border:1px solid var(--line);border-radius:14px;background:#fff;margin-bottom:11px;overflow:hidden}
+.item{padding:14px;display:flex;align-items:center;gap:12px}
+.item+.item{border-top:1px solid #edf3f8}
+.item-icon{width:39px;height:39px;border-radius:12px;background:#edf7ff;color:#087acb;display:grid;place-items:center;font-size:19px;flex-shrink:0}
+.item-main{flex:1;min-width:0}
+.item-main strong{display:block;font-size:13px;color:#24445e}
+.item-main small{display:block;font-size:11px;color:var(--muted);line-height:1.45;margin-top:4px}
+.state{font-size:10px;font-weight:800;color:var(--amber);background:#fff6e6;padding:6px 8px;border-radius:20px;white-space:nowrap}
+.state.ready{color:var(--green);background:#eaf8ef}
+.chevron{color:#91a5b5;font-size:20px}
+button{font-family:inherit}
+.action{border:0;border-radius:9px;background:#eaf4fc;color:#17699f;font-size:11px;font-weight:800;padding:9px 11px;cursor:pointer;white-space:nowrap}
+.action:disabled{opacity:.55;cursor:not-allowed}
+.password-card{padding:15px}
+.password-card h3{font-size:14px;color:#17466d;margin-bottom:5px}
+.password-card>p{font-size:11px;color:var(--muted);line-height:1.5;margin-bottom:13px}
+.field{margin-bottom:12px}
+label{display:block;font-size:11px;font-weight:700;color:#526b80;margin:0 0 6px 3px}
+input{width:100%;height:45px;border:1px solid #d7e6f1;border-radius:10px;padding:0 12px;font-size:13px;color:var(--text);outline:none;background:#fbfdff}
+input:focus{border-color:var(--blue);box-shadow:0 0 0 3px #1688df18}
+.primary{width:100%;height:46px;border:0;border-radius:10px;background:linear-gradient(120deg,#087acb,#25a7ed);color:#fff;font-size:13px;font-weight:800;cursor:pointer}
+.primary:disabled{opacity:.55;cursor:not-allowed}
+.notice{display:none;padding:11px 12px;margin:0 0 12px;border-radius:9px;font-size:12px;line-height:1.5}
+.notice.show{display:block}.notice.error{background:#fff0f0;color:#b52c2c}.notice.success{background:#eaf8ef;color:#197842}.notice.info{background:#edf7ff;color:#17699f}
+.small-note{font-size:10px;color:#91a3b1;line-height:1.5;margin-top:10px}
+.logout{width:100%;height:45px;border:1px solid #f0d7d7;border-radius:10px;background:#fff7f7;color:#b52c2c;font-size:13px;font-weight:800;cursor:pointer;margin-top:5px}
+.bottom-nav{position:sticky;bottom:0;background:#fff;border-top:1px solid var(--line);display:flex;justify-content:space-around;padding:10px 4px 13px}
+.bottom-nav a{flex:1;text-decoration:none;color:#8295a5;font-size:10px;display:flex;flex-direction:column;align-items:center;gap:4px}
+.bottom-nav strong{font-size:21px}.bottom-nav a.active{color:#087acb}
+footer{text-align:center;color:#a0afbb;font-size:10px;padding:10px 0 14px}
+@media(min-width:560px){body{padding:18px 0}.app{min-height:calc(100vh - 36px);border-radius:16px;overflow:hidden;box-shadow:0 8px 30px #17466d10}}
+</style>
+</head>
+<body>
+<div class="app">
+<header>
+ <button class="back" id="backButton" type="button" aria-label="Go back">‹</button>
+ <div class="header-title"><h1>Security Center</h1><p>Protect your GLO 365 account</p></div>
+</header>
+<main class="content">
+ <section class="intro">
+  <div class="intro-row">
+   <div class="shield">🛡️</div>
+   <div><h2>Account Security</h2><p>Review your account security and update your login password. Verification features will appear when supported by the server.</p></div>
+  </div>
+ </section>
+
+ <div id="notice" class="notice" role="status" aria-live="polite"></div>
+
+ <h3 class="section-title">Security overview</h3>
+ <section class="card">
+  <div class="item">
+   <div class="item-icon">👤</div>
+   <div class="item-main"><strong>Account</strong><small id="accountSummary">Checking your account...</small></div>
+   <span class="state" id="accountState">Checking</span>
+  </div>
+  <div class="item">
+   <div class="item-icon">✉️</div>
+   <div class="item-main"><strong>Email verification</strong><small id="emailSummary">Verification status is not available from the current API.</small></div>
+   <span class="state" id="emailState">Not confirmed</span>
+  </div>
+  <div class="item">
+   <div class="item-icon">📱</div>
+   <div class="item-main"><strong>Phone verification</strong><small>Phone OTP verification is not yet connected to the server.</small></div>
+   <span class="state">Unavailable</span>
+  </div>
+  <div class="item">
+   <div class="item-icon">🔐</div>
+   <div class="item-main"><strong>Transaction password</strong><small>A separate transaction-password API is not yet available.</small></div>
+   <span class="state">Not configured</span>
+  </div>
+ </section>
+
+ <h3 class="section-title">Login password</h3>
+ <section class="card password-card">
+  <h3>Change login password</h3>
+  <p>Use your current password to set a new password. The new password must contain 6–16 characters.</p>
+  <form id="passwordForm">
+   <div class="field">
+    <label for="currentPassword">Current password</label>
+    <input id="currentPassword" type="password" autocomplete="current-password" maxlength="128" required>
+   </div>
+   <div class="field">
+    <label for="newPassword">New password</label>
+    <input id="newPassword" type="password" autocomplete="new-password" minlength="6" maxlength="16" required>
+   </div>
+   <div class="field">
+    <label for="confirmPassword">Confirm new password</label>
+    <input id="confirmPassword" type="password" autocomplete="new-password" minlength="6" maxlength="16" required>
+   </div>
+   <button class="primary" id="changeButton" type="submit">Update Password</button>
+  </form>
+  <p class="small-note">Never share your password, PIN, or OTP with anyone, including support staff.</p>
+ </section>
+
+ <h3 class="section-title">Other account settings</h3>
+ <section class="card">
+  <div class="item">
+   <div class="item-icon">🪪</div>
+   <div class="item-main"><strong>Account information</strong><small>Review your personal information and linked contact details.</small></div>
+   <button class="action" type="button" onclick="location.href='my-account.html'">Open</button>
+  </div>
+  <div class="item">
+   <div class="item-icon">💳</div>
+   <div class="item-main"><strong>Link E-wallet</strong><small>Wallet linking is not yet connected to a verified server API.</small></div>
+   <span class="state">Unavailable</span>
+  </div>
+  <div class="item">
+   <div class="item-icon">🛡️</div>
+   <div class="item-main"><strong>Account verification</strong><small>Identity verification is managed through the account verification workflow.</small></div>
+   <span class="state">Unavailable</span>
+  </div>
+ </section>
+
+ <button class="logout" id="logoutButton" type="button">Log Out</button>
+</main>
+<nav class="bottom-nav">
+ <a href="home.html"><strong>⌂</strong>Home</a>
+ <a href="mybets.html"><strong>🎯</strong>My Bets</a>
+ <a href="results.html"><strong>🏆</strong>Results</a>
+ <a href="profile.html"><strong>♙</strong>Profile</a>
+</nav>
+<footer>GLO 365 · Security Center</footer>
+</div>
+<script>
+"use strict";
+const API_BASE_URL="https://glo365.onrender.com/api";
+const TOKEN_KEY="glo365_token";
+const $=id=>document.getElementById(id);
+let currentUser=null;
+let redirecting=false;
+
+function getToken(){try{return sessionStorage.getItem(TOKEN_KEY)||"";}catch(_){return "";}}
+function clearSession(){
+ try{
+  sessionStorage.removeItem(TOKEN_KEY);
+  sessionStorage.removeItem("glo365_user");
+  sessionStorage.removeItem("glo365_session");
+ }catch(_){}
+}
+function showNotice(message,type="error"){
+ const box=$("notice");box.textContent=message;box.className="notice show "+type;
+}
+function clearNotice(){const box=$("notice");box.textContent="";box.className="notice";}
+async function apiRequest(path,options={}){
+ const token=getToken();
+ const response=await fetch(API_BASE_URL+path,{
+  method:options.method||"GET",
+  credentials:"include",
+  cache:"no-store",
+  headers:{
+   "Accept":"application/json",
+   ...(options.body?{"Content-Type":"application/json"}:{}),
+   ...(token?{"Authorization":"Bearer "+token}:{})
+  },
+  body:options.body?JSON.stringify(options.body):undefined
+ });
+ let data={};
+ try{data=await response.json();}catch(_){}
+ if(response.status===401){
+  clearSession();
+  if(!redirecting){redirecting=true;location.replace("login.html");}
+  throw new Error("Your session has expired. Please sign in again.");
+ }
+ if(!response.ok||data.success===false){
+  throw new Error(data.message||data.error||"Request failed. Please try again.");
+ }
+ return data;
+}
+function unwrapUser(data){
+ if(data?.user)return data.user;
+ if(data?.data?.user)return data.data.user;
+ if(data?.data&&typeof data.data==="object")return data.data;
+ return data||{};
+}
+async function loadAccount(){
+ const data=await apiRequest("/auth/me");
+ currentUser=unwrapUser(data);
+ if(!currentUser||!currentUser.id)throw new Error("Unable to verify your account.");
+ const status=String(currentUser.status||"active").toLowerCase();
+ $("accountSummary").textContent=(currentUser.username?"@"+currentUser.username+" · ":"")+"Account status: "+status;
+ $("accountState").textContent=status==="active"?"Active":"Review";
+ $("accountState").className="state"+(status==="active"?" ready":"");
+ // Do not infer verification from the presence of an email address.
+ const verified=currentUser.email_verified===true||currentUser.emailVerified===true;
+ if(verified){
+  $("emailSummary").textContent="Your email is marked as verified by the server.";
+  $("emailState").textContent="Verified";
+  $("emailState").className="state ready";
+ }
+}
+$("backButton").addEventListener("click",()=>history.length>1?history.back():location.href="profile.html");
+$("passwordForm").addEventListener("submit",async event=>{
+ event.preventDefault();clearNotice();
+ const current=$("currentPassword").value;
+ const next=$("newPassword").value;
+ const confirm=$("confirmPassword").value;
+ if(next.length<6||next.length>16){showNotice("New password must contain 6–16 characters.");return;}
+ if(next!==confirm){showNotice("The new passwords do not match.");return;}
+ if(current===next){showNotice("Choose a password different from your current password.");return;}
+ const button=$("changeButton");button.disabled=true;button.textContent="UPDATING...";
+ try{
+  await apiRequest("/auth/change-password",{
+   method:"POST",
+   body:{current_password:current,new_password:next}
+  });
+  $("passwordForm").reset();
+  showNotice("Password updated successfully. Please sign in again with your new password.","success");
+  clearSession();
+  setTimeout(()=>location.replace("login.html"),1300);
+ }catch(error){showNotice(error.message||"Password could not be updated.");}
+ finally{button.disabled=false;button.textContent="Update Password";}
+});
+$("logoutButton").addEventListener("click",()=>{
+ clearSession();
+ location.replace("login.html");
+});
+(async function init(){
+ try{await loadAccount();}
+ catch(error){if(!redirecting)showNotice(error.message||"Unable to load security information.");}
+})();
+</script>
+</body>
+</html>
