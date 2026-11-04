@@ -5,739 +5,176 @@
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
 <meta name="theme-color" content="#dce3ed">
 <title>GLO 365 - Login & Create Account</title>
-
 <style>
 *{box-sizing:border-box;margin:0;padding:0}
-
-:root{
- --bg:#dce3ed;
- --blue:#2196e8;
- --blue-dark:#147fc9;
- --text:#26364b;
- --muted:#718096;
-}
-
-body{
- font-family:Arial,sans-serif;
- background:var(--bg);
- min-height:100vh;
- display:flex;
- align-items:center;
- justify-content:center;
- padding:24px 16px;
- color:var(--text);
- overflow-x:hidden;
-}
-
-.page{
- width:100%;
- max-width:440px;
- text-align:center;
-}
-
-.login-circle{
- width:100%;
- max-width:390px;
- min-height:450px;
- margin:auto;
- padding:35px 28px;
- border-radius:50%;
- background:var(--bg);
- box-shadow:
-  18px 18px 35px #aeb8c7,
-  -18px -18px 35px #ffffff;
- display:flex;
- flex-direction:column;
- justify-content:center;
- position:relative;
- transition:.4s ease;
-}
-
-.login-circle:before{
- content:"";
- position:absolute;
- inset:12px;
- border-radius:50%;
- box-shadow:
-  inset 5px 5px 12px #c0c9d6,
-  inset -5px -5px 12px #f5f8ff;
- pointer-events:none;
-}
-
-.form-content{
- position:relative;
- z-index:1;
- width:100%;
-}
-
-.logo{
- font-size:27px;
- font-weight:900;
- letter-spacing:2px;
- margin-bottom:7px;
- color:#26364b;
-}
-
-.logo span{color:var(--blue)}
-
-.subtitle{
- font-size:12px;
- color:var(--muted);
- margin-bottom:22px;
-}
-
-.tabs{
- display:grid;
- grid-template-columns:1fr 1fr;
- gap:10px;
- margin-bottom:25px;
-}
-
-.tab{
- border:0;
- padding:11px 5px;
- border-radius:25px;
- background:var(--bg);
- color:#718096;
- font-weight:bold;
- font-size:12px;
- box-shadow:5px 5px 10px #b6c0ce,-5px -5px 10px #fff;
- cursor:pointer;
-}
-
-.tab.active{
- color:#fff;
- background:var(--blue);
- box-shadow:inset 3px 3px 7px #1475b7,inset -3px -3px 7px #42b0ff;
-}
-
-h2{
- font-size:22px;
- font-weight:900;
- margin-bottom:22px;
- color:#26364b;
-}
-
-.form-panel{display:none}
-.form-panel.active{display:block;animation:fadeIn .35s ease}
-
-@keyframes fadeIn{
- from{opacity:0;transform:translateY(9px)}
- to{opacity:1;transform:translateY(0)}
-}
-
-.form-group{
- margin-bottom:16px;
- text-align:left;
-}
-
-label{
- display:block;
- font-size:12px;
- font-weight:bold;
- color:#52647a;
- margin:0 0 7px 12px;
-}
-
-input{
- width:100%;
- height:49px;
- padding:0 17px;
- border:0;
- outline:none;
- border-radius:30px;
- background:var(--bg);
- color:#26364b;
- font-size:14px;
- box-shadow:
-  inset 5px 5px 10px #b9c3d0,
-  inset -5px -5px 10px #fff;
- transition:.25s;
-}
-
-input:focus{
- box-shadow:
-  inset 3px 3px 7px #b9c3d0,
-  inset -3px -3px 7px #fff,
-  0 0 0 2px #2196e855;
-}
-
+:root{--bg:#dce3ed;--blue:#2196e8;--blue-dark:#147fc9;--text:#26364b;--muted:#718096}
+body{font-family:Arial,sans-serif;background:var(--bg);min-height:100vh;display:flex;align-items:center;justify-content:center;padding:24px 16px;color:var(--text);overflow-x:hidden}
+.page{width:100%;max-width:440px;text-align:center}
+.login-circle{width:100%;max-width:390px;min-height:450px;margin:auto;padding:35px 28px;border-radius:50%;background:var(--bg);box-shadow:18px 18px 35px #aeb8c7,-18px -18px 35px #fff;display:flex;flex-direction:column;justify-content:center;position:relative;transition:.4s ease}
+.login-circle:before{content:"";position:absolute;inset:12px;border-radius:50%;box-shadow:inset 5px 5px 12px #c0c9d6,inset -5px -5px 12px #f5f8ff;pointer-events:none}
+.form-content{position:relative;z-index:1;width:100%}
+.logo{font-size:27px;font-weight:900;letter-spacing:2px;margin-bottom:7px;color:#26364b}.logo span{color:var(--blue)}
+.subtitle{font-size:12px;color:var(--muted);margin-bottom:22px}
+.tabs{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:25px}
+.tab{border:0;padding:11px 5px;border-radius:25px;background:var(--bg);color:#718096;font-weight:bold;font-size:12px;box-shadow:5px 5px 10px #b6c0ce,-5px -5px 10px #fff;cursor:pointer}
+.tab.active{color:#fff;background:var(--blue);box-shadow:inset 3px 3px 7px #1475b7,inset -3px -3px 7px #42b0ff}
+h2{font-size:22px;font-weight:900;margin-bottom:22px;color:#26364b}
+.form-panel{display:none}.form-panel.active{display:block;animation:fadeIn .35s ease}
+@keyframes fadeIn{from{opacity:0;transform:translateY(9px)}to{opacity:1;transform:translateY(0)}}
+.form-group{margin-bottom:13px;text-align:left}
+input{width:100%;height:49px;padding:0 17px;border:0;outline:none;border-radius:30px;background:var(--bg);color:#26364b;font-size:14px;box-shadow:inset 5px 5px 10px #b9c3d0,inset -5px -5px 10px #fff;transition:.25s}
+input:focus{box-shadow:inset 3px 3px 7px #b9c3d0,inset -3px -3px 7px #fff,0 0 0 2px #2196e855}
 input::placeholder{color:#8b98a9}
-
-.username-status{
- min-height:18px;
- padding:5px 12px 0;
- font-size:11px;
- font-weight:bold;
- text-align:left;
-}
-
-.status-available{color:#168a49}
-.status-taken{color:#d32f2f}
-.status-checking{color:#147fc9}
-.status-warning{color:#9b741b}
-
-.action-btn{
- width:100%;
- min-height:49px;
- border:0;
- border-radius:30px;
- margin-top:9px;
- background:var(--bg);
- color:var(--blue-dark);
- font-size:16px;
- font-weight:900;
- cursor:pointer;
- box-shadow:
-  7px 7px 13px #b4becc,
-  -7px -7px 13px #fff;
- transition:.2s;
-}
-
-.action-btn:active{
- box-shadow:
-  inset 5px 5px 9px #b4becc,
-  inset -5px -5px 9px #fff;
- transform:scale(.98);
-}
-
-.action-btn:disabled{
- opacity:.55;
- cursor:not-allowed;
-}
-
-.message{
- display:none;
- position:relative;
- z-index:2;
- max-width:350px;
- margin:20px auto 0;
- padding:12px 15px;
- border-radius:14px;
- font-size:12px;
- line-height:1.6;
- overflow-wrap:anywhere;
-}
-
-.message.error{
- display:block;
- background:#ffe8e8;
- color:#bd2525;
- box-shadow:3px 3px 8px #c5b8b8,-3px -3px 8px #fff;
-}
-
-.message.success{
- display:block;
- background:#e2f8e9;
- color:#19783d;
- box-shadow:3px 3px 8px #b8c8bc,-3px -3px 8px #fff;
-}
-
-.message.info{
- display:block;
- background:#e7f3ff;
- color:#1769a5;
-}
-
-.loader{
- width:35px;
- height:35px;
- border:5px solid #bbc5d2;
- border-top-color:var(--blue);
- border-radius:50%;
- margin:20px auto 0;
- animation:spin 1s linear infinite;
- display:none;
-}
-
+.username-status{min-height:18px;padding:5px 12px 0;font-size:11px;font-weight:bold;text-align:left}
+.status-available{color:#168a49}.status-taken{color:#d32f2f}.status-checking{color:#147fc9}.status-warning{color:#9b741b}
+.action-btn{width:100%;min-height:49px;border:0;border-radius:30px;margin-top:9px;background:var(--bg);color:var(--blue-dark);font-size:16px;font-weight:900;cursor:pointer;box-shadow:7px 7px 13px #b4becc,-7px -7px 13px #fff;transition:.2s}
+.action-btn:active{box-shadow:inset 5px 5px 9px #b4becc,inset -5px -5px 9px #fff;transform:scale(.98)}
+.action-btn:disabled{opacity:.55;cursor:not-allowed}
+.message{display:none;position:relative;z-index:2;max-width:350px;margin:20px auto 0;padding:12px 15px;border-radius:14px;font-size:12px;line-height:1.6;overflow-wrap:anywhere}
+.message.error{display:block;background:#ffe8e8;color:#bd2525;box-shadow:3px 3px 8px #c5b8b8,-3px -3px 8px #fff}
+.message.success{display:block;background:#e2f8e9;color:#19783d;box-shadow:3px 3px 8px #b8c8bc,-3px -3px 8px #fff}
+.message.info{display:block;background:#e7f3ff;color:#1769a5}
+.loader{width:35px;height:35px;border:5px solid #bbc5d2;border-top-color:var(--blue);border-radius:50%;margin:20px auto 0;animation:spin 1s linear infinite;display:none}
 @keyframes spin{to{transform:rotate(360deg)}}
-
-@media(max-width:390px){
- .login-circle{min-height:430px;padding:30px 23px}
- .logo{font-size:24px}
- h2{font-size:19px}
- input{height:46px;font-size:13px}
- .action-btn{min-height:46px}
-}
-
-@media(max-height:700px){
- body{align-items:flex-start}
- .login-circle{min-height:410px}
-}
+@media(max-width:390px){.login-circle{min-height:430px;padding:30px 23px}.logo{font-size:24px}h2{font-size:19px}input{height:46px;font-size:13px}.action-btn{min-height:46px}}
+@media(max-height:700px){body{align-items:flex-start}.login-circle{min-height:410px}}
+@media(max-width:360px){.login-circle{border-radius:32px;min-height:0;padding:30px 22px}.login-circle:before{border-radius:25px}}
 </style>
 </head>
-
 <body>
 <div class="page">
-
  <div class="login-circle">
-
   <div class="form-content">
-
    <div class="logo">GLO <span>365</span></div>
    <div class="subtitle">Welcome Thailand Lottery</div>
-
    <div class="tabs">
     <button type="button" class="tab active" id="loginTab">SIGN IN</button>
     <button type="button" class="tab" id="registerTab">SIGN UP</button>
    </div>
-
-   <!-- LOGIN -->
    <div class="form-panel active" id="loginPanel">
-
     <h2>SIGN IN</h2>
-
     <form id="loginForm">
-
-     <div class="form-group">
-      <input
-       id="loginUsername"
-       type="text"
-       placeholder="Username or Email"
-       autocomplete="username"
-       required>
-     </div>
-
-     <div class="form-group">
-      <input
-       id="loginPassword"
-       type="password"
-       placeholder="Password"
-       autocomplete="current-password"
-       required>
-     </div>
-
-     <button class="action-btn" id="loginButton" type="submit">
-      Login
-     </button>
-
+     <div class="form-group"><input id="loginUsername" type="text" placeholder="Username or Email" autocomplete="username" required></div>
+     <div class="form-group"><input id="loginPassword" type="password" placeholder="Password" autocomplete="current-password" required></div>
+     <button class="action-btn" id="loginButton" type="submit">Login</button>
     </form>
    </div>
-
-   <!-- REGISTER -->
    <div class="form-panel" id="registerPanel">
-
     <h2>CREATE ACCOUNT</h2>
-
     <form id="registerForm">
-
      <div class="form-group">
-      <input
-       id="registerUsername"
-       type="text"
-       placeholder="Choose Username"
-       minlength="3"
-       maxlength="30"
-       autocomplete="username"
-       required>
-
-      <div id="usernameStatus" class="username-status"></div>
+      <input id="registerUsername" type="text" placeholder="Choose Username" minlength="3" maxlength="30" autocomplete="username" autocapitalize="none" required>
+      <div id="usernameStatus" class="username-status" aria-live="polite"></div>
      </div>
-
-     <div class="form-group">
-      <input
-       id="registerEmail"
-       type="email"
-       placeholder="Email Address"
-       maxlength="150"
-       autocomplete="email"
-       required>
-     </div>
-
-     <div class="form-group">
-      <input
-       id="registerPassword"
-       type="password"
-       placeholder="Create Password (8+ characters)"
-       minlength="8"
-       maxlength="128"
-       autocomplete="new-password"
-       required>
-     </div>
-
-     <div class="form-group">
-      <input
-       id="confirmPassword"
-       type="password"
-       placeholder="Confirm Password"
-       minlength="8"
-       maxlength="128"
-       autocomplete="new-password"
-       required>
-     </div>
-
-     <button class="action-btn" id="registerButton" type="submit">
-      Create Account
-     </button>
-
+     <div class="form-group"><input id="registerEmail" type="email" placeholder="Email Address" maxlength="150" autocomplete="email" required></div>
+     <div class="form-group"><input id="registerPassword" type="password" placeholder="Create Password (6-16 characters)" minlength="6" maxlength="16" autocomplete="new-password" required></div>
+     <div class="form-group"><input id="confirmPassword" type="password" placeholder="Confirm Password" minlength="6" maxlength="16" autocomplete="new-password" required></div>
+     <div class="form-group"><input id="referralCode" type="text" placeholder="Referral Code (Optional)" maxlength="30" autocomplete="off" autocapitalize="characters"></div>
+     <button class="action-btn" id="registerButton" type="submit">Create Account</button>
     </form>
    </div>
-
   </div>
  </div>
-
  <div class="loader" id="loader"></div>
  <div class="message" id="message" role="status" aria-live="polite"></div>
-
 </div>
-
 <script>
 "use strict";
-
 const API_BASE_URL="https://glo365.onrender.com/api";
 const TOKEN_KEY="glo365_token";
-
 const $=id=>document.getElementById(id);
-
 let usernameTimer=null;
 let usernameCheckVersion=0;
 let usernameAvailable=null;
 let usernameCheckReady=false;
 
-function showMessage(message,type){
- const box=$("message");
- box.textContent=message;
- box.className="message "+type;
-}
-
-function clearMessage(){
- const box=$("message");
- box.textContent="";
- box.className="message";
-}
-
-function setLoading(loading){
- $("loader").style.display=loading?"block":"none";
-}
-
-function showTab(tab){
- clearMessage();
-
- const login=tab==="login";
-
- $("loginTab").classList.toggle("active",login);
- $("registerTab").classList.toggle("active",!login);
-
- $("loginPanel").classList.toggle("active",login);
- $("registerPanel").classList.toggle("active",!login);
-}
-
+function showMessage(message,type){const box=$("message");box.textContent=message;box.className="message "+type}
+function clearMessage(){const box=$("message");box.textContent="";box.className="message"}
+function setLoading(loading){$("loader").style.display=loading?"block":"none"}
+function showTab(tab){clearMessage();const login=tab==="login";$("loginTab").classList.toggle("active",login);$("registerTab").classList.toggle("active",!login);$("loginPanel").classList.toggle("active",login);$("registerPanel").classList.toggle("active",!login)}
 $("loginTab").addEventListener("click",()=>showTab("login"));
 $("registerTab").addEventListener("click",()=>showTab("register"));
 
 async function apiRequest(endpoint,data){
- const response=await fetch(API_BASE_URL+endpoint,{
-  method:"POST",
-  credentials:"include",
-  headers:{
-   "Content-Type":"application/json",
-   "Accept":"application/json"
-  },
-  body:JSON.stringify(data)
- });
-
- let result;
-
- try{
-  result=await response.json();
- }catch(_){
-  throw new Error("Server returned an invalid response.");
- }
-
- if(!response.ok||result.success===false){
-  throw new Error(
-   result.message||
-   result.error||
-   "Request failed. Please try again."
-  );
- }
-
+ const response=await fetch(API_BASE_URL+endpoint,{method:"POST",credentials:"include",headers:{"Content-Type":"application/json","Accept":"application/json"},body:JSON.stringify(data)});
+ let result;try{result=await response.json()}catch(_){throw new Error("Server returned an invalid response.")}
+ if(!response.ok||result.success===false)throw new Error(result.message||result.error||"Request failed. Please try again.");
  return result;
 }
-
+async function getUsernameAvailability(username){
+ const url=API_BASE_URL+"/auth/username-availability?username="+encodeURIComponent(username);
+ const response=await fetch(url,{method:"GET",credentials:"include",headers:{"Accept":"application/json"},cache:"no-store"});
+ let data;try{data=await response.json()}catch(_){throw new Error("Username check returned an invalid response.")}
+ if(!response.ok||data.success===false)throw new Error(data.message||"Username check failed.");
+ if(typeof data.available!=="boolean")throw new Error("Invalid username availability response.");
+ return data;
+}
 function saveSession(token,user){
-
- if(!token||!user||!user.id){
-  throw new Error("Server did not return valid account information.");
- }
-
- try{
-  sessionStorage.setItem(TOKEN_KEY,token);
-  sessionStorage.setItem("glo365_user",JSON.stringify(user));
- }catch(_){
-  throw new Error("Browser could not save your login session.");
- }
+ if(!token||!user||!user.id)throw new Error("Server did not return valid account information.");
+ try{sessionStorage.setItem(TOKEN_KEY,token);sessionStorage.setItem("glo365_user",JSON.stringify(user))}catch(_){throw new Error("Browser could not save your login session.")}
 }
-
-/* ROLE-BASED REDIRECT */
-
-function redirectByRole(user){
-
- const role=String(user.role||"user").trim().toLowerCase();
-
- if(role==="admin"){
-  location.replace("admin.html");
-  return;
- }
-
- if(role==="affiliate"){
-  location.replace("affiliate-profile.html");
-  return;
- }
-
- location.replace("home.html");
-}
-
-/* USERNAME LIVE CHECK */
-
-function setUsernameStatus(message,type){
- const box=$("usernameStatus");
- box.textContent=message;
- box.className="username-status "+type;
-}
+function redirectByRole(user){const role=String(user.role||"user").trim().toLowerCase();if(role==="admin"){location.replace("admin.html");return}if(role==="affiliate"){location.replace("affiliate-profile.html");return}location.replace("home.html")}
+function setUsernameStatus(message,type){const box=$("usernameStatus");box.textContent=message;box.className="username-status "+(type||"")}
 
 async function checkUsername(username,version){
-
  try{
-
-  const url=API_BASE_URL+
-   "/auth/check-username?username="+
-   encodeURIComponent(username);
-
-  const response=await fetch(url,{
-   method:"GET",
-   credentials:"include",
-   headers:{"Accept":"application/json"},
-   cache:"no-store"
-  });
-
+  const data=await getUsernameAvailability(username);
   if(version!==usernameCheckVersion)return;
-
-  if(response.status===404){
-   usernameAvailable=null;
-   usernameCheckReady=false;
-
-   setUsernameStatus(
-    "Live Username Check চালু করতে Server API প্রয়োজন।",
-    "status-warning"
-   );
-   return;
-  }
-
-  const data=await response.json();
-
-  if(!response.ok||data.success===false){
-   throw new Error(data.message||"Username check failed");
-  }
-
-  if(typeof data.available!=="boolean"){
-   throw new Error("Invalid username availability response");
-  }
-
-  usernameAvailable=data.available;
-  usernameCheckReady=true;
-
-  if(data.available){
-   setUsernameStatus("✓ Username Available","status-available");
-  }else{
-   setUsernameStatus("✕ Username Already Taken","status-taken");
-  }
-
+  if(data.valid===false){usernameAvailable=false;usernameCheckReady=true;setUsernameStatus("এই Username ব্যবহার করা যাবে না।","status-taken");return}
+  usernameAvailable=data.available;usernameCheckReady=true;
+  setUsernameStatus(data.available?"✓ Username Available":"✕ Username Already Taken",data.available?"status-available":"status-taken");
  }catch(error){
-
   if(version!==usernameCheckVersion)return;
-
-  usernameAvailable=null;
-  usernameCheckReady=false;
-
-  setUsernameStatus(
-   "Username check এখন করা যাচ্ছে না। Server API প্রয়োজন।",
-   "status-warning"
-  );
+  usernameAvailable=null;usernameCheckReady=false;
+  setUsernameStatus("Username check করা যাচ্ছে না। আবার চেষ্টা করুন।","status-warning");
  }
 }
-
 $("registerUsername").addEventListener("input",function(){
-
- clearTimeout(usernameTimer);
-
- const username=this.value.trim().toLowerCase();
-
- usernameCheckVersion++;
- usernameAvailable=null;
- usernameCheckReady=false;
-
- if(!username){
-  setUsernameStatus("Username লিখুন।","");
-  return;
- }
-
- if(!/^[a-z0-9_]{3,30}$/.test(username)){
-  setUsernameStatus(
-   "৩-৩০ অক্ষর। শুধু English letter, number ও underscore ব্যবহার করুন।",
-   "status-taken"
-  );
-  return;
- }
-
- setUsernameStatus("Checking Username...","status-checking");
-
- const version=usernameCheckVersion;
-
- usernameTimer=setTimeout(()=>{
-  checkUsername(username,version);
- },550);
+ clearTimeout(usernameTimer);const username=this.value.trim().toLowerCase();usernameCheckVersion++;usernameAvailable=null;usernameCheckReady=false;
+ if(!username){setUsernameStatus("Username লিখুন।","");return}
+ if(!/^[a-z0-9_]{3,30}$/.test(username)){setUsernameStatus("৩-৩০ অক্ষর। শুধু English letter, number ও underscore ব্যবহার করুন।","status-taken");return}
+ setUsernameStatus("Checking Username...","status-checking");const version=usernameCheckVersion;
+ usernameTimer=setTimeout(()=>checkUsername(username,version),500);
 });
-
-/* LOGIN */
 
 $("loginForm").addEventListener("submit",async function(event){
-
- event.preventDefault();
- clearMessage();
-
- const button=$("loginButton");
-
- const loginValue=$("loginUsername").value.trim().toLowerCase();
- const password=$("loginPassword").value;
-
- if(!loginValue||!password){
-  showMessage("Username/Email ও Password লিখুন।","error");
-  return;
- }
-
- button.disabled=true;
- button.textContent="PLEASE WAIT...";
- setLoading(true);
-
+ event.preventDefault();clearMessage();const button=$("loginButton");
+ const loginValue=$("loginUsername").value.trim().toLowerCase();const password=$("loginPassword").value;
+ if(!loginValue||!password){showMessage("Username/Email ও Password লিখুন।","error");return}
+ button.disabled=true;button.textContent="PLEASE WAIT...";setLoading(true);
  try{
-
-  const result=await apiRequest("/auth/login",{
-   email:loginValue,
-   password:password
-  });
-
-  saveSession(result.token,result.user);
-
-  showMessage(
-   "Login successful. Opening your account...",
-   "success"
-  );
-
-  setTimeout(()=>{
-   redirectByRole(result.user);
-  },600);
-
- }catch(error){
-
-  showMessage(error.message,"error");
-
- }finally{
-
-  button.disabled=false;
-  button.textContent="Login";
-  setLoading(false);
- }
+  const result=await apiRequest("/auth/login",{email:loginValue,password});saveSession(result.token,result.user);
+  showMessage("Login successful. Opening your account...","success");setTimeout(()=>redirectByRole(result.user),600);
+ }catch(error){showMessage(error.message,"error")}
+ finally{button.disabled=false;button.textContent="Login";setLoading(false)}
 });
 
-/* CREATE ACCOUNT */
-
 $("registerForm").addEventListener("submit",async function(event){
-
- event.preventDefault();
- clearMessage();
-
- const button=$("registerButton");
-
- const username=$("registerUsername").value.trim().toLowerCase();
- const email=$("registerEmail").value.trim().toLowerCase();
- const password=$("registerPassword").value;
- const confirm=$("confirmPassword").value;
-
- if(!/^[a-z0-9_]{3,30}$/.test(username)){
-  showMessage(
-   "Username 3-30 অক্ষরের হতে হবে। শুধু English letter, number ও underscore ব্যবহার করুন।",
-   "error"
-  );
-  return;
- }
-
- if(!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)){
-  showMessage("সঠিক Email Address লিখুন।","error");
-  return;
- }
-
- if(password.length<8||password.length>128){
-  showMessage(
-   "Password কমপক্ষে ৮ এবং সর্বোচ্চ ১২৮ অক্ষরের হতে হবে।",
-   "error"
-  );
-  return;
- }
-
- if(password!==confirm){
-  showMessage("দুটি Password মিলছে না।","error");
-  return;
- }
-
- if(usernameCheckReady&&usernameAvailable===false){
-  showMessage(
-   "এই Username আগে থেকেই ব্যবহার করা হয়েছে। অন্য Username দিন।",
-   "error"
-  );
-  return;
- }
-
- button.disabled=true;
- button.textContent="CREATING ACCOUNT...";
- setLoading(true);
-
+ event.preventDefault();clearMessage();const button=$("registerButton");
+ const username=$("registerUsername").value.trim().toLowerCase();const email=$("registerEmail").value.trim().toLowerCase();
+ const password=$("registerPassword").value;const confirm=$("confirmPassword").value;const referralCode=$("referralCode").value.trim().toUpperCase();
+ if(!/^[a-z0-9_]{3,30}$/.test(username)){showMessage("Username ৩-৩০ অক্ষরের হতে হবে। শুধু English letter, number ও underscore ব্যবহার করুন।","error");return}
+ if(!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)){showMessage("সঠিক Email Address লিখুন।","error");return}
+ if(password.length<6||password.length>16){showMessage("Password কমপক্ষে ৬ এবং সর্বোচ্চ ১৬ অক্ষরের হতে হবে।","error");return}
+ if(password!==confirm){showMessage("দুটি Password মিলছে না।","error");return}
+ if(referralCode&&!/^[A-Z0-9_-]{2,30}$/.test(referralCode)){showMessage("Referral Code সঠিকভাবে লিখুন।","error");return}
+ button.disabled=true;button.textContent="CHECKING...";setLoading(true);
  try{
-
-  const result=await apiRequest("/auth/register",{
-   username:username,
-   email:email,
-   password:password
-  });
-
+  clearTimeout(usernameTimer);usernameCheckVersion++;
+  const check=await getUsernameAvailability(username);
+  if(check.valid===false||check.available===false){usernameAvailable=false;usernameCheckReady=true;setUsernameStatus("✕ Username Already Taken","status-taken");throw new Error("এই Username ব্যবহার করা যাবে না। অন্য Username দিন।")}
+  usernameAvailable=true;usernameCheckReady=true;setUsernameStatus("✓ Username Available","status-available");
+  button.textContent="CREATING ACCOUNT...";
+  const payload={username,email,password};if(referralCode)payload.referral_code=referralCode;
+  const result=await apiRequest("/auth/register",payload);
   if(result.token&&result.user){
-
-   saveSession(result.token,result.user);
-
-   showMessage(
-    "অ্যাকাউন্ট সফলভাবে তৈরি হয়েছে। আপনার Home Page খুলছে...",
-    "success"
-   );
-
-   $("registerForm").reset();
-
-   setTimeout(()=>{
-    redirectByRole(result.user);
-   },700);
-
+   saveSession(result.token,result.user);showMessage("অ্যাকাউন্ট সফলভাবে তৈরি হয়েছে। আপনার Home Page খুলছে...","success");
+   $("registerForm").reset();usernameAvailable=null;usernameCheckReady=false;setTimeout(()=>redirectByRole(result.user),700);
   }else{
-
-   $("registerForm").reset();
-   $("loginUsername").value=username;
-
-   showTab("login");
-
-   showMessage(
-    "অ্যাকাউন্ট তৈরি হয়েছে। এখন Login করুন।",
-    "success"
-   );
+   $("registerForm").reset();$("loginUsername").value=username;showTab("login");showMessage("অ্যাকাউন্ট তৈরি হয়েছে। এখন Login করুন।","success");
   }
-
- }catch(error){
-
-  showMessage(error.message,"error");
-
- }finally{
-
-  button.disabled=false;
-  button.textContent="Create Account";
-  setLoading(false);
- }
+ }catch(error){showMessage(error.message,"error")}
+ finally{button.disabled=false;button.textContent="Create Account";setLoading(false)}
 });
 </script>
 </body>
