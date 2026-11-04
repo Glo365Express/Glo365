@@ -206,6 +206,10 @@
       return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
     }
 
+    function validPassword(password) {
+      return typeof password === "string" && password.length >= 6 && password.length <= 16;
+    }
+
     function validExternalEventUrl(value, platform) {
       try {
         const url = new URL(value);
@@ -688,10 +692,17 @@
       await pool.query(`
         CREATE TABLE IF NOT EXISTS support_conversations (
           id BIGSERIAL PRIMARY KEY,
-          user_id BIGINT NOT NULL UNIQUE REFERENCES users(id) ON DELETE CASCADE,
+          user_id BIGINT NOT NULL REFERENCES users(id) ON DELETE CASCADE,
+          status VARCHAR(12) NOT NULL DEFAULT 'open' CHECK (status IN ('open','closed')),
+          closed_at TIMESTAMPTZ,
           created_at TIMESTAMPTZ NOT NULL DEFAULT NOW(),
           updated_at TIMESTAMPTZ NOT NULL DEFAULT NOW()
         );
+        ALTER TABLE support_conversations ADD COLUMN IF NOT EXISTS status VARCHAR(12) NOT NULL DEFAULT 'open';
+        ALTER TABLE support_conversations ADD COLUMN IF NOT EXISTS closed_at TIMESTAMPTZ;
+        ALTER TABLE support_conversations DROP CONSTRAINT IF EXISTS support_conversations_user_id_key;
+        CREATE UNIQUE INDEX IF NOT EXISTS idx_support_one_open_conversation_per_user
+          ON support_conversations(user_id) WHERE status = 'open';
         CREATE TABLE IF NOT EXISTS support_messages (
           id BIGSERIAL PRIMARY KEY,
           conversation_id BIGINT NOT NULL REFERENCES support_conversations(id) ON DELETE CASCADE,
@@ -1027,6 +1038,17 @@
     // REGISTER
     // ==========================================
 
+    app.get("/api/auth/username-availability", asyncRoute(async (req, res) => {
+      const username = cleanText(req.query.username, 30).toLowerCase();
+      if (!validUsername(username) || username === PRIMARY_ADMIN_USERNAME) {
+        return res.json({ success: true, available: false, valid: false });
+      }
+      const result = await pool.query(
+        "SELECT 1 FROM users WHERE username = $1 LIMIT 1", [username]
+      );
+      return res.json({ success: true, available: result.rows.length === 0, valid: true });
+    }));
+
     app.post("/api/auth/register", asyncRoute(async (req, res) => {
       const username = cleanText(req.body.username, 30).toLowerCase();
       const email = cleanText(req.body.email, 150).toLowerCase();
@@ -1053,12 +1075,8 @@
         return sendError(res, 409, "This username is reserved.");
       }
 
-      if (
-        typeof password !== "string" ||
-        password.length < 8 ||
-        password.length > 128
-      ) {
-        return sendError(res, 400, "Password must be 8-128 characters.");
+      if (!validPassword(password)) {
+        return sendError(res, 400, "Password must be 6-16 characters.");
       }
 
       let referrer = null;
@@ -1191,6 +1209,34 @@
         token,
         user: publicUser(user)
       });
+    }));
+
+    // ==========================================
+    // CHANGE LOGIN PASSWORD
+    // ==========================================
+
+    app.post("/api/auth/change-password", authenticateToken, asyncRoute(async (req, res) => {
+      const currentPassword = req.body.current_password;
+      const newPassword = req.body.new_password;
+      if (typeof currentPassword !== "string" || !currentPassword) {
+        return sendError(res, 400, "Current password is required.");
+      }
+      if (!validPassword(newPassword)) {
+        return sendError(res, 400, "New password must be 6-16 characters.");
+      }
+      const found = await pool.query(
+        "SELECT password_hash FROM users WHERE id = $1 LIMIT 1", [req.user.id]
+      );
+      if (!found.rows.length) return sendError(res, 404, "Account not found.");
+      const matches = await bcrypt.compare(currentPassword, found.rows[0].password_hash);
+      if (!matches) return sendError(res, 401, "Current password is incorrect.");
+      const passwordHash = await bcrypt.hash(newPassword, 12);
+      await pool.query(
+        "UPDATE users SET password_hash = $1, updated_at = NOW() WHERE id = $2",
+        [passwordHash, req.user.id]
+      );
+      clearAuthCookie(res);
+      return res.json({ success: true, message: "Password changed. Please log in again." });
     }));
 
     // ==========================================
@@ -2150,8 +2196,8 @@
         if (username === PRIMARY_ADMIN_USERNAME) {
           return sendError(res, 400, "This username is reserved.");
         }
-        if (typeof password !== "string" || password.length < 8 || password.length > 128) {
-          return sendError(res, 400, "Password must be 8-128 characters.");
+        if (!validPassword(password)) {
+          return sendError(res, 400, "Password must be 6-16 characters.");
         }
         if (!Number.isFinite(rate) || rate < 0 || rate > 100) {
           return sendError(res, 400, "Commission rate must be between 0 and 100.");
@@ -4292,8 +4338,9 @@
       }
 
       const conversation = await pool.query(
-        `SELECT id, user_id, created_at, updated_at
-         FROM support_conversations WHERE user_id = $1`, [userId]
+        `SELECT id, user_id, status, created_at, updated_at, closed_at
+         FROM support_conversations WHERE user_id = $1 AND status = 'open'
+         ORDER BY id DESC LIMIT 1`, [userId]
       );
       if (!conversation.rows.length) {
         return res.json({ success: true, conversation: null, messages: [] });
@@ -4326,7 +4373,7 @@
         if (adminSending) {
           const found = await client.query(
             `SELECT id, user_id FROM support_conversations
-             WHERE user_id = $1 FOR UPDATE`, [targetUserId]
+             WHERE user_id = $1 AND status = 'open' ORDER BY id DESC LIMIT 1 FOR UPDATE`, [targetUserId]
           );
           if (!found.rows.length) {
             await client.query("ROLLBACK");
@@ -4343,8 +4390,9 @@
           }
         } else {
           const created = await client.query(
-            `INSERT INTO support_conversations (user_id) VALUES ($1)
-             ON CONFLICT (user_id) DO UPDATE SET updated_at = NOW()
+            `INSERT INTO support_conversations (user_id, status) VALUES ($1, 'open')
+             ON CONFLICT (user_id) WHERE status = 'open'
+             DO UPDATE SET updated_at = NOW()
              RETURNING id, user_id`, [req.user.id]
           );
           conversation = created.rows[0];
@@ -4373,9 +4421,22 @@
       }
     }));
 
+    // Admin Close permanently deletes this conversation and its messages (CASCADE).
+    // A later user message starts a brand-new conversation with no chat history.
+    app.delete("/api/admin/support/conversations/:id", authenticateToken, requireAdmin, asyncRoute(async (req, res) => {
+      const id = String(req.params.id || "");
+      if (!/^\d+$/.test(id)) return sendError(res, 400, "Invalid conversation ID.");
+      const deleted = await pool.query(
+        "DELETE FROM support_conversations WHERE id = $1 AND status = 'open' RETURNING id",
+        [id]
+      );
+      if (!deleted.rows.length) return sendError(res, 404, "Open conversation not found.");
+      return res.json({ success: true, message: "Conversation and its messages have been deleted." });
+    }));
+
     app.get("/api/admin/support/conversations", authenticateToken, requireAdmin, asyncRoute(async (req, res) => {
       const result = await pool.query(
-        `SELECT c.id, c.user_id, u.username, u.email, c.created_at, c.updated_at,
+        `SELECT c.id, c.user_id, c.status, u.username, u.email, c.created_at, c.updated_at,
                 (SELECT m.message FROM support_messages m
                  WHERE m.conversation_id = c.id
                  ORDER BY m.created_at DESC, m.id DESC LIMIT 1) AS last_message,
@@ -4384,6 +4445,7 @@
                  ORDER BY m.created_at DESC, m.id DESC LIMIT 1) AS last_sender_role
          FROM support_conversations c
          JOIN users u ON u.id = c.user_id
+         WHERE c.status = 'open'
          ORDER BY c.updated_at DESC, c.id DESC`
       );
       return res.json({ success: true, conversations: result.rows });
