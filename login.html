@@ -1,4 +1,3 @@
-
 <!DOCTYPE html>
 <html lang="bn">
 <head>
@@ -470,9 +469,11 @@ function saveSession(token,user){
  }
 }
 
+/* ROLE-BASED REDIRECT */
+
 function redirectByRole(user){
 
- const role=String(user.role||"user").toLowerCase();
+ const role=String(user.role||"user").trim().toLowerCase();
 
  if(role==="admin"){
   location.replace("admin.html");
@@ -480,22 +481,14 @@ function redirectByRole(user){
  }
 
  if(role==="affiliate"){
-  location.replace("affiliate.html");
+  location.replace("affiliate-profile.html");
   return;
  }
 
  location.replace("home.html");
 }
 
-/* USERNAME LIVE CHECK
-   Future server endpoint:
-   GET /api/auth/check-username?username=example
-
-   Expected:
-   {success:true,available:true}
-   or
-   {success:true,available:false}
-*/
+/* USERNAME LIVE CHECK */
 
 function setUsernameStatus(message,type){
  const box=$("usernameStatus");
