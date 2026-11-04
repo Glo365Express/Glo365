@@ -423,6 +423,27 @@
           created_at TIMESTAMPTZ DEFAULT NOW()
         );
 
+        ALTER TABLE users
+          ADD COLUMN IF NOT EXISTS commission_rate NUMERIC(5,2) NOT NULL DEFAULT 0
+          CHECK (commission_rate BETWEEN 0 AND 100);
+
+        CREATE TABLE IF NOT EXISTS affiliate_loss_commissions (
+          id BIGSERIAL PRIMARY KEY,
+          affiliate_id BIGINT NOT NULL REFERENCES users(id) ON DELETE CASCADE,
+          referred_user_id BIGINT NOT NULL REFERENCES users(id) ON DELETE CASCADE,
+          source_table VARCHAR(40) NOT NULL,
+          source_bet_id BIGINT NOT NULL,
+          loss_points NUMERIC(12,2) NOT NULL CHECK (loss_points > 0),
+          commission_rate NUMERIC(5,2) NOT NULL CHECK (commission_rate BETWEEN 0 AND 100),
+          commission_amount NUMERIC(12,2) NOT NULL CHECK (commission_amount >= 0),
+          created_at TIMESTAMPTZ NOT NULL DEFAULT NOW(),
+          UNIQUE(source_table, source_bet_id)
+        );
+        CREATE INDEX IF NOT EXISTS idx_affiliate_loss_affiliate_date
+          ON affiliate_loss_commissions(affiliate_id, created_at DESC);
+        CREATE INDEX IF NOT EXISTS idx_affiliate_loss_user
+          ON affiliate_loss_commissions(referred_user_id, created_at DESC);
+
         CREATE TABLE IF NOT EXISTS audit_logs (
           id BIGSERIAL PRIMARY KEY,
           actor_id BIGINT REFERENCES users(id) ON DELETE SET NULL,
@@ -1840,10 +1861,15 @@
         );
 
         const commissions = await pool.query(
-          `SELECT COALESCE(SUM(amount), 0) AS total,
-                  COUNT(*)::int AS entries
-           FROM affiliate_commissions
+          `SELECT COALESCE(SUM(commission_amount), 0) AS total,
+                  COUNT(*)::int AS entries,
+                  COALESCE(SUM(loss_points), 0) AS total_loss_points
+           FROM affiliate_loss_commissions
            WHERE affiliate_id = $1`,
+          [req.user.id]
+        );
+        const rate = await pool.query(
+          `SELECT commission_rate FROM users WHERE id = $1 AND role = 'affiliate'`,
           [req.user.id]
         );
 
@@ -1851,8 +1877,50 @@
           success: true,
           referral_code: info.rows[0]?.referral_code,
           total_referrals: referrals.rows[0].total,
+          commission_rate: rate.rows[0]?.commission_rate || 0,
           commissions: commissions.rows[0]
         });
+      })
+    );
+
+    app.get(
+      "/api/affiliate/users",
+      authenticateToken,
+      asyncRoute(async (req, res) => {
+        if (req.user.role !== "affiliate") {
+          return sendError(res, 403, "Affiliate access required.");
+        }
+        const result = await pool.query(
+          `SELECT id, username, created_at, status
+           FROM users
+           WHERE referred_by = $1 AND role = 'user'
+           ORDER BY created_at DESC
+           LIMIT 1000`,
+          [req.user.id]
+        );
+        res.json({ success: true, users: result.rows, total: result.rows.length });
+      })
+    );
+
+    app.get(
+      "/api/affiliate/commissions",
+      authenticateToken,
+      asyncRoute(async (req, res) => {
+        if (req.user.role !== "affiliate") {
+          return sendError(res, 403, "Affiliate access required.");
+        }
+        const result = await pool.query(
+          `SELECT c.id, c.referred_user_id, u.username AS referred_username,
+                  c.source_table, c.source_bet_id, c.loss_points,
+                  c.commission_rate, c.commission_amount, c.created_at
+           FROM affiliate_loss_commissions c
+           JOIN users u ON u.id = c.referred_user_id
+           WHERE c.affiliate_id = $1
+           ORDER BY c.created_at DESC
+           LIMIT 500`,
+          [req.user.id]
+        );
+        res.json({ success: true, commissions: result.rows });
       })
     );
 
@@ -1863,7 +1931,7 @@
     async function getAffiliateList(res) {
       const result = await pool.query(
         `SELECT u.id, u.username, u.email, u.status,
-                u.referral_code, u.created_at,
+                u.referral_code, u.commission_rate, u.created_at,
                 COUNT(r.id)::int AS referral_count
          FROM users u
          LEFT JOIN users r ON r.referred_by = u.id
@@ -2067,6 +2135,97 @@
     // ADMIN: AFFILIATE MANAGEMENT
     // ==========================================
 
+    app.post(
+      "/api/admin/affiliates",
+      authenticateToken,
+      requireAdmin,
+      asyncRoute(async (req, res) => {
+        const username = cleanText(req.body.username, 30).toLowerCase();
+        const email = cleanText(req.body.email, 150).toLowerCase();
+        const password = req.body.password;
+        const rate = Number(req.body.commission_rate);
+        if (!validUsername(username) || !validEmail(email)) {
+          return sendError(res, 400, "Enter a valid username and email address.");
+        }
+        if (username === PRIMARY_ADMIN_USERNAME) {
+          return sendError(res, 400, "This username is reserved.");
+        }
+        if (typeof password !== "string" || password.length < 8 || password.length > 128) {
+          return sendError(res, 400, "Password must be 8-128 characters.");
+        }
+        if (!Number.isFinite(rate) || rate < 0 || rate > 100) {
+          return sendError(res, 400, "Commission rate must be between 0 and 100.");
+        }
+        const passwordHash = await bcrypt.hash(password, 12);
+        const client = await pool.connect();
+        try {
+          await client.query("BEGIN");
+          const created = await client.query(
+            `INSERT INTO users (username,email,password_hash,role,status,commission_rate)
+             VALUES ($1,$2,$3,'affiliate','active',$4)
+             RETURNING id,username,email,role,status,commission_rate,created_at`,
+            [username,email,passwordHash,rate]
+          );
+          const affiliate = created.rows[0];
+          const code = "GLOAF" + affiliate.id;
+          await client.query("UPDATE users SET referral_code=$1 WHERE id=$2", [code,affiliate.id]);
+          await client.query("INSERT INTO profiles (user_id) VALUES ($1) ON CONFLICT (user_id) DO NOTHING", [affiliate.id]);
+          await client.query("COMMIT");
+          affiliate.referral_code = code;
+          await audit(req.user.id, "affiliate_account_created", affiliate.id, { commission_rate: rate });
+          return res.status(201).json({ success:true, message:"Affiliate account created.", affiliate });
+        } catch (error) {
+          await client.query("ROLLBACK");
+          if (error.code === "23505") return sendError(res, 409, "Username or email already exists.");
+          throw error;
+        } finally { client.release(); }
+      })
+    );
+
+    app.patch(
+      "/api/admin/affiliates/:id/rate",
+      authenticateToken,
+      requireAdmin,
+      asyncRoute(async (req, res) => {
+        const id = validId(req.params.id);
+        const rate = Number(req.body.commission_rate);
+        if (!id || !Number.isFinite(rate) || rate < 0 || rate > 100) {
+          return sendError(res, 400, "Valid affiliate ID and commission rate (0-100) are required.");
+        }
+        const result = await pool.query(
+          `UPDATE users SET commission_rate=$1, updated_at=NOW()
+           WHERE id=$2 AND role='affiliate'
+           RETURNING id,username,email,status,commission_rate,referral_code`,
+          [rate,id]
+        );
+        if (!result.rows.length) return sendError(res, 404, "Affiliate not found.");
+        await audit(req.user.id, "affiliate_commission_rate_updated", id, { commission_rate: rate });
+        res.json({ success:true, affiliate:result.rows[0] });
+      })
+    );
+
+    app.patch(
+      "/api/admin/affiliates/:id/status",
+      authenticateToken,
+      requireAdmin,
+      asyncRoute(async (req, res) => {
+        const id = validId(req.params.id);
+        const status = cleanText(req.body.status, 20).toLowerCase();
+        if (!id || !["active","suspended"].includes(status)) {
+          return sendError(res, 400, "Status must be active or suspended.");
+        }
+        const result = await pool.query(
+          `UPDATE users SET status=$1, updated_at=NOW()
+           WHERE id=$2 AND role='affiliate'
+           RETURNING id,username,email,status,commission_rate`,
+          [status,id]
+        );
+        if (!result.rows.length) return sendError(res, 404, "Affiliate not found.");
+        await audit(req.user.id, "affiliate_status_updated", id, { status });
+        res.json({ success:true, affiliate:result.rows[0] });
+      })
+    );
+
     app.get(
       "/api/admin/affiliates",
       authenticateToken,
@@ -2082,6 +2241,28 @@
       requireAdmin,
       asyncRoute(async (req, res) => {
         await getAffiliateCommissions(res);
+      })
+    );
+
+    // Admin view of automatically calculated loss-point commissions only.
+    app.get(
+      "/api/admin/affiliates/loss-commissions",
+      authenticateToken,
+      requireAdmin,
+      asyncRoute(async (req, res) => {
+        const result = await pool.query(
+          `SELECT c.id, c.affiliate_id, c.referred_user_id,
+                  a.username AS affiliate_username,
+                  u.username AS referred_username,
+                  c.source_table, c.source_bet_id, c.loss_points,
+                  c.commission_rate, c.commission_amount, c.created_at
+           FROM affiliate_loss_commissions c
+           JOIN users a ON a.id = c.affiliate_id
+           JOIN users u ON u.id = c.referred_user_id
+           ORDER BY c.created_at DESC
+           LIMIT 500`
+        );
+        res.json({ success: true, commissions: result.rows });
       })
     );
 
@@ -3891,22 +4072,55 @@
       return false;
     }
 
+    async function recordAffiliateLossCommission(client, userId, sourceTable, betId, lossPoints) {
+      const points = Number(lossPoints);
+      if (!Number.isFinite(points) || points <= 0) return false;
+
+      const referral = await client.query(
+        `SELECT a.id AS affiliate_id, a.commission_rate
+         FROM users u
+         JOIN users a ON a.id = u.referred_by
+         WHERE u.id = $1 AND u.role = 'user'
+           AND a.role = 'affiliate' AND a.status = 'active'
+         FOR UPDATE OF a`,
+        [userId]
+      );
+      if (!referral.rows.length) return false;
+
+      const affiliateId = referral.rows[0].affiliate_id;
+      const rate = Number(referral.rows[0].commission_rate || 0);
+      if (!Number.isFinite(rate) || rate <= 0) return false;
+      const commission = Math.round((points * rate / 100) * 100) / 100;
+      if (commission <= 0) return false;
+
+      await client.query(
+        `INSERT INTO affiliate_loss_commissions
+         (affiliate_id, referred_user_id, source_table, source_bet_id,
+          loss_points, commission_rate, commission_amount)
+         VALUES ($1,$2,$3,$4,$5,$6,$7)
+         ON CONFLICT (source_table, source_bet_id) DO NOTHING`,
+        [affiliateId, userId, sourceTable, betId, points, rate, commission]
+      );
+      return true;
+    }
+
     async function settleDrawBets(client, result) {
       let checked = 0, won = 0, lost = 0;
       const singleRows = await client.query(
-        `SELECT id, game_name, selection FROM demo_bets
+        `SELECT id, user_id, game_name, selection, amount FROM demo_bets
          WHERE draw_date = $1 AND LOWER(status) NOT IN ('win','won','loss','lose','lost','cancelled','canceled')
          FOR UPDATE`, [result.draw_date]
       );
       for (const bet of singleRows.rows) {
         const isWin = resultMatches(bet.game_name, bet.selection, result);
         await client.query(`UPDATE demo_bets SET status=$1, result_id=$2 WHERE id=$3`, [isWin ? 'win' : 'loss', result.id, bet.id]);
+        if (!isWin) await recordAffiliateLossCommission(client, bet.user_id, 'demo_bets', bet.id, bet.amount);
         checked++; if (isWin) won++; else lost++;
       }
 
       for (const [table, game] of [['demo_3up_bets','3up'], ['demo_6up_bets','6up']]) {
         const rows = await client.query(
-          `SELECT id, rows FROM ${table}
+          `SELECT id, user_id, rows, payable_amount FROM ${table}
            WHERE draw_date=$1 AND LOWER(status) NOT IN ('win','won','loss','lose','lost','cancelled','canceled')
            FOR UPDATE`, [result.draw_date]
         );
@@ -3919,6 +4133,7 @@
               : /^\d{6}$/.test(n) && n === result.first_prize;
           });
           await client.query(`UPDATE ${table} SET status=$1, result_id=$2 WHERE id=$3`, [isWin ? 'win' : 'loss', result.id, bet.id]);
+          if (!isWin) await recordAffiliateLossCommission(client, bet.user_id, table, bet.id, bet.payable_amount);
           checked++; if (isWin) won++; else lost++;
         }
       }
