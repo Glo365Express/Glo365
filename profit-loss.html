@@ -1,0 +1,242 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="theme-color" content="#2196e8">
+<title>GLO 365 - Profit & Loss</title>
+<style>
+:root{--blue:#2196e8;--dark:#087acb;--bg:#f1f7fc;--text:#18344b;--muted:#71869a;--border:#d8e9f5;--green:#13834e;--red:#d94350}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--text);font-family:Arial,Helvetica,sans-serif;padding-bottom:82px}
+.header{background:linear-gradient(135deg,var(--blue),var(--dark));color:#fff;padding:16px;font-size:19px;font-weight:800;box-shadow:0 3px 12px #087acb30}
+.container{max-width:760px;margin:auto;padding:13px}
+.topline{display:flex;align-items:center;justify-content:space-between;gap:10px;margin:5px 0 14px}
+.back{color:var(--dark);text-decoration:none;font-weight:700;font-size:13px}
+.sub{font-size:12px;color:var(--muted);line-height:1.5;margin:0 0 13px}
+.summary{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px}
+.stat{background:#fff;border:1px solid var(--border);border-radius:14px;padding:14px;box-shadow:0 3px 12px #1c5d850b;min-width:0}
+.stat-label{font-size:11px;color:var(--muted);font-weight:700}
+.stat-value{font-size:21px;font-weight:900;margin-top:7px;overflow-wrap:anywhere}
+.stat-note{font-size:10px;color:var(--muted);margin-top:4px}
+.blue{color:var(--dark)}.green{color:var(--green)}.red{color:var(--red)}
+.notice{margin:12px 0;background:#fff8e8;border:1px solid #f0dfb8;border-radius:12px;padding:11px 12px;color:#775b21;font-size:11px;line-height:1.55}
+.panel{background:#fff;border:1px solid var(--border);border-radius:15px;padding:13px;margin-top:13px;box-shadow:0 3px 12px #1c5d850b}
+.panel-head{display:flex;justify-content:space-between;align-items:center;gap:8px;margin-bottom:12px}
+.panel-head h2{font-size:15px;margin:0}
+button,select{font:inherit}
+.refresh{border:1px solid #cce4f5;background:#eaf5fd;color:var(--dark);border-radius:20px;padding:8px 12px;font-size:11px;font-weight:800}
+.filters{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:12px}
+.filters select{border:1px solid var(--border);border-radius:9px;background:#fff;padding:9px;font-size:12px;color:var(--text);min-width:0}
+.list{display:flex;flex-direction:column;gap:9px}
+.bet{border:1px solid #e3edf5;border-radius:12px;padding:11px;display:grid;grid-template-columns:minmax(0,1fr) auto;gap:8px;align-items:center}
+.bet-title{font-size:13px;font-weight:800;overflow-wrap:anywhere}
+.bet-meta{font-size:10px;color:var(--muted);margin-top:5px;line-height:1.5}
+.bet-amount{text-align:right;font-size:13px;font-weight:900;white-space:nowrap}
+.status{display:inline-block;margin-top:6px;padding:4px 8px;border-radius:20px;font-size:10px;font-weight:800;text-transform:capitalize;background:#eef3f7;color:#64798b}
+.status.win{background:#e7f8ef;color:var(--green)}.status.loss{background:#fff0f1;color:var(--red)}.status.pending{background:#fff5df;color:#a66b00}
+.empty,.loading,.error{padding:22px 10px;text-align:center;color:var(--muted);font-size:12px;line-height:1.6}
+.error{color:var(--red)}
+.bottom-nav{position:fixed;bottom:0;left:0;right:0;height:66px;background:#fff;border-top:1px solid var(--border);display:grid;grid-template-columns:repeat(4,1fr);z-index:10}
+.nav-item{text-decoration:none;color:#8295a6;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:4px;font-size:11px}
+.nav-item span{font-size:20px}.nav-item.active{color:var(--dark);font-weight:800}
+@media(min-width:560px){.summary{grid-template-columns:repeat(4,minmax(0,1fr))}}
+</style>
+</head>
+<body>
+<header class="header">📊 Profit &amp; Loss</header>
+<main class="container">
+  <div class="topline">
+    <a class="back" href="profile.html">← Back to Profile</a>
+    <button class="refresh" id="refreshBtn" type="button">↻ Refresh</button>
+  </div>
+  <p class="sub">Your GLO 365 demo-points betting activity, grouped by result status.</p>
+
+  <section class="summary">
+    <div class="stat"><div class="stat-label">TOTAL ENTRIES</div><div class="stat-value blue" id="totalEntries">—</div><div class="stat-note">All loaded game entries</div></div>
+    <div class="stat"><div class="stat-label">TOTAL PLAYED</div><div class="stat-value blue" id="totalPlayed">—</div><div class="stat-note">Points staked / payable</div></div>
+    <div class="stat"><div class="stat-label">LOST POINTS</div><div class="stat-value red" id="lostPoints">—</div><div class="stat-note">Stake on settled losing entries</div></div>
+    <div class="stat"><div class="stat-label">WINNING ENTRY STAKE</div><div class="stat-value green" id="winningStake">—</div><div class="stat-note">Stake on winning entries, not prize payout</div></div>
+  </section>
+
+  <div class="notice">
+    <strong>Important:</strong> This page reports demo points only. The current bet-history APIs provide each entry's stake and win/loss status, but do not provide the actual prize payout for every game. Therefore, a true net profit figure cannot be calculated here; winning-entry stake is not the same as winnings.
+  </div>
+
+  <section class="panel">
+    <div class="panel-head"><h2>Betting History</h2></div>
+    <div class="filters">
+      <select id="gameFilter" aria-label="Filter by game">
+        <option value="all">All games</option>
+        <option value="single2d">Single / 2D</option>
+        <option value="millionaire">Millionaire</option>
+        <option value="3up">3UP</option>
+        <option value="6up">6UP</option>
+      </select>
+      <select id="statusFilter" aria-label="Filter by status">
+        <option value="all">All statuses</option>
+        <option value="pending">Pending</option>
+        <option value="win">Won</option>
+        <option value="loss">Lost</option>
+      </select>
+    </div>
+    <div id="historyList" class="loading">Loading your betting history…</div>
+  </section>
+</main>
+
+<nav class="bottom-nav">
+  <a class="nav-item" href="home.html"><span>🏠</span>Home</a>
+  <a class="nav-item" href="mybets.html"><span>🎯</span>My Bets</a>
+  <a class="nav-item" href="results.html"><span>🏆</span>Results</a>
+  <a class="nav-item active" href="profile.html"><span>👤</span>Profile</a>
+</nav>
+
+<script>
+"use strict";
+(function(){
+  const API_BASE="https://glo365.onrender.com/api";
+  const TOKEN_KEY="glo365_token";
+  const token=sessionStorage.getItem(TOKEN_KEY)||"";
+  const list=document.getElementById("historyList");
+  let allBets=[];
+
+  function money(value){
+    const n=Number(value||0);
+    return Number.isFinite(n)?n.toLocaleString("en-US",{minimumFractionDigits:2,maximumFractionDigits:2}):"0.00";
+  }
+  function normalizeStatus(value){
+    const s=String(value||"pending").toLowerCase();
+    if(["win","won"].includes(s))return "win";
+    if(["loss","lose","lost"].includes(s))return "loss";
+    return "pending";
+  }
+  async function get(path){
+    const response=await fetch(API_BASE+path,{
+      method:"GET",
+      headers:token?{Authorization:"Bearer "+token}:{},
+      credentials:"include",
+      cache:"no-store"
+    });
+    let data={};
+    try{data=await response.json();}catch(e){}
+    if(response.status===401){
+      sessionStorage.removeItem(TOKEN_KEY);
+      location.replace("login.html");
+      throw new Error("Your session expired. Please login again.");
+    }
+    if(!response.ok||data.success===false){
+      throw new Error(data.message||data.error||"Could not load "+path);
+    }
+    return data;
+  }
+  function firstNumber(obj,keys){
+    for(const key of keys){
+      if(obj[key]!==undefined&&obj[key]!==null&&obj[key]!==""){
+        const n=Number(obj[key]);
+        if(Number.isFinite(n))return n;
+      }
+    }
+    return 0;
+  }
+  function makeBet(row,game,amountKeys){
+    const amount=firstNumber(row,amountKeys);
+    return {
+      id:String(row.id??""),
+      game,
+      selection:String(row.selection??row.draw_number??row.game_name??"Entry"),
+      amount,
+      status:normalizeStatus(row.status),
+      createdAt:row.created_at||row.createdAt||"",
+      drawNumber:row.draw_number||""
+    };
+  }
+  function dateText(value){
+    if(!value)return "Date unavailable";
+    const d=new Date(value);
+    return Number.isNaN(d.getTime())?String(value):d.toLocaleString();
+  }
+  function render(){
+    const game=document.getElementById("gameFilter").value;
+    const status=document.getElementById("statusFilter").value;
+    const filtered=allBets.filter(b=>{
+      const gameOk=game==="all"||
+        (game==="single2d"&&["Single","2D"].includes(b.game))||
+        (game==="millionaire"&&b.game==="Millionaire")||
+        (game==="3up"&&b.game==="3UP")||
+        (game==="6up"&&b.game==="6UP");
+      return gameOk&&(status==="all"||b.status===status);
+    });
+    if(!filtered.length){
+      list.className="empty";
+      list.textContent="No betting entries found for this filter.";
+      return;
+    }
+    list.className="list";
+    list.replaceChildren();
+    filtered.forEach(b=>{
+      const item=document.createElement("article");
+      item.className="bet";
+      const left=document.createElement("div");
+      const title=document.createElement("div");
+      title.className="bet-title";
+      title.textContent=b.game+" · "+(b.selection||"Entry");
+      const meta=document.createElement("div");
+      meta.className="bet-meta";
+      meta.textContent="Entry #"+b.id+" · "+dateText(b.createdAt);
+      const badge=document.createElement("span");
+      badge.className="status "+b.status;
+      badge.textContent=b.status==="win"?"Won":b.status==="loss"?"Lost":"Pending";
+      left.append(title,meta,badge);
+      const right=document.createElement("div");
+      right.className="bet-amount";
+      right.textContent=money(b.amount)+" pts";
+      item.append(left,right);
+      list.appendChild(item);
+    });
+  }
+  async function load(){
+    if(!token){location.replace("login.html");return;}
+    const btn=document.getElementById("refreshBtn");
+    btn.disabled=true;btn.textContent="Loading…";
+    list.className="loading";list.textContent="Loading your betting history…";
+    try{
+      const [general,three,six]=await Promise.all([
+        get("/demo/bets"),
+        get("/demo/3up/bets"),
+        get("/demo/6up/bets")
+      ]);
+      const entries=[];
+      (general.bets||[]).forEach(row=>{
+        const raw=String(row.game_name||"").toLowerCase();
+        const game=raw.includes("millionaire")?"Millionaire":
+          (raw.includes("single")?"Single":"2D");
+        entries.push(makeBet(row,game,["amount"]));
+      });
+      (three.bets||[]).forEach(row=>entries.push(makeBet(row,"3UP",["payable_amount","total_amount"])));
+      (six.bets||[]).forEach(row=>entries.push(makeBet(row,"6UP",["payable_amount","total_amount"])));
+      allBets=entries.sort((a,b)=>new Date(b.createdAt||0)-new Date(a.createdAt||0));
+
+      const played=allBets.reduce((s,b)=>s+b.amount,0);
+      const lost=allBets.filter(b=>b.status==="loss").reduce((s,b)=>s+b.amount,0);
+      const wonStake=allBets.filter(b=>b.status==="win").reduce((s,b)=>s+b.amount,0);
+      document.getElementById("totalEntries").textContent=allBets.length;
+      document.getElementById("totalPlayed").textContent=money(played);
+      document.getElementById("lostPoints").textContent=money(lost);
+      document.getElementById("winningStake").textContent=money(wonStake);
+      render();
+    }catch(error){
+      console.error("Profit & Loss load error:",error);
+      list.className="error";
+      list.textContent=error.message||"Unable to load betting history.";
+    }finally{
+      btn.disabled=false;btn.textContent="↻ Refresh";
+    }
+  }
+  document.getElementById("refreshBtn").addEventListener("click",load);
+  document.getElementById("gameFilter").addEventListener("change",render);
+  document.getElementById("statusFilter").addEventListener("change",render);
+  load();
+})();
+</script>
+</body>
+</html>
