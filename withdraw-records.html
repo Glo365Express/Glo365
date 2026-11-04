@@ -1,0 +1,298 @@
+
+<!DOCTYPE html>
+<html lang="bn">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="theme-color" content="#2196e8">
+<title>GLO 365 - Withdrawal History</title>
+
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+:root{--blue:#2196e8;--dark:#087acb;--border:#d8e9f5;--text:#18344b;--muted:#71869a;--bg:#f1f7fc}
+body{font-family:Arial,sans-serif;background:var(--bg);color:var(--text);min-height:100vh}
+.app{max-width:520px;min-height:100vh;margin:auto;background:#fff;padding-bottom:30px}
+header{height:72px;background:linear-gradient(110deg,#1687d5,#087acb);color:white;display:flex;align-items:center;justify-content:center;position:relative;font-size:21px;font-weight:900}
+.back{position:absolute;left:18px;color:white;text-decoration:none;font-size:30px}
+.page{padding:19px 14px}
+.intro{padding:5px 3px 18px}
+.intro h2{font-size:23px;color:#167fc4}
+.intro p{font-size:12px;color:var(--muted);margin-top:7px;line-height:1.6}
+.stats{display:grid;grid-template-columns:repeat(2,1fr);gap:10px;margin-bottom:17px}
+.stat{background:#f3f9fe;border:1px solid var(--border);border-radius:13px;padding:13px}
+.stat small{font-size:10px;color:var(--muted);font-weight:bold}
+.stat strong{display:block;font-size:20px;color:var(--dark);margin-top:7px}
+.history-title{display:flex;justify-content:space-between;align-items:center;margin-bottom:13px;font-size:17px;font-weight:900}
+.history-title small{font-size:11px;color:var(--muted)}
+.request-card{background:white;border:1px solid var(--border);border-radius:14px;padding:14px;margin-bottom:11px;box-shadow:0 3px 12px #123c6008}
+.request-top{display:flex;justify-content:space-between;align-items:center;gap:8px}
+.request-method{display:flex;align-items:center;gap:9px;font-size:14px;font-weight:900;min-width:0}
+.history-logo{width:35px;height:35px;flex-shrink:0;background:#eaf5fd;color:#087acb;border-radius:10px;display:grid;place-items:center;font-size:10px;font-weight:900}
+.request-status{font-size:10px;font-weight:bold;padding:7px 10px;border-radius:20px;background:#fff5df;color:#a66b00;white-space:nowrap}
+.request-status.approved{background:#e7f8ef;color:#13834e}
+.request-status.rejected{background:#fff0f1;color:#d13e4b}
+.request-details{margin-top:11px;color:var(--muted);font-size:11px;line-height:1.9;white-space:pre-line;overflow-wrap:anywhere}
+.request-amount{font-size:20px;font-weight:900;color:var(--dark);margin-top:9px}
+.empty{text-align:center;padding:28px 12px;color:var(--muted);font-size:12px;background:#f7fbff;border:1px dashed var(--border);border-radius:13px;line-height:1.7}
+.refresh{width:100%;border:1px solid var(--border);background:#f1f8fe;color:var(--dark);padding:12px;border-radius:11px;font-size:12px;font-weight:900;cursor:pointer;margin-bottom:15px}
+.refresh:disabled{opacity:.5}
+.notice{margin-top:18px;padding:13px;border-radius:11px;background:#eff8ff;border:1px solid var(--border);font-size:11px;color:#526f87;line-height:1.8}
+.toast{display:none;position:fixed;bottom:25px;left:50%;transform:translateX(-50%);background:#102d49;color:white;padding:13px 18px;border-radius:10px;font-size:12px;z-index:20;max-width:90%;text-align:center}
+</style>
+</head>
+
+<body>
+<div class="app">
+
+<header>
+<a class="back" href="withdraw.html">‹</a>
+Withdrawal History
+</header>
+
+<main class="page">
+
+<section class="intro">
+<h2>My Withdrawals</h2>
+<p>View all your withdrawal requests and their latest status.</p>
+</section>
+
+<section class="stats">
+<div class="stat">
+<small>TOTAL REQUESTS</small>
+<strong id="totalRequests">0</strong>
+</div>
+<div class="stat">
+<small>PENDING REQUESTS</small>
+<strong id="pendingRequests">0</strong>
+</div>
+</section>
+
+<button class="refresh" id="refreshBtn" type="button">↻ Refresh History</button>
+
+<div class="history-title">
+<span>Withdrawal Records</span>
+<small id="requestCount">0 Requests</small>
+</div>
+
+<div id="requestList">
+<div class="empty">Loading withdrawal history...</div>
+</div>
+
+<div class="notice">
+<strong>Withdrawal Status Information</strong><br>
+Pending: আপনার Request Admin-এর যাচাইয়ের অপেক্ষায় আছে।<br>
+Approved: Admin আপনার Withdrawal Request অনুমোদন করেছেন।<br>
+Rejected: আপনার Request বাতিল করা হয়েছে। Rejection Reason থাকলে এখানে দেখা যাবে।
+</div>
+
+</main>
+</div>
+
+<div class="toast" id="toast"></div>
+
+<script>
+"use strict";
+
+const API_BASE_URL="https://glo365.onrender.com/api";
+const TOKEN_KEY="glo365_token";
+
+const $=id=>document.getElementById(id);
+
+let requests=[];
+let loading=false;
+let toastTimer;
+
+function getToken(){
+ return sessionStorage.getItem(TOKEN_KEY)||"";
+}
+
+function showToast(message){
+ const el=$("toast");
+ el.textContent=message;
+ el.style.display="block";
+ clearTimeout(toastTimer);
+ toastTimer=setTimeout(()=>el.style.display="none",3500);
+}
+
+async function api(path,options={}){
+ const headers={...(options.headers||{})};
+ const token=getToken();
+
+ if(token)headers.Authorization="Bearer "+token;
+ if(options.body!==undefined)headers["Content-Type"]="application/json";
+
+ const response=await fetch(API_BASE_URL+path,{
+  ...options,
+  headers,
+  credentials:"include",
+  cache:"no-store"
+ });
+
+ let data={};
+ try{data=await response.json()}catch(e){}
+
+ if(response.status===401){
+  sessionStorage.removeItem(TOKEN_KEY);
+  location.replace("login.html");
+  throw new Error("Your session has expired.");
+ }
+
+ if(!response.ok||data.success===false){
+  throw new Error(data.message||data.error||"Unable to load withdrawal history.");
+ }
+
+ return data;
+}
+
+const methodCodes={
+ "Google Pay":"GPay",
+ "PayPal":"PP",
+ "bKash":"bK",
+ "Nagad":"NG",
+ "Binance":"BNB",
+ "RedotPay":"RP",
+ "Bank Transfer":"BANK"
+};
+
+function formatDate(value){
+ const date=new Date(value);
+ return Number.isNaN(date.getTime())
+  ?"Unavailable"
+  :date.toLocaleString("en-GB");
+}
+
+function maskAccount(value){
+ const text=String(value||"");
+ return text.length<=4?"••••":"••••••"+text.slice(-4);
+}
+
+function renderHistory(){
+ const list=$("requestList");
+ list.replaceChildren();
+
+ $("requestCount").textContent=requests.length+" Requests";
+ $("totalRequests").textContent=requests.length;
+
+ const pending=requests.filter(item=>
+  String(item.status||"pending").toLowerCase()==="pending"
+ ).length;
+
+ $("pendingRequests").textContent=pending;
+
+ if(!requests.length){
+  const empty=document.createElement("div");
+  empty.className="empty";
+  empty.textContent="No withdrawal requests yet.";
+  list.appendChild(empty);
+  return;
+ }
+
+ requests.forEach(request=>{
+  const card=document.createElement("article");
+  card.className="request-card";
+
+  const top=document.createElement("div");
+  top.className="request-top";
+
+  const method=document.createElement("div");
+  method.className="request-method";
+
+  const logo=document.createElement("span");
+  logo.className="history-logo";
+  logo.textContent=methodCodes[request.method]||"PAY";
+
+  const name=document.createElement("span");
+  name.textContent=request.method||"Unknown";
+
+  method.append(logo,name);
+
+  const status=document.createElement("span");
+  const state=String(request.status||"pending").toLowerCase();
+
+  status.className="request-status";
+
+  if(state==="approved")status.classList.add("approved");
+  if(state==="rejected")status.classList.add("rejected");
+
+  status.textContent=state.toUpperCase();
+
+  top.append(method,status);
+
+  const details=document.createElement("div");
+  details.className="request-details";
+
+  details.textContent=
+   "Request ID: "+String(request.id||"—")+
+   "\nAccount: "+maskAccount(request.account)+
+   "\nDate: "+formatDate(request.created_at||request.date);
+
+  const amount=document.createElement("div");
+  amount.className="request-amount";
+  amount.textContent=Number(request.amount||0).toFixed(2)+" Points";
+
+  card.append(top,details,amount);
+
+  if(state==="rejected"&&request.rejection_reason){
+   const reason=document.createElement("div");
+   reason.className="request-details";
+   reason.style.color="#d13e4b";
+   reason.textContent="Rejection Reason: "+request.rejection_reason;
+   card.appendChild(reason);
+  }
+
+  list.appendChild(card);
+ });
+}
+
+async function loadHistory(){
+ if(loading)return;
+
+ loading=true;
+
+ const btn=$("refreshBtn");
+ btn.disabled=true;
+ btn.textContent="Loading...";
+
+ try{
+  const data=await api("/withdrawals/me");
+
+  requests=Array.isArray(data.requests)?data.requests:[];
+
+  renderHistory();
+
+ }catch(error){
+  showToast(error.message);
+
+  if(!getToken()){
+   location.replace("login.html");
+  }else{
+   $("requestList").innerHTML=
+    '<div class="empty">Could not load withdrawal history. Please try again.</div>';
+  }
+
+ }finally{
+  loading=false;
+  btn.disabled=false;
+  btn.textContent="↻ Refresh History";
+ }
+}
+
+$("refreshBtn").addEventListener("click",loadHistory);
+
+async function initialize(){
+ if(!getToken()){
+  location.replace("login.html");
+  return;
+ }
+
+ await loadHistory();
+}
+
+window.addEventListener("pageshow",()=>{
+ if(getToken())loadHistory();
+});
+
+initialize();
+</script>
+</body>
+</html>
