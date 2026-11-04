@@ -1,0 +1,1008 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="theme-color" content="#1687d5">
+<title>GLO 365 - Affiliate Dashboard</title>
+
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+
+:root{
+ --blue:#1687d5;
+ --blue2:#2196e8;
+ --navy:#123b63;
+ --bg:#f1f6fb;
+ --white:#fff;
+ --text:#26364b;
+ --muted:#718096;
+ --border:#e2ebf4;
+ --green:#159b63;
+ --red:#e05252;
+ --shadow:0 5px 20px rgba(25,85,135,.08);
+}
+
+body{
+ font-family:Arial,sans-serif;
+ background:var(--bg);
+ color:var(--text);
+ min-height:100vh;
+}
+
+button,input{font:inherit}
+
+.topbar{
+ background:linear-gradient(120deg,#147fc9,#2196e8);
+ color:#fff;
+ padding:17px 20px;
+ box-shadow:0 4px 15px rgba(0,80,150,.18);
+}
+
+.topbar-inner{
+ max-width:1200px;
+ margin:auto;
+ display:flex;
+ align-items:center;
+ justify-content:space-between;
+ gap:12px;
+}
+
+.brand{
+ font-size:22px;
+ font-weight:900;
+ letter-spacing:1px;
+}
+
+.brand span{color:#d7edff}
+
+.top-actions{
+ display:flex;
+ align-items:center;
+ gap:10px;
+}
+
+.top-btn{
+ border:1px solid rgba(255,255,255,.35);
+ background:rgba(255,255,255,.13);
+ color:#fff;
+ padding:9px 14px;
+ border-radius:20px;
+ font-size:12px;
+ font-weight:bold;
+ cursor:pointer;
+}
+
+.container{
+ max-width:1200px;
+ margin:22px auto;
+ padding:0 16px 35px;
+}
+
+.welcome{
+ background:linear-gradient(120deg,#fff,#e9f5ff);
+ border:1px solid #d8eafa;
+ border-radius:17px;
+ padding:22px;
+ display:flex;
+ justify-content:space-between;
+ align-items:center;
+ gap:15px;
+ box-shadow:var(--shadow);
+}
+
+.welcome h1{
+ font-size:23px;
+ color:var(--navy);
+ margin-bottom:7px;
+}
+
+.welcome p{
+ font-size:13px;
+ color:var(--muted);
+ line-height:1.6;
+}
+
+.affiliate-badge{
+ background:#e4f3ff;
+ color:#147fc9;
+ padding:9px 14px;
+ border-radius:20px;
+ font-size:12px;
+ font-weight:bold;
+ white-space:nowrap;
+}
+
+.referral-box{
+ margin-top:16px;
+ background:#fff;
+ border:1px solid var(--border);
+ border-radius:15px;
+ padding:17px;
+ box-shadow:var(--shadow);
+}
+
+.referral-title{
+ font-size:14px;
+ font-weight:900;
+ color:var(--navy);
+ margin-bottom:12px;
+}
+
+.referral-row{
+ display:flex;
+ gap:10px;
+}
+
+.referral-code{
+ flex:1;
+ min-width:0;
+ padding:13px 15px;
+ border:1px dashed #8fc7ef;
+ border-radius:10px;
+ background:#f2f9ff;
+ color:#147fc9;
+ font-size:16px;
+ font-weight:900;
+ letter-spacing:1px;
+ overflow-wrap:anywhere;
+}
+
+.copy-btn{
+ border:0;
+ background:var(--blue);
+ color:#fff;
+ border-radius:10px;
+ padding:0 18px;
+ font-size:12px;
+ font-weight:bold;
+ cursor:pointer;
+}
+
+.section-title{
+ font-size:17px;
+ font-weight:900;
+ color:var(--navy);
+ margin:25px 0 13px;
+}
+
+.stats-grid{
+ display:grid;
+ grid-template-columns:repeat(4,minmax(0,1fr));
+ gap:13px;
+}
+
+.stat-card{
+ background:#fff;
+ border:1px solid var(--border);
+ border-radius:14px;
+ padding:17px;
+ box-shadow:var(--shadow);
+ min-width:0;
+}
+
+.stat-label{
+ color:var(--muted);
+ font-size:12px;
+ font-weight:bold;
+ margin-bottom:11px;
+}
+
+.stat-value{
+ color:var(--navy);
+ font-size:24px;
+ font-weight:900;
+ overflow-wrap:anywhere;
+}
+
+.stat-note{
+ color:#8b9aad;
+ font-size:11px;
+ margin-top:8px;
+ line-height:1.5;
+}
+
+.stat-icon{
+ width:35px;
+ height:35px;
+ display:flex;
+ align-items:center;
+ justify-content:center;
+ border-radius:10px;
+ background:#e8f5ff;
+ color:#1687d5;
+ font-size:17px;
+ margin-bottom:12px;
+}
+
+.panel{
+ margin-top:18px;
+ background:#fff;
+ border:1px solid var(--border);
+ border-radius:15px;
+ padding:18px;
+ box-shadow:var(--shadow);
+}
+
+.panel-heading{
+ display:flex;
+ align-items:center;
+ justify-content:space-between;
+ flex-wrap:wrap;
+ gap:12px;
+ margin-bottom:15px;
+}
+
+.panel-heading h2{
+ color:var(--navy);
+ font-size:16px;
+}
+
+.search-box{
+ width:100%;
+ max-width:260px;
+ height:40px;
+ border:1px solid var(--border);
+ border-radius:9px;
+ outline:none;
+ padding:0 12px;
+ font-size:12px;
+ color:var(--text);
+ background:#fbfdff;
+}
+
+.search-box:focus{
+ border-color:#79bde9;
+ box-shadow:0 0 0 3px #2196e81c;
+}
+
+.table-wrap{
+ width:100%;
+ overflow-x:auto;
+}
+
+table{
+ width:100%;
+ border-collapse:collapse;
+ min-width:520px;
+}
+
+th{
+ background:#eef7ff;
+ color:#45627e;
+ font-size:11px;
+ text-align:left;
+ padding:13px 12px;
+ white-space:nowrap;
+}
+
+td{
+ border-bottom:1px solid #edf1f5;
+ padding:13px 12px;
+ font-size:12px;
+ color:#42546a;
+}
+
+tbody tr:last-child td{border-bottom:0}
+
+.empty{
+ text-align:center;
+ color:#8795a7;
+ padding:28px 12px;
+ font-size:12px;
+ line-height:1.7;
+}
+
+.status{
+ display:inline-block;
+ padding:5px 9px;
+ border-radius:20px;
+ font-size:10px;
+ font-weight:bold;
+ background:#fff3dc;
+ color:#a46b12;
+}
+
+.report-grid{
+ display:grid;
+ grid-template-columns:repeat(3,minmax(0,1fr));
+ gap:12px;
+}
+
+.report-item{
+ border:1px solid var(--border);
+ border-radius:12px;
+ padding:15px;
+ background:#fff;
+}
+
+.report-item h3{
+ font-size:12px;
+ color:#64778c;
+ margin-bottom:10px;
+}
+
+.report-item strong{
+ display:block;
+ font-size:19px;
+ color:var(--navy);
+}
+
+.report-item small{
+ display:block;
+ margin-top:7px;
+ font-size:10px;
+ color:#98a5b4;
+ line-height:1.5;
+}
+
+.profit-card{
+ margin-top:14px;
+ border-radius:13px;
+ padding:19px;
+ background:linear-gradient(120deg,#123b63,#1687d5);
+ color:#fff;
+}
+
+.profit-card h3{
+ font-size:13px;
+ margin-bottom:10px;
+}
+
+.profit-card strong{
+ font-size:25px;
+}
+
+.profit-card p{
+ font-size:11px;
+ opacity:.8;
+ margin-top:8px;
+}
+
+.notice{
+ margin-top:15px;
+ padding:12px 14px;
+ border-radius:10px;
+ background:#fff8e8;
+ border:1px solid #f4e3b7;
+ color:#8a671e;
+ font-size:11px;
+ line-height:1.6;
+}
+
+.loading{
+ text-align:center;
+ padding:25px;
+ color:#718096;
+ font-size:12px;
+}
+
+.loader{
+ width:28px;
+ height:28px;
+ border:4px solid #dbeaf6;
+ border-top-color:var(--blue);
+ border-radius:50%;
+ margin:0 auto 10px;
+ animation:spin .8s linear infinite;
+}
+
+@keyframes spin{to{transform:rotate(360deg)}}
+
+.error-box{
+ display:none;
+ margin-top:15px;
+ padding:12px;
+ background:#fff0f0;
+ color:#bd3030;
+ border-radius:10px;
+ font-size:12px;
+ line-height:1.5;
+}
+
+.footer{
+ text-align:center;
+ color:#99a6b5;
+ font-size:10px;
+ padding:25px 10px 5px;
+}
+
+@media(max-width:850px){
+ .stats-grid{grid-template-columns:repeat(2,minmax(0,1fr))}
+ .report-grid{grid-template-columns:repeat(2,minmax(0,1fr))}
+}
+
+@media(max-width:480px){
+ .topbar{padding:14px}
+ .brand{font-size:19px}
+ .top-btn{padding:8px 10px;font-size:10px}
+ .container{margin:14px auto;padding:0 11px 25px}
+ .welcome{padding:17px;align-items:flex-start}
+ .welcome h1{font-size:19px}
+ .affiliate-badge{font-size:10px;padding:8px}
+ .stat-card{padding:13px}
+ .stat-value{font-size:21px}
+ .stat-label{font-size:11px}
+ .panel{padding:14px}
+ .report-grid{grid-template-columns:1fr 1fr}
+ .referral-row{flex-direction:column}
+ .copy-btn{height:42px}
+ .search-box{max-width:100%}
+}
+
+@media(max-width:350px){
+ .stats-grid,.report-grid{grid-template-columns:1fr}
+}
+</style>
+</head>
+
+<body>
+
+<header class="topbar">
+ <div class="topbar-inner">
+  <div class="brand">GLO <span>365</span></div>
+
+  <div class="top-actions">
+   <button class="top-btn" onclick="loadDashboard()">↻ Refresh</button>
+   <button class="top-btn" onclick="logout()">Logout</button>
+  </div>
+ </div>
+</header>
+
+<main class="container">
+
+ <section class="welcome">
+  <div>
+   <h1>Affiliate Dashboard</h1>
+   <p>Welcome, <strong id="affiliateUsername">Affiliate</strong><br>
+   Manage your referrals and view your performance.</p>
+  </div>
+  <div class="affiliate-badge">✦ AFFILIATE</div>
+ </section>
+
+ <section class="referral-box">
+  <div class="referral-title">YOUR REFERRAL CODE</div>
+  <div class="referral-row">
+   <div class="referral-code" id="referralCode">Loading...</div>
+   <button class="copy-btn" onclick="copyReferralCode()">COPY CODE</button>
+  </div>
+ </section>
+
+ <h2 class="section-title">Commission Overview</h2>
+
+ <section class="stats-grid">
+
+  <div class="stat-card">
+   <div class="stat-icon">৳</div>
+   <div class="stat-label">Total Commission</div>
+   <div class="stat-value" id="totalCommission">—</div>
+   <div class="stat-note">Recorded commission amount</div>
+  </div>
+
+  <div class="stat-card">
+   <div class="stat-icon">👥</div>
+   <div class="stat-label">Active Players</div>
+   <div class="stat-value" id="activePlayers">—</div>
+   <div class="stat-note">Requires player activity report API</div>
+  </div>
+
+  <div class="stat-card">
+   <div class="stat-icon">♙</div>
+   <div class="stat-label">All Users</div>
+   <div class="stat-value" id="totalUsers">—</div>
+   <div class="stat-note">Users referred by you</div>
+  </div>
+
+  <div class="stat-card">
+   <div class="stat-icon">▣</div>
+   <div class="stat-label">Commission Entries</div>
+   <div class="stat-value" id="commissionEntries">—</div>
+   <div class="stat-note">Recorded commission entries</div>
+  </div>
+
+ </section>
+
+ <h2 class="section-title">Affiliate Reports</h2>
+
+ <section class="report-grid">
+
+  <div class="report-item">
+   <h3>Commission — This Period</h3>
+   <strong id="periodCommission">Not Available</strong>
+   <small>Period-wise report API required</small>
+  </div>
+
+  <div class="report-item">
+   <h3>Commission — Last Period</h3>
+   <strong id="lastPeriodCommission">Not Available</strong>
+   <small>Period-wise report API required</small>
+  </div>
+
+  <div class="report-item">
+   <h3>First Deposit</h3>
+   <strong>Not Available</strong>
+   <small>Deposit report API required</small>
+  </div>
+
+  <div class="report-item">
+   <h3>Deposit</h3>
+   <strong>Not Available</strong>
+   <small>Deposit report API required</small>
+  </div>
+
+  <div class="report-item">
+   <h3>Withdrawal</h3>
+   <strong>Not Available</strong>
+   <small>Withdrawal report API required</small>
+  </div>
+
+  <div class="report-item">
+   <h3>Bonus</h3>
+   <strong>Not Available</strong>
+   <small>Bonus report API required</small>
+  </div>
+
+ </section>
+
+ <section class="profit-card">
+  <h3>Affiliate Profit & Loss</h3>
+  <strong id="affiliateProfit">Not Available</strong>
+  <p>Profit & Loss report will appear when the Backend report API is connected.</p>
+ </section>
+
+ <section class="panel">
+  <div class="panel-heading">
+   <h2>All Users</h2>
+   <input
+    type="search"
+    id="userSearch"
+    class="search-box"
+    placeholder="Search Username..."
+    oninput="filterUsers()">
+  </div>
+
+  <div class="table-wrap">
+   <table>
+    <thead>
+     <tr>
+      <th>SL</th>
+      <th>Username</th>
+      <th>Registration Date</th>
+     </tr>
+    </thead>
+    <tbody id="usersTable">
+     <tr>
+      <td colspan="3" class="empty">
+       All Users API is not connected yet.
+      </td>
+     </tr>
+    </tbody>
+   </table>
+  </div>
+
+  <div class="stat-note" id="userCountText">
+   Total referred users: Loading...
+  </div>
+
+  <div class="notice">
+   এখানে শুধু আপনার Referral Code ব্যবহার করে নিবন্ধিত Users দেখানো হবে।
+   অন্য Affiliate-এর Users এখানে দেখানো হবে না।
+  </div>
+ </section>
+
+ <section class="panel">
+  <div class="panel-heading">
+   <h2>Commission History</h2>
+  </div>
+
+  <div class="table-wrap">
+   <table>
+    <thead>
+     <tr>
+      <th>SL</th>
+      <th>Username</th>
+      <th>Amount</th>
+      <th>Status</th>
+      <th>Date</th>
+     </tr>
+    </thead>
+    <tbody id="commissionTable">
+     <tr>
+      <td colspan="5" class="empty">
+       Commission history API is not connected yet.
+      </td>
+     </tr>
+    </tbody>
+   </table>
+  </div>
+ </section>
+
+ <div class="error-box" id="errorBox"></div>
+
+ <div class="footer">
+  GLO 365 Affiliate Dashboard · Demo Points Only
+ </div>
+
+</main>
+
+<script>
+"use strict";
+
+const API_BASE_URL="https://glo365.onrender.com/api";
+const TOKEN_KEY="glo365_token";
+
+const $=id=>document.getElementById(id);
+
+let allUsers=[];
+
+function getToken(){
+ try{
+  return sessionStorage.getItem(TOKEN_KEY)||"";
+ }catch(_){
+  return "";
+ }
+}
+
+function getSavedUser(){
+ try{
+  const value=sessionStorage.getItem("glo365_user");
+  return value?JSON.parse(value):null;
+ }catch(_){
+  return null;
+ }
+}
+
+function showError(message){
+ const box=$("errorBox");
+ box.textContent=message;
+ box.style.display="block";
+}
+
+function clearError(){
+ $("errorBox").textContent="";
+ $("errorBox").style.display="none";
+}
+
+async function apiGet(endpoint){
+
+ const token=getToken();
+
+ const response=await fetch(API_BASE_URL+endpoint,{
+  method:"GET",
+  credentials:"include",
+  cache:"no-store",
+  headers:{
+   "Accept":"application/json",
+   ...(token?{"Authorization":"Bearer "+token}:{})
+  }
+ });
+
+ let data={};
+
+ try{
+  data=await response.json();
+ }catch(_){
+  throw new Error("Server returned an invalid response.");
+ }
+
+ if(!response.ok||data.success===false){
+  throw new Error(
+   data.message||
+   data.error||
+   "Could not load dashboard information."
+  );
+ }
+
+ return data;
+}
+
+function formatNumber(value){
+ const number=Number(value||0);
+ return Number.isFinite(number)
+  ?number.toLocaleString("en-US",{maximumFractionDigits:2})
+  :"0";
+}
+
+function formatDate(value){
+ if(!value)return "—";
+
+ const date=new Date(value);
+
+ if(Number.isNaN(date.getTime()))return "—";
+
+ return date.toLocaleDateString("en-GB",{
+  day:"2-digit",
+  month:"short",
+  year:"numeric"
+ });
+}
+
+function escapeHTML(value){
+ return String(value??"").replace(/[&<>"']/g,char=>({
+  "&":"&amp;",
+  "<":"&lt;",
+  ">":"&gt;",
+  '"':"&quot;",
+  "'":"&#039;"
+ }[char]));
+}
+
+/* LOAD AFFILIATE SUMMARY */
+
+async function loadAffiliateSummary(){
+
+ const data=await apiGet("/affiliate/me");
+
+ $("totalCommission").textContent=
+  formatNumber(data.commissions?.total);
+
+ $("commissionEntries").textContent=
+  formatNumber(data.commissions?.entries);
+
+ $("totalUsers").textContent=
+  formatNumber(data.total_referrals);
+
+ $("userCountText").textContent=
+  "Total referred users: "+formatNumber(data.total_referrals);
+
+ $("referralCode").textContent=
+  data.referral_code||"Not assigned";
+
+ const savedUser=getSavedUser();
+
+ if(savedUser?.username){
+  $("affiliateUsername").textContent=savedUser.username;
+ }
+
+}
+
+/* ALL USERS
+   Backend endpoint required:
+   GET /api/affiliate/users?search=username
+
+   Expected response:
+   {
+     success:true,
+     users:[
+       {username:"example",created_at:"2026-01-01T00:00:00Z"}
+     ]
+   }
+*/
+
+async function loadAllUsers(){
+
+ const body=$("usersTable");
+
+ try{
+
+  const data=await apiGet("/affiliate/users");
+
+  allUsers=Array.isArray(data.users)?data.users:[];
+
+  renderUsers(allUsers);
+
+ }catch(error){
+
+  body.innerHTML=`
+   <tr>
+    <td colspan="3" class="empty">
+     All Users API এখনো Backend-এ যোগ করা হয়নি।<br>
+     Backend API যুক্ত হলে এখানে আপনার Referred Users দেখা যাবে।
+    </td>
+   </tr>`;
+
+ }
+}
+
+function renderUsers(users){
+
+ const body=$("usersTable");
+
+ if(!users.length){
+  body.innerHTML=`
+   <tr>
+    <td colspan="3" class="empty">
+     আপনার Referral থেকে এখনো কোনো User পাওয়া যায়নি।
+    </td>
+   </tr>`;
+  return;
+ }
+
+ body.innerHTML=users.map((user,index)=>`
+  <tr>
+   <td>${index+1}</td>
+   <td><strong>${escapeHTML(user.username||"—")}</strong></td>
+   <td>${formatDate(user.created_at||user.registration_date)}</td>
+  </tr>
+ `).join("");
+
+}
+
+function filterUsers(){
+
+ const search=$("userSearch").value.trim().toLowerCase();
+
+ const filtered=allUsers.filter(user=>
+  String(user.username||"").toLowerCase().includes(search)
+ );
+
+ renderUsers(filtered);
+}
+
+/* COMMISSION HISTORY
+   Backend endpoint required:
+   GET /api/affiliate/commissions
+
+   Expected response:
+   {
+     success:true,
+     commissions:[
+       {
+         referred_username:"example",
+         amount:100,
+         status:"approved",
+         created_at:"2026-01-01T00:00:00Z"
+       }
+     ]
+   }
+*/
+
+async function loadCommissionHistory(){
+
+ const body=$("commissionTable");
+
+ try{
+
+  const data=await apiGet("/affiliate/commissions");
+
+  const commissions=Array.isArray(data.commissions)
+   ?data.commissions
+   :[];
+
+  if(!commissions.length){
+   body.innerHTML=`
+    <tr>
+     <td colspan="5" class="empty">
+      কোনো Commission Record পাওয়া যায়নি।
+     </td>
+    </tr>`;
+   return;
+  }
+
+  body.innerHTML=commissions.map((item,index)=>{
+
+   const status=String(item.status||"pending").toLowerCase();
+
+   return `
+    <tr>
+     <td>${index+1}</td>
+     <td>${escapeHTML(item.referred_username||"—")}</td>
+     <td>${formatNumber(item.amount)}</td>
+     <td><span class="status">${escapeHTML(status)}</span></td>
+     <td>${formatDate(item.created_at)}</td>
+    </tr>
+   `;
+
+  }).join("");
+
+ }catch(error){
+
+  body.innerHTML=`
+   <tr>
+    <td colspan="5" class="empty">
+     Commission History API এখনো Backend-এ যোগ করা হয়নি।
+    </td>
+   </tr>`;
+
+ }
+}
+
+/* COPY REFERRAL CODE */
+
+async function copyReferralCode(){
+
+ const code=$("referralCode").textContent.trim();
+
+ if(!code||code==="Loading..."||code==="Not assigned"){
+  alert("Referral Code পাওয়া যায়নি।");
+  return;
+ }
+
+ try{
+
+  await navigator.clipboard.writeText(code);
+  alert("Referral Code copied!");
+
+ }catch(_){
+
+  const input=document.createElement("textarea");
+  input.value=code;
+  document.body.appendChild(input);
+  input.select();
+
+  try{
+   document.execCommand("copy");
+   alert("Referral Code copied!");
+  }catch(error){
+   alert("Copy করা যায়নি।");
+  }
+
+  input.remove();
+ }
+}
+
+/* REFRESH */
+
+async function loadDashboard(){
+
+ clearError();
+
+ if(!getToken()){
+  location.replace("login.html");
+  return;
+ }
+
+ $("usersTable").innerHTML=`
+  <tr><td colspan="3" class="empty">Loading...</td></tr>`;
+
+ $("commissionTable").innerHTML=`
+  <tr><td colspan="5" class="empty">Loading...</td></tr>`;
+
+ try{
+
+  await loadAffiliateSummary();
+
+  await Promise.all([
+   loadAllUsers(),
+   loadCommissionHistory()
+  ]);
+
+ }catch(error){
+
+  showError(error.message);
+
+  if(/401|unauthorized|token|session/i.test(error.message)){
+   setTimeout(()=>location.replace("login.html"),1200);
+  }
+ }
+}
+
+/* LOGOUT */
+
+function logout(){
+
+ try{
+  sessionStorage.removeItem(TOKEN_KEY);
+  sessionStorage.removeItem("glo365_user");
+ }catch(_){}
+
+ location.replace("login.html");
+}
+
+/* INITIAL LOAD */
+
+(function(){
+
+ if(!getToken()){
+  location.replace("login.html");
+  return;
+ }
+
+ const user=getSavedUser();
+
+ if(user?.role&&String(user.role).toLowerCase()!=="affiliate"){
+  if(String(user.role).toLowerCase()==="admin"){
+   location.replace("admin.html");
+  }else{
+   location.replace("home.html");
+  }
+  return;
+ }
+
+ loadDashboard();
+
+})();
+</script>
+
+</body>
+</html>
