@@ -1,0 +1,185 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="theme-color" content="#102b46">
+<title>GLO 365 - Daily Millionaire Report</title>
+<style>
+:root{--blue:#1687d5;--blue2:#2196e8;--navy:#102b46;--text:#18344b;--muted:#71869a;--bg:#f1f7fc;--border:#d8e9f5;--green:#16834f;--red:#d64555}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--text);font-family:Arial,Helvetica,sans-serif}
+button,input,select{font:inherit}
+.top{background:linear-gradient(120deg,#102b46,#176da9);color:#fff;padding:17px 15px;box-shadow:0 3px 14px #102b4620}
+.top-inner{max-width:1100px;margin:auto;display:flex;justify-content:space-between;align-items:center;gap:12px}
+.brand{font-weight:900;font-size:20px}.brand span{color:#8fd1ff}
+.top small{display:block;margin-top:4px;color:#d4eaff;font-size:12px}
+.wrap{max-width:1100px;margin:auto;padding:15px}
+.heading{display:flex;justify-content:space-between;align-items:center;gap:10px;margin:5px 0 14px;flex-wrap:wrap}
+.heading h1{font-size:21px;margin:0}.heading p{font-size:12px;color:var(--muted);margin:5px 0 0}
+.actions{display:flex;gap:8px;flex-wrap:wrap}
+.btn{border:0;border-radius:9px;padding:10px 14px;font-size:12px;font-weight:800;cursor:pointer}
+.btn-primary{background:linear-gradient(120deg,var(--blue),var(--blue2));color:#fff}
+.btn-light{background:#fff;border:1px solid var(--border);color:#176da9}
+.btn:disabled{opacity:.55;cursor:not-allowed}
+.cards{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:10px;margin-bottom:13px}
+.stat{background:#fff;border:1px solid var(--border);border-radius:13px;padding:14px;box-shadow:0 3px 12px #1c5d8509;min-width:0}
+.stat-label{font-size:11px;color:var(--muted);font-weight:700}
+.stat-value{font-size:21px;font-weight:900;color:#087acb;margin-top:7px;overflow-wrap:anywhere}
+.stat-note{font-size:10px;color:#91a1ae;margin-top:4px}
+.panel{background:#fff;border:1px solid var(--border);border-radius:14px;padding:13px;margin-bottom:13px;box-shadow:0 3px 12px #1c5d8509}
+.filters{display:grid;grid-template-columns:1.4fr .8fr .8fr auto;gap:8px;align-items:end}
+.field label{display:block;font-size:10px;font-weight:800;color:#62798d;margin:0 0 5px}
+.field input,.field select{width:100%;height:40px;border:1px solid var(--border);border-radius:8px;padding:0 10px;background:#fbfdff;color:var(--text);outline:none;font-size:12px}
+.field input:focus,.field select:focus{border-color:var(--blue);box-shadow:0 0 0 3px #2196e817}
+.table-head{display:flex;justify-content:space-between;align-items:center;gap:8px;margin-bottom:10px;flex-wrap:wrap}
+.table-head h2{font-size:15px;margin:0}
+.count{font-size:11px;color:var(--muted)}
+.table-wrap{overflow-x:auto}
+table{width:100%;border-collapse:collapse;min-width:760px}
+th{background:#eff8ff;color:#648097;font-size:10px;text-align:left;padding:11px 9px;white-space:nowrap}
+td{border-bottom:1px solid #edf2f6;padding:11px 9px;font-size:12px;white-space:nowrap}
+tbody tr:hover{background:#f9fcff}
+.number{font-size:15px;font-weight:900;color:#087acb;letter-spacing:1px}
+.amount{font-weight:800;color:#176da9}
+.status{display:inline-block;padding:4px 8px;border-radius:20px;font-size:10px;font-weight:800;text-transform:capitalize}
+.pending{background:#fff5df;color:#9b6800}.win{background:#e7f8ef;color:#13834e}.loss{background:#ffedef;color:#bd3545}
+.empty,.message{text-align:center;padding:28px 12px;color:var(--muted);font-size:13px}
+.error{color:#b42332;background:#fff0f0;border:1px solid #f2c5c9;border-radius:9px;padding:11px;font-size:12px;line-height:1.5;margin-bottom:12px;display:none}
+.loading{display:none;text-align:center;padding:22px;color:#648097;font-size:12px}
+.frequency{display:flex;gap:7px;flex-wrap:wrap;margin-top:10px}
+.freq{background:#eff8ff;border:1px solid #d7eafa;border-radius:8px;padding:7px 10px;font-size:11px;color:#526f87}
+.freq strong{color:#087acb;font-size:13px}
+.foot{text-align:center;color:#8a9aaa;font-size:10px;padding:8px 0 18px}
+@media(max-width:700px){.cards{grid-template-columns:repeat(2,minmax(0,1fr))}.filters{grid-template-columns:1fr 1fr}.filters .search{grid-column:1/-1}.filters .filter-action{grid-column:1/-1}.heading h1{font-size:19px}}
+@media(max-width:360px){.wrap{padding:10px}.stat{padding:11px}.stat-value{font-size:18px}.filters{grid-template-columns:1fr}.filters .search,.filters .filter-action{grid-column:auto}}
+</style>
+</head>
+<body>
+<header class="top"><div class="top-inner"><div><div class="brand">GLO <span>365</span></div><small>ADMINISTRATION · REPORTS</small></div><div style="font-size:12px;font-weight:800">💎 Daily Millionaire</div></div></header>
+<main class="wrap">
+ <div class="heading">
+  <div><h1>Daily Millionaire Report</h1><p>View users' selected numbers, entry amounts and draw status.</p></div>
+  <div class="actions"><button class="btn btn-light" id="backBtn" type="button">← Admin Dashboard</button><button class="btn btn-primary" id="refreshBtn" type="button">↻ Refresh Report</button></div>
+ </div>
+ <div class="error" id="errorBox" role="alert"></div>
+ <section class="cards">
+  <div class="stat"><div class="stat-label">TOTAL PLAYERS</div><div class="stat-value" id="players">—</div><div class="stat-note">Unique usernames in loaded report</div></div>
+  <div class="stat"><div class="stat-label">TOTAL ENTRIES</div><div class="stat-value" id="entries">—</div><div class="stat-note">Millionaire number entries</div></div>
+  <div class="stat"><div class="stat-label">TOTAL POINTS</div><div class="stat-value" id="points">—</div><div class="stat-note">Sum of entry amounts</div></div>
+  <div class="stat"><div class="stat-label">MOST PLAYED NUMBER</div><div class="stat-value" id="popular">—</div><div class="stat-note" id="popularNote">Based on loaded entries</div></div>
+ </section>
+ <section class="panel">
+  <div class="table-head"><h2>Number frequency</h2><span class="count">Top 10 most selected numbers</span></div>
+  <div class="frequency" id="frequency"><span class="freq">No report loaded</span></div>
+ </section>
+ <section class="panel">
+  <div class="filters">
+   <div class="field search"><label for="search">SEARCH USERNAME OR NUMBER</label><input id="search" type="search" placeholder="Enter username or 3-digit number"></div>
+   <div class="field"><label for="statusFilter">BET STATUS</label><select id="statusFilter"><option value="">All statuses</option><option value="pending">Pending</option><option value="win">Win</option><option value="loss">Loss</option></select></div>
+   <div class="field"><label for="dateFilter">DRAW DATE</label><input id="dateFilter" type="date"></div>
+   <div class="filter-action actions"><button class="btn btn-light" id="clearBtn" type="button">Clear Filters</button><button class="btn btn-primary" id="csvBtn" type="button">Export CSV</button></div>
+  </div>
+ </section>
+ <section class="panel">
+  <div class="table-head"><h2>Player entries</h2><span class="count" id="resultCount">Waiting for report…</span></div>
+  <div class="loading" id="loading">Loading Millionaire report…</div>
+  <div class="table-wrap">
+   <table>
+    <thead><tr><th>#</th><th>USERNAME</th><th>NUMBER</th><th>BET AMOUNT</th><th>DRAW DATE</th><th>SUBMITTED</th><th>STATUS</th></tr></thead>
+    <tbody id="reportBody"><tr><td colspan="7" class="empty">Report has not been loaded.</td></tr></tbody>
+   </table>
+  </div>
+ </section>
+ <div class="foot">GLO 365 · Admin-only report · Data provided by your server</div>
+</main>
+<script>
+"use strict";
+const API_BASE="https://glo365.onrender.com/api";
+const TOKEN_KEY="glo365_token";
+let allReports=[];
+let visibleReports=[];
+const $=id=>document.getElementById(id);
+function token(){try{return sessionStorage.getItem(TOKEN_KEY)||""}catch(_){return""}}
+function money(value){const n=Number(value);return Number.isFinite(n)?n.toLocaleString("en-US",{minimumFractionDigits:2,maximumFractionDigits:2}):"0.00"}
+function safeText(value){return String(value??"")}
+function dateText(value){if(!value)return"—";const d=new Date(value);return Number.isNaN(d.getTime())?safeText(value):d.toLocaleString(undefined,{year:"numeric",month:"short",day:"2-digit",hour:"2-digit",minute:"2-digit"})}
+async function api(path){
+ const t=token();
+ const response=await fetch(API_BASE+path,{method:"GET",credentials:"include",cache:"no-store",headers:t?{Authorization:"Bearer "+t}:{}});
+ let data={};try{data=await response.json()}catch(_){throw new Error("Server returned an invalid response.")}
+ if(response.status===401||response.status===403){throw new Error(response.status===401?"Your login session has expired. Please login again.":"Admin access is required to view this report.")}
+ if(!response.ok||data.success===false)throw new Error(data.message||data.error||"Could not load report.");
+ return data;
+}
+function showError(message){$("errorBox").textContent=message;$("errorBox").style.display="block"}
+function hideError(){$("errorBox").style.display="none"}
+function normalizeReport(row){return{...row,game:String(row.game||"").toLowerCase(),username:row.username??"",number:row.number??row.selection??"",amount:Number(row.amount)||0,status:String(row.status||"pending").toLowerCase(),draw_date:row.draw_date??"",created_at:row.created_at??""}}
+function updateSummary(rows){
+ const users=new Set(rows.map(r=>String(r.username)).filter(Boolean));
+ const total=rows.reduce((sum,r)=>sum+r.amount,0);
+ const counts={};rows.forEach(r=>{const n=String(r.number);counts[n]=(counts[n]||0)+1});
+ const sorted=Object.entries(counts).sort((a,b)=>b[1]-a[1]||a[0].localeCompare(b[0]));
+ $("players").textContent=users.size.toLocaleString();
+ $("entries").textContent=rows.length.toLocaleString();
+ $("points").textContent=money(total);
+ $("popular").textContent=sorted.length?sorted[0][0]:"—";
+ $("popularNote").textContent=sorted.length?sorted[0][1]+" entries":"No entries";
+ const freq=$("frequency");freq.replaceChildren();
+ if(!sorted.length){const span=document.createElement("span");span.className="freq";span.textContent="No entries available";freq.append(span);return}
+ sorted.slice(0,10).forEach(([number,count])=>{const item=document.createElement("span");item.className="freq";const strong=document.createElement("strong");strong.textContent=number;item.append(strong,document.createTextNode(" · "+count+" entries"));freq.append(item)});
+}
+function renderTable(rows){
+ const body=$("reportBody");body.replaceChildren();
+ $("resultCount").textContent=rows.length+" entr"+(rows.length===1?"y":"ies");
+ if(!rows.length){const tr=document.createElement("tr"),td=document.createElement("td");td.colSpan=7;td.className="empty";td.textContent="No Millionaire entries match these filters.";tr.append(td);body.append(tr);return}
+ rows.forEach((r,i)=>{
+  const tr=document.createElement("tr");
+  const values=[String(i+1),safeText(r.username)||"—",safeText(r.number)||"—",money(r.amount),safeText(r.draw_date).slice(0,10)||"—",dateText(r.created_at)];
+  values.forEach((value,index)=>{const td=document.createElement("td");td.textContent=value;if(index===2)td.className="number";if(index===3)td.className="amount";tr.append(td)});
+  const td=document.createElement("td"),badge=document.createElement("span");badge.className="status "+(["pending","win","loss"].includes(r.status)?r.status:"pending");badge.textContent=r.status;td.append(badge);tr.append(td);body.append(tr);
+ });
+}
+function applyFilters(){
+ const q=$("search").value.trim().toLowerCase(),status=$("statusFilter").value,date=$("dateFilter").value;
+ visibleReports=allReports.filter(r=>{
+  const matchesSearch=!q||String(r.username).toLowerCase().includes(q)||String(r.number).toLowerCase().includes(q);
+  const matchesStatus=!status||r.status===status;
+  const matchesDate=!date||String(r.draw_date).slice(0,10)===date;
+  return matchesSearch&&matchesStatus&&matchesDate;
+ });
+ updateSummary(visibleReports);renderTable(visibleReports);
+}
+async function loadReport(){
+ $("refreshBtn").disabled=true;$("loading").style.display="block";hideError();
+ try{
+  if(!token()){location.replace("login.html");return}
+  const data=await api("/admin/number-reports");
+  if(!Array.isArray(data.reports))throw new Error("The server response does not contain a reports list.");
+  allReports=data.reports.map(normalizeReport).filter(r=>r.game==="millionaire");
+  applyFilters();
+ }catch(error){
+  showError(error.message||"Unable to load report.");
+  $("reportBody").innerHTML='<tr><td colspan="7" class="empty">Report could not be loaded.</td></tr>';
+  $("resultCount").textContent="Unavailable";
+  if(/login session/i.test(error.message)){setTimeout(()=>location.replace("login.html"),1000)}
+ }finally{$("loading").style.display="none";$("refreshBtn").disabled=false}
+}
+function exportCsv(){
+ if(!visibleReports.length){alert("There are no entries to export.");return}
+ const rows=[["Username","Number","Amount","Status","Draw Date","Submitted At"],...visibleReports.map(r=>[r.username,r.number,r.amount,r.status,r.draw_date,r.created_at])];
+ const csv=rows.map(row=>row.map(v=>'"'+String(v??"").replace(/"/g,'""')+'"').join(",")).join("\r\n");
+ const blob=new Blob(["\uFEFF"+csv],{type:"text/csv;charset=utf-8"});
+ const url=URL.createObjectURL(blob),a=document.createElement("a");a.href=url;a.download="glo365-millionaire-report.csv";document.body.append(a);a.click();a.remove();URL.revokeObjectURL(url);
+}
+$("refreshBtn").addEventListener("click",loadReport);
+$("search").addEventListener("input",applyFilters);
+$("statusFilter").addEventListener("change",applyFilters);
+$("dateFilter").addEventListener("change",applyFilters);
+$("clearBtn").addEventListener("click",()=>{$("search").value="";$("statusFilter").value="";$("dateFilter").value="";applyFilters()});
+$("csvBtn").addEventListener("click",exportCsv);
+$("backBtn").addEventListener("click",()=>{location.href="admin.html"});
+loadReport();
+</script>
+</body>
+</html>
