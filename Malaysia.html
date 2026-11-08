@@ -1,0 +1,264 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="theme-color" content="#071a35">
+<title>Malaysia Toto</title>
+
+<style>
+*{
+    margin:0;
+    padding:0;
+    box-sizing:border-box;
+}
+
+body{
+    font-family:Arial,sans-serif;
+    background:#f1f6fc;
+    color:#172b45;
+    min-height:100vh;
+}
+
+.header{
+    background:linear-gradient(135deg,#071a35,#124b86);
+    color:white;
+    padding:25px 18px;
+    text-align:center;
+}
+
+.logo{
+    font-size:25px;
+    font-weight:900;
+    letter-spacing:1px;
+}
+
+.header p{
+    margin-top:7px;
+    color:#c5dcf8;
+    font-size:13px;
+}
+
+.container{
+    max-width:500px;
+    margin:30px auto;
+    padding:15px;
+}
+
+.section-title{
+    font-size:19px;
+    font-weight:bold;
+    margin-bottom:15px;
+}
+
+.card{
+    background:white;
+    border-radius:16px;
+    padding:25px 18px;
+    text-align:center;
+    box-shadow:0 5px 22px rgba(20,55,95,.09);
+    border:1px solid #e2eaf4;
+    cursor:pointer;
+    transition:.2s;
+}
+
+.card:active{
+    transform:scale(.97);
+}
+
+.card-icon{
+    font-size:42px;
+    margin-bottom:12px;
+}
+
+.card h2{
+    font-size:21px;
+    color:#123c70;
+}
+
+.card p{
+    color:#8494a8;
+    font-size:13px;
+    margin-top:8px;
+}
+
+.tap{
+    display:inline-block;
+    margin-top:18px;
+    background:#1687d5;
+    color:white;
+    padding:11px 28px;
+    border-radius:30px;
+    font-size:13px;
+    font-weight:bold;
+}
+
+.footer{
+    text-align:center;
+    color:#91a0b3;
+    font-size:12px;
+    padding:25px 10px;
+}
+
+/* Maintenance Popup */
+
+.overlay{
+    position:fixed;
+    inset:0;
+    background:rgba(3,15,32,.78);
+    display:none;
+    align-items:center;
+    justify-content:center;
+    padding:20px;
+    z-index:1000;
+}
+
+.overlay.show{
+    display:flex;
+}
+
+.popup{
+    width:100%;
+    max-width:380px;
+    background:white;
+    border-radius:22px;
+    padding:30px 23px;
+    text-align:center;
+    animation:appear .3s ease;
+}
+
+@keyframes appear{
+    from{
+        opacity:0;
+        transform:translateY(20px) scale(.95);
+    }
+    to{
+        opacity:1;
+        transform:translateY(0) scale(1);
+    }
+}
+
+.warning{
+    width:75px;
+    height:75px;
+    background:#fff3dc;
+    border-radius:50%;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    font-size:36px;
+    margin:0 auto 18px;
+}
+
+.popup h2{
+    color:#153b68;
+    font-size:22px;
+    margin-bottom:13px;
+}
+
+.popup p{
+    color:#66768b;
+    font-size:14px;
+    line-height:1.7;
+}
+
+.status{
+    display:inline-block;
+    margin:18px 0;
+    background:#fff3dc;
+    color:#bd7915;
+    padding:8px 15px;
+    border-radius:20px;
+    font-size:11px;
+    font-weight:bold;
+    letter-spacing:.5px;
+}
+
+.close-btn{
+    width:100%;
+    border:none;
+    background:linear-gradient(135deg,#1687d5,#1261ae);
+    color:white;
+    padding:14px;
+    border-radius:12px;
+    font-size:14px;
+    font-weight:bold;
+    cursor:pointer;
+}
+</style>
+</head>
+
+<body>
+
+<header class="header">
+    <div class="logo">🇲🇾 MALAYSIA TOTO</div>
+    <p>Your Daily Results & Information Portal</p>
+</header>
+
+<main class="container">
+
+    <div class="section-title">Available Services</div>
+
+    <div class="card" onclick="showMaintenance()">
+        <div class="card-icon">🎯</div>
+        <h2>Malaysia Toto</h2>
+        <p>Tap to access the latest information</p>
+        <span class="tap">TAP TO OPEN</span>
+    </div>
+
+</main>
+
+<footer class="footer">
+    © 2026 Malaysia Toto. All Rights Reserved.
+</footer>
+
+<!-- Maintenance Popup -->
+
+<div class="overlay" id="maintenance">
+    <div class="popup">
+
+        <div class="warning">⚙️</div>
+
+        <h2>Temporary Maintenance</h2>
+
+        <p>
+        We sincerely apologize for the inconvenience.
+        Our servers are currently undergoing scheduled
+        maintenance to improve your experience.
+        <br><br>
+        Please try again later. Thank you for your
+        patience and understanding.
+        </p>
+
+        <div class="status">
+            ● SYSTEM UNDER MAINTENANCE
+        </div>
+
+        <button class="close-btn" onclick="closeMaintenance()">
+            UNDERSTOOD
+        </button>
+
+    </div>
+</div>
+
+<script>
+function showMaintenance(){
+    document.getElementById("maintenance")
+    .classList.add("show");
+}
+
+function closeMaintenance(){
+    document.getElementById("maintenance")
+    .classList.remove("show");
+}
+
+document.getElementById("maintenance")
+.addEventListener("click",function(e){
+    if(e.target===this){
+        closeMaintenance();
+    }
+});
+</script>
+
+</body>
+</html>
