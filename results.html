@@ -32,7 +32,7 @@ body{
  min-height:100vh;
  margin:auto;
  background:#fff;
- padding-bottom:145px;
+ padding-bottom:35px;
  overflow:hidden;
 }
 
@@ -173,7 +173,7 @@ header{
 /* RESULTS */
 
 .result-content{
- padding:5px 13px 25px;
+ padding:5px 13px 15px;
 }
 
 .result-section{
@@ -229,13 +229,41 @@ header{
 .result-info{
  text-align:center;
  color:var(--muted);
- font-size:11px;
- padding:13px 10px;
+ font-size:12px;
+ padding:13px 10px 8px;
  white-space:pre-line;
  overflow-wrap:anywhere;
 }
 
-/* BOTTOM AD */
+/* GO HOME BUTTON */
+
+.home-button-area{
+ padding:8px 13px 18px;
+}
+
+.home-button{
+ width:100%;
+ min-height:48px;
+ display:flex;
+ align-items:center;
+ justify-content:center;
+ gap:9px;
+ border:0;
+ border-radius:11px;
+ background:linear-gradient(110deg,#0876d5,#1687e8,#0755a8);
+ color:#fff;
+ font-size:14px;
+ font-weight:900;
+ letter-spacing:.5px;
+ cursor:pointer;
+ box-shadow:0 5px 15px #0876d540;
+}
+
+.home-button:active{
+ transform:scale(.98);
+}
+
+/* BOTTOM ADVERTISEMENT */
 
 .ad-banner{
  margin:10px 13px 18px;
@@ -276,97 +304,6 @@ header{
 .ad-frame iframe{
  max-width:100%;
  border:0;
-}
-
-/* RESULT TABS */
-
-.result-tabs{
- position:fixed;
- bottom:65px;
- left:50%;
- transform:translateX(-50%);
- width:100%;
- max-width:520px;
- display:flex;
- background:var(--navy);
- z-index:9;
- box-shadow:0 -2px 8px #00000012;
-}
-
-.result-tabs button{
- flex:1;
- padding:12px 5px;
- background:none;
- border:0;
- color:#b7c9d8;
- font-size:14px;
- font-weight:bold;
- cursor:pointer;
-}
-
-.result-tabs button.active{
- color:white;
- border-bottom:3px solid #ffcf58;
- background:#ffffff10;
-}
-
-/* BOTTOM NAV */
-
-nav{
- position:fixed;
- bottom:0;
- left:50%;
- transform:translateX(-50%);
- width:100%;
- max-width:520px;
- background:white;
- border-top:1px solid var(--border);
- display:flex;
- justify-content:space-around;
- align-items:center;
- padding:9px 4px 14px;
- z-index:10;
-}
-
-nav button{
- flex:1;
- border:0;
- background:none;
- color:#8295a6;
- font-size:11px;
- display:flex;
- flex-direction:column;
- align-items:center;
- gap:5px;
- cursor:pointer;
-}
-
-nav button strong{font-size:22px}
-
-nav button.active{
- color:var(--red);
- font-weight:bold;
-}
-
-.nav-profile-avatar{
- width:25px;
- height:25px;
- border-radius:50%;
- overflow:hidden;
- display:grid;
- place-items:center;
- border:1.5px solid var(--red);
- font-size:18px;
- line-height:1;
- flex-shrink:0;
-}
-
-.nav-profile-avatar img{
- width:100%;
- height:100%;
- object-fit:cover;
- display:block;
- border-radius:50%;
 }
 
 /* HISTORY MODAL */
@@ -498,7 +435,6 @@ nav button.active{
  .two-result{font-size:42px}
  .three-results div{font-size:32px}
  .result-label{font-size:15px}
- .result-tabs button{font-size:12px}
 }
 </style>
 </head>
@@ -532,7 +468,6 @@ nav button.active{
    SINGAPORE 4D
   </button>
 
-  <!-- Duplicate cards for continuous movement -->
   <button class="game-card active" data-game="thai" aria-hidden="true">
    THAI Gov. Lotto
   </button>
@@ -600,6 +535,13 @@ nav button.active{
   Loading results...
  </div>
 
+ <!-- GO TO HOME -->
+ <div class="home-button-area">
+  <button class="home-button" id="goHomeButton" type="button">
+   <span>←</span> GO TO HOME
+  </button>
+ </div>
+
 </section>
 
 <!-- BOTTOM ADVERTISEMENT -->
@@ -624,7 +566,6 @@ nav button.active{
 
 <!-- STATISTICS -->
 <section id="statisticsContent" class="statistics">
-
  <div class="stat-card">
   <h3>📊 Result Statistics</h3>
   <p id="statisticsText">
@@ -636,12 +577,10 @@ nav button.active{
   <h3>📅 Available Draws</h3>
   <p id="drawCount">0 published results</p>
  </div>
-
 </section>
 
 <!-- HISTORY MODAL -->
 <div class="modal" id="historyModal">
-
  <div class="modal-box">
 
   <div class="modal-header">
@@ -652,43 +591,6 @@ nav button.active{
   <div class="date-list" id="dateList"></div>
 
  </div>
-</div>
-
-<!-- BOTTOM NAV -->
-<nav>
-
- <button onclick="location.href='home.html'">
-  <strong>🏠</strong>Home
- </button>
-
- <button onclick="location.href='mybets.html'">
-  <strong>🎯</strong>My Bets
- </button>
-
- <button class="active" onclick="location.href='results.html'">
-  <strong>🏆</strong>Results
- </button>
-
- <button onclick="location.href='profile.html'">
-  <strong class="nav-profile-avatar" id="navProfileAvatar">♙</strong>
-  Profile
- </button>
-
-</nav>
-
-<!-- RESULT TABS -->
-<div class="result-tabs">
-
- <button id="resultTab" class="active"
-  onclick="switchTab('results')">
-  Results
- </button>
-
- <button id="statsTab"
-  onclick="switchTab('statistics')">
-  Statistics
- </button>
-
 </div>
 
 </div>
@@ -813,15 +715,6 @@ function detectGame(row){
   return "thai";
  }
 
- /*
-  * Compatibility:
-  * Older result records without a category
-  * are treated as Thai Gov. Lotto.
-  *
-  * Add a category to Malaysia and Singapore
-  * records in the backend for correct filtering.
-  */
-
  if(!value.trim()){
   return "thai";
  }
@@ -843,6 +736,25 @@ function formatDate(date){
  return d.toLocaleDateString("en-GB",{
   day:"2-digit",
   month:"long",
+  year:"numeric"
+ });
+}
+
+/* PUBLISHED DATE - DATE ONLY, NO TIME */
+
+function formatPublishedDate(value){
+
+ if(!value)return "";
+
+ const date=new Date(value);
+
+ if(Number.isNaN(date.getTime())){
+  return "";
+ }
+
+ return date.toLocaleDateString("en-GB",{
+  day:"2-digit",
+  month:"short",
   year:"numeric"
  });
 }
@@ -1021,7 +933,6 @@ function selectGame(game){
  selectedResult=null;
 
  applyGameFilter();
-
 }
 
 /* CARD EVENTS */
@@ -1061,9 +972,11 @@ function showResult(result){
  document.getElementById("frontThree2").textContent=
   result.frontThree[1]||"XXX";
 
+ const publishedDate=formatPublishedDate(result.publishedAt);
+
  document.getElementById("resultInfo").textContent=
-  result.publishedAt
-   ?"Result Published · "+new Date(result.publishedAt).toLocaleString()
+  publishedDate
+   ?"Result Published · "+publishedDate
    :"Result Published";
 
  renderStatistics();
@@ -1220,35 +1133,14 @@ document.getElementById("searchInput").addEventListener(
  }
 );
 
-/* RESULTS / STATISTICS TABS */
+/* GO TO HOME */
 
-function switchTab(tab){
-
- const resultContent=document.getElementById("resultsContent");
- const statsContent=document.getElementById("statisticsContent");
-
- const resultTab=document.getElementById("resultTab");
- const statsTab=document.getElementById("statsTab");
-
- if(tab==="results"){
-
-  resultContent.style.display="block";
-  statsContent.style.display="none";
-
-  resultTab.classList.add("active");
-  statsTab.classList.remove("active");
-
- }else{
-
-  resultContent.style.display="none";
-  statsContent.style.display="block";
-
-  resultTab.classList.remove("active");
-  statsTab.classList.add("active");
-
-  renderStatistics();
+document.getElementById("goHomeButton").addEventListener(
+ "click",
+ function(){
+  location.href="home.html";
  }
-}
+);
 
 /* STATISTICS */
 
@@ -1280,81 +1172,25 @@ function renderStatistics(){
   (selectedResult.frontThree[1]||"XXX");
 }
 
-/* PROFILE AVATAR */
-
-async function updateResultsProfileAvatar(){
-
- const element=document.getElementById("navProfileAvatar");
-
- if(!element)return;
-
- const token=getToken();
-
- if(!token){
-  element.textContent="♙";
-  return;
- }
-
- try{
-
-  const data=await apiRequest("/auth/me");
-
-  const user=data.user||data.profile||data;
-
-  const photo=
-   user.avatar||
-   user.photo||
-   user.profile_photo||
-   user.profilePhoto||
-   "";
-
-  if(typeof photo==="string"&&photo.trim()){
-
-   const img=document.createElement("img");
-
-   img.src=photo;
-   img.alt="My Profile Avatar";
-
-   img.onerror=()=>{
-    element.textContent="♙";
-   };
-
-   element.replaceChildren(img);
-
-  }else{
-
-   element.textContent="♙";
-  }
-
- }catch(e){
-
-  element.textContent="♙";
- }
-}
-
 /* REFRESH */
 
 window.addEventListener("focus",()=>{
  loadResults();
- updateResultsProfileAvatar();
 });
 
 window.addEventListener("pageshow",()=>{
  loadResults();
- updateResultsProfileAvatar();
 });
 
 document.addEventListener("visibilitychange",()=>{
  if(!document.hidden){
   loadResults();
-  updateResultsProfileAvatar();
  }
 });
 
 /* INITIAL LOAD */
 
 loadResults();
-updateResultsProfileAvatar();
 
 </script>
 
