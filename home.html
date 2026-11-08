@@ -1184,6 +1184,31 @@ nav button.active{color:#087acb}
  .six .ball{width:26px;height:26px;font-size:14px}
 }
 
+
+/* THAILAND LOTTERY QUICK LINK */
+.thailand-lottery-link{
+ margin:0 10px 14px;min-height:48px;padding:7px 12px;
+ display:flex;align-items:center;gap:9px;position:relative;
+ border:1px solid #c9e6f8;border-radius:13px;
+ background:linear-gradient(100deg,#ffffff,#edf8ff);
+ box-shadow:0 3px 9px #087acb18;text-decoration:none;color:#075da8;
+}
+.thailand-flag{font-size:22px;line-height:1;flex-shrink:0}
+.thailand-link-title{font-size:14px;font-weight:900;white-space:nowrap}
+.thailand-link-subtitle{font-size:9px;font-weight:800;color:#6c91ac;margin-left:auto;white-space:nowrap}
+.thailand-link-arrow{width:29px;height:29px;flex-shrink:0;border-radius:50%;
+ display:grid;place-items:center;background:#1688df;color:#fff;font-size:19px;font-weight:900}
+.thailand-lottery-link:active{transform:scale(.99);background:#e5f4ff}
+.notice-wrap{margin:0 10px 9px;min-height:39px;border-radius:8px}
+.notice-icon{width:30px;height:30px;font-size:16px}
+.notice-track span{padding:10px 22px}
+@media(max-width:380px){
+ .thailand-lottery-link{margin-left:8px;margin-right:8px;min-height:45px;padding:6px 9px;gap:7px}
+ .thailand-link-title{font-size:13px}
+ .thailand-link-subtitle{font-size:8px}
+ .thailand-link-arrow{width:27px;height:27px}
+}
+
 </style>
 </head>
 
@@ -1213,6 +1238,15 @@ nav button.active{color:#087acb}
   </button>
  </div>
 </header>
+
+<!-- ADMIN NOTICE: DISPLAY DIRECTLY UNDER THE TOP HEADER -->
+
+<section class="notice-wrap" id="noticeWrap">
+ <div class="notice-icon">📢</div>
+ <div class="notice-window">
+  <div class="notice-track" id="noticeTrack"></div>
+ </div>
+</section>
 
 <section class="draw-board">
 
@@ -1314,12 +1348,13 @@ nav button.active{color:#087acb}
  </div>
 </section>
 
-<section class="notice-wrap" id="noticeWrap">
- <div class="notice-icon">📢</div>
- <div class="notice-window">
-  <div class="notice-track" id="noticeTrack"></div>
- </div>
-</section>
+<!-- THAILAND LOTTERY PAGE LINK -->
+<a class="thailand-lottery-link" href="thailand-lottary.html" aria-label="Open Thailand Lottery games">
+ <span class="thailand-flag">🇹🇭</span>
+ <span class="thailand-link-title">Thailand Lottery</span>
+ <span class="thailand-link-subtitle">SINGLE · 2D · 3 UP · 6 UP</span>
+ <span class="thailand-link-arrow" aria-hidden="true">➜</span>
+</a>
 
 <!-- DAILY MILLIONAIRE: COUNTDOWN LEFT, RESULT RIGHT -->
 
@@ -1374,52 +1409,6 @@ nav button.active{color:#087acb}
 <!-- GAME CARDS -->
 
 <section class="cards">
-
- <a class="game-card single" href="single.html">
-  <span class="card-glow"></span>
-  <div class="card-crown">👑</div>
-  <div class="balls"><div class="ball">7</div></div>
-  <h2>SINGLE</h2>
-  <div class="play">PLAY NOW <span class="play-arrow">➜</span></div>
- </a>
-
- <a class="game-card two" href="2D.html">
-  <span class="card-glow"></span>
-  <div class="card-crown">👑</div>
-  <div class="balls">
-   <div class="ball">2</div>
-   <div class="ball">8</div>
-  </div>
-  <h2>2D</h2>
-  <div class="play">PLAY NOW <span class="play-arrow">➜</span></div>
- </a>
-
- <a class="game-card three" href="3up.html">
-  <span class="card-glow"></span>
-  <div class="card-crown">👑</div>
-  <div class="balls">
-   <div class="ball">1</div>
-   <div class="ball">3</div>
-   <div class="ball">6</div>
-  </div>
-  <h2>3 UP</h2>
-  <div class="play">PLAY NOW <span class="play-arrow">➜</span></div>
- </a>
-
- <a class="game-card six" href="6up.html">
-  <span class="card-glow"></span>
-  <div class="card-crown">👑</div>
-  <div class="balls">
-   <div class="ball">1</div>
-   <div class="ball">2</div>
-   <div class="ball">3</div>
-   <div class="ball">4</div>
-   <div class="ball">5</div>
-   <div class="ball">6</div>
-  </div>
-  <h2>6 UP</h2>
-  <div class="play">PLAY NOW <span class="play-arrow">➜</span></div>
- </a>
 
  <div class="game-divider" aria-hidden="true"></div>
 
