@@ -3,88 +3,455 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width,initial-scale=1">
-<meta name="theme-color" content="#2196e8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="theme-color" content="#10102b">
 <title>GLO 365 - Daily Millionaire</title>
+
 <style>
 *{box-sizing:border-box;margin:0;padding:0}
-body{font-family:Arial,sans-serif;background:#f0f7fd;color:#18334d}
-.app{max-width:520px;min-height:100vh;margin:auto;background:#fff;padding-bottom:25px;box-shadow:0 0 25px #163c5c0b}
-.header{background:linear-gradient(120deg,#1687d5,#2196e8);padding:17px 15px;display:flex;justify-content:space-between;align-items:center}
-.logo{font-size:27px;font-weight:900;color:#fff}.logo span{color:#d9f0ff}
-.balance{background:#fff;color:#167fc4;padding:10px 14px;border-radius:30px;font-size:13px;font-weight:bold}
-.page-title{background:#2196e8;text-align:center;padding:15px 10px;font-size:19px;font-weight:900;color:#fff}
-.subtitle{text-align:center;padding:12px 5px;background:#eff8ff;color:#167fc4;font-size:13px;font-weight:bold}
-.rate-box{margin:12px 11px;padding:14px 10px;text-align:center;background:linear-gradient(145deg,#eff8ff,#d9efff);border:1px solid #c9e4f7;border-radius:12px;color:#526f87;font-size:13px;line-height:1.8}
-.rate-box strong{color:#0874c5;font-size:19px}
-.lock-status{display:none;margin:12px 11px;padding:14px 12px;border:1px solid #f0b8b8;border-radius:10px;background:#fff0f0;color:#b42332;text-align:center;font-size:13px;font-weight:bold;line-height:1.7}
-.lock-status.locked,.lock-status.open{display:block}.lock-status strong{display:block;font-size:14px;margin-bottom:3px}
-.lock-status.open{border-color:#b9e4ca;background:#effbf3;color:#187344}
-.bet-area{padding:8px 9px 0}
-.column-heading,.bet-row{display:grid;grid-template-columns:25px minmax(0,1.15fr) minmax(0,.9fr) minmax(0,1fr) 20px;gap:5px}
-.column-heading{padding:8px 0;font-size:10px;font-weight:bold;color:#8195a8;text-align:center}
-.bet-row{align-items:center;margin-bottom:8px}
-.serial{text-align:center;font-size:14px;color:#526f87}
-.bet-row input{width:100%;min-width:0;height:49px;border:1px solid #cbdfee;background:#f7fbff;border-radius:10px;text-align:center;font-size:14px;color:#18334d;outline:none;padding:4px}
-.bet-row input:focus{border-color:#2196e8;background:#fff;box-shadow:0 0 0 3px #2196e817}
-.bet-row input::placeholder{color:#9aabba}.bet-row input:disabled{background:#edf0f3;color:#8795a1;cursor:not-allowed;opacity:.7}
-.prize-output{width:100%;min-width:0;height:49px;border:1px solid #cbdfee;background:#eaf6ff;border-radius:10px;display:grid;place-items:center;text-align:center;padding:3px;font-size:13px;font-weight:900;color:#0874c5;overflow:hidden}
-.remove-btn{border:0;background:transparent;color:#d34c5e;font-size:20px;font-weight:bold;padding:3px 0;cursor:pointer}
-.remove-btn:disabled{opacity:.3;cursor:not-allowed}
-.add-area{display:flex;justify-content:flex-end;padding:5px 3px 17px}
-.add-btn{width:43px;height:43px;border-radius:50%;background:#eff8ff;color:#1687d5;border:1px solid #cbdfee;font-size:29px;font-weight:bold;display:grid;place-items:center;cursor:pointer}
-.add-btn:disabled{opacity:.4;cursor:not-allowed}
-.summary{padding:5px 11px}.summary-box{background:#eff8ff;border:1px solid #dcebf6;border-radius:12px;padding:16px 7px;text-align:center;font-size:14px;margin-bottom:9px;color:#526f87}
-.summary-box strong{font-weight:900;color:#167fc4}.summary-box.prize-summary{background:#eaf6ff;border-color:#b9ddf5;color:#075da8}
-.summary-box.prize-summary strong{font-size:19px;color:#0874c5}
-.place-btn{width:calc(100% - 22px);margin:17px 11px 0;padding:16px 8px;background:linear-gradient(90deg,#1687d5,#2196e8);border:0;border-radius:10px;color:#fff;font-size:17px;font-weight:900;box-shadow:0 4px 12px #1687d530;cursor:pointer}
-.place-btn:active{transform:scale(.98)}.place-btn:disabled{opacity:.6;cursor:not-allowed}
-.back-btn{display:block;margin:10px auto;border:0;background:transparent;color:#167fc4;padding:10px;font-size:13px;cursor:pointer}
-.notice{margin:10px 11px;padding:12px;background:#eff8ff;border:1px solid #dcebf6;border-radius:9px;text-align:center;color:#526f87;font-size:11px;line-height:1.7}
-.notice strong{color:#167fc4}
 
-/* Custom success popup */
-.success-overlay{position:fixed;inset:0;background:rgba(10,28,45,.68);backdrop-filter:blur(5px);-webkit-backdrop-filter:blur(5px);display:flex;align-items:center;justify-content:center;padding:18px;z-index:1000;opacity:0;visibility:hidden;transition:.25s}
+:root{
+ --blue:#1687e8;
+ --gold:#ffd34e;
+ --white:#fff;
+ --muted:#a9b9d0;
+}
+
+body{
+ font-family:Arial,sans-serif;
+ color:#fff;
+ min-height:100vh;
+ background:
+ radial-gradient(ellipse at 50% 8%,#a72b16 0%,transparent 34%),
+ radial-gradient(ellipse at 0% 25%,#0758bd 0%,transparent 43%),
+ radial-gradient(ellipse at 100% 30%,#7000a9 0%,transparent 43%),
+ radial-gradient(ellipse at 50% 100%,#a00035 0%,transparent 48%),
+ linear-gradient(135deg,#07132f,#240b35 48%,#080d2a);
+ background-attachment:fixed;
+}
+
+.app{
+ width:100%;
+ max-width:520px;
+ min-height:100vh;
+ margin:auto;
+ padding-bottom:28px;
+ overflow:hidden;
+ background:
+ radial-gradient(ellipse at 50% 0%,#ff8a0030,transparent 35%),
+ linear-gradient(180deg,#10142bde,#10152bf2);
+ box-shadow:0 0 35px #0008;
+}
+
+.page-title{
+ position:relative;
+ overflow:hidden;
+ text-align:center;
+ padding:24px 12px;
+ font-size:24px;
+ font-weight:900;
+ letter-spacing:.5px;
+ color:#fff;
+ background:
+ radial-gradient(circle at 50% 0%,#fff5,transparent 55%),
+ linear-gradient(110deg,#075ac5,#a50058 52%,#5d16bb);
+ border-bottom:2px solid #ffcf4c;
+ text-shadow:0 2px 8px #0008;
+ box-shadow:0 5px 22px #0005;
+}
+
+.page-title:after{
+ content:"";
+ position:absolute;
+ left:0;right:0;bottom:0;
+ height:3px;
+ background:linear-gradient(90deg,#00d9ff,#ffe15b,#ff3f8c,#a45cff);
+}
+
+.rate-box{
+ margin:17px 13px 10px;
+ padding:17px 12px;
+ text-align:center;
+ border:1px solid #ffffff35;
+ border-radius:15px;
+ background:linear-gradient(135deg,#123b70e8,#35205de8);
+ color:#d5e8ff;
+ font-size:14px;
+ line-height:1.8;
+ box-shadow:0 8px 25px #0004,inset 0 1px #ffffff20;
+}
+
+.rate-box strong{
+ display:block;
+ color:#ffdf65;
+ font-size:25px;
+ line-height:1.5;
+ text-shadow:0 2px 12px #ffb70055;
+}
+
+.play-caption{
+ margin-top:5px;
+ color:#fff;
+ font-size:16px;
+ font-weight:900;
+ letter-spacing:.6px;
+ text-shadow:0 2px 10px #ff9e0055;
+}
+
+.lock-status{
+ display:none;
+ margin:12px 13px;
+ padding:14px 12px;
+ border:1px solid #ffffff35;
+ border-radius:12px;
+ background:#391b30e8;
+ color:#ffd6d6;
+ text-align:center;
+ font-size:13px;
+ font-weight:bold;
+ line-height:1.7;
+ box-shadow:0 5px 18px #0003;
+}
+
+.lock-status.locked,.lock-status.open{display:block}
+
+.lock-status strong{
+ display:block;
+ font-size:15px;
+ margin-bottom:4px;
+}
+
+.lock-status.open{
+ border-color:#45d99a80;
+ background:linear-gradient(135deg,#103f37ed,#124d3bed);
+ color:#aaffd0;
+}
+
+.bet-area{padding:8px 10px 0}
+
+.column-heading,.bet-row{
+ display:grid;
+ grid-template-columns:22px minmax(0,1.15fr) minmax(0,.88fr) minmax(0,.92fr) 17px;
+ gap:5px;
+}
+
+.column-heading{
+ padding:9px 0;
+ font-size:10px;
+ font-weight:900;
+ color:#c1d2e9;
+ text-align:center;
+ letter-spacing:.4px;
+}
+
+.bet-row{
+ align-items:center;
+ margin-bottom:7px;
+}
+
+.serial{
+ text-align:center;
+ font-size:13px;
+ color:#e2eaff;
+ font-weight:bold;
+}
+
+.bet-row input{
+ width:100%;
+ min-width:0;
+ height:43px;
+ border:1px solid #b8d7f2;
+ background:linear-gradient(145deg,#ffffff,#eaf5ff);
+ border-radius:9px;
+ text-align:center;
+ font-size:13px;
+ color:#163d60;
+ outline:none;
+ padding:4px;
+ box-shadow:0 3px 8px #0002;
+}
+
+.bet-row input:focus{
+ border:2px solid #ffcf4c;
+ background:#fff;
+ box-shadow:0 0 0 3px #ffcf4c30;
+}
+
+.bet-row input::placeholder{color:#8298ad}
+
+.bet-row input:disabled{
+ background:#dce5ee;
+ color:#8795a1;
+ cursor:not-allowed;
+ opacity:.7;
+}
+
+.prize-output{
+ width:100%;
+ min-width:0;
+ height:43px;
+ border:1px solid #b8d7f2;
+ background:linear-gradient(145deg,#eaf6ff,#cce8ff);
+ border-radius:9px;
+ display:grid;
+ place-items:center;
+ text-align:center;
+ padding:3px;
+ font-size:12px;
+ font-weight:900;
+ color:#0866b4;
+ overflow:hidden;
+ box-shadow:0 3px 8px #0002;
+}
+
+.remove-btn{
+ border:0;
+ background:transparent;
+ color:#ff7895;
+ font-size:20px;
+ font-weight:bold;
+ padding:3px 0;
+ cursor:pointer;
+}
+
+.remove-btn:disabled{opacity:.3;cursor:not-allowed}
+
+.add-area{
+ display:flex;
+ justify-content:flex-end;
+ padding:5px 3px 15px;
+}
+
+.add-btn{
+ width:38px;
+ height:38px;
+ border-radius:50%;
+ background:linear-gradient(145deg,#1687e8,#0755a8);
+ color:#fff;
+ border:1px solid #ffffff70;
+ font-size:26px;
+ font-weight:bold;
+ display:grid;
+ place-items:center;
+ cursor:pointer;
+ box-shadow:0 4px 12px #0004;
+}
+
+.add-btn:disabled{opacity:.4;cursor:not-allowed}
+
+.summary{padding:5px 13px}
+
+.summary-box{
+ background:linear-gradient(135deg,#152f54,#202b53);
+ border:1px solid #ffffff30;
+ border-radius:11px;
+ padding:13px 7px;
+ text-align:center;
+ font-size:13px;
+ margin-bottom:9px;
+ color:#d6e7ff;
+ box-shadow:0 4px 12px #0003;
+}
+
+.summary-box strong{
+ font-weight:900;
+ color:#ffdc65;
+}
+
+.summary-box.prize-summary{
+ background:linear-gradient(110deg,#173c75,#4a1c69);
+ border-color:#ffda6555;
+ color:#fff;
+}
+
+.summary-box.prize-summary strong{
+ font-size:18px;
+ color:#ffdf65;
+}
+
+.place-btn{
+ width:calc(100% - 26px);
+ margin:15px 13px 0;
+ padding:15px 8px;
+ background:linear-gradient(100deg,#0876d5,#a00072,#6b2acb);
+ border:1px solid #ffffff55;
+ border-radius:11px;
+ color:#fff;
+ font-size:16px;
+ font-weight:900;
+ box-shadow:0 5px 18px #0005,0 0 15px #a0007240;
+ cursor:pointer;
+}
+
+.place-btn:active{transform:scale(.98)}
+.place-btn:disabled{opacity:.6;cursor:not-allowed}
+
+.back-btn{
+ display:block;
+ margin:10px auto;
+ border:0;
+ background:transparent;
+ color:#c8e5ff;
+ padding:10px;
+ font-size:13px;
+ cursor:pointer;
+}
+
+.notice{
+ margin:10px 13px;
+ padding:12px;
+ background:#142b4ce8;
+ border:1px solid #ffffff30;
+ border-radius:9px;
+ text-align:center;
+ color:#c6d8ee;
+ font-size:11px;
+ line-height:1.7;
+}
+
+.notice strong{color:#ffdc65}
+
+/* Success popup */
+.success-overlay{
+ position:fixed;
+ inset:0;
+ background:rgba(5,10,28,.78);
+ backdrop-filter:blur(6px);
+ -webkit-backdrop-filter:blur(6px);
+ display:flex;
+ align-items:center;
+ justify-content:center;
+ padding:18px;
+ z-index:1000;
+ opacity:0;
+ visibility:hidden;
+ transition:.25s;
+}
+
 .success-overlay.show{opacity:1;visibility:visible}
-.success-modal{width:100%;max-width:390px;background:#fff;border-radius:22px;overflow:hidden;box-shadow:0 22px 70px #0004;transform:translateY(18px) scale(.96);transition:.25s}
+
+.success-modal{
+ width:100%;
+ max-width:390px;
+ background:#fff;
+ border-radius:22px;
+ overflow:hidden;
+ box-shadow:0 22px 70px #0008;
+ transform:translateY(18px) scale(.96);
+ transition:.25s;
+}
+
 .success-overlay.show .success-modal{transform:translateY(0) scale(1)}
-.success-head{padding:25px 20px 20px;text-align:center;background:linear-gradient(140deg,#eaf8ff,#f5fbff);border-bottom:1px solid #e0edf6}
-.success-check{width:66px;height:66px;margin:0 auto 12px;border-radius:50%;display:grid;place-items:center;background:linear-gradient(145deg,#24b978,#11965e);color:#fff;font-size:34px;font-weight:bold;box-shadow:0 7px 18px #17a66b35}
+
+.success-head{
+ padding:25px 20px 20px;
+ text-align:center;
+ background:linear-gradient(140deg,#eaf8ff,#f5fbff);
+ border-bottom:1px solid #e0edf6;
+}
+
+.success-check{
+ width:66px;
+ height:66px;
+ margin:0 auto 12px;
+ border-radius:50%;
+ display:grid;
+ place-items:center;
+ background:linear-gradient(145deg,#24b978,#11965e);
+ color:#fff;
+ font-size:34px;
+ font-weight:bold;
+ box-shadow:0 7px 18px #17a66b35;
+}
+
 .success-head h2{font-size:21px;color:#173c58;margin-bottom:6px}
 .success-head p{font-size:12px;color:#71869a;line-height:1.5}
 .success-body{padding:18px 20px 20px}
-.success-row{display:flex;justify-content:space-between;gap:12px;padding:11px 0;border-bottom:1px solid #edf2f6;font-size:13px}
+
+.success-row{
+ display:flex;
+ justify-content:space-between;
+ gap:12px;
+ padding:11px 0;
+ border-bottom:1px solid #edf2f6;
+ font-size:13px;
+}
+
 .success-row:last-of-type{border-bottom:0}
-.success-row span{color:#71869a}.success-row strong{color:#23445d;text-align:right;overflow-wrap:anywhere}
+.success-row span{color:#71869a}
+.success-row strong{color:#23445d;text-align:right;overflow-wrap:anywhere}
 .success-row.highlight strong{color:#087acb;font-size:16px}
-.success-done{width:100%;margin-top:16px;border:0;border-radius:12px;padding:14px;background:linear-gradient(110deg,#1687d5,#2196e8);color:#fff;font-size:14px;font-weight:900;cursor:pointer;box-shadow:0 4px 12px #1687d530}
-@media(max-width:380px){.logo{font-size:24px}.balance{font-size:11px;padding:9px}.bet-row input{height:45px;font-size:12px}.prize-output{height:45px;font-size:11px}.column-heading{font-size:9px;gap:3px}.bet-row{gap:3px}.serial{font-size:12px}.summary-box{font-size:13px}}
+
+.success-done{
+ width:100%;
+ margin-top:16px;
+ border:0;
+ border-radius:12px;
+ padding:14px;
+ background:linear-gradient(110deg,#1687d5,#2196e8);
+ color:#fff;
+ font-size:14px;
+ font-weight:900;
+ cursor:pointer;
+ box-shadow:0 4px 12px #1687d530;
+}
+
+@media(max-width:380px){
+ .page-title{font-size:21px;padding:21px 8px}
+ .rate-box strong{font-size:22px}
+ .play-caption{font-size:14px}
+ .bet-row input{height:40px;font-size:12px}
+ .prize-output{height:40px;font-size:11px}
+ .column-heading{font-size:9px;gap:3px}
+ .bet-row{gap:3px}
+ .serial{font-size:12px}
+ .summary-box{font-size:12px}
+}
 </style>
 </head>
+
 <body>
 <div class="app">
-<header class="header">
- <div class="logo">GLO <span>365</span></div>
- <div class="balance"><span id="balance">0.00</span> Points</div>
-</header>
+
 <div class="page-title">💎 DAILY MILLIONAIRE</div>
-<div class="subtitle">Enter 3 Digit Number &amp; Virtual Points</div>
-<div class="rate-box">Daily Millionaire Prize Rate<br><strong>1 Point = 900 Points</strong><br>Enter your Amount to calculate the Prize automatically.</div>
+
+<div class="rate-box">
+ Daily Millionaire Prize Rate
+ <strong>1 Point = 900 Points</strong>
+ <div class="play-caption">PLAY MILLIONAIRE 3 DIGITS</div>
+</div>
+
 <div id="lockStatus" class="lock-status locked">
  <strong id="lockTitle">LOADING BETTING STATUS</strong>
  <span id="lockMessage">Please wait…</span>
 </div>
+
 <section class="bet-area">
- <div class="column-heading"><span>#</span><span>NUMBER</span><span>AMOUNT</span><span>PRIZE</span><span></span></div>
+ <div class="column-heading">
+  <span>#</span>
+  <span>NUMBER</span>
+  <span>AMOUNT</span>
+  <span>PRIZE</span>
+  <span></span>
+ </div>
  <div id="betRows"></div>
- <div class="add-area"><button class="add-btn" id="addRow" type="button" title="Add more rows">+</button></div>
+ <div class="add-area">
+  <button class="add-btn" id="addRow" type="button" title="Add more rows">+</button>
+ </div>
 </section>
+
 <section class="summary">
- <div class="summary-box">Total Amount = <strong id="totalAmount">0.00</strong> Points</div>
- <div class="summary-box prize-summary">Total Prize = <strong id="totalPrize">0.00</strong> Points</div>
+ <div class="summary-box">
+  Total Amount = <strong id="totalAmount">0.00</strong> Points
+ </div>
+ <div class="summary-box prize-summary">
+  Total Prize = <strong id="totalPrize">0.00</strong> Points
+ </div>
 </section>
+
 <button class="place-btn" id="placeBet" type="button" disabled>LOADING…</button>
 <button class="back-btn" id="backHome" type="button">← Back to Home</button>
+
 </div>
 
 <div class="success-overlay" id="successOverlay" role="dialog" aria-modal="true" aria-labelledby="successTitle">
@@ -92,7 +459,7 @@ body{font-family:Arial,sans-serif;background:#f0f7fd;color:#18334d}
   <div class="success-head">
    <div class="success-check">✓</div>
    <h2 id="successTitle">Entry Submitted!</h2>
-   <p>Your Daily Millionaire demo entry has been saved successfully.</p>
+   <p>Your Daily Millionaire entry has been saved successfully.</p>
   </div>
   <div class="success-body">
    <div class="success-row"><span>Username</span><strong id="successUsername">—</strong></div>
@@ -106,47 +473,553 @@ body{font-family:Arial,sans-serif;background:#f0f7fd;color:#18334d}
 
 <script>
 "use strict";
+
 const API_BASE_URL="https://glo365.onrender.com/api";
 const MIN_ROWS=10,MAX_ROWS=50,PRIZE_RATE=900;
-let currentUser=null,wallet=0,bettingLocked=true,lockReason="Betting status has not been verified by the server.",settingsLoaded=false,submitting=false;
-const rowsContainer=document.getElementById("betRows"),addButton=document.getElementById("addRow"),totalElement=document.getElementById("totalAmount"),totalPrizeElement=document.getElementById("totalPrize"),balanceElement=document.getElementById("balance"),placeButton=document.getElementById("placeBet"),lockStatus=document.getElementById("lockStatus"),lockTitle=document.getElementById("lockTitle"),lockMessage=document.getElementById("lockMessage");
-function authHeaders(extra={}){const headers={...extra};try{const token=sessionStorage.getItem("glo365_token");if(token)headers.Authorization="Bearer "+token;}catch(e){}return headers;}
-async function apiRequest(path,options={}){const response=await fetch(API_BASE_URL+path,{...options,credentials:"include",cache:"no-store",headers:authHeaders({...((options.body)?{"Content-Type":"application/json"}:{}),...(options.headers||{})})});let data={};try{data=await response.json();}catch(e){throw new Error("Server returned an invalid response.");}if(!response.ok||data.success===false){if(response.status===401)throw new Error("Your login session has expired. Please login again.");throw new Error(data.message||data.error||"Request failed ("+response.status+").");}return data;}
-function updateWallet(value){const amount=Number(value);wallet=Number.isFinite(amount)&&amount>=0?amount:0;balanceElement.textContent=wallet.toFixed(2);}
-async function loadCurrentUser(){const data=await apiRequest("/auth/me");currentUser=data.user||data.profile||null;if(!currentUser)throw new Error("Could not load your account.");updateWallet(currentUser.balance??currentUser.wallet_balance??currentUser.points??0);}
-function getDrawSettings(data){return data.drawSettings||data.draw_settings||data.settings||data.draw||null;}
-function parseServerDate(value){if(!value)return null;const date=new Date(value);return Number.isNaN(date.getTime())?null:date;}
-function formatDrawDate(value){const date=parseServerDate(value);if(!date)return "";return new Intl.DateTimeFormat("en-GB",{day:"2-digit",month:"short",year:"numeric",hour:"2-digit",minute:"2-digit",hour12:true}).format(date);}
-function showLock(title,message,isOpen=false){bettingLocked=!isOpen;lockReason=message||"";lockStatus.className=isOpen?"lock-status open":"lock-status locked";lockTitle.textContent=title;lockMessage.textContent=message;applyBettingLock();}
-function updateLockFromSettings(data){const draw=getDrawSettings(data);const lockedValue=typeof data.betting_locked==="boolean"?data.betting_locked:typeof data.bettingLocked==="boolean"?data.bettingLocked:typeof draw?.betting_locked==="boolean"?draw.betting_locked:null;const drawAt=draw?.draw_at||draw?.drawAt||data.draw_at||data.drawAt||null;const nextBettingAt=data.next_betting_at||data.nextBettingAt||draw?.next_betting_at||draw?.nextBettingAt||null;const drawDate=parseServerDate(drawAt),reopenDate=parseServerDate(nextBettingAt);
- if(lockedValue===null){showLock("BETTING LOCKED","The server has not confirmed the betting status. Please try again.");settingsLoaded=false;return;}
- if(lockedValue===true){let message="Betting is currently closed. It closes 15 minutes before the draw and reopens at 03:15 AM.";if(drawDate)message+=" Next draw: "+formatDrawDate(drawDate)+".";if(reopenDate)message+=" Betting reopens: "+formatDrawDate(reopenDate)+".";showLock("BETTING CLOSED",message,false);settingsLoaded=true;return;}
- if(!drawDate){showLock("BETTING LOCKED","The server did not provide a valid draw time.");settingsLoaded=false;return;}
- showLock("BETTING IS OPEN","Betting is open. Daily draw: 12:15 AM. Betting closes 15 minutes before the draw.",true);settingsLoaded=true;
+
+let currentUser=null;
+let wallet=0;
+let bettingLocked=true;
+let lockReason="Betting status has not been verified by the server.";
+let settingsLoaded=false;
+let submitting=false;
+
+const rowsContainer=document.getElementById("betRows");
+const addButton=document.getElementById("addRow");
+const totalElement=document.getElementById("totalAmount");
+const totalPrizeElement=document.getElementById("totalPrize");
+const balanceElement=document.getElementById("successBalance");
+const placeButton=document.getElementById("placeBet");
+const lockStatus=document.getElementById("lockStatus");
+const lockTitle=document.getElementById("lockTitle");
+const lockMessage=document.getElementById("lockMessage");
+
+function authHeaders(extra={}){
+ const headers={...extra};
+ try{
+  const token=sessionStorage.getItem("glo365_token");
+  if(token)headers.Authorization="Bearer "+token;
+ }catch(e){}
+ return headers;
 }
-async function loadSettings(){const data=await apiRequest("/public/daily-millionaire-settings");updateLockFromSettings(data);}
-async function refreshAccountAndSettings(){try{await Promise.all([loadCurrentUser(),loadSettings()]);}catch(error){settingsLoaded=false;showLock("UNABLE TO LOAD",error.message||"Could not connect to the server.",false);placeButton.disabled=true;placeButton.textContent="UNAVAILABLE";if(/login session|authentication|required|unauthorized/i.test(error.message))setTimeout(()=>location.replace("login.html"),900);}}
-function applyBettingLock(){rowsContainer.querySelectorAll(".bet-row").forEach(row=>{row.querySelectorAll("input").forEach(input=>input.disabled=bettingLocked||submitting);const remove=row.querySelector(".remove-btn");if(remove)remove.disabled=bettingLocked||submitting;});const count=rowsContainer.querySelectorAll(".bet-row").length;addButton.disabled=bettingLocked||submitting||count>=MAX_ROWS;placeButton.disabled=bettingLocked||submitting||!settingsLoaded;placeButton.textContent=submitting?"SUBMITTING…":!settingsLoaded?"LOADING…":bettingLocked?"BETTING CLOSED":"PLACE BET";}
-function updateSerials(){rowsContainer.querySelectorAll(".bet-row").forEach((row,index)=>row.querySelector(".serial").textContent=(index+1)+".");updateAddButton();}
-function updateAddButton(){const count=rowsContainer.querySelectorAll(".bet-row").length;addButton.disabled=bettingLocked||submitting||count>=MAX_ROWS;addButton.title=count>=MAX_ROWS?"Maximum 50 rows reached":"Add row ("+count+"/50)";}
-function addRow(force=false){if(bettingLocked&&!force){alert("Betting is currently closed.");return;}if(rowsContainer.querySelectorAll(".bet-row").length>=MAX_ROWS){alert("Maximum 50 rows allowed.");return;}const row=document.createElement("div");row.className="bet-row";const serial=document.createElement("span");serial.className="serial";const number=document.createElement("input");number.type="text";number.inputMode="numeric";number.maxLength=3;number.placeholder="Number";number.dataset.field="number";number.autocomplete="off";const amount=document.createElement("input");amount.type="number";amount.inputMode="decimal";amount.min="0";amount.step="0.01";amount.placeholder="Amount";amount.dataset.field="amount";const prize=document.createElement("div");prize.className="prize-output";prize.dataset.field="prize";prize.textContent="0.00";const remove=document.createElement("button");remove.type="button";remove.className="remove-btn";remove.textContent="×";remove.title="Clear or remove row";row.append(serial,number,amount,prize,remove);rowsContainer.appendChild(row);number.addEventListener("input",()=>{if(bettingLocked||submitting)return;number.value=number.value.replace(/\D/g,"").slice(0,3);calculate();});amount.addEventListener("input",()=>{if(!bettingLocked&&!submitting)calculate();});remove.addEventListener("click",()=>{if(bettingLocked||submitting)return;const count=rowsContainer.querySelectorAll(".bet-row").length;if(count>MIN_ROWS)row.remove();else{number.value="";amount.value="";}updateSerials();calculate();});updateSerials();calculate();applyBettingLock();}
-function getRows(){const rows=[];rowsContainer.querySelectorAll(".bet-row").forEach(row=>{const number=row.querySelector('[data-field="number"]').value.trim(),value=row.querySelector('[data-field="amount"]').value;if(number===""&&value==="")return;rows.push({number,amount:value===""?0:Number(value)});});return rows;}
-function calculate(){let totalAmount=0,totalPrize=0;rowsContainer.querySelectorAll(".bet-row").forEach(row=>{const value=row.querySelector('[data-field="amount"]').value,amount=value===""?0:Number(value),output=row.querySelector('[data-field="prize"]');if(Number.isFinite(amount)&&amount>0){const prize=amount*PRIZE_RATE;totalAmount+=amount;totalPrize+=prize;output.textContent=prize.toLocaleString("en-US",{minimumFractionDigits:2,maximumFractionDigits:2});}else output.textContent="0.00";});totalElement.textContent=totalAmount.toLocaleString("en-US",{minimumFractionDigits:2,maximumFractionDigits:2});totalPrizeElement.textContent=totalPrize.toLocaleString("en-US",{minimumFractionDigits:2,maximumFractionDigits:2});return{totalAmount,totalPrize};}
-function validateRows(rows){if(!rows.length){alert("Please enter at least one Number and Amount.");return false;}for(let i=0;i<rows.length;i++){const row=rows[i];if(!/^\d{3}$/.test(row.number)){alert("Row "+(i+1)+": Number must contain exactly three digits (000-999).");return false;}if(!Number.isFinite(row.amount)||row.amount<=0||Math.round(row.amount*100)!==row.amount*100){alert("Row "+(i+1)+": Enter a valid Amount greater than 0.");return false;}}return true;}
-function showSuccessPopup(result){document.getElementById("successUsername").textContent=currentUser?.username||"—";document.getElementById("successAmount").textContent=result.totalAmount.toFixed(2)+" Points";document.getElementById("successPrize").textContent=result.totalPrize.toLocaleString("en-US",{minimumFractionDigits:2,maximumFractionDigits:2})+" Points";document.getElementById("successBalance").textContent=wallet.toFixed(2)+" Points";document.getElementById("successOverlay").classList.add("show");}
-function closeSuccessPopup(){document.getElementById("successOverlay").classList.remove("show");}
-async function submitBet(){if(submitting)return;try{settingsLoaded=false;applyBettingLock();await Promise.all([loadCurrentUser(),loadSettings()]);}catch(error){alert(error.message||"Could not verify your account.");applyBettingLock();return;}if(!settingsLoaded||bettingLocked){alert(lockReason||"Betting is closed.");applyBettingLock();return;}const rows=getRows();if(!validateRows(rows))return;const result=calculate();if(result.totalAmount<=0){alert("Please enter a valid Amount.");return;}if(result.totalAmount>wallet){alert("Insufficient points.");return;}submitting=true;applyBettingLock();try{const response=await apiRequest("/demo/daily-millionaire/bets",{method:"POST",body:JSON.stringify({rows:rows,prize_rate:PRIZE_RATE})});if(response.balance!==undefined)updateWallet(response.balance);else if(response.user?.balance!==undefined)updateWallet(response.user.balance);else await loadCurrentUser();showSuccessPopup(result);resetRows();await loadSettings();}catch(error){alert(error.message||"Could not submit Daily Millionaire entry.");try{await loadCurrentUser();}catch(e){}try{await loadSettings();}catch(e){}}finally{submitting=false;applyBettingLock();}}
-function resetRows(){rowsContainer.replaceChildren();for(let i=0;i<MIN_ROWS;i++)addRow(true);calculate();applyBettingLock();}
-addButton.addEventListener("click",()=>{if(bettingLocked){alert("Betting is currently closed.");return;}addRow();});
+
+async function apiRequest(path,options={}){
+ const response=await fetch(API_BASE_URL+path,{
+  ...options,
+  credentials:"include",
+  cache:"no-store",
+  headers:authHeaders({
+   ...((options.body)?{"Content-Type":"application/json"}:{}),
+   ...(options.headers||{})
+  })
+ });
+
+ let data={};
+ try{
+  data=await response.json();
+ }catch(e){
+  throw new Error("Server returned an invalid response.");
+ }
+
+ if(!response.ok||data.success===false){
+  if(response.status===401)
+   throw new Error("Your login session has expired. Please login again.");
+  throw new Error(data.message||data.error||"Request failed ("+response.status+").");
+ }
+ return data;
+}
+
+function updateWallet(value){
+ const amount=Number(value);
+ wallet=Number.isFinite(amount)&&amount>=0?amount:0;
+}
+
+async function loadCurrentUser(){
+ const data=await apiRequest("/auth/me");
+ currentUser=data.user||data.profile||null;
+ if(!currentUser)throw new Error("Could not load your account.");
+ updateWallet(currentUser.balance??currentUser.wallet_balance??currentUser.points??0);
+}
+
+function getDrawSettings(data){
+ return data.drawSettings||data.draw_settings||data.settings||data.draw||null;
+}
+
+function parseServerDate(value){
+ if(!value)return null;
+ const date=new Date(value);
+ return Number.isNaN(date.getTime())?null:date;
+}
+
+/* Thailand display time: Asia/Bangkok */
+function formatThailandTime(value){
+ const date=parseServerDate(value);
+ if(!date)return "";
+ return new Intl.DateTimeFormat("en-US",{
+  timeZone:"Asia/Bangkok",
+  hour:"2-digit",
+  minute:"2-digit",
+  hour12:true
+ }).format(date);
+}
+
+function formatThailandDate(value){
+ const date=parseServerDate(value);
+ if(!date)return "";
+ return new Intl.DateTimeFormat("en-GB",{
+  timeZone:"Asia/Bangkok",
+  day:"2-digit",
+  month:"short",
+  year:"numeric"
+ }).format(date);
+}
+
+function showLock(title,message,isOpen=false){
+ bettingLocked=!isOpen;
+ lockReason=message||"";
+ lockStatus.className=isOpen?"lock-status open":"lock-status locked";
+ lockTitle.textContent=title;
+ lockMessage.textContent=message;
+ applyBettingLock();
+}
+
+function updateLockFromSettings(data){
+ const draw=getDrawSettings(data);
+
+ const lockedValue=
+  typeof data.betting_locked==="boolean"?data.betting_locked:
+  typeof data.bettingLocked==="boolean"?data.bettingLocked:
+  typeof draw?.betting_locked==="boolean"?draw.betting_locked:null;
+
+ const drawAt=
+  draw?.draw_at||draw?.drawAt||data.draw_at||data.drawAt||null;
+
+ const nextBettingAt=
+  data.next_betting_at||data.nextBettingAt||
+  draw?.next_betting_at||draw?.nextBettingAt||null;
+
+ const drawDate=parseServerDate(drawAt);
+ const reopenDate=parseServerDate(nextBettingAt);
+
+ if(lockedValue===null){
+  showLock(
+   "BETTING LOCKED",
+   "The server has not confirmed the betting status. Please try again."
+  );
+  settingsLoaded=false;
+  return;
+ }
+
+ if(lockedValue===true){
+  let message="Betting is currently closed. It closes 15 minutes before the draw.";
+
+  if(drawDate){
+   message+=" Next draw: "+formatThailandDate(drawDate)+
+    " at "+formatThailandTime(drawDate)+" Thailand Time.";
+  }
+
+  if(reopenDate){
+   message+=" Betting reopens: "+formatThailandTime(reopenDate)+" Thailand Time.";
+  }
+
+  showLock("BETTING CLOSED",message,false);
+  settingsLoaded=true;
+  return;
+ }
+
+ if(!drawDate){
+  showLock(
+   "BETTING LOCKED",
+   "The server did not provide a valid draw time."
+  );
+  settingsLoaded=false;
+  return;
+ }
+
+ const thailandTime=formatThailandTime(drawDate);
+
+ showLock(
+  "BETTING IS OPEN",
+  "Betting is open. Daily draw: "+thailandTime+
+  " Thailand Time (12:15 AM Bangladesh Time). Betting closes 15 minutes before the draw.",
+  true
+ );
+
+ settingsLoaded=true;
+}
+
+async function loadSettings(){
+ const data=await apiRequest("/public/daily-millionaire-settings");
+ updateLockFromSettings(data);
+}
+
+async function refreshAccountAndSettings(){
+ try{
+  await Promise.all([loadCurrentUser(),loadSettings()]);
+ }catch(error){
+  settingsLoaded=false;
+  showLock(
+   "UNABLE TO LOAD",
+   error.message||"Could not connect to the server.",
+   false
+  );
+  placeButton.disabled=true;
+  placeButton.textContent="UNAVAILABLE";
+
+  if(/login session|authentication|required|unauthorized/i.test(error.message))
+   setTimeout(()=>location.replace("login.html"),900);
+ }
+}
+
+function applyBettingLock(){
+ rowsContainer.querySelectorAll(".bet-row").forEach(row=>{
+  row.querySelectorAll("input").forEach(input=>{
+   input.disabled=bettingLocked||submitting;
+  });
+
+  const remove=row.querySelector(".remove-btn");
+  if(remove)remove.disabled=bettingLocked||submitting;
+ });
+
+ const count=rowsContainer.querySelectorAll(".bet-row").length;
+
+ addButton.disabled=bettingLocked||submitting||count>=MAX_ROWS;
+
+ placeButton.disabled=bettingLocked||submitting||!settingsLoaded;
+
+ placeButton.textContent=
+  submitting?"SUBMITTING…":
+  !settingsLoaded?"LOADING…":
+  bettingLocked?"BETTING CLOSED":"PLACE BET";
+}
+
+function updateSerials(){
+ rowsContainer.querySelectorAll(".bet-row").forEach((row,index)=>{
+  row.querySelector(".serial").textContent=(index+1)+".";
+ });
+ updateAddButton();
+}
+
+function updateAddButton(){
+ const count=rowsContainer.querySelectorAll(".bet-row").length;
+ addButton.disabled=bettingLocked||submitting||count>=MAX_ROWS;
+ addButton.title=count>=MAX_ROWS?"Maximum 50 rows reached":"Add row ("+count+"/50)";
+}
+
+function addRow(force=false){
+ if(bettingLocked&&!force){
+  alert("Betting is currently closed.");
+  return;
+ }
+
+ if(rowsContainer.querySelectorAll(".bet-row").length>=MAX_ROWS){
+  alert("Maximum 50 rows allowed.");
+  return;
+ }
+
+ const row=document.createElement("div");
+ row.className="bet-row";
+
+ const serial=document.createElement("span");
+ serial.className="serial";
+
+ const number=document.createElement("input");
+ number.type="text";
+ number.inputMode="numeric";
+ number.maxLength=3;
+ number.placeholder="Number";
+ number.dataset.field="number";
+ number.autocomplete="off";
+
+ const amount=document.createElement("input");
+ amount.type="number";
+ amount.inputMode="decimal";
+ amount.min="0";
+ amount.step="0.01";
+ amount.placeholder="Amount";
+ amount.dataset.field="amount";
+
+ const prize=document.createElement("div");
+ prize.className="prize-output";
+ prize.dataset.field="prize";
+ prize.textContent="0.00";
+
+ const remove=document.createElement("button");
+ remove.type="button";
+ remove.className="remove-btn";
+ remove.textContent="×";
+ remove.title="Clear or remove row";
+
+ row.append(serial,number,amount,prize,remove);
+ rowsContainer.appendChild(row);
+
+ number.addEventListener("input",()=>{
+  if(bettingLocked||submitting)return;
+  number.value=number.value.replace(/\D/g,"").slice(0,3);
+  calculate();
+ });
+
+ amount.addEventListener("input",()=>{
+  if(!bettingLocked&&!submitting)calculate();
+ });
+
+ remove.addEventListener("click",()=>{
+  if(bettingLocked||submitting)return;
+
+  const count=rowsContainer.querySelectorAll(".bet-row").length;
+
+  if(count>MIN_ROWS){
+   row.remove();
+  }else{
+   number.value="";
+   amount.value="";
+  }
+
+  updateSerials();
+  calculate();
+ });
+
+ updateSerials();
+ calculate();
+ applyBettingLock();
+}
+
+function getRows(){
+ const rows=[];
+
+ rowsContainer.querySelectorAll(".bet-row").forEach(row=>{
+  const number=row.querySelector('[data-field="number"]').value.trim();
+  const value=row.querySelector('[data-field="amount"]').value;
+
+  if(number===""&&value==="")return;
+
+  rows.push({
+   number,
+   amount:value===""?0:Number(value)
+  });
+ });
+
+ return rows;
+}
+
+function calculate(){
+ let totalAmount=0,totalPrize=0;
+
+ rowsContainer.querySelectorAll(".bet-row").forEach(row=>{
+  const value=row.querySelector('[data-field="amount"]').value;
+  const amount=value===""?0:Number(value);
+  const output=row.querySelector('[data-field="prize"]');
+
+  if(Number.isFinite(amount)&&amount>0){
+   const prize=amount*PRIZE_RATE;
+   totalAmount+=amount;
+   totalPrize+=prize;
+
+   output.textContent=prize.toLocaleString("en-US",{
+    minimumFractionDigits:2,
+    maximumFractionDigits:2
+   });
+  }else{
+   output.textContent="0.00";
+  }
+ });
+
+ totalElement.textContent=totalAmount.toLocaleString("en-US",{
+  minimumFractionDigits:2,
+  maximumFractionDigits:2
+ });
+
+ totalPrizeElement.textContent=totalPrize.toLocaleString("en-US",{
+  minimumFractionDigits:2,
+  maximumFractionDigits:2
+ });
+
+ return{totalAmount,totalPrize};
+}
+
+function validateRows(rows){
+ if(!rows.length){
+  alert("Please enter at least one Number and Amount.");
+  return false;
+ }
+
+ for(let i=0;i<rows.length;i++){
+  const row=rows[i];
+
+  if(!/^\d{3}$/.test(row.number)){
+   alert("Row "+(i+1)+": Number must contain exactly three digits (000-999).");
+   return false;
+  }
+
+  if(!Number.isFinite(row.amount)||row.amount<=0||
+     Math.round(row.amount*100)!==row.amount*100){
+   alert("Row "+(i+1)+": Enter a valid Amount greater than 0.");
+   return false;
+  }
+ }
+
+ return true;
+}
+
+function showSuccessPopup(result){
+ document.getElementById("successUsername").textContent=
+  currentUser?.username||"—";
+
+ document.getElementById("successAmount").textContent=
+  result.totalAmount.toFixed(2)+" Points";
+
+ document.getElementById("successPrize").textContent=
+  result.totalPrize.toLocaleString("en-US",{
+   minimumFractionDigits:2,
+   maximumFractionDigits:2
+  })+" Points";
+
+ document.getElementById("successBalance").textContent=
+  wallet.toFixed(2)+" Points";
+
+ document.getElementById("successOverlay").classList.add("show");
+}
+
+function closeSuccessPopup(){
+ document.getElementById("successOverlay").classList.remove("show");
+}
+
+async function submitBet(){
+ if(submitting)return;
+
+ try{
+  settingsLoaded=false;
+  applyBettingLock();
+
+  await Promise.all([
+   loadCurrentUser(),
+   loadSettings()
+  ]);
+ }catch(error){
+  alert(error.message||"Could not verify your account.");
+  applyBettingLock();
+  return;
+ }
+
+ if(!settingsLoaded||bettingLocked){
+  alert(lockReason||"Betting is closed.");
+  applyBettingLock();
+  return;
+ }
+
+ const rows=getRows();
+
+ if(!validateRows(rows))return;
+
+ const result=calculate();
+
+ if(result.totalAmount<=0){
+  alert("Please enter a valid Amount.");
+  return;
+ }
+
+ if(result.totalAmount>wallet){
+  alert("Insufficient points.");
+  return;
+ }
+
+ submitting=true;
+ applyBettingLock();
+
+ try{
+  const response=await apiRequest("/demo/daily-millionaire/bets",{
+   method:"POST",
+   body:JSON.stringify({
+    rows:rows,
+    prize_rate:PRIZE_RATE
+   })
+  });
+
+  if(response.balance!==undefined){
+   updateWallet(response.balance);
+  }else if(response.user?.balance!==undefined){
+   updateWallet(response.user.balance);
+  }else{
+   await loadCurrentUser();
+  }
+
+  showSuccessPopup(result);
+  resetRows();
+  await loadSettings();
+
+ }catch(error){
+  alert(error.message||"Could not submit Daily Millionaire entry.");
+
+  try{await loadCurrentUser();}catch(e){}
+  try{await loadSettings();}catch(e){}
+
+ }finally{
+  submitting=false;
+  applyBettingLock();
+ }
+}
+
+function resetRows(){
+ rowsContainer.replaceChildren();
+
+ for(let i=0;i<MIN_ROWS;i++){
+  addRow(true);
+ }
+
+ calculate();
+ applyBettingLock();
+}
+
+addButton.addEventListener("click",()=>{
+ if(bettingLocked){
+  alert("Betting is currently closed.");
+  return;
+ }
+ addRow();
+});
+
 placeButton.addEventListener("click",submitBet);
-document.getElementById("backHome").addEventListener("click",()=>location.href="home.html");
+
+document.getElementById("backHome").addEventListener("click",()=>{
+ location.href="home.html";
+});
+
 document.getElementById("successDone").addEventListener("click",closeSuccessPopup);
-document.getElementById("successOverlay").addEventListener("click",event=>{if(event.target.id==="successOverlay")closeSuccessPopup();});
-document.addEventListener("keydown",event=>{if(event.key==="Escape")closeSuccessPopup();});
-window.addEventListener("focus",()=>{if(!submitting)refreshAccountAndSettings();});
-window.addEventListener("pageshow",()=>{if(!submitting)refreshAccountAndSettings();});
-setInterval(async()=>{if(submitting)return;try{await loadSettings();}catch(error){settingsLoaded=false;showLock("CONNECTION ISSUE","Could not refresh draw settings. Betting is temporarily disabled.",false);}},30000);
-resetRows();refreshAccountAndSettings();
+
+document.getElementById("successOverlay").addEventListener("click",event=>{
+ if(event.target.id==="successOverlay")closeSuccessPopup();
+});
+
+document.addEventListener("keydown",event=>{
+ if(event.key==="Escape")closeSuccessPopup();
+});
+
+window.addEventListener("focus",()=>{
+ if(!submitting)refreshAccountAndSettings();
+});
+
+window.addEventListener("pageshow",()=>{
+ if(!submitting)refreshAccountAndSettings();
+});
+
+setInterval(async()=>{
+ if(submitting)return;
+
+ try{
+  await loadSettings();
+ }catch(error){
+  settingsLoaded=false;
+  showLock(
+   "CONNECTION ISSUE",
+   "Could not refresh draw settings. Betting is temporarily disabled.",
+   false
+  );
+ }
+},30000);
+
+resetRows();
+refreshAccountAndSettings();
+
 </script>
 </body>
 </html>
