@@ -1,160 +1,694 @@
 
 <!DOCTYPE html>
-<html lang="bn">
+<html lang="en">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width,initial-scale=1">
-<meta name="theme-color" content="#2196e8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="theme-color" content="#a90012">
 <title>GLO 365 - Live Results</title>
+
 <style>
 *{box-sizing:border-box;margin:0;padding:0}
-:root{--blue:#2196e8;--blue-dark:#087acb;--blue-light:#eaf5fd;--border:#d8e9f5;--text:#18344b;--muted:#71869a;--bg:#f1f7fc;--navy:#102d49}
-body{font-family:Arial,sans-serif;background:var(--bg);color:var(--text)}
-.app{max-width:520px;min-height:100vh;margin:auto;background:#fff;padding-bottom:145px}
-header{width:100%;min-height:90px;background:#fff;display:flex;justify-content:center;align-items:center;padding:8px 5px;overflow:hidden;border-bottom:1px solid var(--border)}
-.header-ad{width:100%;min-height:70px;display:flex;justify-content:center;align-items:center;overflow:hidden}
-.header-ad iframe{max-width:100%;border:0}
-.search-area{padding:15px 13px 5px}
-.search-box{width:100%;height:52px;border:1px solid var(--border);outline:none;border-radius:10px;background:#f5faff;padding:0 15px;font-size:15px;color:var(--text)}
-.search-box:focus{border-color:var(--blue);box-shadow:0 0 0 3px #2196e820}
-.date-area{padding:20px 12px 10px;text-align:center}
-.date-title{font-size:21px;font-weight:900;margin-bottom:17px;color:var(--blue-dark)}
-.previous-btn{border:1px solid var(--border);background:var(--blue-light);color:var(--blue-dark);font-size:14px;font-weight:bold;padding:9px 14px;border-radius:25px;cursor:pointer}
-.previous-btn span{display:inline-grid;place-items:center;width:25px;height:25px;margin-left:6px;background:var(--blue);color:white;border-radius:50%}
-.result-content{padding:5px 13px 25px}
-.result-section{text-align:center;margin-top:22px;background:#fff;border:1px solid var(--border);border-radius:13px;padding:15px 8px}
-.result-label{color:var(--blue-dark);font-size:18px;font-weight:900;margin-bottom:17px}
-.first-result{font-size:65px;font-weight:900;letter-spacing:2px;color:var(--navy);padding:4px 0 12px;overflow-wrap:anywhere}
-.two-result{font-size:56px;font-weight:900;color:var(--blue-dark);padding:4px 0 12px}
-.three-results{display:grid;grid-template-columns:1fr 1fr;gap:10px;padding:0 12px 8px}
-.three-results div{font-size:43px;font-weight:900;color:var(--blue-dark);background:var(--blue-light);border:1px solid var(--border);border-radius:10px;padding:10px 5px}
-.result-info{text-align:center;color:var(--muted);font-size:12px;padding:15px 10px;white-space:pre-line}
-.ad-banner{margin:12px 13px 20px;min-height:90px;border:1px solid var(--border);border-radius:12px;background:#f8fcff;display:flex;align-items:center;justify-content:center;padding:12px;overflow:hidden}
-.ad-content{width:100%;text-align:center}
-.ad-label{display:block;font-size:9px;color:#8298aa;margin-bottom:7px;letter-spacing:1px;font-weight:bold}
-.ad-frame{width:100%;min-height:50px;display:flex;justify-content:center;align-items:center;overflow:hidden}
-.ad-frame iframe{max-width:100%;border:0}
-.result-tabs{position:fixed;bottom:65px;left:50%;transform:translateX(-50%);width:100%;max-width:520px;display:flex;background:var(--navy);z-index:9;box-shadow:0 -2px 8px #00000012}
-.result-tabs button{flex:1;padding:13px 5px;background:none;border:0;color:#b7c9d8;font-size:15px;font-weight:bold;cursor:pointer}
-.result-tabs button.active{color:white;border-bottom:3px solid #55b7ff;background:#ffffff10}
-nav{position:fixed;bottom:0;left:50%;transform:translateX(-50%);width:100%;max-width:520px;background:white;border-top:1px solid var(--border);display:flex;justify-content:space-around;align-items:center;padding:10px 4px 15px;z-index:10}
-nav button{flex:1;border:0;background:none;color:#8295a6;font-size:11px;display:flex;flex-direction:column;align-items:center;gap:5px;cursor:pointer}
-nav button strong{font-size:23px}
-nav button.active{color:var(--blue-dark);font-weight:bold}
-.nav-profile-avatar{width:25px;height:25px;border-radius:50%;overflow:hidden;display:grid;place-items:center;border:1.5px solid var(--blue);font-size:19px;line-height:1;flex-shrink:0}
-.nav-profile-avatar img{width:100%;height:100%;object-fit:cover;display:block;border-radius:50%}
-.modal{display:none;position:fixed;inset:0;background:#071c2dcc;z-index:30;align-items:center;justify-content:center;padding:20px}
+
+:root{
+ --red:#b90018;
+ --red-dark:#79000e;
+ --gold:#ffd45c;
+ --border:#ead5d5;
+ --text:#263746;
+ --muted:#71869a;
+ --bg:#fff5f5;
+ --navy:#102d49;
+}
+
+body{
+ font-family:Arial,sans-serif;
+ background:var(--bg);
+ color:var(--text);
+}
+
+.app{
+ max-width:520px;
+ min-height:100vh;
+ margin:auto;
+ background:#fff;
+ padding-bottom:145px;
+ overflow:hidden;
+}
+
+/* WINNER BANNER */
+
+header{
+ width:100%;
+ padding:9px 10px 5px;
+ background:#fff;
+}
+
+.banner-image{
+ display:block;
+ width:100%;
+ height:105px;
+ object-fit:cover;
+ object-position:center;
+ border-radius:10px;
+}
+
+/* LOTTERY CARDS */
+
+.game-slider{
+ width:100%;
+ overflow:hidden;
+ padding:10px 0 13px;
+ background:#fff;
+}
+
+.game-track{
+ display:flex;
+ width:max-content;
+ gap:9px;
+ animation:moveCards 18s linear infinite;
+}
+
+.game-slider:hover .game-track{
+ animation-play-state:paused;
+}
+
+.game-card{
+ flex-shrink:0;
+ width:145px;
+ height:43px;
+ border:1px solid #f0c7a0;
+ border-radius:9px;
+ background:linear-gradient(110deg,#fff2c8,#ffe09a,#fff5d8);
+ color:#7b2800;
+ font-size:12px;
+ font-weight:900;
+ letter-spacing:.2px;
+ cursor:pointer;
+ box-shadow:0 2px 6px #8b000015;
+}
+
+.game-card.active{
+ background:linear-gradient(110deg,#a90012,#ed2638);
+ border-color:#ffbd55;
+ color:#fff;
+ box-shadow:0 3px 10px #b9001835;
+}
+
+@keyframes moveCards{
+ from{transform:translateX(0)}
+ to{transform:translateX(-50%)}
+}
+
+/* SEARCH */
+
+.search-area{
+ padding:8px 13px 5px;
+}
+
+.search-box{
+ width:100%;
+ height:47px;
+ border:1px solid var(--border);
+ outline:none;
+ border-radius:10px;
+ background:#fff8f8;
+ padding:0 14px;
+ font-size:14px;
+ color:var(--text);
+}
+
+.search-box:focus{
+ border-color:var(--red);
+ box-shadow:0 0 0 3px #b9001815;
+}
+
+/* DATE */
+
+.date-area{
+ padding:17px 12px 9px;
+ text-align:center;
+}
+
+.date-title{
+ font-size:19px;
+ font-weight:900;
+ margin-bottom:13px;
+ color:var(--red);
+}
+
+.selected-game-title{
+ display:inline-block;
+ margin-bottom:12px;
+ padding:6px 15px;
+ border-radius:20px;
+ background:#fff0d5;
+ color:#9a3500;
+ font-size:12px;
+ font-weight:900;
+}
+
+.previous-btn{
+ border:1px solid #edcaca;
+ background:#fff2f2;
+ color:var(--red);
+ font-size:13px;
+ font-weight:bold;
+ padding:8px 13px;
+ border-radius:25px;
+ cursor:pointer;
+}
+
+.previous-btn span{
+ display:inline-grid;
+ place-items:center;
+ width:22px;
+ height:22px;
+ margin-left:5px;
+ background:var(--red);
+ color:white;
+ border-radius:50%;
+}
+
+/* RESULTS */
+
+.result-content{
+ padding:5px 13px 25px;
+}
+
+.result-section{
+ text-align:center;
+ margin-top:15px;
+ background:#fff;
+ border:1px solid var(--border);
+ border-radius:11px;
+ padding:12px 8px;
+ box-shadow:0 2px 8px #7b001008;
+}
+
+.result-label{
+ color:var(--red);
+ font-size:16px;
+ font-weight:900;
+ margin-bottom:12px;
+}
+
+.first-result{
+ font-size:57px;
+ font-weight:900;
+ letter-spacing:2px;
+ color:var(--navy);
+ padding:3px 0 9px;
+ overflow-wrap:anywhere;
+}
+
+.two-result{
+ font-size:49px;
+ font-weight:900;
+ color:var(--red);
+ padding:3px 0 9px;
+}
+
+.three-results{
+ display:grid;
+ grid-template-columns:1fr 1fr;
+ gap:9px;
+ padding:0 10px 5px;
+}
+
+.three-results div{
+ font-size:37px;
+ font-weight:900;
+ color:var(--red);
+ background:#fff1f1;
+ border:1px solid #f0d0d0;
+ border-radius:9px;
+ padding:9px 5px;
+}
+
+.result-info{
+ text-align:center;
+ color:var(--muted);
+ font-size:11px;
+ padding:13px 10px;
+ white-space:pre-line;
+ overflow-wrap:anywhere;
+}
+
+/* BOTTOM AD */
+
+.ad-banner{
+ margin:10px 13px 18px;
+ min-height:85px;
+ border:1px solid var(--border);
+ border-radius:10px;
+ background:#fffafa;
+ display:flex;
+ align-items:center;
+ justify-content:center;
+ padding:10px;
+ overflow:hidden;
+}
+
+.ad-content{
+ width:100%;
+ text-align:center;
+}
+
+.ad-label{
+ display:block;
+ font-size:9px;
+ color:#8298aa;
+ margin-bottom:6px;
+ letter-spacing:1px;
+ font-weight:bold;
+}
+
+.ad-frame{
+ width:100%;
+ min-height:50px;
+ display:flex;
+ justify-content:center;
+ align-items:center;
+ overflow:hidden;
+}
+
+.ad-frame iframe{
+ max-width:100%;
+ border:0;
+}
+
+/* RESULT TABS */
+
+.result-tabs{
+ position:fixed;
+ bottom:65px;
+ left:50%;
+ transform:translateX(-50%);
+ width:100%;
+ max-width:520px;
+ display:flex;
+ background:var(--navy);
+ z-index:9;
+ box-shadow:0 -2px 8px #00000012;
+}
+
+.result-tabs button{
+ flex:1;
+ padding:12px 5px;
+ background:none;
+ border:0;
+ color:#b7c9d8;
+ font-size:14px;
+ font-weight:bold;
+ cursor:pointer;
+}
+
+.result-tabs button.active{
+ color:white;
+ border-bottom:3px solid #ffcf58;
+ background:#ffffff10;
+}
+
+/* BOTTOM NAV */
+
+nav{
+ position:fixed;
+ bottom:0;
+ left:50%;
+ transform:translateX(-50%);
+ width:100%;
+ max-width:520px;
+ background:white;
+ border-top:1px solid var(--border);
+ display:flex;
+ justify-content:space-around;
+ align-items:center;
+ padding:9px 4px 14px;
+ z-index:10;
+}
+
+nav button{
+ flex:1;
+ border:0;
+ background:none;
+ color:#8295a6;
+ font-size:11px;
+ display:flex;
+ flex-direction:column;
+ align-items:center;
+ gap:5px;
+ cursor:pointer;
+}
+
+nav button strong{font-size:22px}
+
+nav button.active{
+ color:var(--red);
+ font-weight:bold;
+}
+
+.nav-profile-avatar{
+ width:25px;
+ height:25px;
+ border-radius:50%;
+ overflow:hidden;
+ display:grid;
+ place-items:center;
+ border:1.5px solid var(--red);
+ font-size:18px;
+ line-height:1;
+ flex-shrink:0;
+}
+
+.nav-profile-avatar img{
+ width:100%;
+ height:100%;
+ object-fit:cover;
+ display:block;
+ border-radius:50%;
+}
+
+/* HISTORY MODAL */
+
+.modal{
+ display:none;
+ position:fixed;
+ inset:0;
+ background:#071c2dcc;
+ z-index:30;
+ align-items:center;
+ justify-content:center;
+ padding:20px;
+}
+
 .modal.show{display:flex}
-.modal-box{background:white;width:100%;max-width:450px;max-height:85vh;border-radius:14px;overflow:hidden;display:flex;flex-direction:column;border:1px solid var(--border)}
-.modal-header{background:var(--blue);color:white;padding:17px;display:flex;align-items:center;justify-content:space-between;font-size:18px;font-weight:bold}
-.close-btn{border:0;background:none;color:white;font-size:30px;cursor:pointer}
+
+.modal-box{
+ background:white;
+ width:100%;
+ max-width:450px;
+ max-height:85vh;
+ border-radius:13px;
+ overflow:hidden;
+ display:flex;
+ flex-direction:column;
+}
+
+.modal-header{
+ background:var(--red);
+ color:white;
+ padding:15px;
+ display:flex;
+ align-items:center;
+ justify-content:space-between;
+ font-size:17px;
+ font-weight:bold;
+}
+
+.close-btn{
+ border:0;
+ background:none;
+ color:white;
+ font-size:29px;
+ cursor:pointer;
+}
+
 .date-list{overflow-y:auto}
-.date-item{width:100%;padding:18px 15px;display:flex;justify-content:space-between;align-items:center;border:0;border-bottom:1px solid #edf3f8;background:white;text-align:left;font-size:14px;color:var(--text);cursor:pointer}
-.date-item.selected{color:var(--blue-dark);font-weight:bold;background:#f1f8fe}
-.radio{width:23px;height:23px;border:2px solid var(--blue);border-radius:50%;display:grid;place-items:center;flex-shrink:0}
-.date-item.selected .radio:after{content:"";width:11px;height:11px;border-radius:50%;background:var(--blue)}
-.statistics{display:none;padding:20px 13px}
-.stat-card{padding:18px;background:#fff;border:1px solid var(--border);border-radius:12px;margin-bottom:12px}
-.stat-card h3{font-size:15px;margin-bottom:12px;color:var(--blue-dark)}
-.stat-card p{font-size:14px;color:#61788b;line-height:1.8;white-space:pre-line}
-.empty{text-align:center;padding:30px 10px;color:var(--muted);font-size:14px}
+
+.date-item{
+ width:100%;
+ padding:16px 14px;
+ display:flex;
+ justify-content:space-between;
+ align-items:center;
+ border:0;
+ border-bottom:1px solid #edf3f8;
+ background:white;
+ text-align:left;
+ font-size:13px;
+ color:var(--text);
+ cursor:pointer;
+}
+
+.date-item.selected{
+ color:var(--red);
+ font-weight:bold;
+ background:#fff4f4;
+}
+
+.radio{
+ width:22px;
+ height:22px;
+ border:2px solid var(--red);
+ border-radius:50%;
+ display:grid;
+ place-items:center;
+ flex-shrink:0;
+}
+
+.date-item.selected .radio:after{
+ content:"";
+ width:10px;
+ height:10px;
+ border-radius:50%;
+ background:var(--red);
+}
+
+/* STATISTICS */
+
+.statistics{
+ display:none;
+ padding:18px 13px;
+}
+
+.stat-card{
+ padding:16px;
+ background:#fff;
+ border:1px solid var(--border);
+ border-radius:11px;
+ margin-bottom:11px;
+}
+
+.stat-card h3{
+ font-size:14px;
+ margin-bottom:10px;
+ color:var(--red);
+}
+
+.stat-card p{
+ font-size:13px;
+ color:#61788b;
+ line-height:1.8;
+ white-space:pre-line;
+}
+
+.empty{
+ text-align:center;
+ padding:27px 10px;
+ color:var(--muted);
+ font-size:13px;
+}
+
 @media(max-width:380px){
-.date-title{font-size:18px}
-.first-result{font-size:52px}
-.two-result{font-size:45px}
-.three-results div{font-size:35px}
-.result-label{font-size:17px}
-.result-tabs button{font-size:13px}
-.ad-banner{padding:8px;min-height:85px}
+ .banner-image{height:88px}
+ .game-card{width:130px;height:40px;font-size:11px}
+ .date-title{font-size:17px}
+ .first-result{font-size:49px}
+ .two-result{font-size:42px}
+ .three-results div{font-size:32px}
+ .result-label{font-size:15px}
+ .result-tabs button{font-size:12px}
 }
 </style>
 </head>
+
 <body>
+
 <div class="app">
 
+<!-- WINNER IMAGE BANNER -->
 <header>
-<div class="header-ad">
-<script>
-var atOptions={'key':'ab837cf0ea9c26ae43b7bc4e05a0b5de','format':'iframe','height':50,'width':320,'params':{}};
-</script>
-<script src="https://bicea.org/22/ab837cf0ea9c26ae43b7bc4e05a0b5de"></script>
-</div>
+ <img
+  class="banner-image"
+  src="1000013847.jpg"
+  alt="GLO 365 Winner Banner"
+ >
 </header>
 
+<!-- MOVING LOTTERY CARDS -->
+<section class="game-slider">
+ <div class="game-track" id="gameTrack">
+
+  <button class="game-card active" data-game="thai">
+   THAI Gov. Lotto
+  </button>
+
+  <button class="game-card" data-game="malaysia">
+   MALAYSIA TOTO
+  </button>
+
+  <button class="game-card" data-game="singapore">
+   SINGAPORE 4D
+  </button>
+
+  <!-- Duplicate cards for continuous movement -->
+  <button class="game-card active" data-game="thai" aria-hidden="true">
+   THAI Gov. Lotto
+  </button>
+
+  <button class="game-card" data-game="malaysia" aria-hidden="true">
+   MALAYSIA TOTO
+  </button>
+
+  <button class="game-card" data-game="singapore" aria-hidden="true">
+   SINGAPORE 4D
+  </button>
+
+ </div>
+</section>
+
+<!-- SEARCH -->
 <div class="search-area">
-<input class="search-box" id="searchInput" type="search" placeholder="🔍 Search result or draw date...">
+ <input
+  class="search-box"
+  id="searchInput"
+  type="search"
+  placeholder="🔍 Search result or draw date..."
+ >
 </div>
 
+<!-- DATE -->
 <section class="date-area">
-<div class="date-title" id="drawDate">Draw Date: Loading...</div>
-<button class="previous-btn" onclick="openHistory()">Previous Results <span>⌄</span></button>
+
+ <div class="selected-game-title" id="selectedGameTitle">
+  THAI Gov. Lotto
+ </div>
+
+ <div class="date-title" id="drawDate">
+  Draw Date: Loading...
+ </div>
+
+ <button class="previous-btn" onclick="openHistory()">
+  Previous Results <span>⌄</span>
+ </button>
+
 </section>
 
+<!-- RESULTS -->
 <section id="resultsContent" class="result-content">
-<div class="result-section">
-<div class="result-label">1st Prize</div>
-<div class="first-result" id="firstPrize">XXXXXX</div>
-</div>
 
-<div class="result-section">
-<div class="result-label">Last 2 Digits</div>
-<div class="two-result" id="lastTwo">XX</div>
-</div>
+ <div class="result-section">
+  <div class="result-label">1st Prize</div>
+  <div class="first-result" id="firstPrize">XXXXXX</div>
+ </div>
 
-<div class="result-section">
-<div class="result-label">Front 3 Digits</div>
-<div class="three-results">
-<div id="frontThree1">XXX</div>
-<div id="frontThree2">XXX</div>
-</div>
-</div>
+ <div class="result-section">
+  <div class="result-label">Last 2 Digits</div>
+  <div class="two-result" id="lastTwo">XX</div>
+ </div>
 
-<div class="result-info" id="resultInfo">Connecting to server...</div>
+ <div class="result-section">
+  <div class="result-label">Front 3 Digits</div>
+  <div class="three-results">
+   <div id="frontThree1">XXX</div>
+   <div id="frontThree2">XXX</div>
+  </div>
+ </div>
+
+ <div class="result-info" id="resultInfo">
+  Loading results...
+ </div>
+
 </section>
 
+<!-- BOTTOM ADVERTISEMENT -->
 <section class="ad-banner" id="resultsAdBanner">
-<div class="ad-content">
-<span class="ad-label">ADVERTISEMENT</span>
-<div class="ad-frame">
-<script>
-var atOptions={'key':'ab837cf0ea9c26ae43b7bc4e05a0b5de','format':'iframe','height':50,'width':320,'params':{}};
-</script>
-<script src="https://bicea.org/22/ab837cf0ea9c26ae43b7bc4e05a0b5de"></script>
-</div>
-</div>
+ <div class="ad-content">
+  <span class="ad-label">ADVERTISEMENT</span>
+
+  <div class="ad-frame">
+   <script>
+    var atOptions={
+     'key':'ab837cf0ea9c26ae43b7bc4e05a0b5de',
+     'format':'iframe',
+     'height':50,
+     'width':320,
+     'params':{}
+    };
+   </script>
+   <script src="https://bicea.org/22/ab837cf0ea9c26ae43b7bc4e05a0b5de"></script>
+  </div>
+ </div>
 </section>
 
+<!-- STATISTICS -->
 <section id="statisticsContent" class="statistics">
-<div class="stat-card">
-<h3>📊 Result Statistics</h3>
-<p id="statisticsText">Select a published draw to view statistics.</p>
-</div>
-<div class="stat-card">
-<h3>📅 Available Draws</h3>
-<p id="drawCount">0 published results</p>
-</div>
+
+ <div class="stat-card">
+  <h3>📊 Result Statistics</h3>
+  <p id="statisticsText">
+   Select a published draw to view statistics.
+  </p>
+ </div>
+
+ <div class="stat-card">
+  <h3>📅 Available Draws</h3>
+  <p id="drawCount">0 published results</p>
+ </div>
+
 </section>
 
+<!-- HISTORY MODAL -->
 <div class="modal" id="historyModal">
-<div class="modal-box">
-<div class="modal-header">
-<span>Previous Results</span>
-<button class="close-btn" onclick="closeHistory()">×</button>
-</div>
-<div class="date-list" id="dateList"></div>
-</div>
+
+ <div class="modal-box">
+
+  <div class="modal-header">
+   <span>Previous Results</span>
+   <button class="close-btn" onclick="closeHistory()">×</button>
+  </div>
+
+  <div class="date-list" id="dateList"></div>
+
+ </div>
 </div>
 
+<!-- BOTTOM NAV -->
 <nav>
-<button onclick="location.href='home.html'"><strong>🏠</strong>Home</button>
-<button onclick="location.href='mybets.html'"><strong>🎯</strong>My Bets</button>
-<button class="active" onclick="location.href='results.html'"><strong>🏆</strong>Results</button>
-<button onclick="location.href='profile.html'"><strong class="nav-profile-avatar" id="navProfileAvatar">♙</strong>Profile</button>
+
+ <button onclick="location.href='home.html'">
+  <strong>🏠</strong>Home
+ </button>
+
+ <button onclick="location.href='mybets.html'">
+  <strong>🎯</strong>My Bets
+ </button>
+
+ <button class="active" onclick="location.href='results.html'">
+  <strong>🏆</strong>Results
+ </button>
+
+ <button onclick="location.href='profile.html'">
+  <strong class="nav-profile-avatar" id="navProfileAvatar">♙</strong>
+  Profile
+ </button>
+
 </nav>
 
+<!-- RESULT TABS -->
 <div class="result-tabs">
-<button id="resultTab" class="active" onclick="switchTab('results')">Results</button>
-<button id="statsTab" onclick="switchTab('statistics')">Statistics</button>
+
+ <button id="resultTab" class="active"
+  onclick="switchTab('results')">
+  Results
+ </button>
+
+ <button id="statsTab"
+  onclick="switchTab('statistics')">
+  Statistics
+ </button>
+
 </div>
 
 </div>
@@ -165,515 +699,656 @@ var atOptions={'key':'ab837cf0ea9c26ae43b7bc4e05a0b5de','format':'iframe','heigh
 const API_BASE_URL="https://glo365.onrender.com/api";
 const TOKEN_KEY="glo365_token";
 
+const GAME_NAMES={
+ thai:"THAI Gov. Lotto",
+ malaysia:"MALAYSIA TOTO",
+ singapore:"SINGAPORE 4D"
+};
+
+let allResults=[];
 let results=[];
 let selectedResult=null;
+let selectedGame="thai";
 let loadError="";
 
+/* SESSION */
+
 function getToken(){
-try{
-return sessionStorage.getItem(TOKEN_KEY)||"";
-}catch(e){
-return "";
+ try{
+  return sessionStorage.getItem(TOKEN_KEY)||"";
+ }catch(e){
+  return "";
+ }
 }
-}
+
+/* API */
 
 async function apiRequest(path,options={}){
-const headers={...(options.headers||{})};
-const token=getToken();
 
-if(token)headers.Authorization="Bearer "+token;
+ const headers={...(options.headers||{})};
+ const token=getToken();
 
-if(options.body&&!headers["Content-Type"]){
-headers["Content-Type"]="application/json";
+ if(token){
+  headers.Authorization="Bearer "+token;
+ }
+
+ if(options.body&&!headers["Content-Type"]){
+  headers["Content-Type"]="application/json";
+ }
+
+ const response=await fetch(API_BASE_URL+path,{
+  ...options,
+  headers,
+  credentials:"include",
+  cache:"no-store"
+ });
+
+ let data={};
+
+ try{
+  data=await response.json();
+ }catch(e){
+  throw new Error("Server returned an invalid response.");
+ }
+
+ if(!response.ok){
+  throw new Error(
+   data.message||
+   data.error||
+   ("Request failed ("+response.status+")")
+  );
+ }
+
+ return data;
 }
 
-const response=await fetch(API_BASE_URL+path,{
-...options,
-headers,
-credentials:"include",
-cache:"no-store"
-});
+/* GAME CATEGORY DETECTION */
 
-let data={};
+function detectGame(row){
 
-try{
-data=await response.json();
-}catch(e){
-throw new Error("Server returned an invalid response.");
-}
+ const fields=[
+  row.game,
+  row.game_name,
+  row.gameName,
+  row.lottery,
+  row.lottery_name,
+  row.lotteryName,
+  row.category,
+  row.result_type,
+  row.resultType,
+  row.type,
+  row.provider
+ ];
 
-if(!response.ok){
-throw new Error(data.message||data.error||("Request failed ("+response.status+")"));
-}
+ const value=fields
+  .filter(v=>v!==undefined&&v!==null)
+  .join(" ")
+  .toLowerCase()
+  .replace(/[_-]+/g," ");
 
-return data;
+ if(
+  value.includes("malaysia")||
+  value.includes("magnum")||
+  value.includes("sports toto")||
+  value.includes("damacai")||
+  value.includes("toto")
+ ){
+  return "malaysia";
+ }
+
+ if(
+  value.includes("singapore")||
+  value.includes("singapore 4d")||
+  value.includes("sg 4d")
+ ){
+  return "singapore";
+ }
+
+ if(
+  value.includes("thai")||
+  value.includes("thailand")||
+  value.includes("gov lotto")||
+  value.includes("government lottery")
+ ){
+  return "thai";
+ }
+
+ /*
+  * Compatibility:
+  * Older result records without a category
+  * are treated as Thai Gov. Lotto.
+  *
+  * Add a category to Malaysia and Singapore
+  * records in the backend for correct filtering.
+  */
+
+ if(!value.trim()){
+  return "thai";
+ }
+
+ return "unknown";
 }
 
 /* DATE FORMAT */
 
 function formatDate(date){
-if(!date)return "Unknown Date";
 
-const value=String(date).slice(0,10);
-const d=new Date(value+"T00:00:00");
+ if(!date)return "Unknown Date";
 
-if(Number.isNaN(d.getTime()))return value;
+ const value=String(date).slice(0,10);
+ const d=new Date(value+"T00:00:00");
 
-return d.toLocaleDateString("en-GB",{
-day:"2-digit",
-month:"long",
-year:"numeric"
-});
+ if(Number.isNaN(d.getTime()))return value;
+
+ return d.toLocaleDateString("en-GB",{
+  day:"2-digit",
+  month:"long",
+  year:"numeric"
+ });
 }
 
-/* FRONT THREE NORMALIZER
-   Supports:
-   ["224"]
-   ["224","123"]
-   "224"
-   "224,123"
-   "224 123"
-*/
+/* FRONT THREE NORMALIZER */
 
 function normalizeFrontThree(value){
 
-if(Array.isArray(value)){
-return value
-.map(v=>String(v).trim())
-.filter(Boolean);
+ if(Array.isArray(value)){
+  return value
+   .map(v=>String(v).trim())
+   .filter(Boolean);
+ }
+
+ if(typeof value==="number"){
+  return [String(value)];
+ }
+
+ if(typeof value==="string"){
+  return value
+   .split(/[,;\s]+/)
+   .map(v=>v.trim())
+   .filter(Boolean);
+ }
+
+ return [];
 }
 
-if(typeof value==="number"){
-return [String(value)];
-}
-
-if(typeof value==="string"){
-return value
-.split(/[,;\s]+/)
-.map(v=>v.trim())
-.filter(Boolean);
-}
-
-return [];
-}
-
-/* NORMALIZE SERVER RESULT */
+/* NORMALIZE RESULT */
 
 function normalizeResult(row){
 
-const frontValue=
-row.frontThree ??
-row.front_three ??
-row.front3 ??
-row.front_3 ??
-row.frontThreeNumbers ??
-row.front_three_numbers ??
-[];
+ const frontValue=
+  row.frontThree ??
+  row.front_three ??
+  row.front3 ??
+  row.front_3 ??
+  row.frontThreeNumbers ??
+  row.front_three_numbers ??
+  [];
 
-const front=normalizeFrontThree(frontValue);
+ return {
 
-return {
-id:row.id,
-date:row.date||row.drawDate||row.draw_date,
-firstPrize:String(
-row.firstPrize ??
-row.first_prize ??
-row.first ??
-""
-).trim(),
+  id:row.id,
 
-lastTwo:String(
-row.lastTwo ??
-row.last_two ??
-row.last2 ??
-""
-).trim(),
+  game:detectGame(row),
 
-frontThree:front,
+  date:
+   row.date||
+   row.drawDate||
+   row.draw_date,
 
-publishedAt:
-row.publishedAt||
-row.published_at||
-null
-};
+  firstPrize:String(
+   row.firstPrize ??
+   row.first_prize ??
+   row.first ??
+   ""
+  ).trim(),
+
+  lastTwo:String(
+   row.lastTwo ??
+   row.last_two ??
+   row.last2 ??
+   ""
+  ).trim(),
+
+  frontThree:normalizeFrontThree(frontValue),
+
+  publishedAt:
+   row.publishedAt||
+   row.published_at||
+   null
+ };
 }
 
 /* LOAD RESULTS */
 
 async function loadResults(){
 
-const info=document.getElementById("resultInfo");
-info.textContent="Loading results from server...";
+ const info=document.getElementById("resultInfo");
 
-try{
+ info.textContent="Loading results from server...";
 
-const data=await apiRequest("/results");
+ try{
 
-if(data.success===false){
-throw new Error(data.message||"Could not load results.");
+  const data=await apiRequest("/results");
+
+  if(data.success===false){
+   throw new Error(data.message||"Could not load results.");
+  }
+
+  const rows=
+   Array.isArray(data)
+    ?data
+    :Array.isArray(data.results)
+     ?data.results
+     :Array.isArray(data.data)
+      ?data.data
+      :Array.isArray(data.rows)
+       ?data.rows
+       :[];
+
+  allResults=rows
+   .map(normalizeResult)
+   .filter(r=>
+    r.date&&
+    r.firstPrize&&
+    r.lastTwo&&
+    r.frontThree.length>=1
+   )
+   .sort((a,b)=>
+    String(b.date).localeCompare(String(a.date))
+   );
+
+  loadError="";
+
+  applyGameFilter();
+
+ }catch(error){
+
+  console.error("Results loading error:",error);
+
+  loadError=error.message||"Unable to connect to results server.";
+
+  allResults=[];
+  results=[];
+  selectedResult=null;
+
+  showEmptyResult("Unable to load results.\n"+loadError);
+
+  renderStatistics();
+ }
 }
 
-const rows=
-Array.isArray(data)
-?data
-:Array.isArray(data.results)
-?data.results
-:Array.isArray(data.data)
-?data.data
-:Array.isArray(data.rows)
-?data.rows
-:[];
+/* FILTER BY SELECTED GAME */
 
-/*
-  IMPORTANT FIX:
-  A result with only one Front Three number is valid.
-  Example: ["224"] is accepted.
-*/
+function applyGameFilter(){
 
-results=rows
-.map(normalizeResult)
-.filter(r=>
-r.date &&
-r.firstPrize &&
-r.lastTwo &&
-r.frontThree.length>=1
-)
-.sort((a,b)=>
-String(b.date).localeCompare(String(a.date))
+ results=allResults.filter(result=>
+  result.game===selectedGame
+ );
+
+ const search=document.getElementById("searchInput").value.trim();
+
+ if(search){
+  searchResults(search);
+ }else{
+  renderLatest();
+ }
+
+ renderStatistics();
+}
+
+/* SELECT GAME */
+
+function selectGame(game){
+
+ if(!GAME_NAMES[game])return;
+
+ selectedGame=game;
+
+ document.getElementById("selectedGameTitle").textContent=
+  GAME_NAMES[game];
+
+ document.querySelectorAll(".game-card").forEach(card=>{
+
+  card.classList.toggle(
+   "active",
+   card.dataset.game===game
+  );
+
+ });
+
+ document.getElementById("searchInput").value="";
+
+ selectedResult=null;
+
+ applyGameFilter();
+
+}
+
+/* CARD EVENTS */
+
+document.getElementById("gameTrack").addEventListener(
+ "click",
+ function(event){
+
+  const card=event.target.closest(".game-card");
+
+  if(!card)return;
+
+  selectGame(card.dataset.game);
+ }
 );
-
-loadError="";
-
-const search=document.getElementById("searchInput").value.trim();
-
-if(!search){
-renderLatest();
-}else{
-searchResults(search);
-}
-
-}catch(error){
-
-loadError=error.message||"Unable to connect to the results server.";
-
-results=[];
-selectedResult=null;
-
-showEmptyResult("Unable to load results.\n"+loadError);
-
-renderStatistics();
-}
-}
 
 /* DISPLAY RESULT */
 
 function showResult(result){
 
-if(!result)return;
+ if(!result)return;
 
-selectedResult=result;
+ selectedResult=result;
 
-document.getElementById("drawDate").textContent=
-"Draw Date: "+formatDate(result.date);
+ document.getElementById("drawDate").textContent=
+  "Draw Date: "+formatDate(result.date);
 
-document.getElementById("firstPrize").textContent=
-result.firstPrize||"XXXXXX";
+ document.getElementById("firstPrize").textContent=
+  result.firstPrize||"XXXXXX";
 
-document.getElementById("lastTwo").textContent=
-result.lastTwo||"XX";
+ document.getElementById("lastTwo").textContent=
+  result.lastTwo||"XX";
 
-document.getElementById("frontThree1").textContent=
-result.frontThree[0]||"XXX";
+ document.getElementById("frontThree1").textContent=
+  result.frontThree[0]||"XXX";
 
-document.getElementById("frontThree2").textContent=
-result.frontThree[1]||"XXX";
+ document.getElementById("frontThree2").textContent=
+  result.frontThree[1]||"XXX";
 
-document.getElementById("resultInfo").textContent=
-result.publishedAt
-?"Result Published · "+new Date(result.publishedAt).toLocaleString()
-:"Result Published";
+ document.getElementById("resultInfo").textContent=
+  result.publishedAt
+   ?"Result Published · "+new Date(result.publishedAt).toLocaleString()
+   :"Result Published";
 
-renderStatistics();
+ renderStatistics();
 }
 
 /* EMPTY RESULT */
 
 function showEmptyResult(message){
 
-document.getElementById("drawDate").textContent=
-loadError
-?"Server Connection Error"
-:"Draw Date: Not Published";
+ document.getElementById("drawDate").textContent=
+  loadError
+   ?"Server Connection Error"
+   :"Draw Date: Not Published";
 
-document.getElementById("firstPrize").textContent="XXXXXX";
-document.getElementById("lastTwo").textContent="XX";
-document.getElementById("frontThree1").textContent="XXX";
-document.getElementById("frontThree2").textContent="XXX";
+ document.getElementById("firstPrize").textContent="XXXXXX";
+ document.getElementById("lastTwo").textContent="XX";
+ document.getElementById("frontThree1").textContent="XXX";
+ document.getElementById("frontThree2").textContent="XXX";
 
-document.getElementById("resultInfo").textContent=message;
+ document.getElementById("resultInfo").textContent=message;
 }
 
 /* LATEST RESULT */
 
 function renderLatest(){
 
-if(results.length===0){
+ if(results.length===0){
 
-selectedResult=null;
+  selectedResult=null;
 
-showEmptyResult(
-loadError
-?"Unable to load results."
-:"No results published yet."
-);
+  showEmptyResult(
+   loadError
+    ?"Unable to load results."
+    :"No "+GAME_NAMES[selectedGame]+" results published yet."
+  );
 
-renderStatistics();
-return;
-}
+  renderStatistics();
 
-showResult(results[0]);
+  return;
+ }
+
+ showResult(results[0]);
 }
 
 /* PREVIOUS RESULTS */
 
 function openHistory(){
 
-const modal=document.getElementById("historyModal");
-const list=document.getElementById("dateList");
+ const modal=document.getElementById("historyModal");
+ const list=document.getElementById("dateList");
 
-list.replaceChildren();
+ list.replaceChildren();
 
-if(results.length===0){
+ if(results.length===0){
 
-const empty=document.createElement("div");
-empty.className="empty";
+  const empty=document.createElement("div");
+  empty.className="empty";
+  empty.textContent="No previous results available.";
 
-empty.textContent=
-loadError
-?"Could not load previous results."
-:"No previous results available.";
+  list.appendChild(empty);
 
-list.appendChild(empty);
+ }else{
 
-}else{
+  results.forEach(result=>{
 
-results.forEach(result=>{
+   const button=document.createElement("button");
+   button.className="date-item";
 
-const button=document.createElement("button");
-button.className="date-item";
+   if(
+    selectedResult&&
+    String(selectedResult.date)===String(result.date)
+   ){
+    button.classList.add("selected");
+   }
 
-if(
-selectedResult &&
-String(selectedResult.date)===String(result.date)
-){
-button.classList.add("selected");
-}
+   const date=document.createElement("span");
 
-const date=document.createElement("span");
+   date.textContent="Draw Date: "+formatDate(result.date);
 
-date.textContent=
-"Draw Date: "+formatDate(result.date);
+   const radio=document.createElement("span");
+   radio.className="radio";
 
-const radio=document.createElement("span");
-radio.className="radio";
+   button.append(date,radio);
 
-button.append(date,radio);
+   button.addEventListener("click",()=>{
+    showResult(result);
+    closeHistory();
+   });
 
-button.addEventListener("click",()=>{
-showResult(result);
-closeHistory();
-});
+   list.appendChild(button);
 
-list.appendChild(button);
+  });
 
-});
+ }
 
-}
-
-modal.classList.add("show");
+ modal.classList.add("show");
 }
 
 function closeHistory(){
-document.getElementById("historyModal").classList.remove("show");
+ document.getElementById("historyModal").classList.remove("show");
 }
 
-document.getElementById("historyModal").addEventListener("click",function(event){
-if(event.target===this)closeHistory();
-});
+document.getElementById("historyModal").addEventListener(
+ "click",
+ function(event){
+  if(event.target===this)closeHistory();
+ }
+);
 
 /* SEARCH */
 
 function searchResults(raw){
 
-const query=raw.trim().toLowerCase();
+ const query=raw.trim().toLowerCase();
 
-if(!query){
-renderLatest();
-return;
+ if(!query){
+  renderLatest();
+  return;
+ }
+
+ const found=results.filter(result=>{
+
+  const searchable=[
+   result.date,
+   result.firstPrize,
+   result.lastTwo,
+   ...result.frontThree
+  ].join(" ").toLowerCase();
+
+  return searchable.includes(query);
+
+ });
+
+ if(found.length){
+
+  showResult(found[0]);
+
+ }else{
+
+  selectedResult=null;
+
+  showEmptyResult(
+   "No matching "+GAME_NAMES[selectedGame]+" result found."
+  );
+
+  renderStatistics();
+ }
 }
 
-const found=results.filter(result=>{
-
-const searchable=[
-result.date,
-result.firstPrize,
-result.lastTwo,
-...result.frontThree
-].join(" ").toLowerCase();
-
-return searchable.includes(query);
-
-});
-
-if(found.length){
-
-showResult(found[0]);
-
-}else{
-
-selectedResult=null;
-
-showEmptyResult("No matching draw found.");
-
-renderStatistics();
-
-}
-}
-
-document.getElementById("searchInput").addEventListener("input",function(){
-searchResults(this.value);
-});
+document.getElementById("searchInput").addEventListener(
+ "input",
+ function(){
+  searchResults(this.value);
+ }
+);
 
 /* RESULTS / STATISTICS TABS */
 
 function switchTab(tab){
 
-const resultContent=document.getElementById("resultsContent");
-const statsContent=document.getElementById("statisticsContent");
+ const resultContent=document.getElementById("resultsContent");
+ const statsContent=document.getElementById("statisticsContent");
 
-const resultTab=document.getElementById("resultTab");
-const statsTab=document.getElementById("statsTab");
+ const resultTab=document.getElementById("resultTab");
+ const statsTab=document.getElementById("statsTab");
 
-if(tab==="results"){
+ if(tab==="results"){
 
-resultContent.style.display="block";
-statsContent.style.display="none";
+  resultContent.style.display="block";
+  statsContent.style.display="none";
 
-resultTab.classList.add("active");
-statsTab.classList.remove("active");
+  resultTab.classList.add("active");
+  statsTab.classList.remove("active");
 
-}else{
+ }else{
 
-resultContent.style.display="none";
-statsContent.style.display="block";
+  resultContent.style.display="none";
+  statsContent.style.display="block";
 
-resultTab.classList.remove("active");
-statsTab.classList.add("active");
+  resultTab.classList.remove("active");
+  statsTab.classList.add("active");
 
-renderStatistics();
-
-}
+  renderStatistics();
+ }
 }
 
 /* STATISTICS */
 
 function renderStatistics(){
 
-const text=document.getElementById("statisticsText");
+ const text=document.getElementById("statisticsText");
 
-document.getElementById("drawCount").textContent=
-results.length+" published draw records";
+ document.getElementById("drawCount").textContent=
+  results.length+" published draw records";
 
-if(!selectedResult){
+ if(!selectedResult){
 
-text.textContent=
-loadError
-?"Statistics unavailable while the server is unreachable."
-:"No result available.";
+  text.textContent=
+   results.length===0
+    ?"No "+GAME_NAMES[selectedGame]+" result available."
+    :"Select a published draw to view statistics.";
 
-return;
-}
+  return;
+ }
 
-text.textContent=
-"Draw Date: "+formatDate(selectedResult.date)+
-"\n1st Prize: "+(selectedResult.firstPrize||"XXXXXX")+
-"\nLast 2: "+(selectedResult.lastTwo||"XX")+
-"\nFront 3: "+
-(selectedResult.frontThree[0]||"XXX")+
-" / "+
-(selectedResult.frontThree[1]||"XXX");
+ text.textContent=
+  "Game: "+GAME_NAMES[selectedGame]+
+  "\nDraw Date: "+formatDate(selectedResult.date)+
+  "\n1st Prize: "+(selectedResult.firstPrize||"XXXXXX")+
+  "\nLast 2: "+(selectedResult.lastTwo||"XX")+
+  "\nFront 3: "+
+  (selectedResult.frontThree[0]||"XXX")+
+  " / "+
+  (selectedResult.frontThree[1]||"XXX");
 }
 
 /* PROFILE AVATAR */
 
 async function updateResultsProfileAvatar(){
 
-const element=document.getElementById("navProfileAvatar");
+ const element=document.getElementById("navProfileAvatar");
 
-if(!element)return;
+ if(!element)return;
 
-const token=getToken();
+ const token=getToken();
 
-if(!token){
-element.textContent="♙";
-return;
-}
+ if(!token){
+  element.textContent="♙";
+  return;
+ }
 
-try{
+ try{
 
-const data=await apiRequest("/auth/me");
+  const data=await apiRequest("/auth/me");
 
-const user=data.user||data.profile||data;
+  const user=data.user||data.profile||data;
 
-const photo=
-user.avatar||
-user.photo||
-user.profile_photo||
-user.profilePhoto||
-"";
+  const photo=
+   user.avatar||
+   user.photo||
+   user.profile_photo||
+   user.profilePhoto||
+   "";
 
-if(typeof photo==="string"&&photo.trim()){
+  if(typeof photo==="string"&&photo.trim()){
 
-const img=document.createElement("img");
+   const img=document.createElement("img");
 
-img.src=photo;
-img.alt="My Profile Avatar";
+   img.src=photo;
+   img.alt="My Profile Avatar";
 
-img.onerror=()=>{
-element.textContent="♙";
-};
+   img.onerror=()=>{
+    element.textContent="♙";
+   };
 
-element.replaceChildren(img);
+   element.replaceChildren(img);
 
-}else{
+  }else{
 
-element.textContent="♙";
+   element.textContent="♙";
+  }
 
-}
+ }catch(e){
 
-}catch(e){
-
-element.textContent="♙";
-
-}
+  element.textContent="♙";
+ }
 }
 
 /* REFRESH */
 
 window.addEventListener("focus",()=>{
-loadResults();
-updateResultsProfileAvatar();
+ loadResults();
+ updateResultsProfileAvatar();
 });
 
 window.addEventListener("pageshow",()=>{
-loadResults();
-updateResultsProfileAvatar();
+ loadResults();
+ updateResultsProfileAvatar();
 });
 
 document.addEventListener("visibilitychange",()=>{
-if(!document.hidden){
-loadResults();
-}
+ if(!document.hidden){
+  loadResults();
+  updateResultsProfileAvatar();
+ }
 });
 
 /* INITIAL LOAD */
@@ -682,5 +1357,6 @@ loadResults();
 updateResultsProfileAvatar();
 
 </script>
+
 </body>
 </html>
