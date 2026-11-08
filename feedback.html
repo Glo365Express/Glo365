@@ -1,0 +1,385 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="theme-color" content="#2196e8">
+<title>GLO 365 - Feedback</title>
+
+<style>
+:root{
+  --blue:#2196e8;
+  --dark:#087acb;
+  --bg:#f1f7fc;
+  --text:#18344b;
+  --muted:#71869a;
+  --border:#d8e9f5;
+}
+
+*{box-sizing:border-box}
+
+body{
+  margin:0;
+  padding-bottom:30px;
+  background:var(--bg);
+  color:var(--text);
+  font-family:Arial,Helvetica,sans-serif;
+}
+
+.header{
+  background:linear-gradient(135deg,var(--blue),var(--dark));
+  color:white;
+  padding:17px;
+  font-size:19px;
+  font-weight:800;
+  box-shadow:0 3px 12px #087acb30;
+}
+
+.container{
+  max-width:600px;
+  margin:auto;
+  padding:15px;
+}
+
+.card{
+  background:white;
+  border:1px solid var(--border);
+  border-radius:19px;
+  padding:20px;
+  box-shadow:0 5px 18px #1c5d8510;
+}
+
+.intro{
+  text-align:center;
+  padding:10px 5px 20px;
+}
+
+.intro-icon{
+  width:75px;
+  height:75px;
+  margin:auto;
+  border-radius:50%;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  background:linear-gradient(145deg,#fff8e8,#fff0cc);
+  border:1px solid #f1dfb8;
+  font-size:35px;
+}
+
+.intro h2{
+  margin:13px 0 7px;
+  font-size:23px;
+}
+
+.intro p{
+  margin:0;
+  color:var(--muted);
+  font-size:13px;
+  line-height:1.6;
+}
+
+label{
+  display:block;
+  margin:17px 0 8px;
+  font-size:13px;
+  font-weight:800;
+}
+
+select,textarea,input{
+  width:100%;
+  border:1px solid #d8e7f2;
+  border-radius:12px;
+  padding:14px;
+  font:inherit;
+  font-size:14px;
+  color:var(--text);
+  background:#f7fbff;
+  outline:none;
+}
+
+select:focus,textarea:focus,input:focus{
+  border-color:var(--blue);
+  box-shadow:0 0 0 3px #2196e820;
+}
+
+textarea{
+  min-height:155px;
+  resize:vertical;
+  line-height:1.6;
+}
+
+.counter{
+  text-align:right;
+  font-size:11px;
+  color:var(--muted);
+  margin-top:6px;
+}
+
+.submit-btn{
+  width:100%;
+  border:0;
+  border-radius:30px;
+  padding:15px;
+  margin-top:22px;
+  color:white;
+  background:linear-gradient(135deg,var(--blue),var(--dark));
+  font-size:15px;
+  font-weight:900;
+  cursor:pointer;
+  box-shadow:0 5px 13px #087acb30;
+}
+
+.submit-btn:active{
+  transform:scale(.98);
+}
+
+.back-btn{
+  display:block;
+  text-align:center;
+  text-decoration:none;
+  margin-top:17px;
+  padding:13px;
+  color:var(--dark);
+  background:#eaf5fd;
+  border-radius:25px;
+  font-weight:800;
+  font-size:13px;
+}
+
+.note{
+  margin-top:16px;
+  padding:12px;
+  background:#edf7ff;
+  border:1px solid #d8eafa;
+  border-radius:11px;
+  color:#58758d;
+  font-size:11px;
+  line-height:1.6;
+}
+
+/* SUCCESS MODAL */
+
+.overlay{
+  position:fixed;
+  inset:0;
+  background:#102b45a8;
+  display:none;
+  align-items:center;
+  justify-content:center;
+  padding:20px;
+  z-index:100;
+}
+
+.overlay.show{
+  display:flex;
+}
+
+.success-box{
+  width:100%;
+  max-width:340px;
+  padding:28px 22px;
+  background:white;
+  border-radius:22px;
+  text-align:center;
+  box-shadow:0 15px 50px #0003;
+  animation:pop .25s ease;
+}
+
+@keyframes pop{
+  from{transform:scale(.85);opacity:0}
+  to{transform:scale(1);opacity:1}
+}
+
+.success-icon{
+  width:75px;
+  height:75px;
+  margin:auto;
+  border-radius:50%;
+  background:#e7f8ef;
+  color:#15965a;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  font-size:39px;
+}
+
+.success-box h2{
+  margin:17px 0 8px;
+  font-size:21px;
+}
+
+.success-box p{
+  color:var(--muted);
+  font-size:13px;
+  line-height:1.6;
+}
+
+.success-box button{
+  width:100%;
+  border:0;
+  padding:13px;
+  margin-top:12px;
+  border-radius:25px;
+  background:linear-gradient(135deg,var(--blue),var(--dark));
+  color:white;
+  font-size:14px;
+  font-weight:900;
+}
+</style>
+</head>
+
+<body>
+
+<header class="header">💬 GLO 365 Feedback</header>
+
+<main class="container">
+
+<section class="card">
+
+  <div class="intro">
+    <div class="intro-icon">💬</div>
+    <h2>Share Your Feedback</h2>
+    <p>
+      Your feedback helps us improve GLO 365.
+      Tell us about your experience or suggestions.
+    </p>
+  </div>
+
+  <form id="feedbackForm">
+
+    <label for="feedbackType">Feedback Type</label>
+
+    <select id="feedbackType" required>
+      <option value="">Select feedback type</option>
+      <option value="Suggestion">Suggestion</option>
+      <option value="Bug Report">Bug Report</option>
+      <option value="Complaint">Complaint</option>
+      <option value="Appreciation">Appreciation</option>
+      <option value="Other">Other</option>
+    </select>
+
+    <label for="subject">Subject</label>
+
+    <input
+      id="subject"
+      type="text"
+      maxlength="100"
+      placeholder="Enter feedback subject"
+      required
+    >
+
+    <label for="message">Your Feedback</label>
+
+    <textarea
+      id="message"
+      maxlength="1500"
+      placeholder="Write your feedback here..."
+      required
+    ></textarea>
+
+    <div class="counter">
+      <span id="charCount">0</span>/1500
+    </div>
+
+    <button class="submit-btn" type="submit">
+      Submit Feedback
+    </button>
+
+  </form>
+
+  <div class="note">
+    🔒 Thank you for helping us improve GLO 365.
+    This demo form does not send or store your feedback on a server.
+  </div>
+
+  <a class="back-btn" href="profile.html">
+    ← Back to Profile
+  </a>
+
+</section>
+
+</main>
+
+<!-- SUCCESS MESSAGE -->
+
+<div class="overlay" id="successModal">
+
+  <div class="success-box">
+
+    <div class="success-icon">✓</div>
+
+    <h2>Feedback Submitted!</h2>
+
+    <p>
+      Thank you for sharing your feedback with GLO 365.
+      We appreciate your support!
+    </p>
+
+    <button type="button" onclick="finishFeedback()">
+      Done
+    </button>
+
+  </div>
+
+</div>
+
+<script>
+"use strict";
+
+const form=document.getElementById("feedbackForm");
+const message=document.getElementById("message");
+const counter=document.getElementById("charCount");
+const modal=document.getElementById("successModal");
+
+message.addEventListener("input",function(){
+  counter.textContent=this.value.length;
+});
+
+form.addEventListener("submit",function(event){
+
+  event.preventDefault();
+
+  const type=document.getElementById("feedbackType").value;
+  const subject=document.getElementById("subject").value.trim();
+  const feedback=message.value.trim();
+
+  if(!type){
+    alert("Please select a feedback type.");
+    return;
+  }
+
+  if(!subject){
+    alert("Please enter a subject.");
+    return;
+  }
+
+  if(feedback.length<5){
+    alert("Please write at least 5 characters.");
+    return;
+  }
+
+  // Frontend-only success demonstration.
+  // No API, backend or LocalStorage is used.
+
+  modal.classList.add("show");
+
+  form.reset();
+  counter.textContent="0";
+
+});
+
+window.finishFeedback=function(){
+  modal.classList.remove("show");
+  window.location.href="profile.html";
+};
+
+modal.addEventListener("click",function(event){
+  if(event.target===modal){
+    finishFeedback();
+  }
+});
+</script>
+
+</body>
+</html>
