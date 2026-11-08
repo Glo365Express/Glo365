@@ -1209,6 +1209,111 @@ nav button.active{color:#087acb}
  .thailand-link-arrow{width:27px;height:27px}
 }
 
+
+/* REFINED HOME TOP SPACING + PREMIUM THAILAND LOTTERY LINK */
+.draw-board{
+ margin-top:1px;
+ margin-bottom:9px;
+ gap:6px;
+}
+.official-box{min-height:137px}
+.official-label{font-size:clamp(14px,3.5vw,20px);padding:8px 2px}
+.days-number{font-size:clamp(32px,8.5vw,49px)}
+.days-label{font-size:clamp(14px,3.8vw,21px);margin-top:5px}
+.draw-number{font-size:clamp(12px,3.2vw,18px);padding:8px 4px}
+.time-value{font-size:clamp(18px,5vw,29px);padding:6px 1px}
+.time-label{font-size:clamp(9px,2.6vw,15px)}
+.draw-status{font-size:10px}
+.results-heading{font-size:13px;margin-bottom:5px}
+.results-board{margin-bottom:8px}
+.result-card{height:68px}
+.result-number{font-size:clamp(12px,3.1vw,16px)}
+.result-caption{font-size:7px}
+
+/* Premium casino-inspired destination card */
+.thailand-lottery-link{
+ min-height:70px;
+ margin:0 10px 15px;
+ padding:10px 14px;
+ display:flex;
+ flex-direction:column;
+ align-items:center;
+ justify-content:center;
+ gap:4px;
+ position:relative;
+ overflow:hidden;
+ text-align:center;
+ text-decoration:none;
+ color:#fff;
+ border:2px solid #e8c66b;
+ border-radius:16px;
+ background:
+  radial-gradient(ellipse at 50% 0%,#3c5e91 0%,transparent 62%),
+  linear-gradient(135deg,#071b3c 0%,#102e5c 48%,#06152f 100%);
+ box-shadow:
+  0 5px 13px #061a3d35,
+  inset 0 0 0 2px #ffffff16,
+  inset 0 0 18px #d9ad4d22;
+}
+.thailand-lottery-link::before,
+.thailand-lottery-link::after{
+ content:"✦";
+ position:absolute;
+ top:50%;
+ transform:translateY(-50%);
+ color:#f4d98b;
+ font-size:17px;
+ text-shadow:0 0 8px #f4d98b88;
+}
+.thailand-lottery-link::before{left:17px}
+.thailand-lottery-link::after{right:17px}
+.thailand-link-title{
+ display:block;
+ margin:0;
+ color:#ffe6a0;
+ font-size:clamp(16px,4.2vw,21px);
+ line-height:1.15;
+ font-weight:900;
+ letter-spacing:1.1px;
+ white-space:nowrap;
+ text-shadow:0 2px 4px #000,0 0 10px #e2b95b55;
+}
+.thailand-link-subtitle{
+ display:block;
+ margin:0;
+ color:#e8f2ff;
+ font-size:9px;
+ line-height:1.2;
+ font-weight:800;
+ letter-spacing:2px;
+ white-space:nowrap;
+ text-shadow:0 1px 3px #000;
+}
+.thailand-lottery-link:active{
+ transform:scale(.985);
+ filter:brightness(1.12);
+}
+@media(max-width:380px){
+ .official-box{min-height:118px}
+ .official-logo{max-width:77px;max-height:77px}
+ .official-label{font-size:13px;padding:7px 1px}
+ .days-number{font-size:34px}
+ .days-label{font-size:14px}
+ .draw-number{font-size:11px;padding:7px 2px}
+ .time-value{font-size:18px}
+ .time-label{font-size:9px}
+ .draw-status{font-size:9px}
+ .results-heading{font-size:12px}
+ .result-card{height:63px}
+ .result-number{font-size:12px}
+ .result-caption{font-size:6.5px}
+ .thailand-lottery-link{min-height:67px;margin-left:8px;margin-right:8px;padding:9px 12px}
+ .thailand-link-title{font-size:16px}
+ .thailand-link-subtitle{font-size:8px}
+ .thailand-lottery-link::before{left:12px}
+ .thailand-lottery-link::after{right:12px}
+}
+
 </style>
 </head>
 
@@ -1349,11 +1454,9 @@ nav button.active{color:#087acb}
 </section>
 
 <!-- THAILAND LOTTERY PAGE LINK -->
-<a class="thailand-lottery-link" href="thailand-lottary.html" aria-label="Open Thailand Lottery games">
- <span class="thailand-flag">🇹🇭</span>
- <span class="thailand-link-title">Thailand Lottery</span>
- <span class="thailand-link-subtitle">SINGLE · 2D · 3 UP · 6 UP</span>
- <span class="thailand-link-arrow" aria-hidden="true">➜</span>
+<a class="thailand-lottery-link" href="thailand-lottary.html" aria-label="Open Thailand Lottery">
+ <span class="thailand-link-title">THAILAND LOTTERY</span>
+ <span class="thailand-link-subtitle">TAP TO OPEN</span>
 </a>
 
 <!-- DAILY MILLIONAIRE: COUNTDOWN LEFT, RESULT RIGHT -->
