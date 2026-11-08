@@ -1,0 +1,665 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="theme-color" content="#2196e8">
+<title>GLO 365 - My Rewards</title>
+
+<style>
+:root{
+  --blue:#2196e8;
+  --dark:#087acb;
+  --bg:#f1f7fc;
+  --text:#18344b;
+  --muted:#71869a;
+  --border:#d8e9f5;
+}
+
+*{box-sizing:border-box}
+
+body{
+  margin:0;
+  background:var(--bg);
+  color:var(--text);
+  font-family:Arial,Helvetica,sans-serif;
+  padding-bottom:30px;
+}
+
+.header{
+  background:linear-gradient(135deg,var(--blue),var(--dark));
+  color:white;
+  padding:16px;
+  font-size:20px;
+  font-weight:900;
+  box-shadow:0 3px 12px #087acb30;
+}
+
+.container{
+  max-width:650px;
+  margin:auto;
+  padding:12px;
+}
+
+.card{
+  background:white;
+  border:1px solid var(--border);
+  border-radius:17px;
+  padding:16px;
+  margin-bottom:13px;
+  box-shadow:0 3px 12px #1c5d8510;
+}
+
+/* REWARD SUMMARY */
+
+.reward-banner{
+  background:linear-gradient(135deg,#126db4,#2196e8);
+  color:white;
+  border-radius:19px;
+  padding:22px 17px;
+  text-align:center;
+  box-shadow:0 7px 18px #087acb30;
+}
+
+.reward-banner .trophy{
+  font-size:43px;
+}
+
+.reward-banner h2{
+  margin:9px 0 5px;
+  font-size:21px;
+}
+
+.reward-banner p{
+  margin:0;
+  font-size:12px;
+  opacity:.9;
+}
+
+.points-box{
+  background:#ffffff20;
+  border:1px solid #ffffff40;
+  border-radius:14px;
+  padding:14px;
+  margin-top:17px;
+}
+
+.points-label{
+  font-size:11px;
+  font-weight:700;
+  opacity:.9;
+}
+
+.points-value{
+  font-size:29px;
+  font-weight:900;
+  margin-top:5px;
+}
+
+/* SECTION */
+
+.section-title{
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+  margin-bottom:13px;
+}
+
+.section-title h3{
+  margin:0;
+  font-size:16px;
+}
+
+.section-title span{
+  color:var(--muted);
+  font-size:11px;
+}
+
+/* STATISTICS */
+
+.stats{
+  display:grid;
+  grid-template-columns:repeat(2,1fr);
+  gap:10px;
+}
+
+.stat{
+  background:#f5faff;
+  border:1px solid #e0edf7;
+  border-radius:13px;
+  padding:14px 10px;
+  text-align:center;
+}
+
+.stat-icon{
+  font-size:25px;
+}
+
+.stat-value{
+  font-size:21px;
+  font-weight:900;
+  color:var(--dark);
+  margin-top:5px;
+}
+
+.stat-label{
+  font-size:11px;
+  color:var(--muted);
+  margin-top:4px;
+}
+
+/* REWARDS */
+
+.reward-list{
+  display:grid;
+  gap:12px;
+}
+
+.reward-item{
+  display:flex;
+  align-items:center;
+  gap:12px;
+  padding:13px;
+  border:1px solid #e0ebf4;
+  background:#fbfdff;
+  border-radius:14px;
+}
+
+.reward-icon{
+  width:54px;
+  height:54px;
+  flex-shrink:0;
+  border-radius:13px;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  font-size:28px;
+  background:linear-gradient(145deg,#fff8e8,#fff0cc);
+}
+
+.reward-info{
+  flex:1;
+  min-width:0;
+}
+
+.reward-info h4{
+  margin:0 0 5px;
+  font-size:13px;
+}
+
+.reward-info p{
+  margin:0;
+  color:var(--muted);
+  font-size:11px;
+  line-height:1.5;
+}
+
+.reward-points{
+  color:var(--dark);
+  font-size:12px;
+  font-weight:900;
+  margin-top:5px;
+}
+
+.claim-btn{
+  border:0;
+  border-radius:20px;
+  padding:9px 12px;
+  color:white;
+  background:linear-gradient(135deg,var(--blue),var(--dark));
+  font-size:11px;
+  font-weight:900;
+  cursor:pointer;
+  flex-shrink:0;
+}
+
+.claim-btn:active{
+  transform:scale(.95);
+}
+
+.claim-btn:disabled{
+  background:#dce8f0;
+  color:#71869a;
+  cursor:not-allowed;
+}
+
+/* ACHIEVEMENTS */
+
+.achievement-grid{
+  display:grid;
+  grid-template-columns:repeat(3,1fr);
+  gap:10px;
+}
+
+.achievement{
+  background:#f7fbff;
+  border:1px solid #e1edf6;
+  border-radius:13px;
+  padding:13px 5px;
+  text-align:center;
+}
+
+.achievement-icon{
+  font-size:29px;
+}
+
+.achievement strong{
+  display:block;
+  font-size:11px;
+  margin-top:7px;
+}
+
+.achievement small{
+  display:block;
+  color:var(--muted);
+  font-size:9px;
+  margin-top:4px;
+}
+
+.locked{
+  filter:grayscale(1);
+  opacity:.55;
+}
+
+/* HISTORY */
+
+.history-item{
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+  gap:10px;
+  padding:13px 0;
+  border-bottom:1px solid #edf2f6;
+}
+
+.history-item:last-child{
+  border-bottom:0;
+}
+
+.history-left strong{
+  display:block;
+  font-size:12px;
+}
+
+.history-left small{
+  display:block;
+  color:var(--muted);
+  font-size:10px;
+  margin-top:5px;
+}
+
+.history-points{
+  font-size:12px;
+  font-weight:900;
+  color:#168b58;
+  white-space:nowrap;
+}
+
+.demo-note{
+  padding:12px;
+  background:#fff7e6;
+  border:1px solid #f3e3bd;
+  border-radius:12px;
+  color:#89611d;
+  font-size:11px;
+  line-height:1.6;
+  margin-bottom:13px;
+}
+
+/* SUCCESS POPUP */
+
+.overlay{
+  position:fixed;
+  inset:0;
+  background:#102b45a8;
+  display:none;
+  align-items:center;
+  justify-content:center;
+  padding:20px;
+  z-index:100;
+}
+
+.overlay.show{
+  display:flex;
+}
+
+.popup{
+  width:100%;
+  max-width:330px;
+  background:white;
+  border-radius:21px;
+  padding:26px 20px;
+  text-align:center;
+  box-shadow:0 15px 50px #0003;
+  animation:pop .25s ease;
+}
+
+@keyframes pop{
+  from{transform:scale(.85);opacity:0}
+  to{transform:scale(1);opacity:1}
+}
+
+.success-icon{
+  width:75px;
+  height:75px;
+  border-radius:50%;
+  background:#e7f8ef;
+  color:#15965a;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  font-size:39px;
+  margin:auto;
+}
+
+.popup h3{
+  margin:16px 0 8px;
+}
+
+.popup p{
+  font-size:12px;
+  color:var(--muted);
+  line-height:1.6;
+}
+
+.popup button{
+  width:100%;
+  border:0;
+  border-radius:25px;
+  padding:13px;
+  background:linear-gradient(135deg,var(--blue),var(--dark));
+  color:white;
+  font-weight:900;
+  margin-top:10px;
+}
+
+.back-btn{
+  display:block;
+  text-align:center;
+  padding:14px;
+  border-radius:25px;
+  background:#e4f2fc;
+  color:var(--dark);
+  text-decoration:none;
+  font-size:13px;
+  font-weight:900;
+}
+
+@media(max-width:350px){
+  .reward-item{gap:8px;padding:10px}
+  .reward-icon{width:45px;height:45px;font-size:24px}
+  .claim-btn{padding:8px 9px;font-size:10px}
+  .achievement-grid{gap:6px}
+}
+</style>
+</head>
+
+<body>
+
+<header class="header">🏆 My Rewards</header>
+
+<main class="container">
+
+  <section class="reward-banner">
+
+    <div class="trophy">🏆</div>
+
+    <h2>My Rewards Center</h2>
+
+    <p>Celebrate your achievements with GLO 365</p>
+
+    <div class="points-box">
+      <div class="points-label">DEMO REWARD POINTS</div>
+      <div class="points-value" id="totalPoints">1,250</div>
+    </div>
+
+  </section>
+
+  <section class="card">
+
+    <div class="section-title">
+      <h3>Reward Overview</h3>
+      <span>Demo Statistics</span>
+    </div>
+
+    <div class="stats">
+
+      <div class="stat">
+        <div class="stat-icon">🎁</div>
+        <div class="stat-value">05</div>
+        <div class="stat-label">Total Rewards</div>
+      </div>
+
+      <div class="stat">
+        <div class="stat-icon">🏅</div>
+        <div class="stat-value">03</div>
+        <div class="stat-label">Achievements</div>
+      </div>
+
+      <div class="stat">
+        <div class="stat-icon">⭐</div>
+        <div class="stat-value">1,250</div>
+        <div class="stat-label">Reward Points</div>
+      </div>
+
+      <div class="stat">
+        <div class="stat-icon">🎯</div>
+        <div class="stat-value">02</div>
+        <div class="stat-label">Available Rewards</div>
+      </div>
+
+    </div>
+
+  </section>
+
+  <section class="card">
+
+    <div class="section-title">
+      <h3>Available Rewards</h3>
+      <span>Demo Rewards</span>
+    </div>
+
+    <div class="reward-list">
+
+      <div class="reward-item">
+
+        <div class="reward-icon">🥉</div>
+
+        <div class="reward-info">
+          <h4>Bronze Member</h4>
+          <p>Special recognition for active members.</p>
+          <div class="reward-points">100 Points</div>
+        </div>
+
+        <button class="claim-btn" data-reward="Bronze Member">
+          Claim
+        </button>
+
+      </div>
+
+      <div class="reward-item">
+
+        <div class="reward-icon">🥈</div>
+
+        <div class="reward-info">
+          <h4>Silver Member</h4>
+          <p>Unlock a special member achievement.</p>
+          <div class="reward-points">250 Points</div>
+        </div>
+
+        <button class="claim-btn" data-reward="Silver Member">
+          Claim
+        </button>
+
+      </div>
+
+      <div class="reward-item">
+
+        <div class="reward-icon">🥇</div>
+
+        <div class="reward-info">
+          <h4>Gold Member</h4>
+          <p>A premium achievement for members.</p>
+          <div class="reward-points">500 Points</div>
+        </div>
+
+        <button class="claim-btn" data-reward="Gold Member">
+          Claim
+        </button>
+
+      </div>
+
+    </div>
+
+  </section>
+
+  <section class="card">
+
+    <div class="section-title">
+      <h3>Achievement Badges</h3>
+      <span>Demo Collection</span>
+    </div>
+
+    <div class="achievement-grid">
+
+      <div class="achievement">
+        <div class="achievement-icon">🌟</div>
+        <strong>New Star</strong>
+        <small>Unlocked</small>
+      </div>
+
+      <div class="achievement">
+        <div class="achievement-icon">🏆</div>
+        <strong>Champion</strong>
+        <small>Unlocked</small>
+      </div>
+
+      <div class="achievement">
+        <div class="achievement-icon">💎</div>
+        <strong>Diamond</strong>
+        <small>Unlocked</small>
+      </div>
+
+      <div class="achievement locked">
+        <div class="achievement-icon">👑</div>
+        <strong>Royal Member</strong>
+        <small>Locked</small>
+      </div>
+
+      <div class="achievement locked">
+        <div class="achievement-icon">🔥</div>
+        <strong>Super Active</strong>
+        <small>Locked</small>
+      </div>
+
+      <div class="achievement locked">
+        <div class="achievement-icon">🚀</div>
+        <strong>Legend</strong>
+        <small>Locked</small>
+      </div>
+
+    </div>
+
+  </section>
+
+  <section class="card">
+
+    <div class="section-title">
+      <h3>Reward History</h3>
+      <span>Sample Records</span>
+    </div>
+
+    <div class="history-item">
+      <div class="history-left">
+        <strong>🌟 Welcome Reward</strong>
+        <small>Demo activity</small>
+      </div>
+      <div class="history-points">+500 Points</div>
+    </div>
+
+    <div class="history-item">
+      <div class="history-left">
+        <strong>🎯 Activity Reward</strong>
+        <small>Demo activity</small>
+      </div>
+      <div class="history-points">+250 Points</div>
+    </div>
+
+    <div class="history-item">
+      <div class="history-left">
+        <strong>🏆 Achievement Reward</strong>
+        <small>Demo activity</small>
+      </div>
+      <div class="history-points">+500 Points</div>
+    </div>
+
+  </section>
+
+  <div class="demo-note">
+    ℹ️ This is a frontend demonstration. Reward points, achievements,
+    claims and history are sample data only. No real points or prizes
+    are issued or stored.
+  </div>
+
+  <a href="profile.html" class="back-btn">
+    ← Back to Profile
+  </a>
+
+</main>
+
+<div class="overlay" id="successModal">
+
+  <div class="popup">
+
+    <div class="success-icon">✓</div>
+
+    <h3>Reward Claimed!</h3>
+
+    <p id="successMessage">
+      Your demo reward has been claimed successfully.
+    </p>
+
+    <button type="button" onclick="closePopup()">
+      Done
+    </button>
+
+  </div>
+
+</div>
+
+<script>
+"use strict";
+
+const modal=document.getElementById("successModal");
+const successMessage=document.getElementById("successMessage");
+
+document.querySelectorAll(".claim-btn").forEach(button=>{
+
+  button.addEventListener("click",function(){
+
+    const reward=this.dataset.reward;
+
+    successMessage.textContent=
+      reward+" demo reward claimed successfully!";
+
+    modal.classList.add("show");
+
+  });
+
+});
+
+window.closePopup=function(){
+  modal.classList.remove("show");
+};
+
+modal.addEventListener("click",function(event){
+
+  if(event.target===modal){
+    closePopup();
+  }
+
+});
+</script>
+
+</body>
+</html>
