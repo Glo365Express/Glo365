@@ -3,299 +3,163 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
-<meta name="theme-color" content="#2196e8">
-<title>GLO 365 - Single</title>
+<meta name="theme-color" content="#126bd5">
+<title>GLO 365 - Daily Millionaire</title>
 
 <style>
-*{box-sizing:border-box;margin:0;padding:0}
+*{
+ box-sizing:border-box;
+ margin:0;
+ padding:0;
+}
 
 body{
  font-family:Arial,sans-serif;
- background:#f0f7fd;
  color:#18334d;
+ min-height:100vh;
+ background:
+  radial-gradient(ellipse at 12% 12%,#168cff 0%,transparent 42%),
+  radial-gradient(ellipse at 88% 18%,#a000e8 0%,transparent 42%),
+  radial-gradient(ellipse at 50% 75%,#ff9b16 0%,transparent 45%),
+  linear-gradient(135deg,#062d82,#087de5 35%,#ff7900 65%,#6500b9);
+ background-attachment:fixed;
 }
 
 .app{
  max-width:520px;
  min-height:100vh;
  margin:auto;
- background:#fff;
- padding-bottom:25px;
- box-shadow:0 0 25px #163c5c0b;
+ padding-bottom:22px;
+ background:rgba(255,255,255,.94);
+ box-shadow:0 0 25px #061b5030;
 }
 
-.header{
- background:linear-gradient(120deg,#1687d5,#2196e8);
- padding:17px 15px;
- display:flex;
- justify-content:space-between;
- align-items:center;
-}
-
-.logo{
- font-size:27px;
- font-weight:900;
- color:#fff;
-}
-
-.logo span{color:#d9f0ff}
-
-.balance{
- background:#fff;
- color:#167fc4;
- padding:10px 14px;
- border-radius:30px;
- font-size:13px;
- font-weight:bold;
-}
+/* TOP TITLE */
 
 .page-title{
- background:#2196e8;
+ background:linear-gradient(110deg,#0754b9,#168ce8,#6500b9);
  text-align:center;
- padding:15px 10px;
- font-size:19px;
+ padding:17px 10px;
+ font-size:22px;
  font-weight:900;
  color:#fff;
+ letter-spacing:.3px;
+ box-shadow:0 3px 12px #052b7040;
 }
 
-.subtitle{
+/* SUBTITLE REMOVED */
+
+/* RATE CARD */
+
+.rate-card{
+ margin:12px 12px 9px;
+ padding:13px 10px;
+ background:linear-gradient(120deg,#e4f4ff,#d4ebff);
+ border:1px solid #b9d9ed;
+ border-radius:13px;
  text-align:center;
- padding:12px 5px;
- background:#eff8ff;
- color:#167fc4;
- font-size:13px;
- font-weight:bold;
+ color:#526f87;
 }
+
+.rate-title{
+ font-size:13px;
+ margin-bottom:5px;
+}
+
+.rate-value{
+ color:#0879c9;
+ font-size:23px;
+ font-weight:900;
+ margin:4px 0;
+}
+
+.play-label{
+ color:#0754a0;
+ font-size:14px;
+ font-weight:900;
+ margin-top:5px;
+}
+
+/* LOCK NOTICE */
 
 .lock-notice{
  display:none;
- margin:12px 11px 4px;
- padding:14px 12px;
+ margin:9px 12px;
+ padding:10px 10px;
  background:#fff0f0;
  border:1px solid #ffcaca;
- border-radius:11px;
+ border-radius:10px;
  text-align:center;
  color:#b42332;
 }
 
-.lock-notice.show{display:block}
+.lock-notice.show{
+ display:block;
+}
 
 .lock-notice strong{
  display:block;
- font-size:14px;
+ font-size:13px;
  font-weight:900;
- margin-bottom:5px;
+ margin-bottom:4px;
 }
 
 .lock-notice span{
  display:block;
- font-size:12px;
- line-height:1.6;
+ font-size:11px;
+ line-height:1.5;
  overflow-wrap:anywhere;
 }
 
 .lock-countdown{
- margin-top:7px;
+ margin-top:4px;
  font-weight:bold;
 }
 
-.bet-area{padding:8px 9px 0}
+/* OPEN STATUS */
 
-.bet-area.locked input{
- background:#f0f0f0;
- color:#999;
- border-color:#ddd;
- cursor:not-allowed;
-}
-
-.bet-area.locked .remove-btn{
- opacity:.35;
- cursor:not-allowed;
-}
-
-.column-heading,.bet-row{
- display:grid;
- grid-template-columns:30px minmax(0,1.4fr) minmax(0,.9fr) minmax(0,.9fr) 22px;
- gap:5px;
-}
-
-.column-heading{
- padding:8px 0;
- font-size:10px;
- font-weight:bold;
- color:#8195a8;
- text-align:center;
-}
-
-.bet-row{
- align-items:center;
- margin-bottom:8px;
-}
-
-.serial{
- text-align:center;
- font-size:14px;
- color:#526f87;
-}
-
-.bet-row input{
- width:100%;
- min-width:0;
- height:49px;
- border:1px solid #cbdfee;
- background:#f7fbff;
- border-radius:10px;
- text-align:center;
- font-size:14px;
- color:#18334d;
- outline:none;
- padding:4px;
-}
-
-.bet-row input:focus{
- border-color:#2196e8;
- background:#fff;
- box-shadow:0 0 0 3px #2196e817;
-}
-
-.bet-row input::placeholder{color:#9aabba}
-
-.remove-btn{
- border:0;
- background:transparent;
- color:#d34c5e;
- font-size:20px;
- font-weight:bold;
- padding:3px 0;
- cursor:pointer;
-}
-
-.add-area{
- display:flex;
- justify-content:flex-end;
- padding:5px 3px 17px;
-}
-
-.add-btn{
- width:43px;
- height:43px;
- border-radius:50%;
- background:#eff8ff;
- color:#1687d5;
- border:1px solid #cbdfee;
- font-size:29px;
- font-weight:bold;
- display:grid;
- place-items:center;
- cursor:pointer;
-}
-
-.add-btn:disabled{
- opacity:.4;
- cursor:not-allowed;
-}
-
-.summary{padding:5px 11px}
-
-.summary-box{
- background:#eff8ff;
- border:1px solid #dcebf6;
- border-radius:12px;
- padding:16px 7px;
- text-align:center;
- font-size:14px;
- margin-bottom:9px;
- color:#526f87;
-}
-
-.summary-box strong{
- font-weight:900;
- color:#167fc4;
-}
-
-.discount-line{
- display:flex;
- align-items:center;
- justify-content:center;
- flex-wrap:wrap;
- gap:7px;
-}
-
-.discount-value{
- background:#fff;
- border:1px solid #cbdfee;
- border-radius:7px;
- min-width:55px;
- padding:7px 9px;
- font-weight:bold;
- color:#167fc4;
-}
-
-.discount-amount{
- font-weight:bold;
- color:#1687d5;
-}
-
-.place-btn{
- width:calc(100% - 22px);
- margin:17px 11px 0;
- padding:16px 8px;
- background:linear-gradient(90deg,#1687d5,#2196e8);
- border:0;
- border-radius:10px;
- color:#fff;
- font-size:17px;
- font-weight:900;
- box-shadow:0 4px 12px #1687d530;
- cursor:pointer;
-}
-
-.place-btn:active{transform:scale(.98)}
-
-.place-btn:disabled{
- opacity:.6;
- cursor:not-allowed;
- background:#8999a5;
- box-shadow:none;
-}
-
-.notice{
- margin:10px 11px;
- padding:12px;
- background:#eff8ff;
- border:1px solid #dcebf6;
- border-radius:9px;
- text-align:center;
- color:#526f87;
- font-size:11px;
- line-height:1.7;
-}
-
-.notice strong{color:#167fc4}
-
-.back-btn{
- display:block;
- margin:10px auto;
- border:0;
- background:transparent;
- color:#167fc4;
+.open-notice{
+ display:none;
+ margin:9px 12px;
  padding:10px;
- font-size:13px;
- cursor:pointer;
+ background:#edfff4;
+ border:1px solid #b9e4ca;
+ border-radius:10px;
+ text-align:center;
+ color:#187344;
 }
+
+.open-notice.show{
+ display:block;
+}
+
+.open-notice strong{
+ display:block;
+ font-size:13px;
+ margin-bottom:4px;
+}
+
+.open-notice span{
+ font-size:11px;
+ line-height:1.5;
+}
+
+/* MESSAGES */
 
 .message{
  display:none;
- margin:12px 11px;
- padding:11px;
+ margin:10px 12px;
+ padding:10px;
  border-radius:9px;
- font-size:13px;
+ font-size:12px;
  line-height:1.5;
  white-space:pre-line;
  overflow-wrap:anywhere;
 }
 
-.message.show{display:block}
+.message.show{
+ display:block;
+}
 
 .message.error{
  background:#fff0f0;
@@ -315,14 +179,241 @@ body{
  color:#167fc4;
 }
 
+/* BET AREA */
+
+.bet-area{
+ padding:5px 9px 0;
+}
+
+.bet-area.locked input{
+ background:#eee;
+ color:#999;
+ border-color:#ddd;
+ cursor:not-allowed;
+}
+
+.bet-area.locked .remove-btn{
+ opacity:.35;
+ cursor:not-allowed;
+}
+
+.column-heading,
+.bet-row{
+ display:grid;
+ grid-template-columns:25px minmax(0,1.4fr) minmax(0,.9fr) minmax(0,.9fr) 19px;
+ gap:4px;
+}
+
+.column-heading{
+ padding:6px 0;
+ font-size:10px;
+ font-weight:bold;
+ color:#8195a8;
+ text-align:center;
+}
+
+.bet-row{
+ align-items:center;
+ margin-bottom:6px;
+}
+
+.serial{
+ text-align:center;
+ font-size:12px;
+ color:#526f87;
+}
+
+.bet-row input{
+ width:100%;
+ min-width:0;
+ height:39px;
+ border:1px solid #cbdfee;
+ background:#f7fbff;
+ border-radius:8px;
+ text-align:center;
+ font-size:13px;
+ color:#18334d;
+ outline:none;
+ padding:3px;
+}
+
+.bet-row input:focus{
+ border-color:#2196e8;
+ background:#fff;
+ box-shadow:0 0 0 2px #2196e817;
+}
+
+.bet-row input::placeholder{
+ color:#9aabba;
+}
+
+.remove-btn{
+ border:0;
+ background:transparent;
+ color:#d34c5e;
+ font-size:19px;
+ font-weight:bold;
+ padding:2px 0;
+ cursor:pointer;
+}
+
+.add-area{
+ display:flex;
+ justify-content:flex-end;
+ padding:3px 3px 10px;
+}
+
+.add-btn{
+ width:35px;
+ height:35px;
+ border-radius:50%;
+ background:#eff8ff;
+ color:#1687d5;
+ border:1px solid #cbdfee;
+ font-size:25px;
+ font-weight:bold;
+ display:grid;
+ place-items:center;
+ cursor:pointer;
+}
+
+.add-btn:disabled{
+ opacity:.4;
+ cursor:not-allowed;
+}
+
+/* SUMMARY */
+
+.summary{
+ padding:3px 12px;
+}
+
+.summary-box{
+ background:linear-gradient(110deg,#eff8ff,#e1f2ff);
+ border:1px solid #d0e5f3;
+ border-radius:9px;
+ padding:10px 7px;
+ text-align:center;
+ font-size:12px;
+ margin-bottom:7px;
+ color:#526f87;
+}
+
+.summary-box strong{
+ font-weight:900;
+ color:#167fc4;
+}
+
+.discount-line{
+ display:flex;
+ align-items:center;
+ justify-content:center;
+ flex-wrap:wrap;
+ gap:6px;
+}
+
+.discount-value{
+ background:#fff;
+ border:1px solid #cbdfee;
+ border-radius:6px;
+ min-width:45px;
+ padding:5px 7px;
+ font-weight:bold;
+ color:#167fc4;
+}
+
+.discount-amount{
+ font-weight:bold;
+ color:#1687d5;
+}
+
+/* PLACE BUTTON */
+
+.place-btn{
+ width:calc(100% - 24px);
+ margin:11px 12px 0;
+ padding:13px 8px;
+ background:linear-gradient(90deg,#0754b9,#168ce8,#6500b9);
+ border:0;
+ border-radius:9px;
+ color:#fff;
+ font-size:15px;
+ font-weight:900;
+ box-shadow:0 4px 12px #1687d530;
+ cursor:pointer;
+}
+
+.place-btn:active{
+ transform:scale(.98);
+}
+
+.place-btn:disabled{
+ opacity:.6;
+ cursor:not-allowed;
+ background:#8999a5;
+ box-shadow:none;
+}
+
+.notice{
+ margin:9px 12px;
+ padding:9px;
+ background:#eff8ff;
+ border:1px solid #dcebf6;
+ border-radius:8px;
+ text-align:center;
+ color:#526f87;
+ font-size:10px;
+ line-height:1.6;
+}
+
+.notice strong{
+ color:#167fc4;
+}
+
+.back-btn{
+ display:block;
+ margin:7px auto;
+ border:0;
+ background:transparent;
+ color:#167fc4;
+ padding:8px;
+ font-size:12px;
+ cursor:pointer;
+}
+
 @media(max-width:380px){
- .logo{font-size:24px}
- .balance{font-size:11px;padding:9px}
- .bet-row input{height:45px;font-size:12px}
- .column-heading{font-size:9px;gap:3px}
- .bet-row{gap:3px}
- .serial{font-size:12px}
- .summary-box{font-size:13px}
+
+ .page-title{
+  font-size:20px;
+  padding:15px 8px;
+ }
+
+ .rate-value{
+  font-size:21px;
+ }
+
+ .bet-row input{
+  height:36px;
+  font-size:12px;
+ }
+
+ .column-heading{
+  font-size:9px;
+  gap:3px;
+ }
+
+ .bet-row{
+  gap:3px;
+ }
+
+ .serial{
+  font-size:11px;
+ }
+
+ .summary-box{
+  font-size:11px;
+  padding:9px 5px;
+ }
 }
 </style>
 </head>
@@ -331,29 +422,37 @@ body{
 
 <div class="app">
 
-<header class="header">
- <div class="logo">GLO <span>365</span></div>
-
- <div class="balance">
-  <span id="balance">0.00</span> Points
- </div>
-</header>
-
-<div class="page-title">SINGLE NUMBER</div>
-
-<div class="subtitle">
- Enter 1 Digit Number &amp; Virtual Points
+<!-- DAILY MILLIONAIRE HEADER -->
+<div class="page-title">
+ 💎 DAILY MILLIONAIRE
 </div>
 
+<!-- PRIZE RATE -->
+<section class="rate-card">
+ <div class="rate-title">Daily Millionaire Prize Rate</div>
+
+ <div class="rate-value">1 Point = 900 Points</div>
+
+ <div class="play-label">Play 3 Digit Number</div>
+</section>
+
+<!-- LOCK STATUS -->
 <div class="lock-notice" id="lockNotice" role="alert">
- <strong id="lockTitle">LOADING BETTING STATUS</strong>
- <span id="lockMessage">Connecting to the server...</span>
+ <strong id="lockTitle">BETTING CLOSED</strong>
+ <span id="lockMessage"></span>
  <span class="lock-countdown" id="lockCountdown"></span>
+</div>
+
+<!-- OPEN STATUS -->
+<div class="open-notice" id="openNotice">
+ <strong>BETTING IS OPEN</strong>
+ <span id="openMessage"></span>
 </div>
 
 <div id="pageMessage" class="message"
  role="status" aria-live="polite"></div>
 
+<!-- BET AREA -->
 <section class="bet-area" id="betArea">
 
  <div class="column-heading">
@@ -373,6 +472,7 @@ body{
 
 </section>
 
+<!-- SUMMARY -->
 <section class="summary">
 
  <div class="summary-box">
@@ -402,6 +502,11 @@ body{
  LOADING...
 </button>
 
+<div class="notice">
+ <strong>DEMO POINTS ONLY</strong><br>
+ All entries use virtual demo points. The server verifies
+ the draw schedule, wallet balance and betting status.
+</div>
 
 <button class="back-btn" id="backHome" type="button">
  ← Back to Home
@@ -416,11 +521,6 @@ body{
    GLO 365 - SINGLE
    Backend: Node.js + Express
    Database: PostgreSQL
-
-   Authentication:
-   - HttpOnly Cookie
-   - sessionStorage token fallback
-
    No LocalStorage.
 ========================================= */
 
@@ -429,11 +529,8 @@ const TOKEN_KEY="glo365_token";
 
 const MIN_ROWS=10;
 const MAX_ROWS=50;
-
 const DEFAULT_LOCK_MINUTES=45;
 const MAX_BET_AMOUNT=100000;
-
-const MAX_SINGLE_NUMBER=1;
 
 const rowsContainer=document.getElementById("betRows");
 const addButton=document.getElementById("addRow");
@@ -449,6 +546,9 @@ const lockNotice=document.getElementById("lockNotice");
 const lockTitle=document.getElementById("lockTitle");
 const lockMessage=document.getElementById("lockMessage");
 const lockCountdown=document.getElementById("lockCountdown");
+
+const openNotice=document.getElementById("openNotice");
+const openMessage=document.getElementById("openMessage");
 
 const betArea=document.getElementById("betArea");
 const pageMessage=document.getElementById("pageMessage");
@@ -673,8 +773,6 @@ function setWallet(value){
  }
 
  wallet=amount;
-
- balanceElement.textContent=formatPoints(wallet);
 }
 
 async function loadWallet(){
@@ -696,13 +794,42 @@ async function loadWallet(){
 /* =========================================
    DRAW SETTINGS
    GET /api/public/draw-settings
+
+   Time display: Asia/Bangkok
+
+   Bangladesh 12:15 PM =
+   Thailand 1:15 PM
+
+   Backend must return the correct absolute
+   draw time. The client does not override
+   server draw schedule or betting lock.
 ========================================= */
 
 function parseDrawTime(value){
 
  if(!value)return null;
 
- const timestamp=Date.parse(value);
+ let dateValue=String(value).trim();
+
+ /*
+  * If backend sends a date-time without timezone,
+  * interpret it as Thailand local time.
+  *
+  * Preferred backend format:
+  * 2026-11-08T13:15:00+07:00
+  */
+
+ const hasTimezone=
+  /(?:Z|[+-]\d{2}:?\d{2})$/i.test(dateValue);
+
+ if(
+  !hasTimezone&&
+  /^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}/.test(dateValue)
+ ){
+  dateValue+="+07:00";
+ }
+
+ const timestamp=Date.parse(dateValue);
 
  return Number.isFinite(timestamp)
   ?timestamp
@@ -757,19 +884,20 @@ async function loadDrawSettings(){
 }
 
 /* =========================================
-   DRAW TIME DISPLAY
+   THAILAND TIME DISPLAY
 ========================================= */
 
 function formatDrawTime(timestamp){
 
- return new Date(timestamp).toLocaleString("en-GB",{
+ return new Intl.DateTimeFormat("en-GB",{
+  timeZone:"Asia/Bangkok",
   day:"2-digit",
   month:"short",
   year:"numeric",
   hour:"2-digit",
   minute:"2-digit",
   hour12:true
- });
+ }).format(new Date(timestamp))+" (Thailand Time)";
 }
 
 function formatRemaining(milliseconds){
@@ -834,6 +962,7 @@ function updateBettingStatus(){
  if(isBetLocked){
 
   lockNotice.classList.add("show");
+  openNotice.classList.remove("show");
   betArea.classList.add("locked");
 
   if(status.reason==="missing"){
@@ -841,7 +970,7 @@ function updateBettingStatus(){
    lockTitle.textContent="BETTING UNAVAILABLE";
 
    lockMessage.textContent=
-    "The server draw schedule is unavailable. Please wait for the next valid schedule.";
+    "The draw schedule is temporarily unavailable. Please try again later.";
 
    lockCountdown.textContent="";
 
@@ -864,11 +993,13 @@ function updateBettingStatus(){
  }else{
 
   lockNotice.classList.remove("show");
+  openNotice.classList.add("show");
   betArea.classList.remove("locked");
 
-  lockTitle.textContent="BETTING OPEN";
-  lockMessage.textContent="";
-  lockCountdown.textContent="";
+  openMessage.textContent=
+   "Draw Time: "+formatDrawTime(drawSchedule.timestamp)+
+   ". Betting closes "+lockMinutes+
+   " minutes before the draw.";
  }
 
  applyControls();
@@ -919,14 +1050,11 @@ function applyControls(){
 
 /* =========================================
    DISCOUNT
-   Current generic Single API does not provide
-   an independent discount setting.
 ========================================= */
 
 function loadDiscount(){
 
  discount=0;
-
  discountPercentElement.textContent="0";
 
  calculate();
@@ -950,7 +1078,6 @@ function updateSerials(){
 function createRow(){
 
  const row=document.createElement("div");
-
  row.className="bet-row";
 
  const serial=document.createElement("span");
@@ -960,7 +1087,7 @@ function createRow(){
 
  number.type="text";
  number.inputMode="numeric";
- number.maxLength=MAX_SINGLE_NUMBER;
+ number.maxLength=1;
  number.placeholder="Number";
  number.autocomplete="off";
  number.dataset.field="number";
@@ -1216,23 +1343,7 @@ function validateRows(rows){
 
 /* =========================================
    SUBMIT SINGLE BETS
-
-   Existing backend:
    POST /api/demo/bets
-
-   Each Single entry is sent separately.
-
-   IMPORTANT:
-   selection MUST be a raw one-digit number.
-   Example: "5"
-
-   Do not send:
-   Number=5, D=10, R=0
-
-   Amount = D + R.
-
-   The server enforces the actual draw cutoff,
-   wallet balance and PostgreSQL transaction.
 ========================================= */
 
 async function submitBet(){
@@ -1277,17 +1388,6 @@ async function submitBet(){
   return;
  }
 
- if(amounts.finalAmount>wallet){
-
-  showMessage(
-   "Insufficient demo points. Current balance: "+
-   formatPoints(wallet),
-   "error"
-  );
-
-  return;
- }
-
  const confirmed=confirm(
   "Confirm your Single demo entry?\n\n"+
   "Numbers: "+rows.length+
@@ -1302,14 +1402,8 @@ async function submitBet(){
  applyControls();
 
  let completed=0;
- let failed=false;
 
  try{
-
-  /*
-   * Refresh authoritative server information
-   * before submitting any entry.
-   */
 
   await loadWallet();
   await loadDrawSettings();
@@ -1328,17 +1422,6 @@ async function submitBet(){
     formatPoints(wallet)
    );
   }
-
-  /*
-   * Backend generic endpoint accepts only one
-   * selection per request.
-   *
-   * Therefore each row becomes one Single bet.
-   *
-   * D + R = row amount.
-   *
-   * Selection is only the digit 0-9.
-   */
 
   for(let index=0;index<rows.length;index++){
 
@@ -1365,19 +1448,13 @@ async function submitBet(){
    completed++;
   }
 
-  /*
-   * All rows accepted.
-   * Reload authoritative wallet balance.
-   */
-
   await loadWallet();
 
   showMessage(
    "Single entries submitted successfully!\n"+
    "Accepted Entries: "+completed+
    "\nTotal Amount: "+formatPoints(amounts.finalAmount)+
-   " Points\n"+
-   "Remaining Points: "+formatPoints(wallet),
+   " Points",
    "success"
   );
 
@@ -1388,15 +1465,6 @@ async function submitBet(){
  }catch(error){
 
   console.error("Single bet submission error:",error);
-
-  failed=true;
-
-  /*
-   * If a later request fails, earlier entries
-   * may already have been accepted by the backend.
-   *
-   * Do not automatically retry or resubmit them.
-   */
 
   try{
    await loadWallet();
@@ -1481,7 +1549,6 @@ async function refreshPageData(){
   }
 
   loadDiscount();
-
   clearMessage();
 
  }finally{
@@ -1532,7 +1599,6 @@ async function initialize(){
   if(error.status===401){
    redirectToLogin();
   }
- }
 }
 
 /* =========================================
@@ -1571,7 +1637,6 @@ window.addEventListener("pageshow",async()=>{
 });
 
 /* START */
-
 initialize();
 
 </script>
