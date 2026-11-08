@@ -1,0 +1,466 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<meta name="theme-color" content="#0878d5">
+<title>Thailand Lottery - GLO 365</title>
+
+<style>
+*{
+    margin:0;
+    padding:0;
+    box-sizing:border-box;
+    -webkit-tap-highlight-color:transparent;
+}
+
+body{
+    font-family:Arial,Helvetica,sans-serif;
+    background:#edf8ff;
+    color:#064477;
+    min-height:100vh;
+}
+
+.header{
+    height:66px;
+    background:linear-gradient(110deg,#0756a9,#078fe8);
+    color:#fff;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    position:relative;
+    box-shadow:0 3px 10px #0075c544;
+}
+
+.back-btn{
+    position:absolute;
+    left:17px;
+    top:50%;
+    transform:translateY(-50%);
+    width:42px;
+    height:42px;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    color:#fff;
+    text-decoration:none;
+    font-size:34px;
+    font-weight:300;
+}
+
+.header h1{
+    font-size:23px;
+    font-weight:800;
+    letter-spacing:.3px;
+}
+
+.container{
+    width:100%;
+    max-width:650px;
+    margin:auto;
+    padding:12px 12px 30px;
+}
+
+/* Thailand banner */
+
+.thailand-banner{
+    height:155px;
+    width:100%;
+    border-radius:17px;
+    overflow:hidden;
+    position:relative;
+    margin-bottom:18px;
+    background:
+      linear-gradient(145deg,#0753b2,#087edb 55%,#063c88);
+    box-shadow:0 4px 12px #0879c955;
+    border:3px solid #fff;
+}
+
+.thai-flag{
+    position:absolute;
+    width:100%;
+    height:100%;
+    opacity:.95;
+    transform:rotate(-8deg) scale(1.2);
+    background:linear-gradient(
+      to bottom,
+      #ed263d 0 17%,
+      #fff 17% 32%,
+      #122e76 32% 68%,
+      #fff 68% 83%,
+      #ed263d 83% 100%
+    );
+    clip-path:polygon(0 0,100% 15%,100% 85%,0 100%);
+}
+
+.banner-content{
+    position:absolute;
+    inset:0;
+    z-index:2;
+    display:flex;
+    flex-direction:column;
+    justify-content:center;
+    align-items:center;
+    text-align:center;
+    background:linear-gradient(90deg,#003d8b55,#003d8b22);
+}
+
+.banner-content h2{
+    font-size:35px;
+    font-weight:900;
+    color:#fff;
+    font-style:italic;
+    text-shadow:2px 4px 4px #002c72;
+    line-height:1.1;
+}
+
+.banner-content p{
+    color:#fff;
+    font-size:12px;
+    font-weight:bold;
+    margin-top:7px;
+    text-shadow:1px 2px 3px #00346b;
+    letter-spacing:1px;
+}
+
+/* Section title */
+
+.section-title{
+    display:flex;
+    align-items:center;
+    gap:9px;
+    margin:10px 3px 14px;
+    color:#075baa;
+    font-size:18px;
+    font-weight:900;
+}
+
+.section-title span{
+    font-size:23px;
+}
+
+/* Game grid */
+
+.game-grid{
+    display:grid;
+    grid-template-columns:repeat(2,minmax(0,1fr));
+    gap:13px;
+}
+
+.game-card{
+    min-width:0;
+    height:310px;
+    position:relative;
+    overflow:hidden;
+    border-radius:25px;
+    border:4px solid #fff;
+    outline:2px solid #8bd8ff;
+    background:
+      radial-gradient(ellipse at 50% 35%,#34d9ff 0%,#12a9ef 48%,#0872d5 100%);
+    box-shadow:
+      0 5px 12px #0879c955,
+      inset 0 0 15px #ffffff77;
+    text-decoration:none;
+    color:#fff;
+    display:flex;
+    flex-direction:column;
+    align-items:center;
+    padding:13px 8px 10px;
+    transition:transform .15s ease;
+}
+
+.game-card:active{
+    transform:scale(.97);
+}
+
+.game-card:before{
+    content:"";
+    position:absolute;
+    width:150%;
+    height:100px;
+    left:-25%;
+    top:115px;
+    border-top:2px solid #ffffff55;
+    border-radius:50%;
+    transform:rotate(-8deg);
+    pointer-events:none;
+}
+
+.crown{
+    font-size:48px;
+    line-height:1.1;
+    filter:drop-shadow(0 3px 3px #00559a88);
+    z-index:1;
+}
+
+.balls{
+    display:flex;
+    justify-content:center;
+    align-items:center;
+    min-height:76px;
+    gap:3px;
+    margin-top:5px;
+    z-index:1;
+}
+
+.ball{
+    width:58px;
+    height:58px;
+    border-radius:50%;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    background:radial-gradient(circle at 35% 25%,#fff,#d7f5ff 55%,#8bd9f7);
+    border:5px solid #17caff;
+    box-shadow:0 3px 6px #004d9b88,inset 0 0 5px #fff;
+    color:#172f49;
+    font-size:31px;
+    font-weight:900;
+}
+
+.ball.pink{
+    border-color:#ff2582;
+}
+
+.ball.green{
+    border-color:#13d77c;
+}
+
+.ball.small{
+    width:36px;
+    height:36px;
+    font-size:18px;
+    border-width:4px;
+}
+
+.game-name{
+    font-size:30px;
+    font-weight:900;
+    letter-spacing:1px;
+    margin-top:7px;
+    text-shadow:2px 3px 3px #00549b;
+    z-index:1;
+    white-space:nowrap;
+}
+
+.game-subtitle{
+    font-size:13px;
+    font-weight:900;
+    margin-top:3px;
+    text-shadow:1px 2px 3px #00549b;
+    z-index:1;
+    white-space:nowrap;
+}
+
+.play-btn{
+    width:95%;
+    height:48px;
+    border-radius:30px;
+    background:#fff;
+    color:#064b91;
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+    padding:0 9px 0 14px;
+    font-size:14px;
+    font-weight:900;
+    margin-top:auto;
+    box-shadow:0 3px 6px #004e9c66;
+    z-index:2;
+    white-space:nowrap;
+}
+
+.arrow{
+    width:36px;
+    height:36px;
+    border-radius:50%;
+    background:#087ee2;
+    color:#fff;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    font-size:25px;
+    font-weight:bold;
+}
+
+.pink-arrow{
+    background:#ee1681;
+}
+
+.green-arrow{
+    background:#08a65c;
+}
+
+/* Footer notice */
+
+.footer-note{
+    text-align:center;
+    color:#39749e;
+    font-size:12px;
+    font-weight:bold;
+    margin:24px 0 8px;
+    padding:12px;
+    background:#fff;
+    border-radius:12px;
+    border:1px solid #c9eaff;
+}
+
+/* Smaller phones */
+
+@media(max-width:360px){
+    .game-card{
+        height:275px;
+        padding:10px 5px 8px;
+    }
+
+    .crown{
+        font-size:40px;
+    }
+
+    .ball{
+        width:48px;
+        height:48px;
+        font-size:26px;
+    }
+
+    .ball.small{
+        width:30px;
+        height:30px;
+        font-size:15px;
+    }
+
+    .game-name{
+        font-size:24px;
+    }
+
+    .game-subtitle{
+        font-size:11px;
+    }
+
+    .play-btn{
+        font-size:12px;
+        height:43px;
+    }
+
+    .arrow{
+        width:32px;
+        height:32px;
+    }
+
+    .banner-content h2{
+        font-size:29px;
+    }
+}
+</style>
+</head>
+
+<body>
+
+<header class="header">
+    <a href="home.html" class="back-btn" aria-label="Go back">‹</a>
+    <h1>Thailand Lottery</h1>
+</header>
+
+<main class="container">
+
+    <section class="thailand-banner">
+        <div class="thai-flag"></div>
+        <div class="banner-content">
+            <h2>Thailand<br>Lottery</h2>
+            <p>GLOBAL LOTTERY • GLO 365</p>
+        </div>
+    </section>
+
+    <div class="section-title">
+        <span>👑</span>
+        CHOOSE YOUR GAME
+    </div>
+
+    <section class="game-grid">
+
+        <!-- SINGLE -->
+        <a href="single.html" class="game-card">
+            <div class="crown">👑</div>
+
+            <div class="balls">
+                <div class="ball">7</div>
+            </div>
+
+            <div class="game-name">SINGLE</div>
+            <div class="game-subtitle">1 DIGIT GAME</div>
+
+            <div class="play-btn">
+                <span>PLAY NOW</span>
+                <span class="arrow">➜</span>
+            </div>
+        </a>
+
+        <!-- 2D -->
+        <a href="2D.html" class="game-card">
+            <div class="crown">👑</div>
+
+            <div class="balls">
+                <div class="ball">2</div>
+                <div class="ball">8</div>
+            </div>
+
+            <div class="game-name">2D</div>
+            <div class="game-subtitle">2 DIGIT GAME</div>
+
+            <div class="play-btn">
+                <span>PLAY NOW</span>
+                <span class="arrow">➜</span>
+            </div>
+        </a>
+
+        <!-- 3 UP -->
+        <a href="3up.html" class="game-card">
+            <div class="crown">👑</div>
+
+            <div class="balls">
+                <div class="ball pink">1</div>
+                <div class="ball pink">3</div>
+                <div class="ball pink">6</div>
+            </div>
+
+            <div class="game-name">3 UP</div>
+            <div class="game-subtitle">3 DIGIT GAME</div>
+
+            <div class="play-btn">
+                <span>PLAY NOW</span>
+                <span class="arrow pink-arrow">➜</span>
+            </div>
+        </a>
+
+        <!-- 6 UP -->
+        <a href="6up.html" class="game-card">
+            <div class="crown">👑</div>
+
+            <div class="balls">
+                <div class="ball small green">1</div>
+                <div class="ball small green">2</div>
+                <div class="ball small green">3</div>
+                <div class="ball small green">4</div>
+                <div class="ball small green">5</div>
+                <div class="ball small green">6</div>
+            </div>
+
+            <div class="game-name">6 UP</div>
+            <div class="game-subtitle">6 DIGIT GAME</div>
+
+            <div class="play-btn">
+                <span>PLAY NOW</span>
+                <span class="arrow green-arrow">➜</span>
+            </div>
+        </a>
+
+    </section>
+
+    <div class="footer-note">
+        💎 GLO 365 • PLAY WITH DEMO POINTS ONLY
+    </div>
+
+</main>
+
+</body>
+</html>
