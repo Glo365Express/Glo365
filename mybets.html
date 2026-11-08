@@ -5,226 +5,1059 @@
 <meta name="viewport" content="width=device-width,initial-scale=1">
 <meta name="theme-color" content="#2196e8">
 <title>GLO 365 - My Bets</title>
+
 <style>
 *{box-sizing:border-box;margin:0;padding:0}
-body{font-family:Arial,sans-serif;background:#f1f7fc;color:#172b45}
-.app{max-width:520px;min-height:100vh;margin:auto;background:#fff;padding-bottom:85px;box-shadow:0 0 20px #163c5c0a}
-header{width:100%;min-height:90px;background:#fff;display:flex;justify-content:center;align-items:center;padding:8px 5px;overflow:hidden;border-bottom:1px solid #d8e9f5}
-.header-ad{width:100%;min-height:70px;display:flex;justify-content:center;align-items:center;overflow:hidden}
-.header-ad iframe{max-width:100%;border:0}
-.heading{padding:20px 14px 12px;display:flex;justify-content:space-between;align-items:center}
-.heading h2{font-size:21px;color:#17466d}.heading small{color:#66849d}
-.summary{display:grid;grid-template-columns:1fr 1fr;gap:10px;padding:5px 12px 17px}
-.summary-card{background:linear-gradient(145deg,#eaf6ff,#d9efff);border:1px solid #c9e5f7;border-radius:13px;padding:16px 8px;text-align:center}
-.summary-card strong{display:block;font-size:21px;color:#087acb}.summary-card small{display:block;color:#66849d;margin-top:6px;font-size:11px}
-.section-title{font-size:14px;font-weight:bold;color:#17466d;padding:5px 13px 12px}
-.bet-list{padding:0 12px}
-.bet-card{border:1px solid #d8e9f5;border-radius:14px;margin-bottom:13px;overflow:hidden;background:white;box-shadow:0 3px 10px #087acb0b}
-.bet-header{background:#eaf5fd;padding:13px;display:flex;justify-content:space-between;align-items:center;gap:8px;border-bottom:1px solid #d9eaf6}
-.game-name{font-size:15px;font-weight:900;color:#087acb}.bet-id{font-size:10px;color:#7790a5;margin-top:5px}
-.status{padding:7px 11px;border-radius:20px;font-size:10px;font-weight:bold;white-space:nowrap}
-.running{background:#e5f3ff;color:#087acb}.win{background:#e1f8e8;color:#16813a}.loss{background:#ffe5e5;color:#c62828}.cancelled{background:#edf1f5;color:#667788}
-.bet-body{padding:12px}.bet-date{font-size:11px;color:#7890a4;margin-bottom:12px}
-.columns,.number-row{display:grid;grid-template-columns:1fr 65px 65px;gap:5px;align-items:center}
-.columns{font-size:10px;font-weight:bold;color:#66849d;padding:8px 5px;border-bottom:1px solid #dceaf4}
-.number-row{font-size:12px;padding:10px 5px;border-bottom:1px solid #e7f0f6;color:#405b72}
-.number-row:last-child{border-bottom:0}.number-row span:not(:first-child),.columns span:not(:first-child){text-align:center}
-.number{font-weight:bold;letter-spacing:1px;color:#087acb}
-.amount-box{background:#f1f8fd;border:1px solid #dcebf5;border-radius:10px;padding:11px;margin-top:12px}
-.amount-line{display:flex;justify-content:space-between;font-size:12px;padding:5px 0;color:#668095}
-.amount-line.final{border-top:1px solid #d2e4f1;margin-top:5px;padding-top:10px;color:#17466d;font-size:14px;font-weight:bold}
-.result-note{margin-top:10px;padding:10px 11px;border-radius:8px;font-size:11px;font-weight:bold}
-.result-note.win{background:#e1f8e8;color:#16813a}.result-note.loss{background:#ffe5e5;color:#c62828}
-.empty{text-align:center;padding:45px 15px;color:#8ba0b2}.empty-icon{font-size:45px;margin-bottom:12px}
-.empty strong{display:block;color:#31536e;font-size:16px;margin-bottom:8px}.empty p{font-size:12px;line-height:1.7}
-.play-btn{display:block;margin:15px auto 0;padding:12px 25px;border:0;border-radius:9px;background:#2196e8;color:white;font-weight:bold;cursor:pointer}
-.message{display:none;margin:10px 12px;padding:12px;border-radius:9px;font-size:12px;line-height:1.6;white-space:pre-line}
-.message.show{display:block}.message.error{background:#fff0f0;color:#a32635;border:1px solid #f0b8b8}.message.info{display:block;background:#eff8ff;color:#167fc4;border:1px solid #cbdfee}
-nav{position:fixed;bottom:0;left:50%;transform:translateX(-50%);width:100%;max-width:520px;background:white;border-top:1px solid #dceaf4;display:flex;justify-content:space-around;padding:11px 4px 16px;z-index:10;box-shadow:0 -3px 12px #00000008}
-nav button{border:0;background:none;color:#7b8d9d;font-size:11px;display:flex;flex-direction:column;align-items:center;gap:5px;flex:1;cursor:pointer}
-nav button strong{font-size:23px}nav button.active{color:#087acb}
-.nav-profile-avatar{width:25px;height:25px;border-radius:50%;overflow:hidden;display:grid;place-items:center;border:1.5px solid #e92760;font-size:19px;line-height:1}
-.nav-profile-avatar img{width:100%;height:100%;object-fit:cover;display:block;border-radius:50%}
-@media(max-width:380px){.columns,.number-row{grid-template-columns:1fr 55px 55px}.heading h2{font-size:19px}}
+
+body{
+ font-family:Arial,sans-serif;
+ background:#f1f7fc;
+ color:#172b45;
+}
+
+.app{
+ max-width:520px;
+ min-height:100vh;
+ margin:auto;
+ background:#fff;
+ padding-bottom:85px;
+ box-shadow:0 0 20px #163c5c0a;
+}
+
+/* HEADER AD */
+
+header{
+ width:100%;
+ min-height:80px;
+ background:#fff;
+ display:flex;
+ justify-content:center;
+ align-items:center;
+ padding:6px 5px;
+ overflow:hidden;
+ border-bottom:1px solid #d8e9f5;
+}
+
+.header-ad{
+ width:100%;
+ min-height:60px;
+ display:flex;
+ justify-content:center;
+ align-items:center;
+ overflow:hidden;
+}
+
+.header-ad iframe{
+ max-width:100%;
+ border:0;
+}
+
+/* HEADING */
+
+.heading{
+ padding:17px 14px 10px;
+ display:flex;
+ justify-content:space-between;
+ align-items:center;
+}
+
+.heading h2{
+ font-size:20px;
+ color:#17466d;
+}
+
+.heading small{
+ color:#66849d;
+ font-size:11px;
+}
+
+/* SUMMARY */
+
+.summary{
+ display:grid;
+ grid-template-columns:1fr 1fr;
+ gap:9px;
+ padding:5px 12px 14px;
+}
+
+.summary-card{
+ background:linear-gradient(145deg,#eaf6ff,#d9efff);
+ border:1px solid #c9e5f7;
+ border-radius:11px;
+ padding:12px 7px;
+ text-align:center;
+}
+
+.summary-card strong{
+ display:block;
+ font-size:19px;
+ color:#087acb;
+}
+
+.summary-card small{
+ display:block;
+ color:#66849d;
+ margin-top:4px;
+ font-size:10px;
+}
+
+/* SECTION */
+
+.section-title{
+ font-size:13px;
+ font-weight:bold;
+ color:#17466d;
+ padding:5px 13px 10px;
+}
+
+.bet-list{
+ padding:0 10px;
+}
+
+/* BET CARD */
+
+.bet-card{
+ border:1px solid #d8e9f5;
+ border-radius:11px;
+ margin-bottom:9px;
+ overflow:hidden;
+ background:white;
+ box-shadow:0 2px 7px #087acb0a;
+}
+
+.bet-header{
+ background:#edf7fe;
+ padding:9px 10px;
+ display:flex;
+ justify-content:space-between;
+ align-items:center;
+ gap:7px;
+ border-bottom:1px solid #d9eaf6;
+}
+
+.game-name{
+ font-size:13px;
+ font-weight:900;
+ color:#087acb;
+}
+
+.bet-id{
+ font-size:9px;
+ color:#7790a5;
+ margin-top:3px;
+}
+
+.status{
+ padding:5px 8px;
+ border-radius:20px;
+ font-size:9px;
+ font-weight:bold;
+ white-space:nowrap;
+}
+
+.running{background:#e5f3ff;color:#087acb}
+.win{background:#e1f8e8;color:#16813a}
+.loss{background:#ffe5e5;color:#c62828}
+.cancelled{background:#edf1f5;color:#667788}
+
+/* CARD BODY */
+
+.bet-body{
+ padding:9px 10px;
+}
+
+.bet-date{
+ font-size:10px;
+ color:#7890a4;
+ margin-bottom:7px;
+}
+
+.columns,
+.number-row{
+ display:grid;
+ grid-template-columns:1fr 60px 60px;
+ gap:4px;
+ align-items:center;
+}
+
+.columns{
+ font-size:9px;
+ font-weight:bold;
+ color:#66849d;
+ padding:6px 4px;
+ border-bottom:1px solid #dceaf4;
+}
+
+.number-row{
+ font-size:11px;
+ padding:7px 4px;
+ border-bottom:1px solid #e7f0f6;
+ color:#405b72;
+}
+
+.number-row:last-child{
+ border-bottom:0;
+}
+
+.number-row span:not(:first-child),
+.columns span:not(:first-child){
+ text-align:center;
+}
+
+.number{
+ font-weight:bold;
+ letter-spacing:1px;
+ color:#087acb;
+}
+
+/* GLO SYMBOL */
+
+.glo-amount{
+ display:inline-flex;
+ align-items:center;
+ justify-content:flex-end;
+ gap:5px;
+ font-weight:bold;
+ color:#087acb;
+ white-space:nowrap;
+}
+
+.glo-symbol{
+ width:17px;
+ height:17px;
+ min-width:17px;
+ display:inline-flex;
+ align-items:center;
+ justify-content:center;
+ border-radius:50%;
+ background:linear-gradient(145deg,#39b8ff,#087acb);
+ border:1px solid #bce8ff;
+ color:#fff;
+ font-size:10px;
+ font-weight:900;
+ box-shadow:0 1px 3px #087acb30;
+}
+
+/* AMOUNT BOX */
+
+.amount-box{
+ background:#f4faff;
+ border:1px solid #dcebf5;
+ border-radius:8px;
+ padding:7px 9px;
+ margin-top:8px;
+}
+
+.amount-line{
+ display:flex;
+ justify-content:space-between;
+ align-items:center;
+ gap:8px;
+ font-size:10px;
+ padding:4px 0;
+ color:#668095;
+}
+
+.amount-line.final{
+ border-top:1px solid #d2e4f1;
+ margin-top:4px;
+ padding-top:7px;
+ color:#17466d;
+ font-size:12px;
+ font-weight:bold;
+}
+
+/* RESULT NOTE */
+
+.result-note{
+ margin-top:7px;
+ padding:7px 9px;
+ border-radius:7px;
+ font-size:10px;
+ font-weight:bold;
+}
+
+.result-note.win{
+ background:#e1f8e8;
+ color:#16813a;
+}
+
+.result-note.loss{
+ background:#ffe5e5;
+ color:#c62828;
+}
+
+/* EMPTY */
+
+.empty{
+ text-align:center;
+ padding:38px 15px;
+ color:#8ba0b2;
+}
+
+.empty-icon{
+ font-size:40px;
+ margin-bottom:10px;
+}
+
+.empty strong{
+ display:block;
+ color:#31536e;
+ font-size:15px;
+ margin-bottom:7px;
+}
+
+.empty p{
+ font-size:11px;
+ line-height:1.7;
+}
+
+.play-btn{
+ display:block;
+ margin:13px auto 0;
+ padding:10px 23px;
+ border:0;
+ border-radius:8px;
+ background:#2196e8;
+ color:white;
+ font-weight:bold;
+ cursor:pointer;
+ font-size:12px;
+}
+
+/* MESSAGE */
+
+.message{
+ display:none;
+ margin:10px 12px;
+ padding:11px;
+ border-radius:9px;
+ font-size:11px;
+ line-height:1.6;
+ white-space:pre-line;
+}
+
+.message.show{
+ display:block;
+}
+
+.message.error{
+ background:#fff0f0;
+ color:#a32635;
+ border:1px solid #f0b8b8;
+}
+
+.message.info{
+ display:block;
+ background:#eff8ff;
+ color:#167fc4;
+ border:1px solid #cbdfee;
+}
+
+/* BOTTOM NAV */
+
+nav{
+ position:fixed;
+ bottom:0;
+ left:50%;
+ transform:translateX(-50%);
+ width:100%;
+ max-width:520px;
+ background:white;
+ border-top:1px solid #dceaf4;
+ display:flex;
+ justify-content:space-around;
+ padding:10px 4px 15px;
+ z-index:10;
+ box-shadow:0 -3px 12px #00000008;
+}
+
+nav button{
+ border:0;
+ background:none;
+ color:#7b8d9d;
+ font-size:11px;
+ display:flex;
+ flex-direction:column;
+ align-items:center;
+ gap:5px;
+ flex:1;
+ cursor:pointer;
+}
+
+nav button strong{
+ font-size:22px;
+}
+
+nav button.active{
+ color:#087acb;
+}
+
+.nav-profile-avatar{
+ width:25px;
+ height:25px;
+ border-radius:50%;
+ overflow:hidden;
+ display:grid;
+ place-items:center;
+ border:1.5px solid #e92760;
+ font-size:19px;
+ line-height:1;
+}
+
+.nav-profile-avatar img{
+ width:100%;
+ height:100%;
+ object-fit:cover;
+ display:block;
+ border-radius:50%;
+}
+
+@media(max-width:380px){
+ .columns,.number-row{
+  grid-template-columns:1fr 53px 53px;
+ }
+ .heading h2{font-size:19px}
+ .bet-header{padding:8px}
+ .bet-body{padding:8px}
+ .glo-symbol{
+  width:15px;
+  height:15px;
+  min-width:15px;
+  font-size:9px;
+ }
+}
 </style>
 </head>
+
 <body>
 <div class="app">
-<header><div class="header-ad">
-<script>var atOptions={'key':'ab837cf0ea9c26ae43b7bc4e05a0b5de','format':'iframe','height':50,'width':320,'params':{}};</script>
-<script src="https://bicea.org/22/ab837cf0ea9c26ae43b7bc4e05a0b5de"></script>
-</div></header>
-<div class="heading"><h2>My Bets</h2><small id="betCount">Loading…</small></div>
-<section class="summary">
-<div class="summary-card"><strong id="runningCount">0</strong><small>Running Bets</small></div>
-<div class="summary-card"><strong id="runningAmount">0.00</strong><small>Total Running Points</small></div>
-</section>
-<div class="section-title">My Bet History</div>
-<div id="pageMessage" class="message">Connecting to GLO 365 server…</div>
-<section class="bet-list" id="betList"></section>
-<nav>
-<button onclick="location.href='home.html'"><strong>🏠</strong>Home</button>
-<button class="active" onclick="location.href='mybets.html'"><strong>🎯</strong>My Bets</button>
-<button onclick="location.href='results.html'"><strong>🏆</strong>Results</button>
-<button onclick="location.href='profile.html'"><strong class="nav-profile-avatar" id="navProfileAvatar">♙</strong>Profile</button>
-</nav>
+
+<header>
+ <div class="header-ad">
+  <script>
+   var atOptions={
+    'key':'ab837cf0ea9c26ae43b7bc4e05a0b5de',
+    'format':'iframe',
+    'height':50,
+    'width':320,
+    'params':{}
+   };
+  </script>
+  <script src="https://bicea.org/22/ab837cf0ea9c26ae43b7bc4e05a0b5de"></script>
+ </div>
+</header>
+
+<div class="heading">
+ <h2>My Bets</h2>
+ <small id="betCount">Loading…</small>
 </div>
+
+<section class="summary">
+ <div class="summary-card">
+  <strong id="runningCount">0</strong>
+  <small>Running Bets</small>
+ </div>
+
+ <div class="summary-card">
+  <strong id="runningAmount">0.00</strong>
+  <small>Total Running GLO</small>
+ </div>
+</section>
+
+<div class="section-title">My Bet History · Last 72 Hours</div>
+
+<div id="pageMessage" class="message">
+ Connecting to GLO 365 server…
+</div>
+
+<section class="bet-list" id="betList"></section>
+
+<nav>
+ <button onclick="location.href='home.html'">
+  <strong>🏠</strong>Home
+ </button>
+
+ <button class="active" onclick="location.href='mybets.html'">
+  <strong>🎯</strong>My Bets
+ </button>
+
+ <button onclick="location.href='results.html'">
+  <strong>🏆</strong>Results
+ </button>
+
+ <button onclick="location.href='profile.html'">
+  <strong class="nav-profile-avatar" id="navProfileAvatar">♙</strong>
+  Profile
+ </button>
+</nav>
+
+</div>
+
 <script>
 "use strict";
+
 const API_BASE_URL="https://glo365.onrender.com/api";
 const TOKEN_KEYS=["glo365_token","token","authToken"];
+const HISTORY_HOURS=72;
+const HISTORY_MS=HISTORY_HOURS*60*60*1000;
+
 let bets=[];
 let currentUser=null;
+
 const $=id=>document.getElementById(id);
 
+/* SESSION */
+
 function getToken(){
-  try{for(const key of TOKEN_KEYS){const value=sessionStorage.getItem(key);if(value)return value;}}catch(_){}
-  return "";
+ try{
+  for(const key of TOKEN_KEYS){
+   const value=sessionStorage.getItem(key);
+   if(value)return value;
+  }
+ }catch(_){}
+ return "";
 }
+
+/* API */
+
 async function apiRequest(path){
-  const headers={Accept:"application/json"};
-  const token=getToken();
-  if(token)headers.Authorization="Bearer "+token;
-  const response=await fetch(API_BASE_URL+path,{method:"GET",headers,credentials:"include",cache:"no-store"});
-  const raw=await response.text();
-  let data={};
-  try{data=raw?JSON.parse(raw):{};}catch(_){throw new Error("Server returned an invalid response.");}
-  if(!response.ok||data.success===false){
-    const error=new Error(data.message||data.error||(response.status===401?"Please log in again.":"Request failed ("+response.status+")."));
-    error.status=response.status;throw error;
-  }
-  return data;
+
+ const headers={Accept:"application/json"};
+ const token=getToken();
+
+ if(token){
+  headers.Authorization="Bearer "+token;
+ }
+
+ const response=await fetch(API_BASE_URL+path,{
+  method:"GET",
+  headers,
+  credentials:"include",
+  cache:"no-store"
+ });
+
+ const raw=await response.text();
+
+ let data={};
+
+ try{
+  data=raw?JSON.parse(raw):{};
+ }catch(_){
+  throw new Error("Server returned an invalid response.");
+ }
+
+ if(!response.ok||data.success===false){
+
+  const error=new Error(
+   data.message||
+   data.error||
+   (response.status===401
+    ?"Please log in again."
+    :"Request failed ("+response.status+").")
+  );
+
+  error.status=response.status;
+  throw error;
+ }
+
+ return data;
 }
+
+/* MESSAGE */
+
 function showMessage(message,type="info"){
-  const box=$("pageMessage");box.textContent=message;box.className="message show "+type;
+ const box=$("pageMessage");
+ box.textContent=message;
+ box.className="message show "+type;
 }
-function formatPoints(value){const n=Number(value);return (Number.isFinite(n)?n:0).toFixed(2);}
+
+/* GLO AMOUNT */
+
+function formatPoints(value){
+ const n=Number(value);
+ return (Number.isFinite(n)?n:0).toFixed(2);
+}
+
+function makeGloAmount(value){
+
+ const wrapper=makeElement("span","glo-amount");
+
+ const symbol=makeElement("span","glo-symbol","G");
+ const amount=makeElement("span","",formatPoints(value));
+
+ wrapper.append(symbol,amount);
+
+ return wrapper;
+}
+
+/* STATUS */
+
 function normalStatus(value){
-  const s=String(value||"pending").toLowerCase();
-  if(["win","won"].includes(s))return "win";
-  if(["loss","lose","lost"].includes(s))return "loss";
-  if(["cancelled","canceled","void"].includes(s))return "cancelled";
-  return "running";
+
+ const s=String(value||"pending").toLowerCase();
+
+ if(["win","won"].includes(s))return "win";
+ if(["loss","lose","lost"].includes(s))return "loss";
+ if(["cancelled","canceled","void"].includes(s))return "cancelled";
+
+ return "running";
 }
+
+/* GAME NAME */
+
 function gameLabel(game){
-  const g=String(game||"").toLowerCase();
-  if(g.includes("6up")||g.includes("6 up"))return "6 UP";
-  if(g.includes("3up")||g.includes("3 up"))return "3 UP";
-  if(g==="2d"||g.includes("2d"))return "2D";
-  if(g.includes("single"))return "SINGLE";
-  return String(game||"BET").toUpperCase();
+
+ const g=String(game||"").toLowerCase();
+
+ if(g.includes("6up")||g.includes("6 up"))return "6 UP";
+ if(g.includes("3up")||g.includes("3 up"))return "3 UP";
+ if(g==="2d"||g.includes("2d"))return "2D";
+ if(g.includes("single"))return "SINGLE";
+
+ return String(game||"BET").toUpperCase();
 }
+
+/* DATE */
+
 function dateLabel(value){
-  if(!value)return "Date unavailable";
-  const d=new Date(value);return Number.isNaN(d.getTime())?String(value):d.toLocaleString("en-GB");
+
+ if(!value)return "Date unavailable";
+
+ const d=new Date(value);
+
+ return Number.isNaN(d.getTime())
+  ?String(value)
+  :d.toLocaleString("en-GB");
 }
+
+/* HISTORY TIME FILTER */
+
+function getBetTimestamp(bet){
+
+ const value=
+  bet.created_at||
+  bet.createdAt||
+  bet.date||
+  bet.bet_date||
+  bet.betDate||
+  null;
+
+ if(!value)return null;
+
+ const timestamp=new Date(value).getTime();
+
+ return Number.isFinite(timestamp)?timestamp:null;
+}
+
+function isWithin72Hours(bet){
+
+ const timestamp=getBetTimestamp(bet);
+
+ if(timestamp===null)return false;
+
+ const now=Date.now();
+
+ return timestamp<=now&&
+        now-timestamp<=HISTORY_MS;
+}
+
+/* ELEMENTS */
+
 function makeElement(tag,cls,text){
-  const n=document.createElement(tag);if(cls)n.className=cls;if(text!==undefined)n.textContent=String(text);return n;
+
+ const n=document.createElement(tag);
+
+ if(cls)n.className=cls;
+ if(text!==undefined)n.textContent=String(text);
+
+ return n;
 }
+
 function appendLine(parent,label,value,final=false){
-  const line=makeElement("div","amount-line"+(final?" final":""));
-  line.append(makeElement("span","",label),makeElement("span","",formatPoints(value)+" Points"));
-  parent.appendChild(line);
+
+ const line=makeElement(
+  "div",
+  "amount-line"+(final?" final":"")
+ );
+
+ const labelElement=makeElement("span","",label);
+
+ line.append(labelElement,makeGloAmount(value));
+
+ parent.appendChild(line);
 }
+
+/* BET CARD */
+
 function cardFor(bet,index){
-  const card=makeElement("article","bet-card");
-  const status=normalStatus(bet.status);
-  const head=makeElement("div","bet-header"),left=document.createElement("div");
-  left.append(makeElement("div","game-name",gameLabel(bet.game||bet.game_name)),makeElement("div","bet-id","Bet ID: "+(bet.id??index+1)));
-  const labels={running:"● RUNNING",win:"🏆 WIN",loss:"✖ LOSS",cancelled:"CANCELLED"};
-  head.append(left,makeElement("span","status "+status,labels[status]));
-  const body=makeElement("div","bet-body");
-  body.appendChild(makeElement("div","bet-date","📅 "+dateLabel(bet.date||bet.created_at)));
-  const rows=Array.isArray(bet.rows)?bet.rows:[];
-  if(rows.length){
-    const columns=makeElement("div","columns");
-    ["NUMBER","STRAIGHT (D)","RUMBLE (R)"].forEach(x=>columns.appendChild(makeElement("span","",x)));
-    body.appendChild(columns);
-    rows.forEach(r=>{
-      const line=makeElement("div","number-row");
-      line.append(makeElement("span","number",r.number??"—"),makeElement("span","",formatPoints(r.straight)),makeElement("span","",formatPoints(r.rumble)));
-      body.appendChild(line);
-    });
-  }else{
-    const selection=bet.selection??"—";
-    body.appendChild(makeElement("div","number-row",String(selection)));
-  }
-  const total=Number(bet.total_amount??bet.total??bet.amount??0);
-  const discount=Number(bet.discount_amount??bet.discountValue??0);
-  const payable=Number(bet.payable_amount??bet.amount??total);
-  const box=makeElement("div","amount-box");
-  appendLine(box,"Total Amount",total);
-  appendLine(box,"Discount",discount);
-  appendLine(box,"Bet Amount",payable,true);
-  body.appendChild(box);
-  if(status==="win"||status==="loss"){
-    body.appendChild(makeElement("div","result-note "+status,status==="win"?"🏆 Congratulations! Your demo bet WON.":"Sorry! Your demo bet LOST."));
-  }
-  card.append(head,body);return card;
+
+ const card=makeElement("article","bet-card");
+
+ const status=normalStatus(bet.status);
+
+ const head=makeElement("div","bet-header");
+ const left=document.createElement("div");
+
+ left.append(
+  makeElement(
+   "div",
+   "game-name",
+   gameLabel(bet.game||bet.game_name)
+  ),
+  makeElement(
+   "div",
+   "bet-id",
+   "Bet ID: "+(bet.id??index+1)
+  )
+ );
+
+ const labels={
+  running:"● RUNNING",
+  win:"🏆 WIN",
+  loss:"✖ LOSS",
+  cancelled:"CANCELLED"
+ };
+
+ head.append(
+  left,
+  makeElement("span","status "+status,labels[status])
+ );
+
+ const body=makeElement("div","bet-body");
+
+ body.appendChild(
+  makeElement(
+   "div",
+   "bet-date",
+   "📅 "+dateLabel(
+    bet.created_at||bet.createdAt||bet.date
+   )
+  )
+ );
+
+ const rows=Array.isArray(bet.rows)?bet.rows:[];
+
+ if(rows.length){
+
+  const columns=makeElement("div","columns");
+
+  ["NUMBER","STRAIGHT (D)","RUMBLE (R)"].forEach(x=>{
+   columns.appendChild(makeElement("span","",x));
+  });
+
+  body.appendChild(columns);
+
+  rows.forEach(r=>{
+
+   const line=makeElement("div","number-row");
+
+   line.append(
+    makeElement("span","number",r.number??"—"),
+    makeElement("span","",formatPoints(r.straight)),
+    makeElement("span","",formatPoints(r.rumble))
+   );
+
+   body.appendChild(line);
+
+  });
+
+ }else{
+
+  const selection=bet.selection??"—";
+
+  body.appendChild(
+   makeElement("div","number-row",String(selection))
+  );
+ }
+
+ const total=Number(
+  bet.total_amount??bet.total??bet.amount??0
+ );
+
+ const discount=Number(
+  bet.discount_amount??bet.discountValue??0
+ );
+
+ const payable=Number(
+  bet.payable_amount??bet.amount??total
+ );
+
+ const box=makeElement("div","amount-box");
+
+ appendLine(box,"Total Amount",total);
+ appendLine(box,"Discount",discount);
+ appendLine(box,"Bet Amount",payable,true);
+
+ body.appendChild(box);
+
+ if(status==="win"||status==="loss"){
+
+  body.appendChild(
+   makeElement(
+    "div",
+    "result-note "+status,
+    status==="win"
+     ?"🏆 Congratulations! Your bet WON."
+     :"Sorry! Your bet LOST."
+   )
+  );
+
+ }
+
+ card.append(head,body);
+
+ return card;
 }
+
+/* RENDER */
+
 function render(){
-  const list=$("betList");list.replaceChildren();
-  const running=bets.filter(b=>normalStatus(b.status)==="running");
-  $("runningCount").textContent=running.length.toLocaleString();
-  $("betCount").textContent=bets.length.toLocaleString()+" Bets";
-  $("runningAmount").textContent=formatPoints(running.reduce((sum,b)=>sum+Number(b.payable_amount??b.amount??0),0));
-  if(!bets.length){
-    const empty=makeElement("div","empty");
-    empty.append(makeElement("div","empty-icon","🎫"),makeElement("strong","","No Bets Found"),makeElement("p","","You have no demo bet history yet. Place a demo entry and it will appear here."));
-    const button=makeElement("button","play-btn","PLACE A BET");
-    button.onclick=()=>location.href="single.html";empty.appendChild(button);list.appendChild(empty);return;
-  }
-  [...bets].sort((a,b)=>new Date(b.date||b.created_at||0)-new Date(a.date||a.created_at||0)).forEach((b,i)=>list.appendChild(cardFor(b,i)));
+
+ const list=$("betList");
+
+ list.replaceChildren();
+
+ const running=bets.filter(
+  b=>normalStatus(b.status)==="running"
+ );
+
+ $("runningCount").textContent=
+  running.length.toLocaleString();
+
+ $("betCount").textContent=
+  bets.length.toLocaleString()+" Bets";
+
+ $("runningAmount").textContent=
+  formatPoints(
+   running.reduce(
+    (sum,b)=>sum+Number(
+     b.payable_amount??b.amount??0
+    ),
+    0
+   )
+  );
+
+ if(!bets.length){
+
+  const empty=makeElement("div","empty");
+
+  empty.append(
+   makeElement("div","empty-icon","🎫"),
+   makeElement("strong","","No Recent Bets"),
+   makeElement(
+    "p",
+    "",
+    "You have no bet history in the last 72 hours."
+   )
+  );
+
+  const button=makeElement(
+   "button",
+   "play-btn",
+   "PLACE A BET"
+  );
+
+  button.onclick=()=>location.href="single.html";
+
+  empty.appendChild(button);
+
+  list.appendChild(empty);
+
+  return;
+ }
+
+ [...bets]
+  .sort((a,b)=>
+   (getBetTimestamp(b)||0)-(getBetTimestamp(a)||0)
+  )
+  .forEach((b,i)=>{
+   list.appendChild(cardFor(b,i));
+  });
 }
+
+/* AVATAR */
+
 function updateAvatar(){
-  const holder=$("navProfileAvatar");if(!holder)return;
-  const avatar=currentUser&&(currentUser.avatar||currentUser.photo);
-  if(!avatar){holder.textContent="♙";return;}
-  const img=document.createElement("img");img.alt="Profile";img.src=avatar;
-  img.onerror=()=>{holder.textContent="♙";};holder.replaceChildren(img);
+
+ const holder=$("navProfileAvatar");
+
+ if(!holder)return;
+
+ const avatar=currentUser&&(
+  currentUser.avatar||currentUser.photo
+ );
+
+ if(!avatar){
+  holder.textContent="♙";
+  return;
+ }
+
+ const img=document.createElement("img");
+
+ img.alt="Profile";
+ img.src=avatar;
+
+ img.onerror=()=>{
+  holder.textContent="♙";
+ };
+
+ holder.replaceChildren(img);
 }
+
+/* LOAD ALL BETS */
+
 async function loadAllBets(){
-  const [generic,three,six]=await Promise.all([
-    apiRequest("/demo/bets"),
-    apiRequest("/demo/3up/bets"),
-    apiRequest("/demo/6up/bets")
-  ]);
-  const genericBets=(generic.bets||[]).map(b=>({
-    ...b,game:b.game_name,date:b.created_at,total_amount:b.amount,payable_amount:b.amount
-  }));
-  const threeBets=(three.bets||[]).map(b=>({
-    ...b,game:"3UP",date:b.created_at,total_amount:b.total_amount,
-    discount_amount:b.discount_amount,payable_amount:b.payable_amount
-  }));
-  const sixBets=(six.bets||[]).map(b=>({
-    ...b,game:"6UP",date:b.created_at,total_amount:b.total_amount,
-    discount_amount:b.discount_amount,payable_amount:b.payable_amount
-  }));
-  bets=[...genericBets,...threeBets,...sixBets];
-  bets.sort((a,b)=>new Date(b.date||0)-new Date(a.date||0));
+
+ const [generic,three,six]=await Promise.all([
+
+  apiRequest("/demo/bets"),
+
+  apiRequest("/demo/3up/bets"),
+
+  apiRequest("/demo/6up/bets")
+
+ ]);
+
+ const genericBets=(generic.bets||[]).map(b=>({
+
+  ...b,
+
+  game:b.game_name,
+
+  date:b.created_at,
+
+  total_amount:b.amount,
+
+  payable_amount:b.amount
+
+ }));
+
+ const threeBets=(three.bets||[]).map(b=>({
+
+  ...b,
+
+  game:"3UP",
+
+  date:b.created_at,
+
+  total_amount:b.total_amount,
+
+  discount_amount:b.discount_amount,
+
+  payable_amount:b.payable_amount
+
+ }));
+
+ const sixBets=(six.bets||[]).map(b=>({
+
+  ...b,
+
+  game:"6UP",
+
+  date:b.created_at,
+
+  total_amount:b.total_amount,
+
+  discount_amount:b.discount_amount,
+
+  payable_amount:b.payable_amount
+
+ }));
+
+ const allBets=[
+  ...genericBets,
+  ...threeBets,
+  ...sixBets
+ ];
+
+ /*
+  * Only show bets from the last 72 hours.
+  * Old database records are NOT deleted.
+  */
+
+ bets=allBets.filter(isWithin72Hours);
+
+ bets.sort((a,b)=>
+  (getBetTimestamp(b)||0)-(getBetTimestamp(a)||0)
+ );
 }
+
+/* INITIALIZE */
+
 async function initialize(){
-  try{
-    const me=await apiRequest("/auth/me");
-    if(!me.user)throw new Error("Could not identify your account.");
-    currentUser=me.user;
-    await loadAllBets();
-    $("pageMessage").className="message";
-    render();updateAvatar();
-  }catch(error){
-    console.error("My Bets load error:",error);
-    if(error.status===401){
-      showMessage("Your login session is missing or expired. Please log in again.","error");
-      setTimeout(()=>location.replace("login.html?next="+encodeURIComponent("mybets.html")),700);
-    }else{
-      showMessage(error.message||"Could not load your bets from the server.","error");
-      $("betCount").textContent="Unavailable";
-    }
+
+ try{
+
+  const me=await apiRequest("/auth/me");
+
+  if(!me.user){
+   throw new Error("Could not identify your account.");
   }
+
+  currentUser=me.user;
+
+  await loadAllBets();
+
+  $("pageMessage").className="message";
+
+  render();
+
+  updateAvatar();
+
+ }catch(error){
+
+  console.error("My Bets load error:",error);
+
+  if(error.status===401){
+
+   showMessage(
+    "Your login session is missing or expired. Please log in again.",
+    "error"
+   );
+
+   setTimeout(()=>{
+    location.replace(
+     "login.html?next="+
+     encodeURIComponent("mybets.html")
+    );
+   },700);
+
+  }else{
+
+   showMessage(
+    error.message||"Could not load your bets from the server.",
+    "error"
+   );
+
+   $("betCount").textContent="Unavailable";
+  }
+ }
 }
-window.addEventListener("focus",()=>initialize());
-window.addEventListener("pageshow",()=>initialize());
-initialize();
+
+/* REFRESH */
+
+let isLoading=false;
+
+async function safeInitialize(){
+
+ if(isLoading)return;
+
+ isLoading=true;
+
+ try{
+  await initialize();
+ }finally{
+  isLoading=false;
+ }
+}
+
+window.addEventListener("focus",safeInitialize);
+
+window.addEventListener("pageshow",safeInitialize);
+
+safeInitialize();
+
 </script>
 </body>
 </html>
