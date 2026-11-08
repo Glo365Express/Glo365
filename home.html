@@ -1458,6 +1458,179 @@ nav button.active{color:#087acb}
  .thai-banner-open{font-size:7px;}
 }
 
+
+/* FINAL FIX: MAKE TOP DRAW CARDS AND RESULT CARDS SLIMMER */
+.draw-board{
+ height:145px !important;
+ min-height:145px !important;
+ margin-top:1px !important;
+ margin-bottom:7px !important;
+ gap:5px !important;
+}
+.draw-board .official-box,
+.draw-board .days-box,
+.draw-board .draw-info{
+ height:145px !important;
+ min-height:145px !important;
+}
+.draw-board .official-box{
+ border-radius:17px !important;
+}
+.draw-board .official-art{
+ min-height:0 !important;
+ padding:3px !important;
+}
+.draw-board .official-logo{
+ width:65px !important;
+ height:65px !important;
+ max-width:65px !important;
+ max-height:65px !important;
+}
+.draw-board .official-label{
+ padding:5px 1px !important;
+ font-size:clamp(10px,2.7vw,15px) !important;
+ line-height:1.1 !important;
+}
+.draw-board .days-box{
+ padding:3px 1px !important;
+ border-radius:17px !important;
+}
+.draw-board .days-number{
+ font-size:clamp(27px,6.3vw,37px) !important;
+ line-height:1 !important;
+}
+.draw-board .days-label{
+ font-size:clamp(11px,2.8vw,16px) !important;
+ margin-top:4px !important;
+}
+.draw-board .draw-info{
+ gap:4px !important;
+}
+.draw-board .draw-number{
+ padding:5px 2px !important;
+ font-size:clamp(9px,2.4vw,13px) !important;
+ line-height:1.15 !important;
+}
+.draw-board .time-row{
+ gap:4px !important;
+}
+.draw-board .time-box{
+ border-radius:15px !important;
+}
+.draw-board .time-value{
+ padding:3px 1px !important;
+ font-size:clamp(15px,3.8vw,22px) !important;
+}
+.draw-board .time-label{
+ padding:1px !important;
+ font-size:clamp(7px,2vw,11px) !important;
+}
+.draw-board .draw-status{
+ padding:0 !important;
+ font-size:8px !important;
+ line-height:1.05 !important;
+}
+.results-heading{
+ margin-bottom:4px !important;
+ font-size:11px !important;
+}
+.results-board{
+ gap:4px !important;
+ margin-bottom:8px !important;
+}
+.results-board .result-card{
+ height:47px !important;
+ min-height:47px !important;
+ padding:2px 1px !important;
+ border-radius:8px !important;
+}
+.results-board .result-rank{
+ width:17px !important;
+ height:17px !important;
+ top:3px !important;
+ left:3px !important;
+ font-size:9px !important;
+}
+.results-board .result-number{
+ margin-top:7px !important;
+ font-size:clamp(10px,2.5vw,13px) !important;
+ line-height:1 !important;
+}
+.results-board .result-caption{
+ margin-top:2px !important;
+ font-size:6px !important;
+ line-height:1 !important;
+}
+@media(max-width:390px){
+ .draw-board{
+  height:132px !important;
+  min-height:132px !important;
+ }
+ .draw-board .official-box,
+ .draw-board .days-box,
+ .draw-board .draw-info{
+  height:132px !important;
+  min-height:132px !important;
+ }
+ .draw-board .official-logo{
+  width:58px !important;
+  height:58px !important;
+  max-width:58px !important;
+  max-height:58px !important;
+ }
+ .draw-board .official-label{font-size:9px !important;}
+ .draw-board .days-number{font-size:26px !important;}
+ .draw-board .days-label{font-size:10px !important;}
+ .draw-board .draw-number{font-size:8px !important;}
+ .draw-board .time-value{font-size:14px !important;}
+ .draw-board .time-label{font-size:7px !important;}
+ .draw-board .draw-status{font-size:7px !important;}
+ .results-board .result-card{
+  height:43px !important;
+  min-height:43px !important;
+ }
+ .results-board .result-number{font-size:10px !important;}
+ .results-board .result-caption{font-size:5.5px !important;}
+}
+
+
+/* THAILAND LOTTERY BANNER: KEEP THE SAME DESIGN, REDUCE ONLY HEIGHT */
+.thailand-lottery-link{
+ height:100px !important;
+ min-height:100px !important;
+ background-size:cover !important;
+ background-position:center !important;
+}
+.thai-banner-copy{
+ top:10% !important;
+ gap:2px !important;
+}
+.thai-banner-heading{
+ font-size:clamp(14px,3.8vw,23px) !important;
+}
+.thai-banner-date{
+ padding:2px 8px !important;
+ font-size:clamp(9px,2.4vw,13px) !important;
+}
+.thai-banner-countdown{
+ font-size:clamp(14px,3.6vw,22px) !important;
+}
+.thai-banner-open{
+ bottom:5px !important;
+ font-size:7px !important;
+}
+@media(max-width:390px){
+ .thailand-lottery-link{
+  height:88px !important;
+  min-height:88px !important;
+ }
+ .thai-banner-copy{top:9% !important;gap:1px !important;}
+ .thai-banner-heading{font-size:14px !important;}
+ .thai-banner-date{font-size:8px !important;padding:2px 6px !important;}
+ .thai-banner-countdown{font-size:14px !important;}
+ .thai-banner-open{bottom:4px !important;font-size:6px !important;}
+}
+
 </style>
 </head>
 
