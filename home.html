@@ -1783,6 +1783,84 @@ nav button.active{color:#087acb}
   margin-right:5px;
  }
 }
+
+/* FINAL COMPACT DAILY MILLIONAIRE PANELS — reference proportion */
+.millionaire-info{
+  grid-template-columns:minmax(0,1fr) minmax(0,1fr) !important;
+  gap:7px !important;
+  margin:8px 12px 12px !important;
+  align-items:stretch !important;
+}
+.millionaire-panel{
+  height:132px !important;
+  min-height:132px !important;
+  max-height:132px !important;
+  box-sizing:border-box !important;
+  padding:0 5px 5px !important;
+  border-radius:17px !important;
+  overflow:hidden !important;
+  justify-content:flex-start !important;
+}
+.millionaire-panel h3{
+  flex:0 0 29px !important;
+  height:29px !important;
+  min-height:29px !important;
+  box-sizing:border-box !important;
+  display:flex !important;
+  align-items:center !important;
+  justify-content:center !important;
+  margin:0 0 5px !important;
+  padding:3px 1px !important;
+  font-size:clamp(9px,2.45vw,12px) !important;
+  border-radius:12px 12px 8px 8px !important;
+}
+.millionaire-draw-number{
+  flex:0 0 24px !important;
+  height:24px !important;
+  min-height:24px !important;
+  box-sizing:border-box !important;
+  margin:0 0 5px !important;
+  padding:3px 1px !important;
+  font-size:clamp(9px,2.35vw,12px) !important;
+}
+.millionaire-timer,
+.millionaire-result-row{
+  flex:1 1 auto !important;
+  min-height:0 !important;
+  align-items:stretch !important;
+  gap:4px !important;
+}
+.millionaire-time-box,
+.millionaire-result-box,
+.millionaire-time-box.hours,
+.millionaire-time-box.minutes,
+.millionaire-time-box.seconds,
+.millionaire-result-box.first,
+.millionaire-result-box.second,
+.millionaire-result-box.third{
+  min-height:0 !important;
+  height:100% !important;
+  border-radius:12px !important;
+}
+.millionaire-time-value{
+  font-size:clamp(17px,4.8vw,25px) !important;
+  padding:5px 1px 3px !important;
+}
+.millionaire-time-box.hours .millionaire-time-value{
+  font-size:clamp(19px,5.3vw,28px) !important;
+}
+.millionaire-time-label{
+  font-size:clamp(7px,1.9vw,9px) !important;
+  padding:3px 1px !important;
+}
+.millionaire-result-value{
+  font-size:clamp(18px,5vw,26px) !important;
+  padding:5px 1px !important;
+}
+@media(max-width:360px){
+  .millionaire-panel{height:124px !important;min-height:124px !important;max-height:124px !important}
+  .millionaire-panel h3{font-size:9px !important}
+}
 </style>
 </head>
 
@@ -1947,7 +2025,7 @@ nav button.active{color:#087acb}
 
    <div class="millionaire-time-box seconds">
     <div class="millionaire-time-value" id="millionaireSeconds">--</div>
-    <div class="millionaire-time-label">SEC</div>
+    <div class="millionaire-time-label">DRAW</div>
    </div>
 
   </div>
@@ -2557,7 +2635,8 @@ function updateMillionaireCountdown(){
 
  setText("millionaireHours",String(hours).padStart(2,"0"));
  setText("millionaireMinutes",String(minutes).padStart(2,"0"));
- setText("millionaireSeconds",String(seconds).padStart(2,"0"));
+ // The third tile is DRAW, not seconds.
+ setText("millionaireSeconds",String(getMillionaireDrawNumber(dateParts)));
 
 }
 
