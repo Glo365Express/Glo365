@@ -1,0 +1,434 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="theme-color" content="#ffffff">
+<title>THAI Gov. Lott Timer</title>
+
+<style>
+*{box-sizing:border-box}
+
+html,body{
+ margin:0;
+ padding:0;
+ width:100%;
+ min-height:100%;
+ font-family:Arial,Helvetica,sans-serif;
+ background:transparent;
+}
+
+body{overflow:hidden}
+
+.draw-board{
+ width:calc(100% - 16px);
+ height:132px;
+ min-height:132px;
+ margin:1px 8px 4px;
+ display:grid;
+ grid-template-columns:1.15fr .88fr 1.35fr;
+ gap:5px;
+ align-items:stretch;
+}
+
+.official-box{
+ min-width:0;
+ height:132px;
+ border-radius:15px;
+ overflow:hidden;
+ background:linear-gradient(145deg,#0755a5,#1688df);
+ display:flex;
+ flex-direction:column;
+ justify-content:space-between;
+ text-decoration:none;
+ color:#fff;
+ text-align:center;
+ border:1px solid #c6e3f8;
+}
+
+.official-art{
+ flex:1;
+ min-height:0;
+ display:grid;
+ place-items:center;
+ background:radial-gradient(circle at 50% 45%,#a9ddff 0,#1688df 35%,#0755a5 78%);
+ padding:2px;
+}
+
+.official-logo{
+ width:82px;
+ height:82px;
+ max-width:82px;
+ max-height:82px;
+ object-fit:contain;
+ filter:drop-shadow(0 4px 5px #062c6370);
+}
+
+.official-label{
+ background:#0874c5;
+ padding:5px 1px;
+ font-size:clamp(9px,2.5vw,14px);
+ line-height:1.1;
+ font-weight:bold;
+}
+
+.days-box{
+ min-width:0;
+ height:132px;
+ border-radius:15px;
+ background:#1688df;
+ color:#fff;
+ display:flex;
+ flex-direction:column;
+ justify-content:center;
+ align-items:center;
+ text-align:center;
+ padding:3px 1px;
+}
+
+.days-number{
+ font-size:clamp(25px,6vw,35px);
+ font-weight:400;
+ line-height:1;
+}
+
+.days-label{
+ font-size:clamp(10px,2.7vw,15px);
+ white-space:nowrap;
+ margin-top:3px;
+}
+
+.draw-info{
+ min-width:0;
+ height:132px;
+ display:flex;
+ flex-direction:column;
+ gap:4px;
+}
+
+.draw-number{
+ background:#fff;
+ border-radius:30px;
+ padding:5px 2px;
+ text-align:center;
+ color:#1976b9;
+ font-size:clamp(9px,2.4vw,13px);
+ white-space:nowrap;
+ overflow:hidden;
+ text-overflow:ellipsis;
+ border:1px solid #d8eaf8;
+}
+
+.time-row{
+ display:grid;
+ grid-template-columns:1fr 1fr;
+ gap:3px;
+ flex:1;
+ min-height:0;
+}
+
+.time-box{
+ display:grid;
+ grid-template-columns:1fr auto;
+ align-items:center;
+ overflow:hidden;
+ border-radius:13px;
+ background:#1688df;
+ color:#fff;
+ min-width:0;
+}
+
+.time-value{
+ text-align:center;
+ font-size:clamp(14px,3.6vw,21px);
+ padding:3px 1px;
+ font-variant-numeric:tabular-nums;
+}
+
+.time-label{
+ background:#0874c5;
+ height:100%;
+ display:grid;
+ place-items:center;
+ padding:1px;
+ font-size:clamp(7px,1.9vw,10px);
+}
+
+.draw-status{
+ grid-column:1/-1;
+ text-align:center;
+ color:#0874c5;
+ font-size:8px;
+ font-weight:bold;
+ padding:0;
+ line-height:1.05;
+}
+
+@media(max-width:380px){
+ .draw-board{
+  width:calc(100% - 10px);
+  margin-left:5px;
+  margin-right:5px;
+  grid-template-columns:1fr .75fr 1.2fr;
+ }
+
+ .official-label{font-size:9px}
+ .days-number{font-size:25px}
+ .days-label{font-size:10px}
+ .draw-number{font-size:8px}
+ .time-value{font-size:14px}
+ .time-label{font-size:7px}
+ .draw-status{font-size:7px}
+}
+</style>
+</head>
+
+<body>
+
+<section class="draw-board">
+
+ <a class="official-box" href="../index.html" aria-label="THAI Gov. Lott">
+  <div class="official-art">
+
+   <svg class="official-logo" viewBox="0 0 200 200"
+    xmlns="http://www.w3.org/2000/svg">
+
+    <defs>
+     <linearGradient id="silver" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0%" stop-color="#ffffff"/>
+      <stop offset="45%" stop-color="#a9d9ff"/>
+      <stop offset="100%" stop-color="#ffffff"/>
+     </linearGradient>
+     <linearGradient id="darkBlue" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0%" stop-color="#174b83"/>
+      <stop offset="100%" stop-color="#062c63"/>
+     </linearGradient>
+    </defs>
+
+    <path d="M100 5 L119 29 L143 19 L151 49 L181 48 L171 78 L195 100 L171 122 L181 152 L151 151 L143 181 L119 171 L100 195 L81 171 L57 181 L49 151 L19 152 L29 122 L5 100 L29 78 L19 48 L49 49 L57 19 L81 29 Z"
+     fill="url(#darkBlue)" stroke="url(#silver)" stroke-width="2.5"/>
+
+    <path d="M100 12 L100 188 M12 100 L188 100 M38 38 L162 162 M162 38 L38 162"
+     stroke="#a9d9ff" stroke-width="1" opacity=".5"/>
+
+    <circle cx="100" cy="100" r="69" fill="#0b4f91"
+     stroke="url(#silver)" stroke-width="4"/>
+    <circle cx="100" cy="100" r="63" fill="none"
+     stroke="#d8edff" stroke-width="1.5" stroke-dasharray="3 3"/>
+    <circle cx="100" cy="100" r="56" fill="none"
+     stroke="url(#silver)" stroke-width="3"/>
+    <circle cx="100" cy="100" r="51" fill="none"
+     stroke="#c9e7ff" stroke-width="1.5"/>
+    <circle cx="100" cy="94" r="31" fill="#145a9e"
+     stroke="url(#silver)" stroke-width="3"/>
+    <circle cx="100" cy="94" r="26" fill="none"
+     stroke="#d8edff" stroke-width="1.5"/>
+
+    <g stroke="#d9efff" stroke-width="2" fill="none">
+     <path d="M100 68 V120"/>
+     <path d="M74 94 H126"/>
+     <path d="M82 76 L118 112"/>
+     <path d="M118 76 L82 112"/>
+     <path d="M87 70 L113 118"/>
+     <path d="M113 70 L87 118"/>
+    </g>
+
+    <circle cx="100" cy="94" r="7" fill="#d8edff"
+     stroke="#ffffff" stroke-width="2"/>
+    <circle cx="100" cy="94" r="3" fill="#145a9e"/>
+
+    <g fill="#bce4ff" stroke="#ffffff" stroke-width="1">
+     <circle cx="100" cy="72" r="3"/>
+     <circle cx="100" cy="116" r="3"/>
+     <circle cx="78" cy="94" r="3"/>
+     <circle cx="122" cy="94" r="3"/>
+     <circle cx="84" cy="78" r="2.5"/>
+     <circle cx="116" cy="78" r="2.5"/>
+     <circle cx="84" cy="110" r="2.5"/>
+     <circle cx="116" cy="110" r="2.5"/>
+    </g>
+
+    <path d="M94 125 L87 139 H113 L106 125"
+     fill="none" stroke="url(#silver)" stroke-width="4"
+     stroke-linejoin="round"/>
+    <path d="M78 141 H122" stroke="url(#silver)"
+     stroke-width="4" stroke-linecap="round"/>
+    <path d="M85 146 H115" stroke="#c7e7ff"
+     stroke-width="2" stroke-linecap="round"/>
+
+   </svg>
+  </div>
+
+  <div class="official-label">THAI Gov. Lott</div>
+ </a>
+
+ <div class="days-box">
+  <div class="days-number" id="countDays">--</div>
+  <div class="days-label">– Days –</div>
+ </div>
+
+ <div class="draw-info">
+  <div class="draw-number" id="drawNumber">Draw #: --</div>
+
+  <div class="time-row">
+   <div class="time-box">
+    <span class="time-value" id="countHours">--</span>
+    <span class="time-label">HR</span>
+   </div>
+
+   <div class="time-box">
+    <span class="time-value" id="countMinutes">--</span>
+    <span class="time-label">MIN</span>
+   </div>
+  </div>
+
+  <div class="draw-status" id="drawScheduleStatus">
+   Loading schedule...
+  </div>
+ </div>
+
+</section>
+
+<script>
+"use strict";
+
+const API_BASE_URL="https://glo365.onrender.com/api";
+const TOKEN_KEY="glo365_token";
+
+let currentDrawSettings=null;
+
+function getToken(){
+ try{
+  return sessionStorage.getItem(TOKEN_KEY)||"";
+ }catch(error){
+  return "";
+ }
+}
+
+async function apiRequest(path){
+ const token=getToken();
+ const headers={"Accept":"application/json"};
+
+ if(token){
+  headers.Authorization="Bearer "+token;
+ }
+
+ const response=await fetch(API_BASE_URL+path,{
+  method:"GET",
+  headers,
+  credentials:"include",
+  cache:"no-store"
+ });
+
+ let data={};
+
+ try{
+  data=await response.json();
+ }catch(error){}
+
+ if(!response.ok){
+  throw new Error(
+   data.message||data.error||
+   "Request failed ("+response.status+")"
+  );
+ }
+
+ return data;
+}
+
+function setText(id,value){
+ const element=document.getElementById(id);
+ if(element)element.textContent=value;
+}
+
+function parseDrawDate(value){
+ if(!value)return null;
+ const date=new Date(value);
+ return Number.isNaN(date.getTime())?null:date;
+}
+
+async function loadDrawSettings(){
+ const data=await apiRequest("/public/draw-settings");
+
+ if(!data.success){
+  throw new Error("Unable to load draw schedule.");
+ }
+
+ currentDrawSettings=
+  data.drawSettings||data.settings||null;
+
+ updateCountdown();
+}
+
+function updateCountdown(){
+ const settings=currentDrawSettings||{};
+
+ const drawNumber=String(
+  settings.draw_number||""
+ ).trim();
+
+ const next=parseDrawDate(settings.draw_at);
+
+ setText(
+  "drawNumber",
+  "Draw #: "+(drawNumber||"--")
+ );
+
+ if(!next){
+  setText("countDays","--");
+  setText("countHours","--");
+  setText("countMinutes","--");
+  setText("drawScheduleStatus","Admin has not scheduled a draw.");
+  return;
+ }
+
+ const remaining=next.getTime()-Date.now();
+
+ if(remaining<=0){
+  setText("countDays","0");
+  setText("countHours","00");
+  setText("countMinutes","00");
+  setText("drawScheduleStatus","DRAW TIME REACHED");
+  return;
+ }
+
+ const total=Math.floor(remaining/1000);
+ const days=Math.floor(total/86400);
+ const hours=Math.floor((total%86400)/3600);
+ const minutes=Math.floor((total%3600)/60);
+
+ setText("countDays",days);
+ setText("countHours",String(hours).padStart(2,"0"));
+ setText("countMinutes",String(minutes).padStart(2,"0"));
+
+ setText(
+  "drawScheduleStatus",
+  settings.betting_locked===true
+   ?"BETTING CLOSED"
+   :"NEXT DRAW SCHEDULED"
+ );
+}
+
+async function refreshPublicData(){
+ try{
+  await loadDrawSettings();
+ }catch(error){
+  console.warn("Timer refresh failed:",error);
+ }
+}
+
+loadDrawSettings().catch(error=>{
+ console.warn("Draw schedule could not be loaded:",error);
+ setText("drawScheduleStatus","Unable to load draw schedule.");
+});
+
+setInterval(updateCountdown,1000);
+setInterval(refreshPublicData,60000);
+
+document.addEventListener("visibilitychange",()=>{
+ if(!document.hidden)refreshPublicData();
+});
+</script>
+
+</body>
+</html>
