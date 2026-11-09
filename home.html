@@ -348,821 +348,109 @@ header{
  100%{transform:translateX(-50%)}
 }
 
-/* DAILY MILLIONAIRE COMPACT COUNTDOWN + RESULT CARDS */
-/* DAILY MILLIONAIRE - REFERENCE MATCH */
+/* DAILY MILLIONAIRE — REFERENCE-MATCHED SLIM PANELS */
 .millionaire-info{
- margin:8px 12px 14px;
+ margin:0 10px 13px;
  display:grid;
- grid-template-columns:minmax(0,1fr) minmax(0,1fr);
- gap:8px;
+ grid-template-columns:1fr 1fr;
+ gap:7px;
  align-items:stretch;
 }
 .millionaire-panel{
  min-width:0;
- height:232px;
- box-sizing:border-box;
- border-radius:24px;
- background:linear-gradient(180deg,#f4fbff 0%,#e9f7ff 100%);
- border:3px solid #8edcff;
- box-shadow:0 5px 13px rgba(0,125,210,.16);
- padding:0 8px 8px;
+ min-height:148px;
+ border-radius:22px;
+ background:linear-gradient(180deg,#f4fbff 0%,#e8f7ff 100%);
+ border:3px solid #8ddcf4;
+ box-shadow:0 5px 12px #1688df20,inset 0 0 0 2px #ffffff;
+ padding:7px 6px 8px;
  display:flex;
  flex-direction:column;
- align-items:stretch;
+ align-items:center;
+ justify-content:flex-start;
+ text-align:center;
  overflow:hidden;
 }
 .millionaire-panel h3{
- flex:0 0 58px;
- width:calc(100% + 16px);
- margin:0 -8px 8px;
- padding:0 4px;
- box-sizing:border-box;
- display:flex;
- align-items:center;
- justify-content:center;
- gap:4px;
+ width:100%;
  color:#fff;
- background:linear-gradient(110deg,#0757c9 0%,#078de8 48%,#0757c9 100%);
- border-radius:19px 19px 13px 13px;
- text-shadow:0 2px 3px rgba(0,0,0,.3);
- font-size:clamp(10px,3.15vw,16px);
- line-height:1;
- font-weight:1000;
- font-style:italic;
+ background:linear-gradient(105deg,#0874d8,#0758c5);
+ border-radius:17px 17px 10px 10px;
+ font-size:clamp(10px,2.9vw,14px);
+ line-height:1.15;
+ font-weight:900;
+ margin:0 0 9px;
+ padding:10px 2px;
  white-space:nowrap;
+ text-shadow:0 1px 2px #003b78;
 }
-.millionaire-panel h3 em{
- color:#ffdf27;
- font-style:italic;
-}
-.millionaire-diamond{
- font-style:normal;
- font-size:1.05em;
-}
-.millionaire-timer,
-.millionaire-result-row{
- flex:1;
- min-height:0;
+.millionaire-draw-number{display:none}
+.millionaire-timer,.millionaire-result-row{
  width:100%;
  display:grid;
- grid-template-columns:1.15fr 1fr .84fr;
+ grid-template-columns:1.2fr 1fr .82fr;
  gap:5px;
  align-items:end;
+ flex:1;
 }
-.millionaire-time-box,
-.millionaire-result-box{
+.millionaire-time-box,.millionaire-result-box{
  min-width:0;
- box-sizing:border-box;
- background:linear-gradient(155deg,#0879ee 0%,#0750b7 100%);
  color:#fff;
- border:3px solid #31d5ff;
- box-shadow:0 4px 9px rgba(0,75,170,.28),inset 0 0 0 1px rgba(255,255,255,.25);
+ background:linear-gradient(145deg,#0878df 0%,#0752b7 100%);
+ border:3px solid #36c9f3;
  border-radius:20px;
+ box-shadow:0 3px 8px #087acb35,inset 0 0 0 1px #ffffff35;
  overflow:hidden;
  display:flex;
  flex-direction:column;
  justify-content:center;
  align-items:center;
 }
-.millionaire-time-box.hours{height:94%;border-radius:22px}
-.millionaire-time-box.minutes{height:76%;border-radius:20px}
-.millionaire-time-box.seconds{height:59%;border-radius:18px}
+.millionaire-time-box{min-height:100px}
+.millionaire-time-box.hours{min-height:112px}
+.millionaire-time-box.minutes{min-height:91px}
+.millionaire-time-box.seconds{min-height:70px}
 .millionaire-time-value{
  width:100%;
+ min-width:0;
  text-align:center;
- font-size:clamp(21px,6vw,38px);
- font-weight:1000;
+ font-size:clamp(20px,6vw,34px);
+ font-weight:800;
  line-height:1;
  font-variant-numeric:tabular-nums;
- padding:8px 1px;
- overflow:hidden;
+ padding:8px 1px 7px;
+ white-space:nowrap;
 }
-.millionaire-time-box.hours .millionaire-time-value{font-size:clamp(25px,7vw,43px)}
-.millionaire-time-box.minutes .millionaire-time-value{font-size:clamp(21px,5.8vw,35px)}
-.millionaire-time-box.seconds .millionaire-time-value{font-size:clamp(12px,3.8vw,22px);letter-spacing:-.4px}
+.millionaire-time-box.hours .millionaire-time-value{font-size:clamp(23px,6.5vw,36px)}
+.millionaire-time-box.minutes .millionaire-time-value{font-size:clamp(20px,5.6vw,30px)}
+.millionaire-time-box.seconds .millionaire-time-value{font-size:clamp(11px,3vw,15px);font-weight:600;letter-spacing:-.4px}
 .millionaire-time-label{
  width:100%;
- box-sizing:border-box;
- background:linear-gradient(90deg,#0878d5,#0759b9);
- border-top:1px solid rgba(255,255,255,.18);
+ background:linear-gradient(90deg,#0874c5,#0560b5);
  text-align:center;
- font-size:clamp(9px,2.5vw,13px);
- font-weight:1000;
- padding:7px 1px;
+ font-size:clamp(8px,2.3vw,11px);
+ font-weight:900;
+ padding:6px 1px;
 }
-.millionaire-result-box.first{height:94%;border-radius:22px}
-.millionaire-result-box.second{height:76%;border-radius:20px}
-.millionaire-result-box.third{height:59%;border-radius:18px}
+.millionaire-result-box{position:relative;min-height:104px}
+.millionaire-result-box.first{min-height:116px}
+.millionaire-result-box.second{min-height:94px}
+.millionaire-result-box.third{min-height:72px}
 .millionaire-result-value{
  width:100%;
  min-width:0;
  text-align:center;
  color:#fff;
- font-size:clamp(24px,7vw,42px);
- line-height:1;
- font-weight:1000;
+ font-size:clamp(20px,6vw,34px);
+ line-height:1.05;
+ font-weight:800;
  padding:10px 1px;
  overflow-wrap:anywhere;
 }
-.millionaire-result-box.second .millionaire-result-value{font-size:clamp(22px,6vw,37px)}
-.millionaire-result-box.third .millionaire-result-value{font-size:clamp(20px,5.5vw,32px)}
-.millionaire-result-status{display:none}
-
-@media(max-width:380px){
- .millionaire-info{gap:6px;margin-left:9px;margin-right:9px}
- .millionaire-panel{height:214px;padding-left:6px;padding-right:6px;border-radius:20px}
- .millionaire-panel h3{flex-basis:52px;width:calc(100% + 12px);margin-left:-6px;margin-right:-6px;font-size:10px}
- .millionaire-timer,.millionaire-result-row{gap:4px}
- .millionaire-time-box,.millionaire-result-box{border-width:2px}
-}
-
-/* GAME CARDS */
-
-.cards{
- display:grid;
- grid-template-columns:repeat(2,minmax(0,1fr));
- gap:13px;
- padding:0 12px;
-}
-
-.game-card{
- height:174px;
- border-radius:23px;
- position:relative;
- overflow:hidden;
- display:flex;
- flex-direction:column;
- align-items:center;
- justify-content:center;
- text-decoration:none;
- isolation:isolate;
- transition:transform .2s;
- border:1px solid #ffffffc9;
- box-shadow:0 8px 18px #17466d15;
-}
-
-.game-card:active{transform:scale(.965)}
-
-.game-card::before{
- content:"";
- position:absolute;
- width:220px;
- height:100px;
- border:2px solid #ffffff65;
- border-radius:50%;
- transform:rotate(-23deg);
- bottom:15px;
- left:-65px;
- z-index:-1;
-}
-
-.game-card::after{
- content:"";
- position:absolute;
- width:150px;
- height:150px;
- border-radius:50%;
- background:#ffffff55;
- filter:blur(35px);
- top:-65px;
- right:-40px;
- z-index:-1;
-}
-
-.card-glow{
- position:absolute;
- width:90px;
- height:90px;
- border-radius:50%;
- background:#ffffff45;
- filter:blur(20px);
- bottom:-35px;
- right:-25px;
- z-index:-1;
-}
-
-.card-crown{
- font-size:27px;
- line-height:1;
- margin-bottom:4px;
-}
-
-.balls{
- display:flex;
- justify-content:center;
- align-items:center;
- gap:5px;
- height:48px;
-}
-
-.ball{
- width:39px;
- height:39px;
- border-radius:50%;
- background:radial-gradient(circle at 32% 25%,#fff 0%,#fff 25%,#e8edf3 62%,#a9b5c2 100%);
- border:3px solid var(--ball-color);
- box-shadow:0 4px 7px #00000035,inset 0 -3px 5px #00000020,0 0 0 3px #ffffff70;
- display:grid;
- place-items:center;
- font-size:21px;
- font-weight:900;
- color:#26384a;
-}
-
-.game-card h2{
- font-size:26px;
- line-height:1;
- font-weight:1000;
- letter-spacing:1.5px;
- text-align:center;
- margin:6px 0 11px;
-}
-
-.play{
- width:84%;
- padding:7px 10px 7px 15px;
- border-radius:30px;
- background:#ffffffdf;
- display:flex;
- justify-content:space-between;
- align-items:center;
- font-size:12px;
- font-weight:900;
- letter-spacing:.7px;
-}
-
-.play-arrow{
- width:30px;
- height:30px;
- border-radius:50%;
- background:var(--accent);
- color:white;
- display:grid;
- place-items:center;
- font-size:19px;
-}
-
-.single{
- --ball-color:#1688df;
- --accent:#087acb;
- background:linear-gradient(145deg,#eaf8ff,#c4eaff,#a9dcff);
- color:#075c9b;
-}
-
-.two{
- --ball-color:#0877ec;
- --accent:#0968db;
- background:linear-gradient(145deg,#e5f5ff,#b6e4ff,#91d2ff);
- color:#0755b5;
-}
-
-.three{
- --ball-color:#e3294b;
- --accent:#d71943;
- background:linear-gradient(145deg,#fff0f3,#ffd0d9,#ffb2c2);
- color:#a90024;
-}
-
-.six{
- --ball-color:#06a84c;
- --accent:#079a49;
- background:linear-gradient(145deg,#eafff0,#c3f8d3,#9cebb8);
- color:#087638;
-}
-
-.single .ball{width:46px;height:46px;font-size:26px}
-.two .ball{width:44px;height:44px}
-.three .ball{width:35px;height:35px;font-size:19px}
-.six .ball{width:28px;height:28px;font-size:14px;border-width:2px}
-
-.game-divider{
- grid-column:1/-1;
- width:100%;
- height:3px;
- border-radius:10px;
- background:linear-gradient(90deg,#e3294b 0%,#d71943 30%,#06a84c 70%,#079a49 100%);
- margin:2px 0 1px;
-}
-
-/* DAILY MILLIONAIRE LOGO CARD */
-
-.millionaire{
- grid-column:1 / -1;
- width:100%;
- max-width:310px;
- justify-self:center;
- margin-left:auto;
- margin-right:auto;
- height:150px;
- padding:0;
- background:linear-gradient(145deg,#eaf8ff,#c4eaff,#a9dcff);
- border-radius:23px;
- display:flex;
- align-items:center;
- justify-content:center;
- overflow:hidden;
-}
-
-.millionaire::before,
-.millionaire::after{display:none}
-
-.millionaire .card-glow{display:none}
-
-.millionaire-logo{
- display:block;
- width:100%;
- height:100%;
- max-width:100%;
- max-height:100%;
- object-fit:fill;
- border-radius:20px;
- flex-shrink:0;
-}
-
-/* BOTTOM NAV */
-
-nav{
- position:fixed;
- bottom:0;
- left:50%;
- transform:translateX(-50%);
- width:100%;
- max-width:520px;
- background:#fff;
- border-top:1px solid #dcebf6;
- display:flex;
- justify-content:space-around;
- padding:11px 4px 16px;
- z-index:5;
- box-shadow:0 -3px 12px #00000008;
-}
-
-nav button{
- flex:1;
- border:0;
- background:none;
- color:#8295a5;
- font-size:11px;
- display:flex;
- flex-direction:column;
- align-items:center;
- gap:5px;
- cursor:pointer;
-}
-
-nav button strong{font-size:23px}
-nav button.active{color:#087acb}
-
-.empty{
- text-align:center;
- color:#999;
- padding:22px;
- font-size:13px;
-}
-
-.nav-profile-avatar{
- width:25px;
- height:25px;
- border-radius:50%;
- overflow:hidden;
- display:grid;
- place-items:center;
- border:1.5px solid #1688df;
- font-size:19px;
- line-height:1;
-}
-
-.nav-profile-avatar img{
- width:100%;
- height:100%;
- object-fit:cover;
- display:block;
- border-radius:50%;
-}
-
-/* POINTS MODAL */
-
-.points-modal{
- display:none;
- position:fixed;
- inset:0;
- background:#071d35b8;
- z-index:20;
- padding:15px;
- align-items:center;
- justify-content:center;
-}
-
-.points-modal.show{display:flex}
-
-.points-content{
- width:100%;
- max-width:460px;
- max-height:85vh;
- overflow-y:auto;
- background:white;
- border:1px solid #cfe6f8;
- border-radius:16px;
- padding:18px;
-}
-
-.points-header{
- display:flex;
- justify-content:space-between;
- align-items:center;
- margin-bottom:15px;
-}
-
-.points-header h3{
- font-size:18px;
- color:#075da8;
-}
-
-.close-btn{
- border:0;
- background:#eaf5ff;
- color:#075da8;
- padding:8px 12px;
- border-radius:8px;
- font-weight:bold;
- cursor:pointer;
-}
-
-.points-total{
- background:linear-gradient(120deg,#0755a5,#1688df);
- color:#fff;
- padding:18px;
- border-radius:12px;
- margin-bottom:15px;
-}
-
-.points-total small{color:#e5f5ff}
-
-.points-total strong{
- display:block;
- font-size:29px;
- margin-top:6px;
-}
-
-.points-content h4{color:#075da8}
-
-.point-entry{
- border:1px solid #dcebf6;
- background:#f8fcff;
- border-radius:10px;
- padding:12px;
- margin-top:9px;
- font-size:13px;
- line-height:1.7;
- color:#555;
-}
-
-.point-entry .amount{
- color:#17833c;
- font-weight:bold;
- font-size:16px;
-}
-
-.point-entry .debit{color:#d14343}
-
-.point-entry small{
- color:#999;
- display:block;
-}
-
-/* FLOATING LIVE BUBBLE */
-
-.live-bubble{
- display:none;
- position:fixed;
- z-index:50;
- width:94px;
- height:94px;
- border-radius:50%;
- border:4px solid #fff;
- background:linear-gradient(145deg,#0755a5,#1688df);
- box-shadow:0 6px 22px #001c3b55;
- color:#fff;
- align-items:center;
- justify-content:center;
- flex-direction:column;
- cursor:grab;
- touch-action:none;
- user-select:none;
-}
-
-.live-bubble.show{display:flex}
-
-.live-bubble:active{cursor:grabbing}
-
-.live-bubble .bubble-play{
- font-size:30px;
- line-height:1;
-}
-
-.live-bubble .bubble-title{
- font-size:11px;
- font-weight:900;
- margin-top:4px;
-}
-
-.live-badge{
- position:absolute;
- top:-7px;
- right:-4px;
- background:#ed263d;
- color:#fff;
- border:2px solid white;
- border-radius:20px;
- font-size:10px;
- font-weight:900;
- padding:4px 8px;
-}
-
-.live-popup{
- display:none;
- position:fixed;
- z-index:51;
- width:min(390px,calc(100vw - 24px));
- background:#fff;
- border:1px solid #b9dcf5;
- border-radius:16px;
- box-shadow:0 12px 35px #001b3d55;
- overflow:hidden;
- touch-action:auto;
-}
-
-.live-popup.show{display:block}
-
-.live-popup.fullscreen-fallback{
- position:fixed!important;
- inset:0!important;
- width:100vw!important;
- height:100dvh!important;
- max-width:none!important;
- border-radius:0!important;
- z-index:99999!important;
-}
-
-.live-popup.fullscreen-fallback .live-popup-player{
- height:calc(100dvh - 62px);
- aspect-ratio:auto;
-}
-
-.live-popup-header{
- min-height:48px;
- padding:8px 9px 8px 13px;
- background:linear-gradient(120deg,#0755a5,#1688df);
- display:flex;
- align-items:center;
- justify-content:space-between;
- gap:8px;
- color:#fff;
- cursor:grab;
- touch-action:none;
- user-select:none;
-}
-
-.live-popup-header:active{cursor:grabbing}
-
-.live-popup-title{
- font-size:13px;
- font-weight:900;
- overflow:hidden;
- text-overflow:ellipsis;
- white-space:nowrap;
- flex:1;
-}
-
-.live-popup-actions{
- display:flex;
- gap:5px;
- flex-shrink:0;
-}
-
-.live-action{
- border:0;
- border-radius:7px;
- padding:7px 8px;
- color:#075da8;
- background:#fff;
- font-weight:900;
- font-size:11px;
- cursor:pointer;
-}
-
-.live-popup-player{
- width:100%;
- aspect-ratio:16/9;
- background:#071a2d;
-}
-
-.live-popup-player iframe{
- width:100%;
- height:100%;
- border:0;
- display:block;
-}
-
-/* LIVE MESSAGE */
-
-.live-message-modal{
- display:none;
- position:fixed;
- inset:0;
- background:#071d35b8;
- z-index:60;
- padding:15px;
- align-items:center;
- justify-content:center;
-}
-
-.live-message-modal.show{display:flex}
-
-.live-message-box{
- width:100%;
- max-width:390px;
- background:#fff;
- border:1px solid #cfe6f8;
- border-radius:20px;
- padding:25px 20px;
- text-align:center;
- box-shadow:0 15px 45px #0004;
-}
-
-.live-message-icon{
- width:70px;
- height:70px;
- border-radius:50%;
- background:#eaf5ff;
- display:grid;
- place-items:center;
- font-size:32px;
- margin:0 auto 15px;
-}
-
-.live-message-box h3{
- font-size:20px;
- margin-bottom:10px;
- color:#075da8;
-}
-
-.live-message-box p{
- color:#718697;
- font-size:14px;
- line-height:1.7;
- margin-bottom:18px;
-}
-
-.live-message-button{
- width:100%;
- border:0;
- border-radius:30px;
- padding:13px;
- background:#1688df;
- color:white;
- font-size:15px;
- font-weight:bold;
- cursor:pointer;
-}
-
-/* MOBILE */
-
-@media(max-width:380px){
-
- .logo{font-size:26px}
- .balance{font-size:11px;padding:7px 9px;min-height:32px}
- .profile{width:36px;height:36px}
-
- .game-card{
-  height:158px;
-  border-radius:19px;
- }
-
- .game-card h2{font-size:21px}
-
- .ball{width:34px;height:34px}
- .single .ball{width:41px;height:41px}
- .two .ball{width:37px;height:37px}
- .three .ball{width:29px;height:29px}
- .six .ball{width:23px;height:23px;font-size:12px}
-
- .millionaire{
-  width:100%;
-  max-width:310px;
-  height:158px;
-  padding:7px;
- }
-
- .millionaire-logo{
-  width:100%;
-  height:100%;
-  object-fit:fill;
-  border-radius:20px;
- }
-
- .play{
-  width:89%;
-  padding:6px 8px 6px 12px;
-  font-size:10px;
- }
-
- .draw-board{
-  gap:4px;
-  margin-left:5px;
-  margin-right:5px;
- }
-
- .official-box{
-  min-height:125px;
-  border-radius:18px;
- }
-
- .official-logo{
-  max-width:85px;
-  max-height:85px;
- }
-
- .days-box{border-radius:18px}
-
- .draw-number{
-  font-size:12px;
-  padding:9px 2px;
- }
-
- .time-row{gap:3px}
- .time-box{border-radius:18px}
- .time-value{font-size:19px}
- .time-label{font-size:10px}
-
- .result-card{
-  height:68px;
-  padding:4px 1px;
- }
-
- .result-rank{
-  width:19px;
-  height:19px;
-  font-size:11px;
-  left:4px;
-  top:4px;
- }
-
- .result-number{
-  font-size:13px;
-  margin-top:9px;
- }
-
- .result-caption{
-  font-size:7px;
-  margin-top:4px;
- }
-
- .results-heading{font-size:13px}
-
- .notice-wrap{
-  margin-left:8px;
-  margin-right:8px;
- }
-
- .notice-track span{
-  font-size:12px;
-  padding:11px 20px;
- }
-
- .millionaire-info{
-  margin-left:8px;
-  margin-right:8px;
-  gap:6px;
- }
-
- .millionaire-panel{min-height:118px;padding:6px 4px;border-radius:16px}
- .millionaire-panel h3{font-size:10px;margin-bottom:6px}
- .millionaire-time-box.hours{min-height:60px}
- .millionaire-time-box.minutes{min-height:50px}
- .millionaire-time-box.seconds{min-height:41px}
- .millionaire-result-box.first{min-height:69px}
- .millionaire-result-box.second{min-height:61px}
- .millionaire-result-box.third{min-height:54px}
- .live-bubble{width:82px;height:82px}
-}
-
-@media(max-width:340px){
-
- .draw-board{grid-template-columns:1fr .75fr 1.2fr}
- .official-label{font-size:14px}
- .result-number{font-size:12px}
- .millionaire-info{gap:5px}
- .millionaire-panel{padding:6px 3px;min-height:112px}
- .millionaire-panel h3{font-size:9px}
- .millionaire-time-box.hours{min-height:56px}
- .millionaire-time-box.minutes{min-height:47px}
- .millionaire-time-box.seconds{min-height:39px}
- .millionaire-result-box.first{min-height:64px}
- .millionaire-result-box.second{min-height:57px}
- .millionaire-result-box.third{min-height:50px}
-}
-
+.millionaire-result-box.first .millionaire-result-value{font-size:clamp(23px,6.5vw,36px)}
+.millionaire-result-box.second .millionaire-result-value{font-size:clamp(20px,5.6vw,30px)}
+.millionaire-result-box.third .millionaire-result-value{font-size:clamp(11px,3vw,15px);font-weight:600;letter-spacing:-.4px}
+.millionaire-result-status{color:#69869b;font-size:8px;font-weight:900;margin-top:6px;min-height:9px}
 /* GLO 365 PREMIUM THAILAND LOTTERY GAME CARDS */
 .cards{gap:14px;padding:0 10px}
 .game-card:not(.millionaire){
@@ -1795,83 +1083,24 @@ nav button.active{color:#087acb}
   margin-right:5px;
  }
 }
-
-/* FINAL COMPACT DAILY MILLIONAIRE PANELS — reference proportion */
-.millionaire-info{
-  grid-template-columns:minmax(0,1fr) minmax(0,1fr) !important;
-  gap:7px !important;
-  margin:8px 12px 12px !important;
-  align-items:stretch !important;
+ 
+@media(max-width:480px){
+ .millionaire-info{margin-left:8px;margin-right:8px;gap:6px}
+ .millionaire-panel{min-height:142px;padding:6px 5px 7px;border-radius:20px}
+ .millionaire-panel h3{font-size:clamp(9px,2.7vw,12px);padding:9px 1px;margin-bottom:8px}
+ .millionaire-timer,.millionaire-result-row{gap:4px}
+ .millionaire-time-box.hours,.millionaire-result-box.first{min-height:104px}
+ .millionaire-time-box.minutes,.millionaire-result-box.second{min-height:84px}
+ .millionaire-time-box.seconds,.millionaire-result-box.third{min-height:64px}
 }
-.millionaire-panel{
-  height:132px !important;
-  min-height:132px !important;
-  max-height:132px !important;
-  box-sizing:border-box !important;
-  padding:0 5px 5px !important;
-  border-radius:17px !important;
-  overflow:hidden !important;
-  justify-content:flex-start !important;
-}
-.millionaire-panel h3{
-  flex:0 0 29px !important;
-  height:29px !important;
-  min-height:29px !important;
-  box-sizing:border-box !important;
-  display:flex !important;
-  align-items:center !important;
-  justify-content:center !important;
-  margin:0 0 5px !important;
-  padding:3px 1px !important;
-  font-size:clamp(9px,2.45vw,12px) !important;
-  border-radius:12px 12px 8px 8px !important;
-}
-.millionaire-draw-number{
-  flex:0 0 24px !important;
-  height:24px !important;
-  min-height:24px !important;
-  box-sizing:border-box !important;
-  margin:0 0 5px !important;
-  padding:3px 1px !important;
-  font-size:clamp(9px,2.35vw,12px) !important;
-}
-.millionaire-timer,
-.millionaire-result-row{
-  flex:1 1 auto !important;
-  min-height:0 !important;
-  align-items:stretch !important;
-  gap:4px !important;
-}
-.millionaire-time-box,
-.millionaire-result-box,
-.millionaire-time-box.hours,
-.millionaire-time-box.minutes,
-.millionaire-time-box.seconds,
-.millionaire-result-box.first,
-.millionaire-result-box.second,
-.millionaire-result-box.third{
-  min-height:0 !important;
-  height:100% !important;
-  border-radius:12px !important;
-}
-.millionaire-time-value{
-  font-size:clamp(17px,4.8vw,25px) !important;
-  padding:5px 1px 3px !important;
-}
-.millionaire-time-box.hours .millionaire-time-value{
-  font-size:clamp(19px,5.3vw,28px) !important;
-}
-.millionaire-time-label{
-  font-size:clamp(7px,1.9vw,9px) !important;
-  padding:3px 1px !important;
-}
-.millionaire-result-value{
-  font-size:clamp(18px,5vw,26px) !important;
-  padding:5px 1px !important;
-}
-@media(max-width:360px){
-  .millionaire-panel{height:124px !important;min-height:124px !important;max-height:124px !important}
-  .millionaire-panel h3{font-size:9px !important}
+@media(max-width:340px){
+ .millionaire-panel{padding:5px 4px;min-height:132px}
+ .millionaire-panel h3{font-size:9px}
+ .millionaire-timer,.millionaire-result-row{gap:3px}
+ .millionaire-time-box.hours,.millionaire-result-box.first{min-height:96px}
+ .millionaire-time-box.minutes,.millionaire-result-box.second{min-height:78px}
+ .millionaire-time-box.seconds,.millionaire-result-box.third{min-height:60px}
+ .millionaire-time-box.seconds .millionaire-time-value,.millionaire-result-box.third .millionaire-result-value{font-size:10px}
 }
 </style>
 </head>
@@ -1915,7 +1144,7 @@ nav button.active{color:#087acb}
 <!-- TIMER SLIDER SLOT: timer-slider.html controls all timer cards -->
 <div class="home-timer-slot" aria-label="GLO 365 timer slider">
  <iframe
-  src="timer-slider/timer-slider.html"
+  src="timer-slider.html"
   title="GLO 365 Timer Slider"
   loading="eager"
   scrolling="no"
@@ -2005,57 +1234,26 @@ nav button.active{color:#087acb}
   <div class="draw-status" id="drawScheduleStatus">Loading schedule...</div>
  </div>
 </section>
-
-<section class="results-board" hidden aria-hidden="true">
- <div class="result-card"><div class="result-number" id="resultFirst">--</div></div>
- <div class="result-card"><div class="result-number" id="resultSecond">--</div></div>
- <div class="result-card"><div class="result-number" id="resultThird">--</div></div>
-</section>
 </div>
 
-<!-- DAILY MILLIONAIRE TIMER + RESULT: COMPACT HOME DISPLAY -->
-<section class="millionaire-info">
+<div class="results-heading">🏆 PREVIOUS DRAW RESULTS</div>
 
- <div class="millionaire-panel">
-  <h3><span class="millionaire-diamond">💎</span> DAILY <em>MILLIONAIRE</em></h3>
-
-  <div class="millionaire-timer">
-
-   <div class="millionaire-time-box hours">
-    <div class="millionaire-time-value" id="millionaireHours">--</div>
-    <div class="millionaire-time-label">HR</div>
-   </div>
-
-   <div class="millionaire-time-box minutes">
-    <div class="millionaire-time-value" id="millionaireMinutes">--</div>
-    <div class="millionaire-time-label">MIN</div>
-   </div>
-
-   <div class="millionaire-time-box seconds">
-    <div class="millionaire-time-value" id="millionaireSeconds">--</div>
-    <div class="millionaire-time-label">DRAW</div>
-   </div>
-
-  </div>
-
+<section class="results-board">
+ <div class="result-card">
+  <span class="result-rank">1</span>
+  <div class="result-number" id="resultFirst">--</div>
+  <div class="result-caption">First Prize</div>
  </div>
-
- <div class="millionaire-panel">
-  <h3><span class="millionaire-diamond">💎</span> MILLIONAIRE <em>RESULT</em></h3>
-
-  <div class="millionaire-result-row">
-   <div class="millionaire-result-box first">
-    <div class="millionaire-result-value" id="millionaireFirstResult">--</div>
-    </div>
-   <div class="millionaire-result-box second">
-    <div class="millionaire-result-value" id="millionaireSecondResult">--</div>
-    </div>
-   <div class="millionaire-result-box third">
-    <div class="millionaire-result-value" id="millionaireThirdResult">--</div>
-    </div>
-  </div>
+ <div class="result-card">
+  <span class="result-rank">2</span>
+  <div class="result-number" id="resultSecond">--</div>
+  <div class="result-caption">Last Two</div>
  </div>
-
+ <div class="result-card">
+  <span class="result-rank">3</span>
+  <div class="result-number" id="resultThird">--</div>
+  <div class="result-caption">Front Three</div>
+ </div>
 </section>
 
 <!-- LOTTERY BANNERS: COMPACT FIVE-GAME STACK -->
@@ -2079,6 +1277,54 @@ nav button.active{color:#087acb}
 </section>
 
 <!-- DAILY MILLIONAIRE: COUNTDOWN LEFT, RESULT RIGHT -->
+
+<section class="millionaire-info">
+
+ <div class="millionaire-panel">
+  <h3>💎 DAILY MILLIONAIRE</h3>
+
+  <div class="millionaire-draw-number" id="millionaireDrawNumber">
+   Draw #: 3679:11:03
+  </div>
+
+  <div class="millionaire-timer">
+
+   <div class="millionaire-time-box hours">
+    <div class="millionaire-time-value" id="millionaireHours">--</div>
+    <div class="millionaire-time-label">HR</div>
+   </div>
+
+   <div class="millionaire-time-box minutes">
+    <div class="millionaire-time-value" id="millionaireMinutes">--</div>
+    <div class="millionaire-time-label">MIN</div>
+   </div>
+
+   <div class="millionaire-time-box seconds">
+    <div class="millionaire-time-value" id="millionaireSeconds">--</div>
+    <div class="millionaire-time-label">SEC</div>
+   </div>
+
+  </div>
+
+ </div>
+
+ <div class="millionaire-panel">
+  <h3>💎 MILLIONAIRE RESULT</h3>
+
+  <div class="millionaire-result-row">
+   <div class="millionaire-result-box first">
+    <div class="millionaire-result-value" id="millionaireFirstResult">--</div>
+    </div>
+   <div class="millionaire-result-box second">
+    <div class="millionaire-result-value" id="millionaireSecondResult">--</div>
+    </div>
+   <div class="millionaire-result-box third">
+    <div class="millionaire-result-value" id="millionaireThirdResult">--</div>
+    </div>
+  </div>
+ </div>
+
+</section>
 
 <!-- GAME CARDS -->
 
@@ -2571,7 +1817,10 @@ function getMillionaireDrawNumber(dateParts){
 
  const drawNumber=MILLIONAIRE_BASE_NUMBER+daysDifference;
 
- return String(drawNumber);
+ const month=String(dateParts.month).padStart(2,"0");
+ const day=String(dateParts.day).padStart(2,"0");
+
+ return String(drawNumber)+":"+month+":"+day;
 }
 
 function getBangladeshTimestamp(dateParts,hour,minute,second=0){
@@ -2624,6 +1873,10 @@ function updateMillionaireCountdown(){
  const now=new Date();
  const dateParts=getBangladeshDateParts(now);
 
+ setText(
+  "millionaireDrawNumber",
+  String(getMillionaireDrawNumber(dateParts))
+ );
 
  const nextDraw=getNextMillionaireDraw(now);
  let remaining=Math.max(0,nextDraw.getTime()-now.getTime());
@@ -2636,8 +1889,7 @@ function updateMillionaireCountdown(){
 
  setText("millionaireHours",String(hours).padStart(2,"0"));
  setText("millionaireMinutes",String(minutes).padStart(2,"0"));
- // The third tile is DRAW, not seconds.
- setText("millionaireSeconds",String(getMillionaireDrawNumber(dateParts)));
+
 
 }
 
