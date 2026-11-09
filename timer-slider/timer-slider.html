@@ -1,0 +1,141 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="theme-color" content="#ffffff">
+<title>GLO 365 Timer Slider</title>
+
+<style>
+*{box-sizing:border-box}
+
+html,body{
+  margin:0;
+  padding:0;
+  width:100%;
+  height:100%;
+  overflow:hidden;
+  background:transparent;
+  font-family:Arial,Helvetica,sans-serif;
+}
+
+#timerSlider{
+  position:relative;
+  width:100%;
+  height:140px;
+  overflow:hidden;
+  background:transparent;
+}
+
+.timer-frame{
+  display:block;
+  width:100%;
+  height:140px;
+  border:0;
+  margin:0;
+  padding:0;
+  background:transparent;
+  overflow:hidden;
+}
+</style>
+</head>
+
+<body>
+
+<div id="timerSlider" aria-label="GLO 365 country timer slider">
+
+  <iframe
+    id="timerFrame"
+    class="timer-frame"
+    title="Thailand draw timer"
+    src="Thai-Timer.html"
+    loading="eager"
+    scrolling="no">
+  </iframe>
+
+</div>
+
+<script>
+"use strict";
+
+/*
+  Folder structure:
+
+  timer-slider/
+    timer-slider.html
+    Thai-Timer.html
+    Singapore-Timer.html
+    Malaysia-Timer.html
+*/
+
+const TIMER_CARDS = [
+
+  {
+    file: "Thai-Timer.html",
+    title: "Thailand timer"
+  }
+
+  // Singapore and Malaysia will be added
+  // after their timer files are created.
+
+];
+
+const CHANGE_INTERVAL = 15000;
+
+const frame = document.getElementById("timerFrame");
+
+let activeIndex = 0;
+let rotationTimer = null;
+
+function showCard(index) {
+
+  if (!TIMER_CARDS.length) return;
+
+  activeIndex = index % TIMER_CARDS.length;
+
+  const card = TIMER_CARDS[activeIndex];
+
+  frame.title = card.title;
+  frame.src = card.file;
+}
+
+function startSlider() {
+
+  if (rotationTimer) {
+    clearInterval(rotationTimer);
+    rotationTimer = null;
+  }
+
+  showCard(activeIndex);
+
+  if (TIMER_CARDS.length > 1) {
+
+    rotationTimer = setInterval(() => {
+
+      showCard(
+        (activeIndex + 1) % TIMER_CARDS.length
+      );
+
+    }, CHANGE_INTERVAL);
+
+  }
+}
+
+startSlider();
+
+document.addEventListener("visibilitychange", () => {
+
+  if (
+    !document.hidden &&
+    TIMER_CARDS.length > 1 &&
+    !rotationTimer
+  ) {
+    startSlider();
+  }
+
+});
+
+</script>
+
+</body>
+</html>
