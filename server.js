@@ -2668,6 +2668,7 @@
     const registerThailandRoutes = require("./src/games/thailand");
     const registerThailand3UpRoutes = require("./src/games/thailand/3up");
     const registerThailand6UpRoutes = require("./src/games/thailand/6up");
+    const registerSingaporeRoutes = require("./src/games/singapore");
 
     const routeDependencies = {
       pool,
@@ -2689,6 +2690,7 @@
     registerThailandRoutes(app, routeDependencies);
     registerThailand3UpRoutes(routeDependencies);
     registerThailand6UpRoutes(routeDependencies);
+    const initializeSingaporeRoutes = registerSingaporeRoutes(app, routeDependencies);
     registerResultsRoutes(app, routeDependencies);
 
     // 404
@@ -2873,6 +2875,9 @@
     async function startServer() {
       try {
         await initializeDatabase();
+
+        // Initialize Singapore-specific tables after the shared users table exists.
+        await initializeSingaporeRoutes();
 
         await bootstrapAdmin();
 
