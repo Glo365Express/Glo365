@@ -2671,7 +2671,8 @@
     const registerSingaporeRoutes = require("./src/games/singapore");
 
     const routeDependencies = {
-      pool,
+  app,
+  pool,
       authenticateToken,
       requireAdmin,
       asyncRoute,
