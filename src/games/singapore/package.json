@@ -4,7 +4,7 @@
   "version": "1.0.0",
   "private": true,
   "description": "GLO 365 Singapore Games API",
-  "main": "server.js",
+  "main": "index.js",
   "scripts": {
     "start": "node server.js"
   },
