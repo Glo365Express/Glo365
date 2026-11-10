@@ -4,437 +4,501 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
-<meta name="theme-color" content="#1687d5">
-<title>Singapore Games - GLO 365</title>
+<meta name="theme-color" content="#17142e">
+<title>Singapore Games | GLO 365</title>
 
 <style>
 *{margin:0;padding:0;box-sizing:border-box}
-
 body{
-  font-family:Arial,sans-serif;
-  background:#eef7fd;
-  color:#173b59;
-  min-height:100vh;
+ font-family:Arial,sans-serif;
+ background:#eef7fd;
+ color:white;
 }
+.app{max-width:600px;margin:auto;min-height:100vh;background:#eef7fd}
 
+/* HEADER */
 .header{
-  background:linear-gradient(135deg,#1687d5,#0870bd);
-  color:white;
-  padding:23px 15px;
-  text-align:center;
+ background:linear-gradient(120deg,#0879c5,#168fdf);
+ text-align:center;padding:23px 12px 25px;
 }
+.header h1{font-size:clamp(25px,7vw,36px);font-weight:900}
+.header p{font-size:14px;margin-top:8px;color:#d9efff}
 
-.logo{font-size:26px;font-weight:900}
-.header p{font-size:12px;margin-top:7px;color:#e2f4ff}
-
-.container{
-  max-width:560px;
-  margin:auto;
-  padding:23px 16px 35px;
+/* HOME */
+.home{padding:20px 15px;color:#194765}
+.home-title{font-size:20px;font-weight:900;margin:8px 0 18px}
+.grid{display:grid;grid-template-columns:repeat(2,1fr);gap:13px}
+.card{
+ border:2px solid #b3e1f5;border-radius:23px;
+ background:linear-gradient(145deg,#34baf0,#0879c9);
+ padding:17px 9px;color:white;text-align:center;
+ min-height:205px;cursor:pointer;
+ box-shadow:0 6px 16px #0878bd25;
 }
-
-.section-title{
-  display:flex;
-  justify-content:space-between;
-  align-items:center;
-  margin-bottom:17px;
-  color:#17669f;
-  font-size:19px;
-  font-weight:900;
+.card .crown{font-size:40px}
+.card .balls{display:flex;justify-content:center;gap:5px;margin:10px 0}
+.card .balls span{
+ width:38px;height:38px;border-radius:50%;background:#effaff;
+ color:#173c5a;border:4px solid #37d0f1;
+ display:grid;place-items:center;font-size:16px;font-weight:900;
 }
-
-.section-title span{
-  font-size:11px;
-  color:#1687d5;
-}
-
-.game-grid{
-  display:grid;
-  grid-template-columns:repeat(2,minmax(0,1fr));
-  gap:14px;
-}
-
-.game-card{
-  border:2px solid #a7ddf4;
-  border-radius:25px;
-  background:linear-gradient(150deg,#36bdf1,#149bdf 55%,#0874c7);
-  min-height:225px;
-  padding:18px 10px 14px;
-  text-align:center;
-  color:white;
-  cursor:pointer;
-  box-shadow:0 7px 18px #0878bd28,
-             inset 0 0 0 5px #ffffff30;
-  position:relative;
-  overflow:hidden;
-  transition:.15s;
-}
-
-.game-card:active{transform:scale(.97)}
-
-.crown{
-  font-size:44px;
-  margin-bottom:10px;
-  filter:drop-shadow(0 3px 3px #075b8b55);
-}
-
-.balls{
-  display:flex;
-  justify-content:center;
-  align-items:center;
-  gap:5px;
-  height:59px;
-  margin:5px 0 10px;
-}
-
-.ball{
-  width:47px;
-  height:47px;
-  flex-shrink:0;
-  border-radius:50%;
-  background:#eafaff;
-  border:5px solid #35d1f3;
-  color:#183c59;
-  display:flex;
-  align-items:center;
-  justify-content:center;
-  font-size:22px;
-  font-weight:900;
-  box-shadow:0 4px 8px #004b7d55;
-}
-
-.ball.pink{border-color:#f12b82}
-.ball.green{border-color:#12c78b}
-
-.ball.small{
-  width:35px;
-  height:35px;
-  font-size:14px;
-  border-width:4px;
-}
-
-.game-card h2{
-  font-size:25px;
-  font-weight:900;
-  text-shadow:0 2px 3px #00548b66;
-}
-
-.game-card p{
-  font-size:12px;
-  font-weight:bold;
-  margin-top:5px;
-}
-
+.card h2{font-size:25px;margin-top:8px}
+.card p{font-size:11px;font-weight:bold;margin-top:5px}
 .play{
-  display:flex;
-  align-items:center;
-  justify-content:space-between;
-  background:white;
-  color:#15578e;
-  border-radius:30px;
-  padding:7px 9px 7px 16px;
-  margin-top:15px;
-  font-size:13px;
-  font-weight:900;
+ background:white;color:#1167a5;border-radius:30px;
+ padding:11px;margin-top:14px;font-size:12px;font-weight:900;
 }
 
-.arrow{
-  width:36px;
-  height:36px;
-  border-radius:50%;
-  background:#1687d5;
-  color:white;
-  display:flex;
-  justify-content:center;
-  align-items:center;
-  font-size:24px;
+/* GAME */
+.game{display:none;background:#eef7fd;color:#18334d;min-height:100vh}
+.game.active{display:block}
+.game-header{
+ background:linear-gradient(120deg,#0879c5,#168fdf);
+ padding:20px 13px;text-align:center;color:white;
 }
-
-.notice{
-  background:white;
-  border:1px solid #d9e8f3;
-  border-radius:13px;
-  padding:13px;
-  margin-top:20px;
-  text-align:center;
-  color:#71869a;
-  font-size:12px;
-  line-height:1.6;
+.game-header h2{font-size:29px;font-weight:900}
+.game-header p{font-size:13px;margin-top:7px}
+.game-top{
+ padding:12px 14px;display:flex;align-items:center;
+ justify-content:space-between;background:#eef7fd;
 }
-
-.footer{
-  text-align:center;
-  padding:15px;
-  color:#8ca0b2;
-  font-size:11px;
-}
-
-/* GAME SCREEN */
-
-.game-view{display:none}
-.game-view.active{display:block}
-.home-view.hidden{display:none}
-
 .back{
-  border:0;
-  background:white;
-  color:#1267a8;
-  font-size:25px;
-  font-weight:bold;
-  padding:7px 19px;
-  border-radius:12px;
-  box-shadow:0 3px 12px #174f7920;
-  margin-bottom:18px;
-  cursor:pointer;
+ background:white;border:0;color:#126ca8;
+ width:53px;height:48px;border-radius:13px;
+ font-size:27px;font-weight:bold;box-shadow:0 3px 12px #164b6d20;
+}
+.balance{
+ background:white;border-radius:30px;padding:11px 13px;
+ color:#167fc4;font-size:12px;font-weight:bold;
 }
 
-.game-title{
-  background:linear-gradient(135deg,#1687d5,#0875c2);
-  color:white;
-  text-align:center;
-  padding:19px 10px;
-  font-size:22px;
-  font-weight:900;
-  border-radius:13px;
+/* DARK ENTRY PANEL */
+.entry-panel{
+ margin-top:0;
+ background:linear-gradient(145deg,#19172f,#100e29);
+ min-height:650px;
+ padding:18px 10px 35px;
+ color:#e7edff;
+}
+.draw-status{
+ background:#252d50;border:1px solid #465779;
+ border-radius:12px;padding:12px;margin:0 3px 18px;
+ text-align:center;font-size:12px;line-height:1.7;
+}
+.draw-status strong{color:#62e5ad;font-size:14px}
+.draw-meta{
+ display:flex;justify-content:space-around;gap:5px;
+ margin-top:7px;color:#d5e4fa;font-size:11px;
+}
+.draw-meta b{color:#ffe27c}
+
+/* TABLE */
+.table-head,.entry-row{
+ display:grid;
+ grid-template-columns:29px minmax(0,1.25fr) minmax(0,.95fr) minmax(0,.95fr) 19px;
+ gap:5px;align-items:center;
+}
+.table-head{
+ text-align:center;font-size:clamp(9px,2.6vw,12px);
+ font-weight:900;color:#c5d5ed;padding:9px 0 17px;
+}
+.entry-row{margin-bottom:12px}
+.index{
+ text-align:center;font-weight:bold;font-size:16px;color:#dce8ff;
+}
+.entry-row input{
+ width:100%;min-width:0;height:77px;
+ border:2px solid #b9d8ed;
+ border-radius:17px;
+ background:linear-gradient(145deg,#fff,#e8f4ff);
+ text-align:center;color:#145c91;
+ font-size:clamp(14px,4vw,23px);
+ outline:none;padding:4px;
+}
+.entry-row input::placeholder{color:#8b9eae}
+.entry-row input:focus{
+ border-color:#ffd35d;
+ box-shadow:0 0 0 4px #ffd35d38;
+}
+.entry-row .prize{
+ background:linear-gradient(145deg,#eaf7ff,#cce9ff);
+ color:#0865a7;font-weight:900;
+}
+.remove{
+ background:none;border:0;color:#f27c9f;
+ font-size:25px;font-weight:900;cursor:pointer;
 }
 
-.game-subtitle{
-  background:#e2f2fc;
-  color:#2778aa;
-  text-align:center;
-  padding:14px 7px;
-  font-size:13px;
-  font-weight:bold;
-  margin-bottom:15px;
+.add-area{display:flex;justify-content:flex-end;padding:12px 0 35px}
+.add{
+ width:73px;height:73px;border-radius:50%;
+ border:2px solid #70bfff;
+ background:linear-gradient(135deg,#168fe5,#075ab0);
+ color:white;font-size:43px;font-weight:bold;
+ box-shadow:0 4px 12px #0005;cursor:pointer;
 }
+
+/* TOTAL */
+.total-box{
+ border:2px solid #43587d;border-radius:20px;
+ background:linear-gradient(120deg,#203b61,#20264c);
+ padding:25px 8px;text-align:center;
+ font-size:clamp(14px,4vw,22px);
+ margin:0 3px 16px;color:#e5efff;
+}
+.total-box strong{color:#ffe36d;font-weight:900}
+.prize-box{
+ background:linear-gradient(110deg,#172b55,#662077);
+ border-color:#886b93;
+}
+.prize-box strong{font-size:clamp(23px,6vw,34px)}
+
+.place{
+ width:calc(100% - 6px);margin:35px 3px 10px;
+ padding:18px 8px;border-radius:18px;
+ border:2px solid #b16bd9;
+ background:linear-gradient(100deg,#087bd5,#8b12a7);
+ color:white;font-size:clamp(19px,5vw,28px);
+ font-weight:900;box-shadow:0 5px 20px #a40cae40;
+}
+.place:disabled{opacity:.65}
 
 .demo{
-  background:#fff8e8;
-  border:1px solid #f3dfb4;
-  color:#9a6b17;
-  padding:12px;
-  text-align:center;
-  border-radius:10px;
-  font-size:12px;
-  margin-bottom:15px;
+ margin:15px 3px;padding:13px;
+ background:#242440;border:1px solid #494767;
+ border-radius:12px;color:#d3d9ec;
+ text-align:center;font-size:11px;line-height:1.6;
 }
+.message{display:none;padding:12px;margin:10px 3px;border-radius:10px;text-align:center;font-size:12px}
+.message.show{display:block}
+.message.error{background:#642b43;color:white}
+.message.info{background:#253a5d;color:#dceaff}
 
-.entry{
-  background:white;
-  border:1px solid #d9e8f3;
-  border-radius:15px;
-  padding:15px;
-}
+.footer{text-align:center;padding:20px;color:#8da4b5;font-size:11px;background:#eef7fd}
 
-.entry label{
-  display:block;
-  font-size:12px;
-  font-weight:bold;
-  color:#71869a;
-  margin-bottom:10px;
-}
-
-.entry input{
-  width:100%;
-  padding:15px;
-  border:1px solid #d5e2ec;
-  border-radius:10px;
-  background:#f8fbfe;
-  font-size:18px;
-  text-align:center;
-  outline:none;
-}
-
-.entry input:focus{border-color:#1687d5}
-
-.coming{
-  margin-top:15px;
-  background:#f1f8fd;
-  padding:14px;
-  border-radius:12px;
-  font-size:12px;
-  color:#6c8498;
-  line-height:1.6;
-  text-align:center;
-}
-
-@media(max-width:360px){
-  .game-grid{gap:10px}
-  .game-card{min-height:205px;padding:15px 7px}
-  .ball{width:40px;height:40px;flex-basis:40px;font-size:19px}
-  .ball.small{width:30px;height:30px;flex-basis:30px}
-  .game-card h2{font-size:22px}
+@media(max-width:370px){
+ .entry-panel{padding-left:6px;padding-right:6px}
+ .table-head,.entry-row{grid-template-columns:24px minmax(0,1.2fr) minmax(0,.9fr) minmax(0,.9fr) 17px;gap:3px}
+ .entry-row input{height:65px;border-radius:13px}
+ .add{width:60px;height:60px}
 }
 </style>
 </head>
 
 <body>
+<div class="app">
 
 <header class="header">
-  <div class="logo">🇸🇬 SINGAPORE GAMES</div>
-  <p>GLO 365 · DEMO POINTS ONLY</p>
+ <h1>🇸🇬 SINGAPORE GAMES</h1>
+ <p>GLO 365 · DEMO POINTS ONLY</p>
 </header>
 
-<main class="container">
+<!-- HOME -->
+<section class="home" id="home">
+ <div class="home-title">👑 CHOOSE YOUR GAME</div>
+ <div class="grid">
 
-<section class="home-view" id="homeView">
+  <button class="card" onclick="openGame('4d')">
+   <div class="crown">👑</div>
+   <div class="balls"><span>7</span><span>2</span><span>9</span><span>4</span></div>
+   <h2>4D</h2><p>4 DIGIT GAME</p>
+   <div class="play">PLAY NOW ➜</div>
+  </button>
 
-  <div class="section-title">
-    <div>👑 CHOOSE YOUR GAME</div>
-    <span>4 GAMES</span>
-  </div>
+  <button class="card" onclick="openGame('3d')">
+   <div class="crown">👑</div>
+   <div class="balls"><span>1</span><span>3</span><span>6</span></div>
+   <h2>3D</h2><p>3 DIGIT GAME</p>
+   <div class="play">PLAY NOW ➜</div>
+  </button>
 
-  <div class="game-grid">
+  <button class="card" onclick="openGame('2d')">
+   <div class="crown">👑</div>
+   <div class="balls"><span>2</span><span>8</span></div>
+   <h2>2D</h2><p>2 DIGIT GAME</p>
+   <div class="play">PLAY NOW ➜</div>
+  </button>
 
-    <button class="game-card" onclick="openGame('4d')">
-      <div class="crown">👑</div>
-      <div class="balls">
-        <span class="ball">7</span>
-        <span class="ball">2</span>
-        <span class="ball">9</span>
-        <span class="ball">4</span>
-      </div>
-      <h2>4D</h2>
-      <p>4 DIGIT GAME</p>
-      <div class="play">PLAY NOW <span class="arrow">➜</span></div>
-    </button>
+  <button class="card" onclick="openGame('649')">
+   <div class="crown">👑</div>
+   <div class="balls"><span>2</span><span>13</span><span>24</span></div>
+   <h2>6/49</h2><p>6 NUMBER GAME</p>
+   <div class="play">PLAY NOW ➜</div>
+  </button>
 
-    <button class="game-card" onclick="openGame('3d')">
-      <div class="crown">👑</div>
-      <div class="balls">
-        <span class="ball">1</span>
-        <span class="ball">3</span>
-        <span class="ball">6</span>
-      </div>
-      <h2>3D</h2>
-      <p>3 DIGIT GAME</p>
-      <div class="play">PLAY NOW <span class="arrow">➜</span></div>
-    </button>
-
-    <button class="game-card" onclick="openGame('2d')">
-      <div class="crown">👑</div>
-      <div class="balls">
-        <span class="ball">2</span>
-        <span class="ball">8</span>
-      </div>
-      <h2>2D</h2>
-      <p>2 DIGIT GAME</p>
-      <div class="play">PLAY NOW <span class="arrow">➜</span></div>
-    </button>
-
-    <button class="game-card" onclick="openGame('649')">
-      <div class="crown">👑</div>
-      <div class="balls">
-        <span class="ball small green">2</span>
-        <span class="ball small green">13</span>
-        <span class="ball small green">24</span>
-        <span class="ball small green">35</span>
-      </div>
-      <h2>6/49</h2>
-      <p>6 NUMBER GAME</p>
-      <div class="play">PLAY NOW <span class="arrow">➜</span></div>
-    </button>
-
-  </div>
-
-  <div class="notice">
-    All games use virtual demo points only.
-    No real-money transactions or cash prizes.
-  </div>
-
+ </div>
 </section>
 
-<section class="game-view" id="gameView">
+<!-- GAME PAGE -->
+<section class="game" id="game">
 
+ <div class="game-top">
   <button class="back" onclick="goHome()">‹</button>
+  <div class="balance"><span id="balance">--</span> Points</div>
+ </div>
 
-  <div class="game-title" id="gameTitle">4D NUMBER</div>
+ <div class="game-header">
+  <h2 id="gameTitle">4D NUMBER</h2>
+  <p id="gameSubtitle">Enter Number & Virtual Points</p>
+ </div>
 
-  <div class="game-subtitle" id="gameSubtitle">
-    Enter 4 Digit Number & Virtual Points
+ <div class="entry-panel">
+
+  <div class="draw-status">
+   <strong id="statusTitle">BETTING STATUS UNAVAILABLE</strong>
+   <div id="statusText">Waiting for Admin settings</div>
+   <div class="draw-meta">
+    <span>DRAW: <b id="drawNo">--</b></span>
+    <span>DATE: <b id="drawDate">--</b></span>
+    <span>TIME: <b id="drawTime">--</b></span>
+   </div>
   </div>
 
-  <div class="demo">DEMO INTERFACE · POINTS ONLY</div>
-
-  <div class="entry">
-    <label id="entryLabel">ENTER 4 DIGIT NUMBER</label>
-    <input id="numberInput"
-           type="text"
-           inputmode="numeric"
-           placeholder="0000"
-           autocomplete="off">
-
-    <div class="coming">
-      Game entry interface is prepared.
-      Secure Singapore Server and Admin Settings
-      will be connected before enabling bet submission.
-    </div>
+  <div class="table-head">
+   <span>#</span><span>NUMBER</span><span>AMOUNT</span><span>PRIZE</span><span></span>
   </div>
 
+  <div id="rows"></div>
+
+  <div class="add-area">
+   <button class="add" onclick="addRow()">+</button>
+  </div>
+
+  <div class="total-box">
+   Total Amount = <strong id="totalAmount">0.00</strong> GLO
+  </div>
+
+  <div class="total-box prize-box">
+   Total Prize = <strong id="totalPrize">0.00</strong> GLO
+  </div>
+
+  <div class="message info show" id="message">
+   Singapore Server connection is pending.
+  </div>
+
+  <button class="place" id="placeBet" disabled>
+   PLACE BET
+  </button>
+
+  <div class="demo">
+   GLO 365 · DEMO POINTS ONLY<br>
+   Bet submission requires verified server authorization.
+  </div>
+
+ </div>
 </section>
 
-</main>
+<footer class="footer">© 2026 GLO 365 · SINGAPORE GAMES</footer>
 
-<footer class="footer">
-  © 2026 GLO 365 · SINGAPORE GAMES
-</footer>
+</div>
 
 <script>
-const games={
-  "4d":{
-    title:"4D NUMBER",
-    subtitle:"Enter 4 Digit Number & Virtual Points",
-    label:"ENTER 4 DIGIT NUMBER",
-    max:4,
-    placeholder:"0000"
-  },
-  "3d":{
-    title:"3D NUMBER",
-    subtitle:"Enter 3 Digit Number & Virtual Points",
-    label:"ENTER 3 DIGIT NUMBER",
-    max:3,
-    placeholder:"000"
-  },
-  "2d":{
-    title:"2D NUMBER",
-    subtitle:"Enter 2 Digit Number & Virtual Points",
-    label:"ENTER 2 DIGIT NUMBER",
-    max:2,
-    placeholder:"00"
-  },
-  "649":{
-    title:"6/49 NUMBER",
-    subtitle:"Choose 6 numbers from 1 to 49",
-    label:"ENTER SIX UNIQUE NUMBERS",
-    max:20,
-    placeholder:"05, 12, 19, 27, 38, 43"
-  }
+"use strict";
+
+/*
+ Singapore frontend.
+ No localStorage.
+ No fabricated wallet balance.
+ No bet submission without backend.
+*/
+
+const CONFIG={
+ minRows:10,
+ maxRows:50
 };
 
+const games={
+ "4d":{title:"4D NUMBER",digits:4,subtitle:"Enter 4 Digit Number & Virtual Points"},
+ "3d":{title:"3D NUMBER",digits:3,subtitle:"Enter 3 Digit Number & Virtual Points"},
+ "2d":{title:"2D NUMBER",digits:2,subtitle:"Enter 2 Digit Number & Virtual Points"},
+ "649":{title:"6/49 NUMBER",digits:20,subtitle:"Enter 6/49 Number & Virtual Points"}
+};
+
+let currentGame="4d";
+let rows=[];
+let prizeRates={};
+let drawSettings=null;
+
+const $=id=>document.getElementById(id);
+
 function openGame(key){
-  const game=games[key];
-  if(!game)return;
+ if(!games[key])return;
+ currentGame=key;
 
-  document.getElementById("homeView").classList.add("hidden");
-  document.getElementById("gameView").classList.add("active");
+ $("home").style.display="none";
+ $("game").classList.add("active");
 
-  document.getElementById("gameTitle").textContent=game.title;
-  document.getElementById("gameSubtitle").textContent=game.subtitle;
-  document.getElementById("entryLabel").textContent=game.label;
+ $("gameTitle").textContent=games[key].title;
+ $("gameSubtitle").textContent=games[key].subtitle;
 
-  const input=document.getElementById("numberInput");
-  input.value="";
-  input.maxLength=game.max;
-  input.placeholder=game.placeholder;
+ rows=[];
+ for(let i=0;i<CONFIG.minRows;i++){
+  rows.push({number:"",amount:""});
+ }
+ renderRows();
+ updateTotals();
 
-  window.scrollTo({top:0,behavior:"smooth"});
+ window.scrollTo(0,0);
 }
 
 function goHome(){
-  document.getElementById("gameView").classList.remove("active");
-  document.getElementById("homeView").classList.remove("hidden");
-  window.scrollTo({top:0,behavior:"smooth"});
+ $("game").classList.remove("active");
+ $("home").style.display="block";
+ window.scrollTo(0,0);
 }
+
+function addRow(){
+ if(rows.length>=CONFIG.maxRows)return;
+ rows.push({number:"",amount:""});
+ renderRows();
+}
+
+function getPrize(number,amount){
+ const rate=Number(prizeRates[currentGame])||0;
+ return number && amount>0 ? amount*rate : 0;
+}
+
+function renderRows(){
+ const container=$("rows");
+ container.replaceChildren();
+
+ rows.forEach((row,index)=>{
+  const line=document.createElement("div");
+  line.className="entry-row";
+
+  const serial=document.createElement("span");
+  serial.className="index";
+  serial.textContent=(index+1)+".";
+
+  const number=document.createElement("input");
+  number.placeholder="Number";
+  number.inputMode="numeric";
+  number.maxLength=games[currentGame].digits;
+  number.value=row.number;
+
+  const amount=document.createElement("input");
+  amount.placeholder="Amount";
+  amount.inputMode="decimal";
+  amount.type="number";
+  amount.min="0";
+  amount.step="0.01";
+  amount.value=row.amount;
+
+  const prize=document.createElement("input");
+  prize.className="prize";
+  prize.readOnly=true;
+  prize.value=getPrize(row.number,Number(row.amount)).toFixed(2);
+
+  const remove=document.createElement("button");
+  remove.className="remove";
+  remove.type="button";
+  remove.textContent="×";
+
+  number.addEventListener("input",()=>{
+   number.value=number.value.replace(/\D/g,"").slice(0,games[currentGame].digits);
+   row.number=number.value;
+   updateTotals();
+   prize.value=getPrize(row.number,Number(row.amount)).toFixed(2);
+  });
+
+  amount.addEventListener("input",()=>{
+   row.amount=amount.value;
+   prize.value=getPrize(row.number,Number(row.amount)).toFixed(2);
+   updateTotals();
+  });
+
+  remove.addEventListener("click",()=>{
+   if(rows.length>CONFIG.minRows){
+    rows.splice(index,1);
+   }else{
+    rows[index]={number:"",amount:""};
+   }
+   renderRows();
+  });
+
+  line.append(serial,number,amount,prize,remove);
+  container.appendChild(line);
+ });
+}
+
+function updateTotals(){
+ let total=0;
+ let prize=0;
+
+ rows.forEach(row=>{
+  const amount=Math.max(0,Number(row.amount)||0);
+  total+=amount;
+  prize+=getPrize(row.number,amount);
+ });
+
+ $("totalAmount").textContent=total.toFixed(2);
+ $("totalPrize").textContent=prize.toFixed(2);
+}
+
+/* Server data will populate these functions later. */
+
+function updateWallet(value){
+ if(!Number.isFinite(Number(value)))return;
+ $("balance").textContent=Number(value).toFixed(2);
+}
+
+function applyAdminSettings(data){
+ drawSettings=data;
+ prizeRates=data.prize_rates||{};
+
+ $("drawNo").textContent=data.draw_number||"--";
+ $("drawDate").textContent=data.draw_date||"--";
+ $("drawTime").textContent=data.draw_time||"--";
+
+ updateTotals();
+ updateStatus();
+}
+
+function updateStatus(){
+ if(!drawSettings){
+  setStatus("BETTING STATUS UNAVAILABLE","Waiting for Singapore Admin settings",false);
+  return;
+ }
+
+ const drawAt=new Date(drawSettings.draw_at).getTime();
+
+ if(!Number.isFinite(drawAt)){
+  setStatus("BETTING STATUS UNAVAILABLE","Invalid draw schedule",false);
+  return;
+ }
+
+ const lockAt=drawAt-45*60*1000;
+ const remaining=lockAt-Date.now();
+
+ if(drawSettings.betting_locked===true||remaining<=0){
+  setStatus("BETTING CLOSED","Betting closes 45 minutes before draw time",false);
+  return;
+ }
+
+ const h=Math.floor(remaining/3600000);
+ const m=Math.floor((remaining%3600000)/60000);
+ const s=Math.floor((remaining%60000)/1000);
+
+ setStatus("BETTING IS OPEN",
+  "Betting closes in "+h+"h "+m+"m "+s+"s",true);
+}
+
+function setStatus(title,message,open){
+ $("statusTitle").textContent=title;
+ $("statusText").textContent=message;
+ $("statusTitle").style.color=open?"#62e5ad":"#ff829f";
+}
+
+function setMessage(text){
+ $("message").textContent=text;
+ $("message").className="message show error";
+}
+
+$("placeBet").addEventListener("click",()=>{
+ setMessage("Singapore Backend is not connected. Bet submission is unavailable.");
+});
+
+setInterval(updateStatus,1000);
 </script>
 
 </body>
