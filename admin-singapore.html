@@ -1,229 +1,192 @@
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
-<meta name="theme-color" content="#0b2b50">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="theme-color" content="#07549b">
 <title>Singapore Admin | GLO 365</title>
 
 <style>
-:root{
+:root {
   --blue:#087fc5;
-  --blue2:#159ce0;
-  --navy:#0b2b50;
-  --text:#203e58;
+  --deep:#082c55;
+  --light:#eaf5fd;
+  --text:#203d55;
   --muted:#8294a2;
-  --bg:#edf6fc;
-  --border:#dce9f1;
   --green:#159b68;
-  --red:#d84d55;
+  --red:#d64a4a;
+  --border:#dce8ef;
 }
 *{box-sizing:border-box}
 body{
   margin:0;
-  font-family:Arial,Helvetica,sans-serif;
-  background:var(--bg);
+  background:var(--light);
   color:var(--text);
+  font-family:Arial,Helvetica,sans-serif;
 }
 button,input,select{font:inherit}
 button{cursor:pointer}
 .hero{
-  background:linear-gradient(120deg,#071d3b,#075da0 65%,#087fc5);
-  color:#fff;
-  padding:30px 22px 42px;
-  border-radius:0 0 42px 42px;
-  position:relative;
-  overflow:hidden;
+  padding:28px 22px 35px;
+  color:white;
+  background:linear-gradient(125deg,#071d3b,#087ec6);
+  border-radius:0 0 38px 38px;
 }
-.hero:after{
-  content:"";
-  position:absolute;
-  width:280px;height:280px;
-  border-radius:50%;
-  background:#ffffff0b;
-  right:-100px;top:-150px;
-}
-.topbar{
+.top{
   display:flex;
-  align-items:center;
   justify-content:space-between;
+  align-items:center;
   gap:10px;
-  position:relative;z-index:1;
 }
-.brand{font-size:34px;font-weight:900;letter-spacing:-1px}
-.brand span{color:#62d2ff}
+.logo{font-size:30px;font-weight:900}
+.logo span{color:#6ad4ff}
 .admin-pill{
-  background:#fff;color:#0872ad;
+  background:white;color:#0874b6;
   border-radius:30px;padding:13px 17px;
-  font-size:13px;font-weight:800;
-}
-.hero-content{
-  margin-top:85px;
-  position:relative;z-index:1;
+  font-weight:800;font-size:13px;
 }
 .eyebrow{
-  font-size:14px;letter-spacing:4px;
-  font-weight:800;color:#a8dcff;
+  margin-top:43px;
+  letter-spacing:4px;
+  color:#a9dcff;
+  font-weight:800;font-size:13px;
 }
-.hero h1{font-size:36px;margin:22px 0 14px}
-.hero p{font-size:18px;line-height:1.6;margin:0;color:#d9efff}
-.container{
-  max-width:900px;
-  margin:auto;
-  padding:24px 18px 50px;
+.hero h1{font-size:34px;margin:14px 0}
+.hero p{font-size:17px;line-height:1.5;color:#d9edff;margin:0}
+main{max-width:900px;margin:auto;padding:22px 16px 50px}
+.profile{
+  display:flex;justify-content:space-between;
+  align-items:center;gap:12px;margin:10px 4px 20px;
 }
-.welcome{
-  display:flex;align-items:center;
-  justify-content:space-between;
-  gap:12px;margin:10px 4px 22px;
+.profile h2{margin:0 0 7px;font-size:25px}
+.profile p{margin:0;color:var(--muted)}
+.status{
+  background:#e1f8ed;color:#198457;
+  border:1px solid #b9e8d0;
+  padding:12px 16px;border-radius:30px;
+  font-weight:800;white-space:nowrap;
 }
-.welcome h2{font-size:25px;margin:0 0 8px}
-.welcome p{margin:0;color:var(--muted)}
-.admin-status{
-  background:#e2f8ed;color:#168454;
-  border:1px solid #bcebd1;
-  padding:11px 16px;border-radius:30px;
-  font-size:13px;font-weight:800;white-space:nowrap;
-}
-.message{
+.alert{
   display:none;padding:15px 17px;
-  border-radius:18px;margin-bottom:20px;
+  border-radius:16px;margin:15px 0;
   line-height:1.5;font-size:14px;
 }
-.message.error{display:block;background:#fff0f0;color:#a33139}
-.message.success{display:block;background:#e6f8ee;color:#137b4d}
-.message.info{display:block;background:#e7f3ff;color:#17639b}
+.alert.error{display:block;background:#fff0f0;color:#a33b3b}
+.alert.success{display:block;background:#e5f8ee;color:#17794d}
+.alert.info{display:block;background:#e5f2ff;color:#155b91}
 .card{
-  background:#fff;border:1px solid var(--border);
-  border-radius:27px;padding:24px;
-  margin-bottom:22px;
-  box-shadow:0 8px 28px #16476b0a;
+  background:white;border:1px solid var(--border);
+  border-radius:25px;padding:22px;
+  margin:18px 0;box-shadow:0 8px 25px #173f5910;
 }
-.card-heading{
-  display:flex;align-items:center;
-  justify-content:space-between;
-  gap:10px;margin-bottom:22px;
+.card-head{
+  display:flex;justify-content:space-between;
+  align-items:center;gap:10px;margin-bottom:20px;
 }
-.card-heading h2{font-size:23px;margin:0}
-.small-label{font-size:13px;font-weight:800;color:#087cb9}
+.card-head h3{margin:0;font-size:22px}
+.small-tag{font-size:12px;font-weight:800;color:#1680b8}
 .games{
-  display:grid;grid-template-columns:repeat(4,1fr);
-  gap:12px;
+  display:grid;grid-template-columns:repeat(4,1fr);gap:10px;
 }
 .game{
-  min-height:110px;border:2px solid #dce9f1;
-  background:#f5fafe;border-radius:23px;
-  color:#416b85;font-weight:900;
-  font-size:21px;transition:.2s;
+  border:2px solid var(--border);background:#f5faff;
+  color:#42657d;border-radius:21px;
+  min-height:100px;font-weight:900;font-size:22px;
 }
-.game small{display:block;font-size:13px;margin-top:10px}
+.game small{display:block;font-size:12px;margin-top:9px}
 .game.active{
-  color:#fff;border-color:#087fc5;
-  background:linear-gradient(135deg,#087fc5,#20a9e9);
-  box-shadow:0 8px 20px #087fc52b;
+  background:linear-gradient(145deg,#087cc4,#20a9e8);
+  color:white;border-color:#087cc4;
+  box-shadow:0 7px 17px #087cc433;
 }
 .game-title{
-  display:flex;align-items:center;
-  justify-content:space-between;gap:10px;
-  margin:4px 0 26px;
+  font-size:27px;font-weight:900;color:#087bbd;
+  margin:22px 0;
 }
-.game-title h2{font-size:30px;color:#087fc5;margin:0}
-.load-state{font-size:13px;color:var(--muted)}
-.field{margin-bottom:22px}
-.field label{
-  display:block;font-weight:800;
-  font-size:16px;margin-bottom:11px;
+.field{margin:19px 0}
+label{
+  display:block;font-size:14px;font-weight:800;
+  margin-bottom:9px;
 }
-.field input,.field select{
-  width:100%;height:58px;
-  border:2px solid #dce7ee;
-  border-radius:17px;padding:0 16px;
-  background:#fff;color:#233f55;
-  outline:none;font-size:16px;
+input,select{
+  width:100%;height:55px;padding:0 15px;
+  border:2px solid var(--border);
+  border-radius:15px;background:white;
+  color:var(--text);outline:none;
 }
-.field input:focus,.field select:focus{
-  border-color:#159ce0;
-  box-shadow:0 0 0 3px #159ce018;
+input:focus,select:focus{border-color:#168dce}
+.hint{font-size:12px;color:var(--muted);margin-top:8px;line-height:1.5}
+.row{
+  display:grid;grid-template-columns:1fr 1fr;gap:13px;
 }
-.hint{font-size:13px;color:#8b9ba6;line-height:1.5;margin-top:9px}
-.switch-row{
-  display:flex;align-items:center;
-  justify-content:space-between;
-  gap:15px;padding:17px;
-  background:#f4f9fc;border-radius:18px;
-  margin:8px 0 22px;
+.toggle-row{
+  display:flex;justify-content:space-between;
+  align-items:center;gap:12px;
+  background:#f2f8fc;padding:16px;
+  border-radius:16px;margin:20px 0;
 }
-.switch-row strong{display:block;font-size:16px}
-.switch-row small{display:block;color:var(--muted);margin-top:6px;line-height:1.4}
-.switch{
-  position:relative;width:56px;height:31px;flex-shrink:0;
-}
+.toggle-row strong{display:block}
+.toggle-row small{color:var(--muted);display:block;margin-top:5px}
+.switch{position:relative;width:54px;height:30px;flex-shrink:0}
 .switch input{display:none}
 .slider{
-  position:absolute;inset:0;
-  background:#c8d5df;border-radius:30px;
-  transition:.2s;
+  position:absolute;inset:0;background:#bdcbd4;
+  border-radius:30px;transition:.2s;
 }
 .slider:before{
-  content:"";position:absolute;
-  width:23px;height:23px;left:4px;top:4px;
-  background:white;border-radius:50%;transition:.2s;
+  content:"";position:absolute;width:22px;height:22px;
+  left:4px;top:4px;background:white;
+  border-radius:50%;transition:.2s;
 }
 .switch input:checked + .slider{background:#16a36c}
-.switch input:checked + .slider:before{transform:translateX(25px)}
-.lock-info{
-  background:#fff8e9;border:1px solid #f5dfb0;
-  color:#8a6320;border-radius:15px;
-  padding:13px 15px;font-size:13px;
-  line-height:1.5;margin-bottom:20px;
+.switch input:checked + .slider:before{transform:translateX(24px)}
+.btn{
+  border:0;border-radius:14px;padding:15px 20px;
+  font-weight:900;background:var(--blue);color:white;
 }
-.save-btn{
-  width:100%;height:58px;border:0;
-  border-radius:17px;
-  color:#fff;font-size:17px;font-weight:900;
-  background:linear-gradient(120deg,#087fc5,#159fe1);
-  box-shadow:0 8px 18px #087fc52b;
-}
-.save-btn:disabled{opacity:.6;cursor:not-allowed}
+.btn:disabled{opacity:.5;cursor:not-allowed}
+.btn.secondary{background:#e9f3fa;color:#17658f}
+.btn.dark{background:#173b5b}
+.actions{display:flex;gap:10px;flex-wrap:wrap;margin-top:20px}
 .stats{
-  display:grid;grid-template-columns:repeat(3,1fr);
-  gap:12px;
+  display:grid;grid-template-columns:repeat(3,1fr);gap:10px;
 }
 .stat{
-  padding:18px 12px;border-radius:18px;
-  background:#f2f8fc;border:1px solid var(--border);
+  background:#f1f8fd;border:1px solid var(--border);
+  padding:16px 10px;border-radius:17px;text-align:center;
 }
-.stat small{display:block;color:#8497a4;font-size:12px;font-weight:700}
-.stat strong{display:block;font-size:24px;margin-top:9px;color:#087fc5;overflow-wrap:anywhere}
+.stat b{display:block;font-size:23px;color:#087bbd}
+.stat span{font-size:11px;color:#718696;display:block;margin-top:7px}
 .table-wrap{overflow-x:auto}
-table{width:100%;border-collapse:collapse;min-width:520px}
+table{width:100%;border-collapse:collapse;min-width:600px}
 th,td{
   padding:13px 10px;text-align:left;
-  border-bottom:1px solid #e8eff4;font-size:13px;
+  border-bottom:1px solid #edf1f4;font-size:13px;
 }
-th{color:#668196;background:#f6fafc}
-.empty{text-align:center;color:#8b9ba6;padding:25px}
-.refresh-btn{
-  border:1px solid #cfe0eb;background:#f5faff;
-  color:#087cb9;padding:9px 13px;
-  border-radius:12px;font-weight:800;
+th{color:#668095;background:#f5f9fc}
+.badge{
+  display:inline-block;padding:6px 9px;
+  border-radius:20px;font-size:11px;font-weight:800;
 }
-.footer{text-align:center;color:#9aabb6;font-size:12px;padding:15px}
+.pending{background:#fff2d8;color:#946600}
+.win{background:#def8e9;color:#168151}
+.loss{background:#ffe6e6;color:#b43c3c}
+.closed{background:#ffe7e7;color:#b23d3d}
+.open{background:#ddf7e9;color:#168151}
+footer{text-align:center;color:#91a0ac;font-size:12px;padding:25px}
 @media(max-width:520px){
-  .hero{padding:28px 22px 40px}
-  .brand{font-size:30px}
-  .hero-content{margin-top:78px}
-  .hero h1{font-size:32px}
-  .hero p{font-size:17px}
-  .games{gap:9px}
-  .game{min-height:100px;font-size:18px;border-radius:19px}
-  .game small{font-size:11px}
-  .card{padding:20px 17px;border-radius:24px}
-  .card-heading h2{font-size:21px}
-  .game-title h2{font-size:26px}
-  .stats{gap:8px}
-  .stat{padding:15px 10px}
-  .stat strong{font-size:20px}
+  .hero h1{font-size:30px}
+  .games{gap:7px}
+  .game{min-height:88px;font-size:19px;border-radius:17px}
+  .game small{font-size:10px}
+  .card{padding:18px}
+  .card-head h3{font-size:19px}
+  .row{grid-template-columns:1fr}
+  .stats{gap:7px}
+  .stat{padding:14px 5px}
+  .stat b{font-size:19px}
+  .profile h2{font-size:21px}
 }
 </style>
 </head>
@@ -231,495 +194,381 @@ th{color:#668196;background:#f6fafc}
 <body>
 
 <header class="hero">
-  <div class="topbar">
-    <div class="brand">GLO <span>365</span></div>
+  <div class="top">
+    <div class="logo">GLO <span>365</span></div>
     <div class="admin-pill">✦ ADMIN PANEL</div>
   </div>
-
-  <div class="hero-content">
-    <div class="eyebrow">SINGAPORE GAMES CONTROL</div>
-    <h1>Singapore Management</h1>
-    <p>Manage draw schedules, prize rates and betting availability.</p>
-  </div>
+  <div class="eyebrow">SINGAPORE GAMES CONTROL</div>
+  <h1>Singapore Management</h1>
+  <p>Manage draw schedules, prize rates and betting availability.</p>
 </header>
 
-<main class="container">
-
-  <section class="welcome">
+<main>
+  <section class="profile">
     <div>
       <h2>Singapore Admin ⚙️</h2>
-      <p id="welcomeText">Loading admin account...</p>
+      <p id="welcome">Checking Admin session...</p>
     </div>
-    <div class="admin-status">● Admin</div>
+    <div class="status">● Admin</div>
   </section>
 
-  <div id="message" class="message"></div>
+  <div id="notice" class="alert"></div>
 
   <section class="card">
-    <div class="card-heading">
-      <h2>Select Game</h2>
-      <span class="small-label">GAME SETTINGS</span>
+    <div class="card-head">
+      <h3>Select Game</h3>
+      <span class="small-tag">GAME SETTINGS</span>
     </div>
-
     <div class="games">
-      <button class="game active" data-game="2D">
-        2D<small>Two Digit</small>
-      </button>
-      <button class="game" data-game="3D">
-        3D<small>Three Digit</small>
-      </button>
-      <button class="game" data-game="4D">
-        4D<small>Four Digit</small>
-      </button>
-      <button class="game" data-game="649">
-        6/49<small>Six Numbers</small>
-      </button>
+      <button class="game active" data-game="2D">2D<small>Two Digit</small></button>
+      <button class="game" data-game="3D">3D<small>Three Digit</small></button>
+      <button class="game" data-game="4D">4D<small>Four Digit</small></button>
+      <button class="game" data-game="649">6/49<small>Six Numbers</small></button>
     </div>
   </section>
 
   <section class="card">
-    <div class="card-heading">
-      <h2>Draw Configuration</h2>
-      <span class="small-label">SERVER SETTINGS</span>
+    <div class="card-head">
+      <h3>Draw Configuration</h3>
+      <span class="small-tag">SERVER SETTINGS</span>
     </div>
 
-    <div class="game-title">
-      <h2 id="gameTitle">2D NUMBER</h2>
-      <span class="load-state" id="loadState">Loading...</span>
+    <div class="game-title" id="gameTitle">2D NUMBER</div>
+
+    <div class="field">
+      <label for="drawNumber">Draw Number / Draw ID</label>
+      <input id="drawNumber" maxlength="50" placeholder="Example: SG-001">
+      <div class="hint">This is the draw sequence identifier, not the player's selected number.</div>
     </div>
 
-    <form id="settingsForm">
+    <div class="field">
+      <label for="drawAt">Draw Date & Time</label>
+      <input id="drawAt" type="datetime-local">
+      <div class="hint">Choose the scheduled draw date and local time. Your browser's local timezone is used.</div>
+    </div>
 
-      <div class="field">
-        <label for="drawNumber">Draw Number / Draw ID</label>
-        <input
-          id="drawNumber"
-          type="text"
-          maxlength="50"
-          placeholder="Example: SG-001"
-          required
-        >
-        <div class="hint">
-          This is the draw sequence identifier, not the player's selected number.
-        </div>
-      </div>
-
-      <div class="field">
-        <label for="drawAt">Draw Date &amp; Time</label>
-        <input id="drawAt" type="datetime-local" required>
-        <div class="hint">
-          Choose the scheduled draw date and local time.
-        </div>
-      </div>
-
+    <div class="row">
       <div class="field">
         <label for="prizeRate">Prize Rate</label>
-        <input
-          id="prizeRate"
-          type="number"
-          min="0"
-          max="100000"
-          step="0.01"
-          placeholder="Example: 80"
-          required
-        >
-        <div class="hint">
-          Prize rate is saved as a multiplier/rate value. Actual prize settlement is not included in this settings page.
-        </div>
+        <input id="prizeRate" type="number" min="0" max="100000" step="0.01" placeholder="Example: 80">
       </div>
-
-      <div class="switch-row">
-        <div>
-          <strong>Betting Availability</strong>
-          <small>Enable or disable betting for this game.</small>
-        </div>
-        <label class="switch">
-          <input id="bettingEnabled" type="checkbox">
-          <span class="slider"></span>
-        </label>
+      <div class="field">
+        <label>Betting Lock</label>
+        <input value="45 Minutes" disabled>
       </div>
+    </div>
 
-      <div class="lock-info">
-        🔒 <strong>Automatic Betting Lock:</strong>
-        Betting will automatically close 45 minutes before the scheduled draw time.
-        This restriction is also enforced by the server.
+    <div class="toggle-row">
+      <div>
+        <strong>Enable Betting</strong>
+        <small id="bettingLabel">Betting is currently disabled.</small>
       </div>
+      <label class="switch">
+        <input id="bettingEnabled" type="checkbox">
+        <span class="slider"></span>
+      </label>
+    </div>
 
-      <button class="save-btn" id="saveBtn" type="submit">
-        SAVE GAME SETTINGS
-      </button>
+    <div class="hint" id="lockStatus">Betting status will appear here.</div>
 
-    </form>
+    <div class="actions">
+      <button class="btn" id="saveBtn">SAVE SETTINGS</button>
+      <button class="btn secondary" id="reloadBtn">↻ Reload</button>
+    </div>
   </section>
 
   <section class="card">
-    <div class="card-heading">
-      <h2>Singapore Overview</h2>
-      <button class="refresh-btn" id="refreshStats">↻ Refresh</button>
+    <div class="card-head">
+      <h3>Singapore Overview</h3>
+      <span class="small-tag">LIVE DATA</span>
     </div>
-
     <div class="stats">
-      <div class="stat">
-        <small>Total Bets</small>
-        <strong id="totalBets">—</strong>
-      </div>
-      <div class="stat">
-        <small>Total Points</small>
-        <strong id="totalPoints">—</strong>
-      </div>
-      <div class="stat">
-        <small>Players</small>
-        <strong id="totalUsers">—</strong>
-      </div>
+      <div class="stat"><b id="totalBets">—</b><span>Total Bets</span></div>
+      <div class="stat"><b id="totalPoints">—</b><span>Total Points</span></div>
+      <div class="stat"><b id="totalUsers">—</b><span>Total Users</span></div>
+    </div>
+    <div class="actions">
+      <button class="btn secondary" id="refreshOverview">↻ Refresh Overview</button>
     </div>
   </section>
 
   <section class="card">
-    <div class="card-heading">
-      <h2>Recent Bets</h2>
-      <button class="refresh-btn" id="refreshBets">↻ Refresh</button>
+    <div class="card-head">
+      <h3>Recent Bets</h3>
+      <span class="small-tag">BET REPORT</span>
     </div>
-
+    <div class="field">
+      <label for="betFilter">Filter by Game</label>
+      <select id="betFilter">
+        <option value="">All Games</option>
+        <option value="2D">2D</option>
+        <option value="3D">3D</option>
+        <option value="4D">4D</option>
+        <option value="649">6/49</option>
+      </select>
+    </div>
     <div class="table-wrap">
       <table>
         <thead>
           <tr>
-            <th>ID</th>
-            <th>User</th>
-            <th>Game</th>
-            <th>Draw</th>
-            <th>Points</th>
-            <th>Status</th>
+            <th>ID</th><th>User</th><th>Game</th>
+            <th>Draw</th><th>Selection</th>
+            <th>Points</th><th>Status</th>
           </tr>
         </thead>
-        <tbody id="betsTable">
-          <tr><td colspan="6" class="empty">Loading bets...</td></tr>
+        <tbody id="betsBody">
+          <tr><td colspan="7">Loading bets...</td></tr>
         </tbody>
       </table>
     </div>
+    <div class="actions">
+      <button class="btn secondary" id="refreshBets">↻ Refresh Bets</button>
+    </div>
   </section>
-
-  <div class="footer">GLO 365 • Singapore Games Administration</div>
-
 </main>
+
+<footer>GLO 365 · Singapore Games Administration</footer>
 
 <script>
 "use strict";
 
 /*
-  IMPORTANT:
-  This is the existing GLO 365 API.
-  No separate Singapore server URL is required.
-*/
+ * Uses the existing GLO 365 API.
+ * No separate Singapore server is required.
+ */
 const API_BASE = "https://glo365.onrender.com/api";
 const TOKEN_KEY = "glo365_token";
 
-const LOCK_MINUTES = 45;
+const $ = id => document.getElementById(id);
 
 let selectedGame = "2D";
 let settingsCache = {};
 
-const $ = id => document.getElementById(id);
-
-function getToken(){
-  return sessionStorage.getItem(TOKEN_KEY) || "";
+function getToken() {
+  try {
+    return sessionStorage.getItem(TOKEN_KEY) || "";
+  } catch {
+    return "";
+  }
 }
 
-function showMessage(text,type="info"){
-  const box = $("message");
-  box.textContent = text;
-  box.className = "message " + type;
+function showNotice(message, type = "info") {
+  const box = $("notice");
+  box.className = "alert " + type;
+  box.textContent = message;
   box.scrollIntoView({behavior:"smooth",block:"nearest"});
 }
 
-function hideMessage(){
-  $("message").className = "message";
-  $("message").textContent = "";
+function clearNotice() {
+  $("notice").className = "alert";
+  $("notice").textContent = "";
 }
 
-function formatNumber(value){
-  const number = Number(value || 0);
-  return Number.isFinite(number)
-    ? number.toLocaleString("en-US",{maximumFractionDigits:2})
-    : "0";
-}
-
-async function apiRequest(path,options={}){
+async function api(path, options = {}) {
   const token = getToken();
-
   const headers = {
     "Content-Type":"application/json",
+    ...(token ? {"Authorization":"Bearer " + token} : {}),
     ...(options.headers || {})
   };
 
-  if(token){
-    headers.Authorization = "Bearer " + token;
-  }
-
-  const response = await fetch(API_BASE + path,{
+  const response = await fetch(API_BASE + path, {
     ...options,
     headers,
     credentials:"include",
     cache:"no-store"
   });
 
-  let data = {};
-
-  try{
+  let data;
+  try {
     data = await response.json();
-  }catch(e){
-    data = {};
+  } catch {
+    throw new Error("Invalid server response.");
   }
 
-  if(response.status === 401){
-    throw new Error("Your session has expired. Please log in again.");
+  if (response.status === 401) {
+    throw new Error("Login expired. Please login to GLO 365 again.");
   }
 
-  if(response.status === 403){
+  if (response.status === 403) {
     throw new Error(data.message || "Admin access denied.");
   }
 
-  if(!response.ok || data.success === false){
-    throw new Error(data.message || "API request failed ("+response.status+").");
+  if (!response.ok || data.success === false) {
+    throw new Error(data.message || "API request failed.");
   }
 
   return data;
 }
 
-function toDateTimeLocal(value){
-  if(!value) return "";
+function formatDateForInput(value) {
+  if (!value) return "";
 
   const date = new Date(value);
-  if(Number.isNaN(date.getTime())) return "";
+  if (!Number.isFinite(date.getTime())) return "";
 
-  const local = new Date(
-    date.getTime() - date.getTimezoneOffset()*60000
-  );
+  const pad = n => String(n).padStart(2,"0");
 
-  return local.toISOString().slice(0,16);
+  return date.getFullYear() + "-" +
+    pad(date.getMonth()+1) + "-" +
+    pad(date.getDate()) + "T" +
+    pad(date.getHours()) + ":" +
+    pad(date.getMinutes());
 }
 
-function localDateTimeToISO(value){
+function localInputToISO(value) {
+  if (!value) return null;
+
   const date = new Date(value);
-  if(Number.isNaN(date.getTime())) return "";
+  if (!Number.isFinite(date.getTime())) return null;
+
   return date.toISOString();
 }
 
-function setLoadState(text){
-  $("loadState").textContent = text;
+function gameName(game) {
+  return game === "649" ? "6/49 NUMBER" : game + " NUMBER";
 }
 
-function updateGameButtons(){
-  document.querySelectorAll(".game").forEach(button=>{
-    button.classList.toggle(
-      "active",
-      button.dataset.game === selectedGame
-    );
-  });
+function updateLockDisplay(settings) {
+  if (!settings) {
+    $("lockStatus").textContent = "No draw settings loaded.";
+    return;
+  }
 
-  $("gameTitle").textContent =
-    selectedGame === "649" ? "6/49 NUMBER" : selectedGame + " NUMBER";
+  const drawTime = settings.draw_at
+    ? new Date(settings.draw_at).getTime()
+    : NaN;
+
+  const locked = settings.betting_locked === true ||
+    !settings.betting_enabled ||
+    !Number.isFinite(drawTime) ||
+    drawTime - Date.now() <= 45 * 60 * 1000;
+
+  $("lockStatus").textContent = locked
+    ? "🔒 Betting is currently locked or disabled."
+    : "🟢 Betting is open. It will automatically lock 45 minutes before the draw.";
+
+  $("bettingLabel").textContent = settings.betting_enabled
+    ? "Admin has enabled betting. Automatic lock applies."
+    : "Betting is currently disabled.";
 }
 
-function fillSettings(row){
-  if(!row){
+function fillSettings(settings) {
+  if (!settings) {
     $("drawNumber").value = "";
     $("drawAt").value = "";
     $("prizeRate").value = "0";
     $("bettingEnabled").checked = false;
+    updateLockDisplay(null);
     return;
   }
 
-  $("drawNumber").value = row.draw_number || "";
-  $("drawAt").value = toDateTimeLocal(row.draw_at);
-  $("prizeRate").value = row.prize_rate ?? 0;
-  $("bettingEnabled").checked = row.betting_enabled === true;
+  $("drawNumber").value = settings.draw_number || "";
+  $("drawAt").value = formatDateForInput(settings.draw_at);
+  $("prizeRate").value = settings.prize_rate ?? 0;
+  $("bettingEnabled").checked = settings.betting_enabled === true;
+
+  updateLockDisplay(settings);
 }
 
-async function loadSettings(game){
-  selectedGame = game;
-  updateGameButtons();
-  setLoadState("Loading...");
-  $("saveBtn").disabled = true;
+async function loadSettings() {
+  $("gameTitle").textContent = gameName(selectedGame);
 
-  try{
-    const data = await apiRequest(
+  try {
+    const data = await api(
       "/admin/singapore/settings"
     );
 
-    const rows = Array.isArray(data.settings)
-      ? data.settings
-      : [];
-
-    rows.forEach(row=>{
-      settingsCache[row.game] = row;
+    settingsCache = {};
+    (data.settings || []).forEach(item => {
+      settingsCache[item.game] = item;
     });
 
-    const row = settingsCache[game] || null;
-    fillSettings(row);
-
-    if(row){
-      setLoadState(
-        row.betting_locked ? "Betting Locked" :
-        row.betting_enabled ? "Betting Open" : "Disabled"
-      );
-    }else{
-      setLoadState("Not configured");
-    }
-
-    hideMessage();
-  }catch(error){
-    setLoadState("Load failed");
-    showMessage(
-      "Settings could not be loaded: " + error.message,
-      "error"
-    );
-  }finally{
-    $("saveBtn").disabled = false;
+    fillSettings(settingsCache[selectedGame] || null);
+    clearNotice();
+  } catch (error) {
+    showNotice("Settings could not be loaded: " + error.message,"error");
   }
 }
 
-async function saveSettings(event){
-  event.preventDefault();
-  hideMessage();
-
+async function saveSettings() {
   const drawNumber = $("drawNumber").value.trim();
-  const drawAtValue = $("drawAt").value;
+  const drawAt = localInputToISO($("drawAt").value);
   const prizeRate = Number($("prizeRate").value);
   const bettingEnabled = $("bettingEnabled").checked;
 
-  if(!drawNumber){
-    showMessage("Please enter the Draw Number / Draw ID.","error");
+  if (!drawNumber) {
+    showNotice("Please enter a Draw Number.","error");
     return;
   }
 
-  if(!drawAtValue){
-    showMessage("Please select the draw date and time.","error");
+  if (!drawAt || new Date(drawAt).getTime() <= Date.now()) {
+    showNotice("Please choose a future draw date and time.","error");
     return;
   }
 
-  const drawAt = localDateTimeToISO(drawAtValue);
-
-  if(!drawAt || new Date(drawAt).getTime() <= Date.now()){
-    showMessage("Draw date and time must be in the future.","error");
+  if (!Number.isFinite(prizeRate) || prizeRate < 0 || prizeRate > 100000) {
+    showNotice("Please enter a valid Prize Rate.","error");
     return;
   }
-
-  if(!Number.isFinite(prizeRate) || prizeRate < 0 || prizeRate > 100000){
-    showMessage("Please enter a valid Prize Rate.","error");
-    return;
-  }
-
-  const payload = {
-    draw_number:drawNumber,
-    draw_at:drawAt,
-    prize_rate:prizeRate,
-    betting_enabled:bettingEnabled
-  };
 
   const button = $("saveBtn");
   button.disabled = true;
   button.textContent = "SAVING...";
 
-  try{
-    const data = await apiRequest(
+  try {
+    const data = await api(
       "/admin/singapore/settings/" + encodeURIComponent(selectedGame),
       {
         method:"PUT",
-        body:JSON.stringify(payload)
+        body:JSON.stringify({
+          draw_number:drawNumber,
+          draw_at:drawAt,
+          prize_rate:prizeRate,
+          betting_enabled:bettingEnabled
+        })
       }
     );
 
-    if(data.settings){
+    if (data.settings) {
       settingsCache[selectedGame] = data.settings;
       fillSettings(data.settings);
     }
 
-    setLoadState(
-      data.settings && data.settings.betting_locked
-        ? "Betting Locked"
-        : bettingEnabled ? "Betting Open" : "Disabled"
-    );
+    showNotice("Singapore " + selectedGame + " settings saved successfully.","success");
 
-    showMessage(
-      data.message || "Game settings saved successfully.",
-      "success"
-    );
-  }catch(error){
-    showMessage("Could not save settings: " + error.message,"error");
-  }finally{
+    await loadSettings();
+  } catch (error) {
+    showNotice("Could not save settings: " + error.message,"error");
+  } finally {
     button.disabled = false;
-    button.textContent = "SAVE GAME SETTINGS";
+    button.textContent = "SAVE SETTINGS";
   }
 }
 
-async function loadOverview(){
-  $("totalBets").textContent = "…";
-  $("totalPoints").textContent = "…";
-  $("totalUsers").textContent = "…";
-
-  try{
-    const data = await apiRequest("/admin/singapore/summary");
+async function loadOverview() {
+  try {
+    const data = await api("/admin/singapore/summary");
     const summary = data.summary || {};
 
-    $("totalBets").textContent = formatNumber(summary.total_bets);
-    $("totalPoints").textContent = formatNumber(summary.total_points);
-    $("totalUsers").textContent = formatNumber(summary.total_users);
-  }catch(error){
-    $("totalBets").textContent = "—";
-    $("totalPoints").textContent = "—";
-    $("totalUsers").textContent = "—";
-    showMessage("Overview could not be loaded: "+error.message,"error");
+    $("totalBets").textContent =
+      Number(summary.total_bets || 0).toLocaleString();
+
+    $("totalPoints").textContent =
+      Number(summary.total_points || 0).toLocaleString();
+
+    $("totalUsers").textContent =
+      Number(summary.total_users || 0).toLocaleString();
+  } catch (error) {
+    $("totalBets").textContent = "!";
+    $("totalPoints").textContent = "!";
+    $("totalUsers").textContent = "!";
+    showNotice("Overview could not be loaded: " + error.message,"error");
   }
 }
 
-function displaySelections(value){
-  if(Array.isArray(value)){
-    return value.map(row=>
-      Array.isArray(row) ? row.join("-") : String(row)
-    ).join(", ");
-  }
-  return String(value || "");
-}
-
-async function loadBets(){
-  const tbody = $("betsTable");
-  tbody.innerHTML =
-    '<tr><td colspan="6" class="empty">Loading bets...</td></tr>';
-
-  try{
-    const data = await apiRequest(
-      "/admin/singapore/bets?limit=100"
-    );
-
-    const bets = Array.isArray(data.bets) ? data.bets : [];
-
-    if(!bets.length){
-      tbody.innerHTML =
-        '<tr><td colspan="6" class="empty">No bets found.</td></tr>';
-      return;
-    }
-
-    tbody.innerHTML = bets.map(bet=>`
-      <tr>
-        <td>${escapeHTML(bet.id)}</td>
-        <td>${escapeHTML(bet.username || "User")}</td>
-        <td>${escapeHTML(bet.game)}</td>
-        <td>${escapeHTML(bet.draw_number)}</td>
-        <td>${formatNumber(bet.amount)}</td>
-        <td>${escapeHTML(bet.status)}</td>
-      </tr>
-    `).join("");
-
-  }catch(error){
-    tbody.innerHTML =
-      '<tr><td colspan="6" class="empty">Could not load bets: '+
-      escapeHTML(error.message)+'</td></tr>';
-  }
-}
-
-function escapeHTML(value){
-  return String(value ?? "").replace(/[&<>"']/g,char=>({
+function escapeHTML(value) {
+  return String(value ?? "").replace(/[&<>"']/g, char => ({
     "&":"&amp;",
     "<":"&lt;",
     ">":"&gt;",
@@ -728,54 +577,112 @@ function escapeHTML(value){
   })[char]);
 }
 
-async function loadAdminInfo(){
-  try{
-    const data = await apiRequest("/auth/me");
-    const user = data.user || data.profile || data;
+function displaySelection(value) {
+  if (Array.isArray(value)) {
+    return value.map(row =>
+      Array.isArray(row) ? row.join(", ") : String(row)
+    ).join(" | ");
+  }
 
-    if(user.username){
-      $("welcomeText").textContent =
-        "Welcome, " + user.username;
-    }else{
-      $("welcomeText").textContent = "Welcome, Admin";
+  return String(value ?? "");
+}
+
+function statusBadge(status) {
+  const value = String(status || "pending").toLowerCase();
+  const allowed = ["pending","win","loss","cancelled"];
+  const safe = allowed.includes(value) ? value : "pending";
+
+  return '<span class="badge ' + safe + '">' +
+    escapeHTML(safe.toUpperCase()) + '</span>';
+}
+
+async function loadBets() {
+  const body = $("betsBody");
+  body.innerHTML = '<tr><td colspan="7">Loading bets...</td></tr>';
+
+  const game = $("betFilter").value;
+  const query = game
+    ? "?game=" + encodeURIComponent(game) + "&limit=100"
+    : "?limit=100";
+
+  try {
+    const data = await api("/admin/singapore/bets" + query);
+    const bets = data.bets || [];
+
+    if (!bets.length) {
+      body.innerHTML = '<tr><td colspan="7">No bets found.</td></tr>';
+      return;
     }
-  }catch(error){
-    $("welcomeText").textContent = "Admin session";
+
+    body.innerHTML = bets.map(bet => `
+      <tr>
+        <td>#${escapeHTML(bet.id)}</td>
+        <td>${escapeHTML(bet.username)}</td>
+        <td>${escapeHTML(bet.game)}</td>
+        <td>${escapeHTML(bet.draw_number)}</td>
+        <td>${escapeHTML(displaySelection(bet.selections))}</td>
+        <td>${Number(bet.amount || 0).toLocaleString()}</td>
+        <td>${statusBadge(bet.status)}</td>
+      </tr>
+    `).join("");
+  } catch (error) {
+    body.innerHTML = '<tr><td colspan="7">' +
+      escapeHTML(error.message) + '</td></tr>';
   }
 }
 
-document.querySelectorAll(".game").forEach(button=>{
-  button.addEventListener("click",()=>{
-    loadSettings(button.dataset.game);
+function selectGame(game) {
+  selectedGame = game;
+
+  document.querySelectorAll(".game").forEach(button => {
+    button.classList.toggle(
+      "active",
+      button.dataset.game === game
+    );
+  });
+
+  $("gameTitle").textContent = gameName(game);
+  fillSettings(settingsCache[game] || null);
+  loadSettings();
+}
+
+document.querySelectorAll(".game").forEach(button => {
+  button.addEventListener("click", () => {
+    selectGame(button.dataset.game);
   });
 });
 
-$("settingsForm").addEventListener("submit",saveSettings);
+$("saveBtn").addEventListener("click", saveSettings);
+$("reloadBtn").addEventListener("click", loadSettings);
 
-$("refreshStats").addEventListener("click",loadOverview);
-$("refreshBets").addEventListener("click",loadBets);
+$("refreshOverview").addEventListener("click", loadOverview);
+$("refreshBets").addEventListener("click", loadBets);
 
-async function initializePage(){
-  if(!getToken()){
-    showMessage(
-      "No login token found. Please log in to your GLO 365 Admin account first.",
-      "error"
-    );
-    setLoadState("Login required");
-    $("saveBtn").disabled = true;
-    return;
+$("betFilter").addEventListener("change", loadBets);
+
+$("bettingEnabled").addEventListener("change", () => {
+  $("bettingLabel").textContent = $("bettingEnabled").checked
+    ? "Betting will be enabled after saving."
+    : "Betting will be disabled after saving.";
+});
+
+async function initialize() {
+  $("welcome").textContent = "Welcome, Admin";
+
+  if (!getToken()) {
+    $("welcome").textContent = "Checking secure login session...";
   }
 
-  await loadAdminInfo();
-  await loadSettings("2D");
   await Promise.all([
+    loadSettings(),
     loadOverview(),
     loadBets()
   ]);
 }
 
-initializePage();
+initialize();
 </script>
 
 </body>
 </html>
+ 
