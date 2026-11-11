@@ -1,1529 +1,1115 @@
-<!DOCTYPE html>  <html lang="en">  
-<head>  
-<meta charset="UTF-8">  
-<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">  
-<meta name="theme-color" content="#2196e8">  
-<title>GLO 365 - Single</title>  <style>  
-*{box-sizing:border-box;margin:0;padding:0}  
-  
-body{  
- font-family:Arial,sans-serif;  
- background:#f0f7fd;  
- color:#18334d;  
-}  
-  
-.app{  
- max-width:520px;  
- min-height:100vh;  
- margin:auto;  
- background:#fff;  
- padding-bottom:25px;  
- box-shadow:0 0 25px #163c5c0b;  
-}  
-  
-.header{  
- background:linear-gradient(120deg,#1687d5,#2196e8);  
- padding:17px 15px;  
- display:flex;  
- justify-content:space-between;  
- align-items:center;  
-}  
-  
-.logo{  
- font-size:27px;  
- font-weight:900;  
- color:#fff;  
-}  
-  
-.logo span{color:#d9f0ff}  
-  
-.balance{  
- background:#fff;  
- color:#167fc4;  
- padding:10px 14px;  
- border-radius:30px;  
- font-size:13px;  
- font-weight:bold;  
-}  
-  
-.page-title{  
- background:#2196e8;  
- text-align:center;  
- padding:15px 10px;  
- font-size:19px;  
- font-weight:900;  
- color:#fff;  
-}  
-  
-.subtitle{  
- text-align:center;  
- padding:12px 5px;  
- background:#eff8ff;  
- color:#167fc4;  
- font-size:13px;  
- font-weight:bold;  
-}  
-  
-.lock-notice{  
- display:none;  
- margin:12px 11px 4px;  
- padding:14px 12px;  
- background:#fff0f0;  
- border:1px solid #ffcaca;  
- border-radius:11px;  
- text-align:center;  
- color:#b42332;  
-}  
-  
-.lock-notice.show{display:block}  
-  
-.lock-notice strong{  
- display:block;  
- font-size:14px;  
- font-weight:900;  
- margin-bottom:5px;  
-}  
-  
-.lock-notice span{  
- display:block;  
- font-size:12px;  
- line-height:1.6;  
- overflow-wrap:anywhere;  
-}  
-  
-.lock-countdown{  
- margin-top:7px;  
- font-weight:bold;  
-}  
-  
-.bet-area{padding:8px 9px 0}  
-  
-.bet-area.locked input{  
- background:#f0f0f0;  
- color:#999;  
- border-color:#ddd;  
- cursor:not-allowed;  
-}  
-  
-.bet-area.locked .remove-btn{  
- opacity:.35;  
- cursor:not-allowed;  
-}  
-  
-.column-heading,.bet-row{  
- display:grid;  
- grid-template-columns:30px minmax(0,1.4fr) minmax(0,.9fr) minmax(0,.9fr) 22px;  
- gap:5px;  
-}  
-  
-.column-heading{  
- padding:8px 0;  
- font-size:10px;  
- font-weight:bold;  
- color:#8195a8;  
- text-align:center;  
-}  
-  
-.bet-row{  
- align-items:center;  
- margin-bottom:8px;  
-}  
-  
-.serial{  
- text-align:center;  
- font-size:14px;  
- color:#526f87;  
-}  
-  
-.bet-row input{  
- width:100%;  
- min-width:0;  
- height:49px;  
- border:1px solid #cbdfee;  
- background:#f7fbff;  
- border-radius:10px;  
- text-align:center;  
- font-size:14px;  
- color:#18334d;  
- outline:none;  
- padding:4px;  
-}  
-  
-.bet-row input:focus{  
- border-color:#2196e8;  
- background:#fff;  
- box-shadow:0 0 0 3px #2196e817;  
-}  
-  
-.bet-row input::placeholder{color:#9aabba}  
-  
-.remove-btn{  
- border:0;  
- background:transparent;  
- color:#d34c5e;  
- font-size:20px;  
- font-weight:bold;  
- padding:3px 0;  
- cursor:pointer;  
-}  
-  
-.add-area{  
- display:flex;  
- justify-content:flex-end;  
- padding:5px 3px 17px;  
-}  
-  
-.add-btn{  
- width:43px;  
- height:43px;  
- border-radius:50%;  
- background:#eff8ff;  
- color:#1687d5;  
- border:1px solid #cbdfee;  
- font-size:29px;  
- font-weight:bold;  
- display:grid;  
- place-items:center;  
- cursor:pointer;  
-}  
-  
-.add-btn:disabled{  
- opacity:.4;  
- cursor:not-allowed;  
-}  
-  
-.summary{padding:5px 11px}  
-  
-.summary-box{  
- background:#eff8ff;  
- border:1px solid #dcebf6;  
- border-radius:12px;  
- padding:16px 7px;  
- text-align:center;  
- font-size:14px;  
- margin-bottom:9px;  
- color:#526f87;  
-}  
-  
-.summary-box strong{  
- font-weight:900;  
- color:#167fc4;  
-}  
-  
-.discount-line{  
- display:flex;  
- align-items:center;  
- justify-content:center;  
- flex-wrap:wrap;  
- gap:7px;  
-}  
-  
-.discount-value{  
- background:#fff;  
- border:1px solid #cbdfee;  
- border-radius:7px;  
- min-width:55px;  
- padding:7px 9px;  
- font-weight:bold;  
- color:#167fc4;  
-}  
-  
-.discount-amount{  
- font-weight:bold;  
- color:#1687d5;  
-}  
-  
-.place-btn{  
- width:calc(100% - 22px);  
- margin:17px 11px 0;  
- padding:16px 8px;  
- background:linear-gradient(90deg,#1687d5,#2196e8);  
- border:0;  
- border-radius:10px;  
- color:#fff;  
- font-size:17px;  
- font-weight:900;  
- box-shadow:0 4px 12px #1687d530;  
- cursor:pointer;  
-}  
-  
-.place-btn:active{transform:scale(.98)}  
-  
-.place-btn:disabled{  
- opacity:.6;  
- cursor:not-allowed;  
- background:#8999a5;  
- box-shadow:none;  
-}  
-  
-.notice{  
- margin:10px 11px;  
- padding:12px;  
- background:#eff8ff;  
- border:1px solid #dcebf6;  
- border-radius:9px;  
- text-align:center;  
- color:#526f87;  
- font-size:11px;  
- line-height:1.7;  
-}  
-  
-.notice strong{color:#167fc4}  
-  
-.back-btn{  
- display:block;  
- margin:10px auto;  
- border:0;  
- background:transparent;  
- color:#167fc4;  
- padding:10px;  
- font-size:13px;  
- cursor:pointer;  
-}  
-  
-.message{  
- display:none;  
- margin:12px 11px;  
- padding:11px;  
- border-radius:9px;  
- font-size:13px;  
- line-height:1.5;  
- white-space:pre-line;  
- overflow-wrap:anywhere;  
-}  
-  
-.message.show{display:block}  
-  
-.message.error{  
- background:#fff0f0;  
- border:1px solid #f0b8b8;  
- color:#a32635;  
-}  
-  
-.message.success{  
- background:#effbf3;  
- border:1px solid #b9e4ca;  
- color:#187344;  
-}  
-  
-.message.info{  
- background:#eff8ff;  
- border:1px solid #cbdfee;  
- color:#167fc4;  
-}  
-  
-@media(max-width:380px){  
- .logo{font-size:24px}  
- .balance{font-size:11px;padding:9px}  
- .bet-row input{height:45px;font-size:12px}  
- .column-heading{font-size:9px;gap:3px}  
- .bet-row{gap:3px}  
- .serial{font-size:12px}  
- .summary-box{font-size:13px}  
-}  
-</style>  </head>  <body>  <div class="app">  <header class="header">  
- <div class="logo">GLO <span>365</span></div>   <div class="balance">  
-  <span id="balance">0.00</span> Points  
- </div>  
-</header>  <div class="page-title">SINGLE NUMBER</div>  <div class="subtitle">  
- Enter 1 Digit Number &amp; Virtual Points  
-</div>  <div class="lock-notice" id="lockNotice" role="alert">  
- <strong id="lockTitle">LOADING BETTING STATUS</strong>  
- <span id="lockMessage">Connecting to the server...</span>  
- <span class="lock-countdown" id="lockCountdown"></span>  
-</div>  <div id="pageMessage" class="message"  
- role="status" aria-live="polite"></div>  <section class="bet-area" id="betArea">   <div class="column-heading">  
-  <span>#</span>  
-  <span>NUMBER</span>  
-  <span>STRAIGHT (D)</span>  
-  <span>RUMBLE (R)</span>  
-  <span></span>  
- </div>   <div id="betRows"></div>   <div class="add-area">  
-  <button class="add-btn" id="addRow"  
-   type="button" title="Add more rows">+</button>  
- </div>  </section>  <section class="summary">   <div class="summary-box">  
-  Total Amount =  
-  <strong id="totalAmount">0.00</strong> Points  
- </div>   <div class="summary-box">  
-  <div class="discount-line">  
-   <span>Discount</span>  
-   <span class="discount-value" id="discountPercent">0</span>  
-   <span>%</span>  
-   <strong class="discount-amount"  
-    id="discountAmount">0.00</strong>  
-   <span>Points</span>  
-  </div>  
- </div>   <div class="summary-box">  
-  Bet Amount =  
-  <strong id="betAmount">0.00</strong> Points  
- </div>  </section>  <button class="place-btn" id="placeBet" type="button" disabled>  
- LOADING...  
-</button>  <button class="back-btn" id="backHome" type="button">  
- ← Back to Home  
-</button>  </div>  <script>  
-"use strict";  
-  
-/* =========================================  
-   GLO 365 - SINGLE  
-   Backend: Node.js + Express  
-   Database: PostgreSQL  
-  
-   Authentication:  
-   - HttpOnly Cookie  
-   - sessionStorage token fallback  
-  
-   No LocalStorage.  
-========================================= */  
-  
-const API_BASE_URL="https://glo365.onrender.com/api";  
-const TOKEN_KEY="glo365_token";  
-  
-const MIN_ROWS=10;  
-const MAX_ROWS=50;  
-  
-const DEFAULT_LOCK_MINUTES=45;  
-const MAX_BET_AMOUNT=100000;  
-  
-const MAX_SINGLE_NUMBER=1;  
-  
-const rowsContainer=document.getElementById("betRows");  
-const addButton=document.getElementById("addRow");  
-const placeButton=document.getElementById("placeBet");  
-  
-const balanceElement=document.getElementById("balance");  
-const totalElement=document.getElementById("totalAmount");  
-const discountElement=document.getElementById("discountAmount");  
-const discountPercentElement=document.getElementById("discountPercent");  
-const betAmountElement=document.getElementById("betAmount");  
-  
-const lockNotice=document.getElementById("lockNotice");  
-const lockTitle=document.getElementById("lockTitle");  
-const lockMessage=document.getElementById("lockMessage");  
-const lockCountdown=document.getElementById("lockCountdown");  
-  
-const betArea=document.getElementById("betArea");  
-const pageMessage=document.getElementById("pageMessage");  
-  
-let currentUser=null;  
-let wallet=0;  
-let discount=0;  
-  
-let isBetLocked=true;  
-let serverBettingLocked=true;  
-  
-let drawSchedule=null;  
-let lockMinutes=DEFAULT_LOCK_MINUTES;  
-  
-let submitting=false;  
-let authenticated=false;  
-let settingsLoaded=false;  
-  
-let countdownTimer=null;  
-let refreshBusy=false;  
-let messageTimer=null;  
-  
-/* =========================================  
-   SESSION  
-========================================= */  
-  
-function getToken(){  
- try{  
-  return sessionStorage.getItem(TOKEN_KEY)||"";  
- }catch(error){  
-  return "";  
- }  
-}  
-  
-function clearSession(){  
- try{  
-  sessionStorage.removeItem(TOKEN_KEY);  
-  sessionStorage.removeItem("glo365_user");  
-  sessionStorage.removeItem("glo365_session");  
- }catch(error){}  
-}  
-  
-function redirectToLogin(){  
- clearSession();  
-  
- location.replace(  
-  "login.html?next="+encodeURIComponent("single.html")  
- );  
-}  
-  
-/* =========================================  
-   MESSAGE  
-========================================= */  
-  
-function showMessage(message,type="info"){  
- clearTimeout(messageTimer);  
-  
- pageMessage.textContent=String(message||"");  
- pageMessage.className="message show "+type;  
-  
- messageTimer=setTimeout(()=>{  
-  pageMessage.className="message";  
-  pageMessage.textContent="";  
- },10000);  
-}  
-  
-function clearMessage(){  
- clearTimeout(messageTimer);  
- pageMessage.textContent="";  
- pageMessage.className="message";  
-}  
-  
-/* =========================================  
-   API REQUEST  
-========================================= */  
-  
-async function apiRequest(path,options={}){  
-  
- const headers=new Headers(options.headers||{});  
- const token=getToken();  
-  
- headers.set("Accept","application/json");  
-  
- if(token){  
-  headers.set("Authorization","Bearer "+token);  
- }  
-  
- let body=options.body;  
-  
- if(body!==undefined&&body!==null){  
-  
-  if(typeof body!=="string"){  
-   body=JSON.stringify(body);  
-  }  
-  
-  headers.set("Content-Type","application/json");  
- }  
-  
- let response;  
-  
- try{  
-  
-  response=await fetch(API_BASE_URL+path,{  
-   method:options.method||"GET",  
-   headers,  
-   credentials:"include",  
-   cache:"no-store",  
-   body  
-  });  
-  
- }catch(error){  
-  
-  throw new Error(  
-   "Cannot connect to GLO 365 server. Check your internet connection."  
-  );  
- }  
-  
- const raw=await response.text();  
-  
- let data={};  
-  
- if(raw){  
-  try{  
-   data=JSON.parse(raw);  
-  }catch(error){  
-   throw new Error("The server returned an invalid response.");  
-  }  
- }  
-  
- if(response.status===401){  
-  
-  authenticated=false;  
-  redirectToLogin();  
-  
-  const error=new Error("Login session expired.");  
-  error.status=401;  
-  
-  throw error;  
- }  
-  
- if(!response.ok||data.success===false){  
-  
-  const error=new Error(  
-   data.message||  
-   data.error||  
-   "Request failed ("+response.status+")."  
-  );  
-  
-  error.status=response.status;  
-  
-  throw error;  
- }  
-  
- return data;  
-}  
-  
-/* =========================================  
-   RESPONSE HELPER  
-========================================= */  
-  
-function unwrap(data){  
-  
- if(!data||typeof data!=="object")return {};  
-  
- return data.data&&typeof data.data==="object"  
-  ?data.data  
-  :data;  
-}  
-  
-/* =========================================  
-   AUTHENTICATION  
-========================================= */  
-  
-async function loadCurrentUser(){  
-  
- const response=await apiRequest("/auth/me");  
- const data=unwrap(response);  
-  
- currentUser=data.user||data.profile||data;  
-  
- if(  
-  !currentUser||  
-  typeof currentUser!=="object"||  
-  currentUser.id===undefined  
- ){  
-  throw new Error(  
-   "The server did not return valid logged-in user information."  
-  );  
- }  
-  
- if(  
-  currentUser.status&&  
-  String(currentUser.status).toLowerCase()!=="active"  
- ){  
-  throw new Error(  
-   "Your account is not active. Please contact the administrator."  
-  );  
- }  
-  
- authenticated=true;  
-}  
-  
-/* =========================================  
-   WALLET  
-========================================= */  
-  
-function formatPoints(value){  
-  
- const n=Number(value);  
-  
- return Number.isFinite(n)  
-  ?n.toFixed(2)  
-  :"0.00";  
-}  
-  
-function setWallet(value){  
-  
- const amount=Number(value);  
-  
- if(!Number.isFinite(amount)||amount<0){  
-  throw new Error("Invalid wallet balance returned by server.");  
- }  
-  
- wallet=amount;  
-  
- balanceElement.textContent=formatPoints(wallet);  
-}  
-  
-async function loadWallet(){  
-  
- const response=await apiRequest("/wallet");  
- const data=unwrap(response);  
-  
- if(data.currency&&data.currency!=="DEMO"){  
-  throw new Error("Unexpected wallet currency.");  
- }  
-  
- if(data.balance===undefined){  
-  throw new Error("The server did not return wallet balance.");  
- }  
-  
- setWallet(data.balance);  
-}  
-  
-/* =========================================  
-   DRAW SETTINGS  
-   GET /api/public/draw-settings  
-========================================= */  
-  
-function parseDrawTime(value){  
-  
- if(!value)return null;  
-  
- const timestamp=Date.parse(value);  
-  
- return Number.isFinite(timestamp)  
-  ?timestamp  
-  :null;  
-}  
-  
-async function loadDrawSettings(){  
-  
- const response=await apiRequest("/public/draw-settings");  
- const data=unwrap(response);  
-  
- const draw=  
-  data.drawSettings||  
-  data.draw_settings||  
-  data.draw||  
-  null;  
-  
- if(!draw||typeof draw!=="object"){  
-  throw new Error(  
-   "The server has not configured a valid draw schedule."  
-  );  
- }  
-  
- const timestamp=parseDrawTime(  
-  draw.draw_at||draw.drawAt  
- );  
-  
- if(timestamp===null){  
-  throw new Error(  
-   "The server returned an invalid draw date and time."  
-  );  
- }  
-  
- drawSchedule={  
-  timestamp,  
-  drawNumber:String(  
-   draw.draw_number||  
-   draw.drawNumber||  
-   ""  
-  )  
- };  
-  
- lockMinutes=Number(data.lock_minutes)>0  
-  ?Number(data.lock_minutes)  
-  :DEFAULT_LOCK_MINUTES;  
-  
- serverBettingLocked=data.betting_locked===true;  
-  
- settingsLoaded=true;  
-  
- updateBettingStatus();  
-}  
-  
-/* =========================================  
-   DRAW TIME DISPLAY  
-========================================= */  
-  
-function formatDrawTime(timestamp){  
-  
- return new Date(timestamp).toLocaleString("en-GB",{  
-  day:"2-digit",  
-  month:"short",  
-  year:"numeric",  
-  hour:"2-digit",  
-  minute:"2-digit",  
-  hour12:true  
- });  
-}  
-  
-function formatRemaining(milliseconds){  
-  
- if(!Number.isFinite(milliseconds)||milliseconds<=0){  
-  return "00:00:00";  
- }  
-  
- const seconds=Math.floor(milliseconds/1000);  
-  
- const hours=Math.floor(seconds/3600);  
- const minutes=Math.floor((seconds%3600)/60);  
- const secs=seconds%60;  
-  
- return [  
-  String(hours).padStart(2,"0"),  
-  String(minutes).padStart(2,"0"),  
-  String(secs).padStart(2,"0")  
- ].join(":");  
-}  
-  
-/* =========================================  
-   BETTING STATUS  
-========================================= */  
-  
-function getBettingStatus(){  
-  
- if(!settingsLoaded||!drawSchedule){  
-  
-  return {  
-   locked:true,  
-   reason:"missing",  
-   remaining:null  
-  };  
- }  
-  
- const remaining=drawSchedule.timestamp-Date.now();  
- const cutoff=lockMinutes*60*1000;  
-  
- if(serverBettingLocked||remaining<=cutoff){  
-  
-  return {  
-   locked:true,  
-   reason:"cutoff",  
-   remaining  
-  };  
- }  
-  
- return {  
-  locked:false,  
-  reason:"open",  
-  remaining  
- };  
-}  
-  
-function updateBettingStatus(){  
-  
- const status=getBettingStatus();  
-  
- isBetLocked=status.locked;  
-  
- if(isBetLocked){  
-  
-  lockNotice.classList.add("show");  
-  betArea.classList.add("locked");  
-  
-  if(status.reason==="missing"){  
-  
-   lockTitle.textContent="BETTING UNAVAILABLE";  
-  
-   lockMessage.textContent=  
-    "The server draw schedule is unavailable. Please wait for the next valid schedule.";  
-  
-   lockCountdown.textContent="";  
-  
-  }else{  
-  
-   lockTitle.textContent="BETTING CLOSED";  
-  
-   lockMessage.textContent=  
-    (drawSchedule.drawNumber  
-     ?"Draw Number: "+drawSchedule.drawNumber+". "  
-     :"")+  
-    "Draw Time: "+formatDrawTime(drawSchedule.timestamp);  
-  
-   lockCountdown.textContent=  
-    status.remaining<=0  
-     ?"The scheduled draw time has passed."  
-     :"Draw starts in: "+formatRemaining(status.remaining);  
-  }  
-  
- }else{  
-  
-  lockNotice.classList.remove("show");  
-  betArea.classList.remove("locked");  
-  
-  lockTitle.textContent="BETTING OPEN";  
-  lockMessage.textContent="";  
-  lockCountdown.textContent="";  
- }  
-  
- applyControls();  
-}  
-  
-/* =========================================  
-   CONTROLS  
-========================================= */  
-  
-function applyControls(){  
-  
- const disabled=  
-  isBetLocked||  
-  submitting||  
-  !authenticated||  
-  !settingsLoaded;  
-  
- rowsContainer.querySelectorAll(".bet-row").forEach(row=>{  
-  
-  row.querySelectorAll("input").forEach(input=>{  
-   input.disabled=disabled;  
-  });  
-  
-  const remove=row.querySelector(".remove-btn");  
-  
-  if(remove){  
-   remove.disabled=disabled;  
-  }  
- });  
-  
- const count=rowsContainer.querySelectorAll(".bet-row").length;  
-  
- addButton.disabled=disabled||count>=MAX_ROWS;  
-  
- placeButton.disabled=disabled;  
-  
- placeButton.textContent=  
-  submitting  
-   ?"SUBMITTING..."  
-   :!authenticated  
-    ?"LOGIN REQUIRED"  
-    :!settingsLoaded  
-     ?"LOADING..."  
-     :isBetLocked  
-      ?"BETTING CLOSED"  
-      :"PLACE BET";  
-}  
-  
-/* =========================================  
-   DISCOUNT  
-   Current generic Single API does not provide  
-   an independent discount setting.  
-========================================= */  
-  
-function loadDiscount(){  
-  
- discount=0;  
-  
- discountPercentElement.textContent="0";  
-  
- calculate();  
-}  
-  
-/* =========================================  
-   ROW MANAGEMENT  
-========================================= */  
-  
-function updateSerials(){  
-  
- const rows=rowsContainer.querySelectorAll(".bet-row");  
-  
- rows.forEach((row,index)=>{  
-  row.querySelector(".serial").textContent=(index+1)+".";  
- });  
-  
- applyControls();  
-}  
-  
-function createRow(){  
-  
- const row=document.createElement("div");  
-  
- row.className="bet-row";  
-  
- const serial=document.createElement("span");  
- serial.className="serial";  
-  
- const number=document.createElement("input");  
-  
- number.type="text";  
- number.inputMode="numeric";  
- number.maxLength=MAX_SINGLE_NUMBER;  
- number.placeholder="Number";  
- number.autocomplete="off";  
- number.dataset.field="number";  
-  
- const straight=document.createElement("input");  
-  
- straight.type="number";  
- straight.inputMode="decimal";  
- straight.min="0";  
- straight.step="0.01";  
- straight.placeholder="D";  
- straight.dataset.field="straight";  
-  
- const rumble=document.createElement("input");  
-  
- rumble.type="number";  
- rumble.inputMode="decimal";  
- rumble.min="0";  
- rumble.step="0.01";  
- rumble.placeholder="R";  
- rumble.dataset.field="rumble";  
-  
- const remove=document.createElement("button");  
-  
- remove.type="button";  
- remove.className="remove-btn";  
- remove.textContent="×";  
- remove.title="Clear or remove row";  
-  
- row.append(  
-  serial,  
-  number,  
-  straight,  
-  rumble,  
-  remove  
- );  
-  
- rowsContainer.appendChild(row);  
-  
- [number,straight,rumble].forEach(input=>{  
-  
-  input.addEventListener("input",()=>{  
-  
-   if(input===number){  
-    input.value=input.value.replace(/\D/g,"").slice(0,1);  
-   }  
-  
-   calculate();  
-  });  
- });  
-  
- remove.addEventListener("click",()=>{  
-  
-  if(isBetLocked||submitting){  
-   updateBettingStatus();  
-   return;  
-  }  
-  
-  const count=rowsContainer.querySelectorAll(".bet-row").length;  
-  
-  if(count>MIN_ROWS){  
-   row.remove();  
-  }else{  
-   number.value="";  
-   straight.value="";  
-   rumble.value="";  
-  }  
-  
-  updateSerials();  
-  calculate();  
- });  
-  
- updateSerials();  
- calculate();  
-}  
-  
-function addRow(){  
-  
- if(isBetLocked||submitting||!authenticated){  
-  updateBettingStatus();  
-  return;  
- }  
-  
- const count=rowsContainer.querySelectorAll(".bet-row").length;  
-  
- if(count>=MAX_ROWS){  
-  showMessage("Maximum 50 rows allowed.","error");  
-  return;  
- }  
-  
- createRow();  
-}  
-  
-function resetRows(){  
-  
- rowsContainer.replaceChildren();  
-  
- for(let i=0;i<MIN_ROWS;i++){  
-  createRow();  
- }  
-  
- updateSerials();  
- calculate();  
- applyControls();  
-}  
-  
-addButton.addEventListener("click",addRow);  
-  
-/* =========================================  
-   READ ROWS  
-========================================= */  
-  
-function getRows(){  
-  
- const result=[];  
-  
- rowsContainer.querySelectorAll(".bet-row").forEach(row=>{  
-  
-  const number=row.querySelector('[data-field="number"]').value.trim();  
-  
-  const dValue=row.querySelector('[data-field="straight"]').value.trim();  
-  
-  const rValue=row.querySelector('[data-field="rumble"]').value.trim();  
-  
-  if(number===""&&dValue===""&&rValue===""){  
-   return;  
-  }  
-  
-  result.push({  
-   number,  
-   straight:dValue===""?0:Number(dValue),  
-   rumble:rValue===""?0:Number(rValue)  
-  });  
- });  
-  
- return result;  
-}  
-  
-/* =========================================  
-   CALCULATION  
-========================================= */  
-  
-function calculate(){  
-  
- let total=0;  
-  
- rowsContainer.querySelectorAll(".bet-row").forEach(row=>{  
-  
-  const d=row.querySelector('[data-field="straight"]').value;  
-  const r=row.querySelector('[data-field="rumble"]').value;  
-  
-  const straight=d===""?0:Number(d);  
-  const rumble=r===""?0:Number(r);  
-  
-  if(Number.isFinite(straight)&&straight>0){  
-   total+=straight;  
-  }  
-  
-  if(Number.isFinite(rumble)&&rumble>0){  
-   total+=rumble;  
-  }  
- });  
-  
- const discountAmount=total*discount/100;  
- const finalAmount=total-discountAmount;  
-  
- totalElement.textContent=formatPoints(total);  
- discountElement.textContent=formatPoints(discountAmount);  
- betAmountElement.textContent=formatPoints(finalAmount);  
-  
- return {  
-  total,  
-  discount,  
-  discountAmount,  
-  finalAmount  
- };  
-}  
-  
-/* =========================================  
-   VALIDATION  
-========================================= */  
-  
-function validateRows(rows){  
-  
- if(!rows.length){  
-  
-  showMessage(  
-   "Please enter at least one Single number and D or R amount.",  
-   "error"  
-  );  
-  
-  return false;  
- }  
-  
- let total=0;  
-  
- for(let index=0;index<rows.length;index++){  
-  
-  const row=rows[index];  
-  
-  if(!/^\d$/.test(row.number)){  
-  
-   showMessage(  
-    "Row "+(index+1)+": Single number must contain exactly one digit (0-9).",  
-    "error"  
-   );  
-  
-   return false;  
-  }  
-  
-  if(  
-   !Number.isFinite(row.straight)||  
-   !Number.isFinite(row.rumble)||  
-   row.straight<0||  
-   row.rumble<0||  
-   Math.round(row.straight*100)!==row.straight*100||  
-   Math.round(row.rumble*100)!==row.rumble*100  
-  ){  
-  
-   showMessage(  
-    "Row "+(index+1)+": Enter valid amounts with up to 2 decimal places.",  
-    "error"  
-   );  
-  
-   return false;  
-  }  
-  
-  if(row.straight===0&&row.rumble===0){  
-  
-   showMessage(  
-    "Row "+(index+1)+": Enter a Straight (D) or Rumble (R) amount.",  
-    "error"  
-   );  
-  
-   return false;  
-  }  
-  
-  total+=row.straight+row.rumble;  
-  
-  if(total>MAX_BET_AMOUNT){  
-  
-   showMessage(  
-    "Total amount cannot exceed 100000 DEMO points.",  
-    "error"  
-   );  
-  
-   return false;  
-  }  
- }  
-  
- return true;  
-}  
-  
-/* =========================================  
-   SUBMIT SINGLE BETS  
-  
-   Existing backend:  
-   POST /api/demo/bets  
-  
-   Each Single entry is sent separately.  
-  
-   IMPORTANT:  
-   selection MUST be a raw one-digit number.  
-   Example: "5"  
-  
-   Do not send:  
-   Number=5, D=10, R=0  
-  
-   Amount = D + R.  
-  
-   The server enforces the actual draw cutoff,  
-   wallet balance and PostgreSQL transaction.  
-========================================= */  
-  
-async function submitBet(){  
-  
- if(submitting)return;  
-  
- clearMessage();  
-  
- if(!authenticated){  
-  redirectToLogin();  
-  return;  
- }  
-  
- updateBettingStatus();  
-  
- if(isBetLocked){  
-  
-  showMessage(  
-   "Betting is closed. Please check the next draw schedule.",  
-   "error"  
-  );  
-  
-  return;  
- }  
-  
- const rows=getRows();  
-  
- if(!validateRows(rows))return;  
-  
- const amounts=calculate();  
-  
- if(  
-  amounts.total<=0||  
-  amounts.finalAmount<=0  
- ){  
-  
-  showMessage(  
-   "Please enter a valid amount greater than zero.",  
-   "error"  
-  );  
-  
-  return;  
- }  
-  
- if(amounts.finalAmount>wallet){  
-  
-  showMessage(  
-   "Insufficient demo points. Current balance: "+  
-   formatPoints(wallet),  
-   "error"  
-  );  
-  
-  return;  
- }  
-  
- const confirmed=confirm(  
-  "Confirm your Single demo entry?\n\n"+  
-  "Numbers: "+rows.length+  
-  "\nTotal Amount: "+formatPoints(amounts.finalAmount)+  
-  " Points\n\n"+  
-  "The server will verify and deduct points from your demo wallet."  
- );  
-  
- if(!confirmed)return;  
-  
- submitting=true;  
- applyControls();  
-  
- let completed=0;  
- let failed=false;  
-  
- try{  
-  
-  /*  
-   * Refresh authoritative server information  
-   * before submitting any entry.  
-   */  
-  
-  await loadWallet();  
-  await loadDrawSettings();  
-  
-  if(isBetLocked){  
-  
-   throw new Error(  
-    "Betting has closed. Please try the next draw."  
-   );  
-  }  
-  
-  if(amounts.finalAmount>wallet){  
-  
-   throw new Error(  
-    "Insufficient demo points. Current balance: "+  
-    formatPoints(wallet)  
-   );  
-  }  
-  
-  /*  
-   * Backend generic endpoint accepts only one  
-   * selection per request.  
-   *  
-   * Therefore each row becomes one Single bet.  
-   *  
-   * D + R = row amount.  
-   *  
-   * Selection is only the digit 0-9.  
-   */  
-  
-  for(let index=0;index<rows.length;index++){  
-  
-   const row=rows[index];  
-  
-   const rowAmount=Number(  
-    (row.straight+row.rumble).toFixed(2)  
-   );  
-  
-   if(rowAmount<=0)continue;  
-  
-   await apiRequest("/demo/bets",{  
-  
-    method:"POST",  
-  
-    body:{  
-     game_name:"Single",  
-     selection:row.number,  
-     amount:rowAmount  
-    }  
-  
-   });  
-  
-   completed++;  
-  }  
-  
-  /*  
-   * All rows accepted.  
-   * Reload authoritative wallet balance.  
-   */  
-  
-  await loadWallet();  
-  
-  showMessage(  
-   "Single entries submitted successfully!\n"+  
-   "Accepted Entries: "+completed+  
-   "\nTotal Amount: "+formatPoints(amounts.finalAmount)+  
-   " Points\n"+  
-   "Remaining Points: "+formatPoints(wallet),  
-   "success"  
-  );  
-  
-  resetRows();  
-  
-  await loadDrawSettings();  
-  
- }catch(error){  
-  
-  console.error("Single bet submission error:",error);  
-  
-  failed=true;  
-  
-  /*  
-   * If a later request fails, earlier entries  
-   * may already have been accepted by the backend.  
-   *  
-   * Do not automatically retry or resubmit them.  
-   */  
-  
-  try{  
-   await loadWallet();  
-  }catch(walletError){  
-   console.warn("Wallet refresh error:",walletError);  
-  }  
-  
-  try{  
-   await loadDrawSettings();  
-  }catch(settingsError){  
-   console.warn("Settings refresh error:",settingsError);  
-  }  
-  
-  if(completed>0){  
-  
-   showMessage(  
-    "Some Single entries were accepted before the request failed.\n"+  
-    "Accepted Entries: "+completed+  
-    "\nError: "+error.message+  
-    "\n\nPlease check My Bets before submitting again to avoid duplicate entries.",  
-    "error"  
-   );  
-  
-  }else{  
-  
-   showMessage(  
-    error.message||"Could not submit your Single entry.",  
-    "error"  
-   );  
-  }  
-  
-  if(error.status===401){  
-   authenticated=false;  
-   redirectToLogin();  
-   return;  
-  }  
-  
- }finally{  
-  
-  submitting=false;  
-  updateBettingStatus();  
- }  
-}  
-  
-placeButton.addEventListener("click",submitBet);  
-  
-/* =========================================  
-   LOAD PAGE DATA  
-========================================= */  
-  
-async function refreshPageData(){  
-  
- if(refreshBusy)return;  
-  
- refreshBusy=true;  
-  
- try{  
-  
-  await loadCurrentUser();  
-  
-  const results=await Promise.allSettled([  
-   loadWallet(),  
-   loadDrawSettings()  
-  ]);  
-  
-  const walletResult=results[0];  
-  const settingsResult=results[1];  
-  
-  if(walletResult.status==="rejected"){  
-   throw walletResult.reason;  
-  }  
-  
-  if(settingsResult.status==="rejected"){  
-  
-   settingsLoaded=false;  
-   serverBettingLocked=true;  
-   drawSchedule=null;  
-  
-   updateBettingStatus();  
-  
-   throw settingsResult.reason;  
-  }  
-  
-  loadDiscount();  
-  
-  clearMessage();  
-  
- }finally{  
-  
-  refreshBusy=false;  
- }  
-}  
-  
-/* =========================================  
-   INITIALIZATION  
-========================================= */  
-  
-async function initialize(){  
-  
- placeButton.disabled=true;  
- placeButton.textContent="LOADING...";  
-  
- resetRows();  
-  
- try{  
-  
-  await refreshPageData();  
-  
-  updateBettingStatus();  
-  
-  if(!countdownTimer){  
-  
-   countdownTimer=setInterval(()=>{  
-    updateBettingStatus();  
-   },1000);  
-  }  
-  
- }catch(error){  
-  
-  console.error("Single initialization error:",error);  
-  
-  settingsLoaded=false;  
-  serverBettingLocked=true;  
-  drawSchedule=null;  
-  
-  updateBettingStatus();  
-  
-  showMessage(  
-   error.message||"Unable to load Single page.",  
-   "error"  
-  );  
-  
-  if(error.status===401){  
-   redirectToLogin();  
-  }  
- }  
-}  
-  
-/* =========================================  
-   PAGE EVENTS  
-========================================= */  
-  
-document.getElementById("backHome").addEventListener(  
- "click",  
- ()=>{  
-  location.href="home.html";  
- }  
-);  
-  
-window.addEventListener("focus",async()=>{  
-  
- if(!submitting){  
-  
-  try{  
-   await refreshPageData();  
-  }catch(error){  
-   console.warn("Page refresh error:",error);  
-  }  
- }  
-});  
-  
-window.addEventListener("pageshow",async()=>{  
-  
- if(!submitting){  
-  
-  try{  
-   await refreshPageData();  
-  }catch(error){  
-   console.warn("Page restore error:",error);  
-  }  
- }  
-});  
-  
-/* START */  
-  
-initialize();  
-  
-</script>  </body>  
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="theme-color" content="#111027">
+<title>GLO 365 - Single</title>
+
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+
+:root{
+ --bg:#111027;
+ --panel:#1b1b3a;
+ --panel2:#22264c;
+ --blue:#168ee8;
+ --cyan:#55d5ff;
+ --purple:#8b43d9;
+ --text:#eef3ff;
+ --muted:#aab6d2;
+ --border:#394b78;
+}
+
+body{
+ font-family:Arial,sans-serif;
+ background:var(--bg);
+ color:var(--text);
+ min-height:100vh;
+}
+
+.app{
+ max-width:520px;
+ min-height:100vh;
+ margin:auto;
+ padding-bottom:25px;
+ background:linear-gradient(160deg,#111027,#171632 55%,#10142c);
+ box-shadow:0 0 35px #0008;
+}
+
+.header{
+ background:linear-gradient(120deg,#0755a6,#087fc9,#173c91);
+ padding:17px 15px;
+ display:flex;
+ justify-content:space-between;
+ align-items:center;
+ box-shadow:0 5px 20px #007bff30;
+}
+
+.logo{
+ font-size:27px;
+ font-weight:900;
+ color:#fff;
+ letter-spacing:1px;
+ text-shadow:0 2px 8px #0005;
+}
+
+.logo span{color:#8be8ff}
+
+.balance{
+ background:linear-gradient(135deg,#eafaff,#bde9ff);
+ color:#075b9d;
+ padding:10px 14px;
+ border-radius:30px;
+ font-size:13px;
+ font-weight:bold;
+ box-shadow:0 3px 12px #0003;
+}
+
+.page-title{
+ background:linear-gradient(100deg,#1357b7,#168fe8,#713bc3);
+ text-align:center;
+ padding:17px 10px;
+ font-size:20px;
+ font-weight:900;
+ color:#fff;
+ letter-spacing:1.5px;
+ text-shadow:0 2px 5px #0007;
+ box-shadow:0 5px 16px #0003;
+}
+
+.subtitle{
+ text-align:center;
+ padding:13px 5px;
+ background:#191a39;
+ color:#72d9ff;
+ font-size:13px;
+ font-weight:bold;
+ letter-spacing:.4px;
+ border-bottom:1px solid #303d6b;
+}
+
+.lock-notice{
+ display:none;
+ margin:12px 11px 4px;
+ padding:14px 12px;
+ background:linear-gradient(135deg,#42202f,#2d1d3d);
+ border:1px solid #bd526f;
+ border-radius:13px;
+ text-align:center;
+ color:#ffb7ca;
+ box-shadow:0 4px 15px #0003;
+}
+
+.lock-notice.show{display:block}
+.lock-notice strong{
+ display:block;
+ font-size:14px;
+ font-weight:900;
+ margin-bottom:5px;
+}
+.lock-notice span{
+ display:block;
+ font-size:12px;
+ line-height:1.6;
+ overflow-wrap:anywhere;
+}
+.lock-countdown{margin-top:7px;font-weight:bold}
+
+.bet-area{padding:10px 9px 0}
+
+.column-heading,.bet-row{
+ display:grid;
+ grid-template-columns:30px minmax(0,1.4fr) minmax(0,.9fr) minmax(0,.9fr) 22px;
+ gap:5px;
+}
+
+.column-heading{
+ padding:10px 0;
+ font-size:10px;
+ font-weight:bold;
+ color:#b8c8f0;
+ text-align:center;
+ letter-spacing:.3px;
+}
+
+.bet-row{
+ align-items:center;
+ margin-bottom:9px;
+}
+
+.serial{
+ text-align:center;
+ font-size:14px;
+ font-weight:bold;
+ color:#d6e2ff;
+}
+
+.bet-row input{
+ width:100%;
+ min-width:0;
+ height:49px;
+ border:2px solid #a9c8e9;
+ background:linear-gradient(145deg,#fff,#dceeff);
+ border-radius:13px;
+ text-align:center;
+ font-size:14px;
+ font-weight:bold;
+ color:#145b91;
+ outline:none;
+ padding:4px;
+ box-shadow:0 3px 8px #0003,inset 0 1px 2px #fff;
+ transition:.2s;
+}
+
+.bet-row input:focus{
+ border-color:#36c7ff;
+ background:#fff;
+ box-shadow:0 0 0 3px #22baff30,0 0 14px #22baff35;
+ transform:translateY(-1px);
+}
+
+.bet-row input::placeholder{
+ color:#8b9eae;
+ font-weight:normal;
+}
+
+.bet-area.locked input{
+ background:#303149;
+ color:#9298ae;
+ border-color:#444968;
+ cursor:not-allowed;
+}
+
+.remove-btn{
+ border:0;
+ background:transparent;
+ color:#ff6f9f;
+ font-size:23px;
+ font-weight:bold;
+ padding:3px 0;
+ cursor:pointer;
+ text-shadow:0 0 8px #ff4e8b55;
+}
+
+.bet-area.locked .remove-btn{
+ opacity:.35;
+ cursor:not-allowed;
+}
+
+.add-area{
+ display:flex;
+ justify-content:flex-end;
+ padding:5px 3px 18px;
+}
+
+.add-btn{
+ width:49px;
+ height:49px;
+ border-radius:50%;
+ background:linear-gradient(145deg,#28b8ff,#0872d2);
+ color:#fff;
+ border:2px solid #75d9ff;
+ font-size:31px;
+ font-weight:bold;
+ display:grid;
+ place-items:center;
+ cursor:pointer;
+ box-shadow:0 5px 15px #008cff55,inset 0 2px 4px #ffffff55;
+ transition:.2s;
+}
+
+.add-btn:active{transform:scale(.92)}
+.add-btn:disabled{opacity:.4;cursor:not-allowed}
+
+.summary{padding:5px 11px}
+
+.summary-box{
+ background:linear-gradient(120deg,#202c56,#25254d);
+ border:1px solid #425b8d;
+ border-radius:17px;
+ padding:17px 7px;
+ text-align:center;
+ font-size:15px;
+ margin-bottom:11px;
+ color:#dce8ff;
+ box-shadow:0 5px 15px #0003,inset 0 1px 2px #ffffff0c;
+}
+
+.summary-box strong{
+ font-weight:900;
+ color:#ffe76a;
+ font-size:19px;
+ text-shadow:0 0 8px #ffdf4b33;
+}
+
+.discount-line{
+ display:flex;
+ align-items:center;
+ justify-content:center;
+ flex-wrap:wrap;
+ gap:7px;
+}
+
+.discount-value{
+ background:linear-gradient(145deg,#fff,#d8eaff);
+ border:1px solid #9acbff;
+ border-radius:8px;
+ min-width:55px;
+ padding:7px 9px;
+ font-weight:bold;
+ color:#1769ad;
+}
+
+.discount-amount{
+ font-weight:bold;
+ color:#70dcff!important;
+}
+
+.place-btn{
+ width:calc(100% - 22px);
+ margin:17px 11px 0;
+ padding:17px 8px;
+ background:linear-gradient(100deg,#087bd7,#14b5ed,#763fd1);
+ border:1px solid #64cfff;
+ border-radius:13px;
+ color:#fff;
+ font-size:17px;
+ font-weight:900;
+ letter-spacing:1px;
+ box-shadow:0 5px 18px #087bdb55,inset 0 1px 3px #ffffff55;
+ cursor:pointer;
+}
+
+.place-btn:active{transform:scale(.98)}
+
+.place-btn:disabled{
+ opacity:.6;
+ cursor:not-allowed;
+ background:#4b5067;
+ box-shadow:none;
+ border-color:#666b83;
+}
+
+.back-btn{
+ display:block;
+ margin:10px auto;
+ border:0;
+ background:transparent;
+ color:#74d9ff;
+ padding:10px;
+ font-size:13px;
+ cursor:pointer;
+}
+
+.message{
+ display:none;
+ margin:12px 11px;
+ padding:12px;
+ border-radius:11px;
+ font-size:13px;
+ line-height:1.5;
+ white-space:pre-line;
+ overflow-wrap:anywhere;
+}
+
+.message.show{display:block}
+
+.message.error{
+ background:#3b1c32;
+ border:1px solid #b94d77;
+ color:#ffb4c9;
+}
+
+.message.success{
+ background:#153b35;
+ border:1px solid #39b88b;
+ color:#9fffd1;
+}
+
+.message.info{
+ background:#172d50;
+ border:1px solid #438acb;
+ color:#a5dcff;
+}
+
+@media(max-width:380px){
+ .logo{font-size:24px}
+ .balance{font-size:11px;padding:9px}
+ .bet-row input{height:45px;font-size:12px}
+ .column-heading{font-size:9px;gap:3px}
+ .bet-row{gap:3px}
+ .serial{font-size:12px}
+ .summary-box{font-size:13px}
+}
+</style>
+</head>
+
+<body>
+<div class="app">
+
+<header class="header">
+ <div class="logo">GLO <span>365</span></div>
+ <div class="balance">
+  <span id="balance">0.00</span> Points
+ </div>
+</header>
+
+<div class="page-title">SINGLE NUMBER</div>
+<div class="subtitle">Enter 1 Digit Number &amp; Virtual Points</div>
+
+<div class="lock-notice" id="lockNotice" role="alert">
+ <strong id="lockTitle">LOADING BETTING STATUS</strong>
+ <span id="lockMessage">Connecting to the server...</span>
+ <span class="lock-countdown" id="lockCountdown"></span>
+</div>
+
+<div id="pageMessage" class="message" role="status" aria-live="polite"></div>
+
+<section class="bet-area" id="betArea">
+ <div class="column-heading">
+  <span>#</span>
+  <span>NUMBER</span>
+  <span>STRAIGHT (D)</span>
+  <span>RUMBLE (R)</span>
+  <span></span>
+ </div>
+ <div id="betRows"></div>
+ <div class="add-area">
+  <button class="add-btn" id="addRow" type="button" title="Add more rows">+</button>
+ </div>
+</section>
+
+<section class="summary">
+ <div class="summary-box">
+  Total Amount = <strong id="totalAmount">0.00</strong> Points
+ </div>
+ <div class="summary-box">
+  <div class="discount-line">
+   <span>Discount</span>
+   <span class="discount-value" id="discountPercent">0</span>
+   <span>%</span>
+   <strong class="discount-amount" id="discountAmount">0.00</strong>
+   <span>Points</span>
+  </div>
+ </div>
+ <div class="summary-box">
+  Bet Amount = <strong id="betAmount">0.00</strong> Points
+ </div>
+</section>
+
+<button class="place-btn" id="placeBet" type="button" disabled>LOADING...</button>
+
+<button class="back-btn" id="backHome" type="button">← Back to Home</button>
+
+</div>
+
+<script>
+"use strict";
+
+const API_BASE_URL="https://glo365.onrender.com/api";
+const TOKEN_KEY="glo365_token";
+
+const MIN_ROWS=10;
+const MAX_ROWS=50;
+const DEFAULT_LOCK_MINUTES=45;
+const MAX_BET_AMOUNT=100000;
+const MAX_SINGLE_NUMBER=1;
+
+const rowsContainer=document.getElementById("betRows");
+const addButton=document.getElementById("addRow");
+const placeButton=document.getElementById("placeBet");
+
+const balanceElement=document.getElementById("balance");
+const totalElement=document.getElementById("totalAmount");
+const discountElement=document.getElementById("discountAmount");
+const discountPercentElement=document.getElementById("discountPercent");
+const betAmountElement=document.getElementById("betAmount");
+
+const lockNotice=document.getElementById("lockNotice");
+const lockTitle=document.getElementById("lockTitle");
+const lockMessage=document.getElementById("lockMessage");
+const lockCountdown=document.getElementById("lockCountdown");
+
+const betArea=document.getElementById("betArea");
+const pageMessage=document.getElementById("pageMessage");
+
+let currentUser=null;
+let wallet=0;
+let discount=0;
+let isBetLocked=true;
+let serverBettingLocked=true;
+let drawSchedule=null;
+let lockMinutes=DEFAULT_LOCK_MINUTES;
+let submitting=false;
+let authenticated=false;
+let settingsLoaded=false;
+let countdownTimer=null;
+let refreshBusy=false;
+let messageTimer=null;
+
+function getToken(){
+ try{return sessionStorage.getItem(TOKEN_KEY)||""}
+ catch(error){return ""}
+}
+
+function clearSession(){
+ try{
+  sessionStorage.removeItem(TOKEN_KEY);
+  sessionStorage.removeItem("glo365_user");
+  sessionStorage.removeItem("glo365_session");
+ }catch(error){}
+}
+
+function redirectToLogin(){
+ clearSession();
+ location.replace("login.html?next="+encodeURIComponent("single.html"));
+}
+
+function showMessage(message,type="info"){
+ clearTimeout(messageTimer);
+ pageMessage.textContent=String(message||"");
+ pageMessage.className="message show "+type;
+ messageTimer=setTimeout(()=>{
+  pageMessage.className="message";
+  pageMessage.textContent="";
+ },10000);
+}
+
+function clearMessage(){
+ clearTimeout(messageTimer);
+ pageMessage.textContent="";
+ pageMessage.className="message";
+}
+
+async function apiRequest(path,options={}){
+ const headers=new Headers(options.headers||{});
+ const token=getToken();
+
+ headers.set("Accept","application/json");
+ if(token)headers.set("Authorization","Bearer "+token);
+
+ let body=options.body;
+
+ if(body!==undefined&&body!==null){
+  if(typeof body!=="string")body=JSON.stringify(body);
+  headers.set("Content-Type","application/json");
+ }
+
+ let response;
+
+ try{
+  response=await fetch(API_BASE_URL+path,{
+   method:options.method||"GET",
+   headers,
+   credentials:"include",
+   cache:"no-store",
+   body
+  });
+ }catch(error){
+  throw new Error("Cannot connect to GLO 365 server. Check your internet connection.");
+ }
+
+ const raw=await response.text();
+ let data={};
+
+ if(raw){
+  try{data=JSON.parse(raw)}
+  catch(error){throw new Error("The server returned an invalid response.")}
+ }
+
+ if(response.status===401){
+  authenticated=false;
+  redirectToLogin();
+  const error=new Error("Login session expired.");
+  error.status=401;
+  throw error;
+ }
+
+ if(!response.ok||data.success===false){
+  const error=new Error(data.message||data.error||"Request failed ("+response.status+").");
+  error.status=response.status;
+  throw error;
+ }
+
+ return data;
+}
+
+function unwrap(data){
+ if(!data||typeof data!=="object")return {};
+ return data.data&&typeof data.data==="object"?data.data:data;
+}
+
+async function loadCurrentUser(){
+ const response=await apiRequest("/auth/me");
+ const data=unwrap(response);
+ currentUser=data.user||data.profile||data;
+
+ if(!currentUser||typeof currentUser!=="object"||currentUser.id===undefined){
+  throw new Error("The server did not return valid logged-in user information.");
+ }
+
+ if(currentUser.status&&String(currentUser.status).toLowerCase()!=="active"){
+  throw new Error("Your account is not active. Please contact the administrator.");
+ }
+
+ authenticated=true;
+}
+
+function formatPoints(value){
+ const n=Number(value);
+ return Number.isFinite(n)?n.toFixed(2):"0.00";
+}
+
+function setWallet(value){
+ const amount=Number(value);
+ if(!Number.isFinite(amount)||amount<0){
+  throw new Error("Invalid wallet balance returned by server.");
+ }
+ wallet=amount;
+ balanceElement.textContent=formatPoints(wallet);
+}
+
+async function loadWallet(){
+ const response=await apiRequest("/wallet");
+ const data=unwrap(response);
+
+ if(data.currency&&data.currency!=="DEMO"){
+  throw new Error("Unexpected wallet currency.");
+ }
+
+ if(data.balance===undefined){
+  throw new Error("The server did not return wallet balance.");
+ }
+
+ setWallet(data.balance);
+}
+
+function parseDrawTime(value){
+ if(!value)return null;
+ const timestamp=Date.parse(value);
+ return Number.isFinite(timestamp)?timestamp:null;
+}
+
+async function loadDrawSettings(){
+ const response=await apiRequest("/public/draw-settings");
+ const data=unwrap(response);
+
+ const draw=data.drawSettings||data.draw_settings||data.draw||null;
+
+ if(!draw||typeof draw!=="object"){
+  throw new Error("The server has not configured a valid draw schedule.");
+ }
+
+ const timestamp=parseDrawTime(draw.draw_at||draw.drawAt);
+
+ if(timestamp===null){
+  throw new Error("The server returned an invalid draw date and time.");
+ }
+
+ drawSchedule={
+  timestamp,
+  drawNumber:String(draw.draw_number||draw.drawNumber||"")
+ };
+
+ lockMinutes=Number(data.lock_minutes)>0?Number(data.lock_minutes):DEFAULT_LOCK_MINUTES;
+ serverBettingLocked=data.betting_locked===true;
+ settingsLoaded=true;
+ updateBettingStatus();
+}
+
+function formatDrawTime(timestamp){
+ return new Date(timestamp).toLocaleString("en-GB",{
+  day:"2-digit",month:"short",year:"numeric",
+  hour:"2-digit",minute:"2-digit",hour12:true
+ });
+}
+
+function formatRemaining(milliseconds){
+ if(!Number.isFinite(milliseconds)||milliseconds<=0)return "00:00:00";
+
+ const seconds=Math.floor(milliseconds/1000);
+ const hours=Math.floor(seconds/3600);
+ const minutes=Math.floor((seconds%3600)/60);
+ const secs=seconds%60;
+
+ return [
+  String(hours).padStart(2,"0"),
+  String(minutes).padStart(2,"0"),
+  String(secs).padStart(2,"0")
+ ].join(":");
+}
+
+function getBettingStatus(){
+ if(!settingsLoaded||!drawSchedule){
+  return {locked:true,reason:"missing",remaining:null};
+ }
+
+ const remaining=drawSchedule.timestamp-Date.now();
+ const cutoff=lockMinutes*60*1000;
+
+ if(serverBettingLocked||remaining<=cutoff){
+  return {locked:true,reason:"cutoff",remaining};
+ }
+
+ return {locked:false,reason:"open",remaining};
+}
+
+function updateBettingStatus(){
+ const status=getBettingStatus();
+ isBetLocked=status.locked;
+
+ if(isBetLocked){
+  lockNotice.classList.add("show");
+  betArea.classList.add("locked");
+
+  if(status.reason==="missing"){
+   lockTitle.textContent="BETTING UNAVAILABLE";
+   lockMessage.textContent="The server draw schedule is unavailable. Please wait for the next valid schedule.";
+   lockCountdown.textContent="";
+  }else{
+   lockTitle.textContent="BETTING CLOSED";
+   lockMessage.textContent=(drawSchedule.drawNumber?"Draw Number: "+drawSchedule.drawNumber+". ":"")+"Draw Time: "+formatDrawTime(drawSchedule.timestamp);
+   lockCountdown.textContent=status.remaining<=0?"The scheduled draw time has passed.":"Draw starts in: "+formatRemaining(status.remaining);
+  }
+ }else{
+  lockNotice.classList.remove("show");
+  betArea.classList.remove("locked");
+  lockTitle.textContent="BETTING OPEN";
+  lockMessage.textContent="";
+  lockCountdown.textContent="";
+ }
+
+ applyControls();
+}
+
+function applyControls(){
+ const disabled=isBetLocked||submitting||!authenticated||!settingsLoaded;
+
+ rowsContainer.querySelectorAll(".bet-row").forEach(row=>{
+  row.querySelectorAll("input").forEach(input=>input.disabled=disabled);
+  const remove=row.querySelector(".remove-btn");
+  if(remove)remove.disabled=disabled;
+ });
+
+ const count=rowsContainer.querySelectorAll(".bet-row").length;
+ addButton.disabled=disabled||count>=MAX_ROWS;
+ placeButton.disabled=disabled;
+
+ placeButton.textContent=
+  submitting?"SUBMITTING...":
+  !authenticated?"LOGIN REQUIRED":
+  !settingsLoaded?"LOADING...":
+  isBetLocked?"BETTING CLOSED":"PLACE BET";
+}
+
+function loadDiscount(){
+ discount=0;
+ discountPercentElement.textContent="0";
+ calculate();
+}
+
+function updateSerials(){
+ const rows=rowsContainer.querySelectorAll(".bet-row");
+ rows.forEach((row,index)=>{
+  row.querySelector(".serial").textContent=(index+1)+".";
+ });
+ applyControls();
+}
+
+function createRow(){
+ const row=document.createElement("div");
+ row.className="bet-row";
+
+ const serial=document.createElement("span");
+ serial.className="serial";
+
+ const number=document.createElement("input");
+ number.type="text";
+ number.inputMode="numeric";
+ number.maxLength=MAX_SINGLE_NUMBER;
+ number.placeholder="Number";
+ number.autocomplete="off";
+ number.dataset.field="number";
+
+ const straight=document.createElement("input");
+ straight.type="number";
+ straight.inputMode="decimal";
+ straight.min="0";
+ straight.step="0.01";
+ straight.placeholder="D";
+ straight.dataset.field="straight";
+
+ const rumble=document.createElement("input");
+ rumble.type="number";
+ rumble.inputMode="decimal";
+ rumble.min="0";
+ rumble.step="0.01";
+ rumble.placeholder="R";
+ rumble.dataset.field="rumble";
+
+ const remove=document.createElement("button");
+ remove.type="button";
+ remove.className="remove-btn";
+ remove.textContent="×";
+ remove.title="Clear or remove row";
+
+ row.append(serial,number,straight,rumble,remove);
+ rowsContainer.appendChild(row);
+
+ [number,straight,rumble].forEach(input=>{
+  input.addEventListener("input",()=>{
+   if(input===number){
+    input.value=input.value.replace(/\D/g,"").slice(0,1);
+   }
+   calculate();
+  });
+ });
+
+ remove.addEventListener("click",()=>{
+  if(isBetLocked||submitting){
+   updateBettingStatus();
+   return;
+  }
+
+  const count=rowsContainer.querySelectorAll(".bet-row").length;
+
+  if(count>MIN_ROWS){
+   row.remove();
+  }else{
+   number.value="";
+   straight.value="";
+   rumble.value="";
+  }
+
+  updateSerials();
+  calculate();
+ });
+
+ updateSerials();
+ calculate();
+}
+
+function addRow(){
+ if(isBetLocked||submitting||!authenticated){
+  updateBettingStatus();
+  return;
+ }
+
+ const count=rowsContainer.querySelectorAll(".bet-row").length;
+
+ if(count>=MAX_ROWS){
+  showMessage("Maximum 50 rows allowed.","error");
+  return;
+ }
+
+ createRow();
+}
+
+function resetRows(){
+ rowsContainer.replaceChildren();
+ for(let i=0;i<MIN_ROWS;i++)createRow();
+ updateSerials();
+ calculate();
+ applyControls();
+}
+
+addButton.addEventListener("click",addRow);
+
+function getRows(){
+ const result=[];
+
+ rowsContainer.querySelectorAll(".bet-row").forEach(row=>{
+  const number=row.querySelector('[data-field="number"]').value.trim();
+  const dValue=row.querySelector('[data-field="straight"]').value.trim();
+  const rValue=row.querySelector('[data-field="rumble"]').value.trim();
+
+  if(number===""&&dValue===""&&rValue==="")return;
+
+  result.push({
+   number,
+   straight:dValue===""?0:Number(dValue),
+   rumble:rValue===""?0:Number(rValue)
+  });
+ });
+
+ return result;
+}
+
+function calculate(){
+ let total=0;
+
+ rowsContainer.querySelectorAll(".bet-row").forEach(row=>{
+  const d=row.querySelector('[data-field="straight"]').value;
+  const r=row.querySelector('[data-field="rumble"]').value;
+
+  const straight=d===""?0:Number(d);
+  const rumble=r===""?0:Number(r);
+
+  if(Number.isFinite(straight)&&straight>0)total+=straight;
+  if(Number.isFinite(rumble)&&rumble>0)total+=rumble;
+ });
+
+ const discountAmount=total*discount/100;
+ const finalAmount=total-discountAmount;
+
+ totalElement.textContent=formatPoints(total);
+ discountElement.textContent=formatPoints(discountAmount);
+ betAmountElement.textContent=formatPoints(finalAmount);
+
+ return {total,discount,discountAmount,finalAmount};
+}
+
+function validateRows(rows){
+ if(!rows.length){
+  showMessage("Please enter at least one Single number and D or R amount.","error");
+  return false;
+ }
+
+ let total=0;
+
+ for(let index=0;index<rows.length;index++){
+  const row=rows[index];
+
+  if(!/^\d$/.test(row.number)){
+   showMessage("Row "+(index+1)+": Single number must contain exactly one digit (0-9).","error");
+   return false;
+  }
+
+  if(
+   !Number.isFinite(row.straight)||
+   !Number.isFinite(row.rumble)||
+   row.straight<0||
+   row.rumble<0||
+   Math.round(row.straight*100)!==row.straight*100||
+   Math.round(row.rumble*100)!==row.rumble*100
+  ){
+   showMessage("Row "+(index+1)+": Enter valid amounts with up to 2 decimal places.","error");
+   return false;
+  }
+
+  if(row.straight===0&&row.rumble===0){
+   showMessage("Row "+(index+1)+": Enter a Straight (D) or Rumble (R) amount.","error");
+   return false;
+  }
+
+  total+=row.straight+row.rumble;
+
+  if(total>MAX_BET_AMOUNT){
+   showMessage("Total amount cannot exceed 100000 DEMO points.","error");
+   return false;
+  }
+ }
+
+ return true;
+}
+
+async function submitBet(){
+ if(submitting)return;
+ clearMessage();
+
+ if(!authenticated){
+  redirectToLogin();
+  return;
+ }
+
+ updateBettingStatus();
+
+ if(isBetLocked){
+  showMessage("Betting is closed. Please check the next draw schedule.","error");
+  return;
+ }
+
+ const rows=getRows();
+ if(!validateRows(rows))return;
+
+ const amounts=calculate();
+
+ if(amounts.total<=0||amounts.finalAmount<=0){
+  showMessage("Please enter a valid amount greater than zero.","error");
+  return;
+ }
+
+ if(amounts.finalAmount>wallet){
+  showMessage("Insufficient demo points. Current balance: "+formatPoints(wallet),"error");
+  return;
+ }
+
+ const confirmed=confirm(
+  "Confirm your Single demo entry?\n\n"+
+  "Numbers: "+rows.length+
+  "\nTotal Amount: "+formatPoints(amounts.finalAmount)+
+  " Points\n\n"+
+  "The server will verify and deduct points from your demo wallet."
+ );
+
+ if(!confirmed)return;
+
+ submitting=true;
+ applyControls();
+
+ let completed=0;
+
+ try{
+  await loadWallet();
+  await loadDrawSettings();
+
+  if(isBetLocked){
+   throw new Error("Betting has closed. Please try the next draw.");
+  }
+
+  if(amounts.finalAmount>wallet){
+   throw new Error("Insufficient demo points. Current balance: "+formatPoints(wallet));
+  }
+
+  for(let index=0;index<rows.length;index++){
+   const row=rows[index];
+   const rowAmount=Number((row.straight+row.rumble).toFixed(2));
+
+   if(rowAmount<=0)continue;
+
+   await apiRequest("/demo/bets",{
+    method:"POST",
+    body:{
+     game_name:"Single",
+     selection:row.number,
+     amount:rowAmount
+    }
+   });
+
+   completed++;
+  }
+
+  await loadWallet();
+
+  showMessage(
+   "Single entries submitted successfully!\n"+
+   "Accepted Entries: "+completed+
+   "\nTotal Amount: "+formatPoints(amounts.finalAmount)+
+   " Points\nRemaining Points: "+formatPoints(wallet),
+   "success"
+  );
+
+  resetRows();
+  await loadDrawSettings();
+
+ }catch(error){
+  console.error("Single bet submission error:",error);
+
+  try{await loadWallet()}
+  catch(walletError){console.warn("Wallet refresh error:",walletError)}
+
+  try{await loadDrawSettings()}
+  catch(settingsError){console.warn("Settings refresh error:",settingsError)}
+
+  if(completed>0){
+   showMessage(
+    "Some Single entries were accepted before the request failed.\n"+
+    "Accepted Entries: "+completed+
+    "\nError: "+error.message+
+    "\n\nPlease check My Bets before submitting again to avoid duplicate entries.",
+    "error"
+   );
+  }else{
+   showMessage(error.message||"Could not submit your Single entry.","error");
+  }
+
+  if(error.status===401){
+   authenticated=false;
+   redirectToLogin();
+   return;
+  }
+
+ }finally{
+  submitting=false;
+  updateBettingStatus();
+ }
+}
+
+placeButton.addEventListener("click",submitBet);
+
+async function refreshPageData(){
+ if(refreshBusy)return;
+ refreshBusy=true;
+
+ try{
+  await loadCurrentUser();
+
+  const results=await Promise.allSettled([
+   loadWallet(),
+   loadDrawSettings()
+  ]);
+
+  const walletResult=results[0];
+  const settingsResult=results[1];
+
+  if(walletResult.status==="rejected"){
+   throw walletResult.reason;
+  }
+
+  if(settingsResult.status==="rejected"){
+   settingsLoaded=false;
+   serverBettingLocked=true;
+   drawSchedule=null;
+   updateBettingStatus();
+   throw settingsResult.reason;
+  }
+
+  loadDiscount();
+  clearMessage();
+
+ }finally{
+  refreshBusy=false;
+ }
+}
+
+async function initialize(){
+ placeButton.disabled=true;
+ placeButton.textContent="LOADING...";
+ resetRows();
+
+ try{
+  await refreshPageData();
+  updateBettingStatus();
+
+  if(!countdownTimer){
+   countdownTimer=setInterval(updateBettingStatus,1000);
+  }
+
+ }catch(error){
+  console.error("Single initialization error:",error);
+
+  settingsLoaded=false;
+  serverBettingLocked=true;
+  drawSchedule=null;
+  updateBettingStatus();
+
+  showMessage(error.message||"Unable to load Single page.","error");
+
+  if(error.status===401)redirectToLogin();
+ }
+}
+
+document.getElementById("backHome").addEventListener("click",()=>{
+ location.href="home.html";
+});
+
+window.addEventListener("focus",async()=>{
+ if(!submitting){
+  try{await refreshPageData()}
+  catch(error){console.warn("Page refresh error:",error)}
+ }
+});
+
+window.addEventListener("pageshow",async()=>{
+ if(!submitting){
+  try{await refreshPageData()}
+  catch(error){console.warn("Page restore error:",error)}
+ }
+});
+
+initialize();
+</script>
+</body>
 </html>
