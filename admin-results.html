@@ -1,79 +1,671 @@
+
 <!DOCTYPE html>
 <html lang="bn">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
 <meta name="theme-color" content="#ffb900">
 <title>GLO 365 - Result Management</title>
+
 <style>
-*{box-sizing:border-box;margin:0;padding:0}body{font-family:Arial,sans-serif;background:#f2f3f5;color:#202127}.app{max-width:1100px;margin:auto;padding:18px}.header{display:flex;justify-content:space-between;align-items:center;gap:12px;flex-wrap:wrap;margin-bottom:20px}.brand{font-size:23px;font-weight:800;color:#202127}.brand span{color:#e6a600}.actions{display:flex;gap:8px;flex-wrap:wrap}button,a.btn{border:0;border-radius:8px;padding:10px 14px;font-weight:700;cursor:pointer;text-decoration:none;font-size:13px}.back{background:#202127;color:white}.logout{background:#ffe4e4;color:#bd2525}.primary{background:#ffb900;color:#202127}.card{background:white;border-radius:13px;padding:18px;margin-bottom:16px;box-shadow:0 3px 12px #00000008}h2{font-size:19px;margin-bottom:15px}.stats{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin-bottom:16px}.stat{background:white;padding:16px;border-radius:12px;box-shadow:0 3px 12px #00000008}.stat small{color:#777}.stat strong{display:block;font-size:24px;margin-top:7px}label{display:block;font-size:13px;font-weight:700;margin:12px 0 6px}input{width:100%;padding:12px;border:1px solid #ddd;border-radius:8px;font-size:15px;outline:none}input:focus{border-color:#e6a600}.grid{display:grid;grid-template-columns:repeat(2,1fr);gap:12px}.help{font-size:12px;color:#777;margin-top:5px}.notice{padding:12px;border-radius:8px;background:#fff7dc;color:#765600;font-size:13px;line-height:1.6;margin-bottom:14px}.success{background:#e7f8ec;color:#176b32}.error{background:#ffe8e8;color:#a51f1f}.result{border:1px solid #eee;border-radius:10px;padding:14px;margin-top:10px}.result-head{display:flex;justify-content:space-between;gap:10px;flex-wrap:wrap;margin-bottom:12px}.result-date{font-weight:800}.published{font-size:11px;background:#e5f8eb;color:#16763a;padding:5px 8px;border-radius:20px}.numbers{display:grid;grid-template-columns:repeat(3,1fr);gap:8px}.number-box{background:#f7f7f8;border-radius:8px;padding:10px;text-align:center;min-width:0}.number-box small{display:block;color:#777;font-size:11px;margin-bottom:6px}.number-box strong{font-size:18px;overflow-wrap:anywhere}.timer{margin-top:12px;padding:11px;border-radius:8px;background:#fff7dc;color:#765600;font-size:12px;line-height:1.7}.timer.expired{background:#ffe8e8;color:#a51f1f}.empty{text-align:center;color:#888;padding:25px}button:disabled{opacity:.6;cursor:wait}@media(max-width:600px){.app{padding:12px}.stats{grid-template-columns:1fr 1fr}.grid{grid-template-columns:1fr}.numbers{grid-template-columns:1fr 1fr}.stat strong{font-size:20px}}
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:Arial,sans-serif;background:#f2f3f5;color:#202127}
+.app{max-width:1100px;margin:auto;padding:18px}
+.header{display:flex;justify-content:space-between;align-items:center;gap:12px;flex-wrap:wrap;margin-bottom:20px}
+.brand{font-size:25px;font-weight:900;color:#202127}
+.brand span{color:#e6a600}
+.actions{display:flex;gap:8px;flex-wrap:wrap}
+button,a.btn{border:0;border-radius:10px;padding:12px 16px;font-weight:700;cursor:pointer;text-decoration:none;font-size:14px}
+.back{background:#202127;color:white}
+.logout{background:#ffe4e4;color:#bd2525}
+.primary{background:#ffb900;color:#202127}
+.card{background:white;border-radius:18px;padding:20px;margin-bottom:17px;box-shadow:0 4px 16px #00000008}
+h2{font-size:19px;margin-bottom:16px}
+.stats{display:grid;grid-template-columns:repeat(3,1fr);gap:13px;margin-bottom:18px}
+.stat{background:white;padding:19px;border-radius:17px;box-shadow:0 4px 15px #00000008;min-width:0}
+.stat small{color:#777;font-size:13px;line-height:1.6}
+.stat strong{display:block;font-size:25px;margin-top:8px;overflow-wrap:anywhere}
+
+/* COUNTRY SELECTOR */
+.country-intro{display:flex;justify-content:space-between;align-items:center;gap:10px;flex-wrap:wrap;margin-bottom:15px}
+.country-intro h2{margin:0}
+.country-intro span{font-size:11px;color:#888}
+.country-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:13px}
+.country-card{
+ position:relative;overflow:hidden;isolation:isolate;
+ min-height:135px;border:0;border-radius:17px;padding:16px;
+ display:flex;align-items:center;gap:12px;text-align:left;
+ color:white;box-shadow:0 7px 17px #00000016;
+ transition:.2s;cursor:pointer;
+}
+.country-card:before{
+ content:"";position:absolute;z-index:-1;width:145px;height:145px;
+ border-radius:50%;right:-55px;top:-70px;background:#ffffff20;
+}
+.country-card:after{
+ content:"";position:absolute;z-index:-1;width:100px;height:100px;
+ border-radius:50%;right:30px;bottom:-75px;background:#ffffff15;
+}
+.country-card:active{transform:scale(.97)}
+.country-card.selected{outline:3px solid #202127;outline-offset:2px}
+.thai{background:linear-gradient(130deg,#a81432,#ef405c)}
+.malaysia{background:linear-gradient(130deg,#064a9d,#1597f0)}
+.singapore{background:linear-gradient(130deg,#08766b,#23b99b)}
+.taiwan{background:linear-gradient(130deg,#4930a7,#9273ff)}
+.laos{background:linear-gradient(130deg,#a9470b,#f39a25)}
+.country-flag{
+ width:54px;height:54px;flex-shrink:0;
+ display:flex;align-items:center;justify-content:center;
+ border-radius:15px;background:#ffffff25;
+ border:1px solid #ffffff55;font-size:32px;
+}
+.country-info{min-width:0;flex:1}
+.country-info small{display:block;font-size:9px;letter-spacing:1px;font-weight:900;margin-bottom:7px;color:#ffffffcf}
+.country-info strong{display:block;font-size:14px;line-height:1.35}
+.country-info em{display:block;font-style:normal;font-size:10px;margin-top:7px;color:#ffffffd9}
+.country-arrow{
+ width:26px;height:26px;border-radius:50%;
+ display:flex;align-items:center;justify-content:center;
+ background:#ffffff30;font-size:19px;flex-shrink:0;
+}
+.selected-note{
+ display:none;margin-top:15px;padding:12px 14px;
+ background:#eaf5ff;border:1px solid #d4eaff;
+ color:#1768a9;border-radius:11px;font-size:13px;
+}
+.selected-note.show{display:block}
+
+/* FORM */
+#publishSection{display:none}
+.selected-heading{
+ display:flex;align-items:center;gap:12px;margin-bottom:16px;
+}
+.selected-flag{
+ width:48px;height:48px;border-radius:13px;
+ display:flex;align-items:center;justify-content:center;
+ font-size:29px;background:#f0f5fb;
+}
+.selected-heading h2{margin:0;font-size:18px}
+.selected-heading small{display:block;color:#888;font-size:11px;margin-top:5px}
+.notice{padding:15px;border-radius:12px;background:#fff7dc;color:#765600;font-size:13px;line-height:1.8;margin-bottom:16px}
+.notice strong{color:#684b00}
+label{display:block;font-size:13px;font-weight:700;margin:13px 0 7px}
+input{width:100%;padding:13px;border:1px solid #ddd;border-radius:10px;font-size:15px;outline:none;background:white}
+input:focus{border-color:#e6a600;box-shadow:0 0 0 3px #ffb90020}
+.grid{display:grid;grid-template-columns:repeat(2,1fr);gap:12px}
+.help{font-size:11px;color:#888;margin-top:6px;line-height:1.5}
+.publish-btn{width:100%;margin-top:19px;padding:15px!important;font-size:15px!important;border-radius:11px!important}
+.cancel-btn{background:#edf0f4;color:#555;width:100%;margin-top:9px}
+.message{display:none;margin-top:13px;padding:13px;border-radius:10px;font-size:13px;line-height:1.6}
+.success{background:#e7f8ec;color:#176b32}
+.error{background:#ffe8e8;color:#a51f1f}
+
+/* RESULTS */
+.result{border:1px solid #eee;border-radius:13px;padding:15px;margin-top:12px}
+.result-head{display:flex;justify-content:space-between;gap:10px;flex-wrap:wrap;margin-bottom:12px}
+.result-date{font-weight:800;font-size:14px}
+.published{font-size:10px;background:#e5f8eb;color:#16763a;padding:6px 9px;border-radius:20px}
+.result-country{font-size:11px;color:#1476bd;font-weight:800;margin-top:5px}
+.numbers{display:grid;grid-template-columns:repeat(3,1fr);gap:8px}
+.number-box{background:#f7f7f8;border-radius:9px;padding:11px;text-align:center;min-width:0}
+.number-box small{display:block;color:#777;font-size:11px;margin-bottom:7px}
+.number-box strong{font-size:17px;overflow-wrap:anywhere}
+.timer{margin-top:12px;padding:11px;border-radius:9px;background:#fff7dc;color:#765600;font-size:12px;line-height:1.7}
+.timer.expired{background:#ffe8e8;color:#a51f1f}
+.empty{text-align:center;color:#888;padding:25px;font-size:13px}
+.filter-row{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:12px}
+.filter-btn{background:#f0f2f5;color:#555;padding:8px 11px!important;font-size:11px!important;border-radius:20px!important}
+.filter-btn.active{background:#202127;color:white}
+button:disabled{opacity:.6;cursor:wait}
+.footer{text-align:center;color:#aaa;font-size:11px;padding:20px}
+
+@media(max-width:600px){
+ .app{padding:13px}
+ .brand{font-size:23px}
+ .stats{grid-template-columns:1fr 1fr;gap:10px}
+ .stat{padding:16px}
+ .stat strong{font-size:21px}
+ .country-grid{grid-template-columns:1fr}
+ .country-card{min-height:112px}
+ .grid{grid-template-columns:1fr}
+ .numbers{grid-template-columns:1fr 1fr}
+ .card{padding:16px}
+}
 </style>
 </head>
+
 <body>
 <div class="app">
-<header class="header"><div class="brand">GLO <span>365</span> <small style="font-size:12px;color:#777">/ Results</small></div><div class="actions"><a class="btn back" href="admin.html">← Dashboard</a><button class="logout" id="logoutBtn" type="button">Logout</button></div></header>
-<div class="stats"><div class="stat"><small>মোট প্রকাশিত ফলাফল</small><strong id="totalResults">0</strong></div><div class="stat"><small>সর্বশেষ ফলাফলের তারিখ</small><strong id="latestDate" style="font-size:16px">—</strong></div><div class="stat"><small>আজকের ফলাফল</small><strong id="todayResults">0</strong></div></div>
-<section class="card"><h2>➕ নতুন ফলাফল প্রকাশ করুন</h2>
-<div class="notice">ফলাফল Publish করলে একই Draw Date-এর Running Bet সার্ভারে যাচাই হবে এবং Bet-এর Status WIN অথবা LOSS হবে।<br><br><b>Single:</b> First Prize-এর শেষ ১ ডিজিট<br><b>2D:</b> Last Two<br><b>3UP:</b> Front Three-এর যেকোনো একটি<br><b>6UP:</b> সম্পূর্ণ First Prize<br><br><b>৭২ ঘণ্টার নিয়ম:</b> Winning Number Publish হওয়ার ৭২ ঘণ্টা পর Publish-এর আগের Submission Number Reports থেকে সার্ভার স্বয়ংক্রিয়ভাবে লুকাবে।</div>
-<form id="resultForm"><label for="drawDate">Draw Date</label><input type="date" id="drawDate" required><div class="grid"><div><label for="firstPrize">First Prize</label><input id="firstPrize" type="text" inputmode="numeric" maxlength="6" placeholder="যেমন: 012345" required><div class="help">১–৬ ডিজিট লিখুন। সংরক্ষণের সময় ৬ ডিজিট করা হবে।</div></div><div><label for="lastTwo">Last Two</label><input id="lastTwo" type="text" inputmode="numeric" maxlength="2" placeholder="যেমন: 07" required><div class="help">১–২ ডিজিট লিখুন। সংরক্ষণের সময় ২ ডিজিট করা হবে।</div></div></div><label for="frontThree">Front Three</label><input id="frontThree" type="text" placeholder="যেমন: 123, 456, 789"><div class="help">কমা দিয়ে আলাদা করে ৩ ডিজিটের নম্বর লিখুন।</div><button class="primary" id="publishBtn" type="submit" style="width:100%;margin-top:18px">Publish Result</button></form>
-<div id="message" style="display:none;margin-top:12px;padding:12px;border-radius:8px;font-size:13px"></div></section>
-<section class="card"><h2>📋 প্রকাশিত ফলাফল</h2><div id="resultList"><div class="empty">Loading results...</div></div></section>
+
+<header class="header">
+ <div class="brand">GLO <span>365</span> <small style="font-size:13px;color:#777">/ Results</small></div>
+ <div class="actions">
+  <a class="btn back" href="admin.html">← Dashboard</a>
+  <button class="logout" id="logoutBtn" type="button">Logout</button>
+ </div>
+</header>
+
+<!-- STATISTICS -->
+<div class="stats">
+ <div class="stat">
+  <small>মোট প্রকাশিত ফলাফল</small>
+  <strong id="totalResults">0</strong>
+ </div>
+ <div class="stat">
+  <small>সর্বশেষ ফলাফলের তারিখ</small>
+  <strong id="latestDate" style="font-size:16px">—</strong>
+ </div>
+ <div class="stat">
+  <small>আজকের ফলাফল</small>
+  <strong id="todayResults">0</strong>
+ </div>
 </div>
+
+<!-- COUNTRY CARDS -->
+<section class="card">
+ <div class="country-intro">
+  <h2>🌍 Select Country</h2>
+  <span>SELECT A COUNTRY TO PUBLISH RESULTS</span>
+ </div>
+
+ <div class="country-grid">
+
+  <button type="button" class="country-card thai" data-country="thai">
+   <span class="country-flag">🇹🇭</span>
+   <span class="country-info">
+    <small>THAILAND</small>
+    <strong>Thai Government Lotto</strong>
+    <em>Publish Thai Results</em>
+   </span>
+   <span class="country-arrow">›</span>
+  </button>
+
+  <button type="button" class="country-card malaysia" data-country="malaysia">
+   <span class="country-flag">🇲🇾</span>
+   <span class="country-info">
+    <small>MALAYSIA</small>
+    <strong>Malaysia Toto</strong>
+    <em>Publish Malaysia Results</em>
+   </span>
+   <span class="country-arrow">›</span>
+  </button>
+
+  <button type="button" class="country-card singapore" data-country="singapore">
+   <span class="country-flag">🇸🇬</span>
+   <span class="country-info">
+    <small>SINGAPORE</small>
+    <strong>Singapore Pools</strong>
+    <em>Publish Singapore Results</em>
+   </span>
+   <span class="country-arrow">›</span>
+  </button>
+
+  <button type="button" class="country-card taiwan" data-country="taiwan">
+   <span class="country-flag">🇹🇼</span>
+   <span class="country-info">
+    <small>TAIWAN</small>
+    <strong>Taiwan Lottery</strong>
+    <em>Publish Taiwan Results</em>
+   </span>
+   <span class="country-arrow">›</span>
+  </button>
+
+  <button type="button" class="country-card laos" data-country="laos">
+   <span class="country-flag">🇱🇦</span>
+   <span class="country-info">
+    <small>LAOS</small>
+    <strong>Laos Government Lotto</strong>
+    <em>Publish Laos Results</em>
+   </span>
+   <span class="country-arrow">›</span>
+  </button>
+
+ </div>
+
+ <div class="selected-note" id="selectedNote">
+  ✓ Country selected. নিচে ফলাফলের তথ্য পূরণ করুন।
+ </div>
+</section>
+
+<!-- PUBLISH FORM -->
+<section class="card" id="publishSection">
+
+ <div class="selected-heading">
+  <div class="selected-flag" id="selectedFlag">🇹🇭</div>
+  <div>
+   <h2 id="selectedCountryName">Thai Government Lotto</h2>
+   <small>Publish Result for selected country</small>
+  </div>
+ </div>
+
+ <div class="notice">
+  ফলাফল Publish করলে একই দেশের একই Draw Date-এর Running Bet সার্ভারে যাচাই হবে এবং Bet-এর Status WIN অথবা LOSS হবে।
+  <br><br>
+  <strong>Single:</strong> First Prize-এর শেষ ১ ডিজিট<br>
+  <strong>2D:</strong> Last Two<br>
+  <strong>3UP:</strong> Front Three-এর যেকোনো একটি<br>
+  <strong>6UP:</strong> সম্পূর্ণ First Prize
+  <br><br>
+  <strong>৭২ ঘণ্টার নিয়ম:</strong> Winning Number Publish হওয়ার ৭২ ঘণ্টা পর Publish-এর আগের Submission Number Reports থেকে সার্ভার স্বয়ংক্রিয়ভাবে লুকাবে।
+ </div>
+
+ <form id="resultForm">
+  <label for="drawDate">Draw Date</label>
+  <input type="date" id="drawDate" required>
+
+  <div class="grid">
+   <div>
+    <label for="firstPrize">First Prize</label>
+    <input id="firstPrize" type="text" inputmode="numeric" maxlength="6" placeholder="যেমন: 012345" required>
+    <div class="help">১–৬ ডিজিট লিখুন। সংরক্ষণের সময় ৬ ডিজিট করা হবে।</div>
+   </div>
+   <div>
+    <label for="lastTwo">Last Two</label>
+    <input id="lastTwo" type="text" inputmode="numeric" maxlength="2" placeholder="যেমন: 07" required>
+    <div class="help">১–২ ডিজিট লিখুন। সংরক্ষণের সময় ২ ডিজিট করা হবে।</div>
+   </div>
+  </div>
+
+  <label for="frontThree">Front Three</label>
+  <input id="frontThree" type="text" placeholder="যেমন: 123, 456, 789">
+  <div class="help">কমা দিয়ে আলাদা করে ৩ ডিজিটের নম্বর লিখুন।</div>
+
+  <button class="primary publish-btn" id="publishBtn" type="submit">
+   ✓ Publish Result
+  </button>
+  <button class="cancel-btn" id="cancelBtn" type="button">
+   Cancel / Change Country
+  </button>
+ </form>
+
+ <div id="message" class="message"></div>
+</section>
+
+<!-- PUBLISHED RESULTS -->
+<section class="card">
+ <h2>📋 প্রকাশিত ফলাফল</h2>
+ <div class="filter-row" id="filterRow">
+  <button class="filter-btn active" data-filter="all">All Countries</button>
+  <button class="filter-btn" data-filter="thai">🇹🇭 Thai</button>
+  <button class="filter-btn" data-filter="malaysia">🇲🇾 Malaysia</button>
+  <button class="filter-btn" data-filter="singapore">🇸🇬 Singapore</button>
+  <button class="filter-btn" data-filter="taiwan">🇹🇼 Taiwan</button>
+  <button class="filter-btn" data-filter="laos">🇱🇦 Laos</button>
+ </div>
+ <div id="resultList">
+  <div class="empty">Loading results...</div>
+ </div>
+</section>
+
+<footer class="footer">© 2026 GLO 365. All Rights Reserved.</footer>
+
+</div>
+
 <script>
 'use strict';
+
 const API_BASE_URL='https://glo365.onrender.com/api';
 const TOKEN_KEY='glo365_token';
 const RETENTION_MS=72*60*60*1000;
+
+const countries={
+ thai:{name:'Thai Government Lotto',flag:'🇹🇭'},
+ malaysia:{name:'Malaysia Toto',flag:'🇲🇾'},
+ singapore:{name:'Singapore Pools',flag:'🇸🇬'},
+ taiwan:{name:'Taiwan Lottery',flag:'🇹🇼'},
+ laos:{name:'Laos Government Lotto',flag:'🇱🇦'}
+};
+
 let results=[];
-function token(){return sessionStorage.getItem(TOKEN_KEY)||'';}
+let selectedCountry=null;
+let activeFilter='all';
+
+function token(){
+ return sessionStorage.getItem(TOKEN_KEY)||'';
+}
+
 async function api(path,options={}){
- const headers={'Content-Type':'application/json',...(options.headers||{})};
+ const headers={
+  'Content-Type':'application/json',
+  ...(options.headers||{})
+ };
+
  if(token())headers.Authorization='Bearer '+token();
- const response=await fetch(API_BASE_URL+path,{...options,headers,credentials:'include'});
- let data={};try{data=await response.json();}catch(e){}
- if(!response.ok)throw new Error(data.message||data.error||`Request failed (${response.status})`);
+
+ const response=await fetch(API_BASE_URL+path,{
+  ...options,
+  headers,
+  credentials:'include'
+ });
+
+ let data={};
+ try{data=await response.json();}catch(e){}
+
+ if(!response.ok){
+  throw new Error(data.message||data.error||`Request failed (${response.status})`);
+ }
+
  return data;
 }
-function showMessage(text,type='success'){
- const box=document.getElementById('message');box.textContent=text;box.className=type;box.style.display='block';
+
+function getToday(){
+ const d=new Date();
+ return `${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,'0')}-${String(d.getDate()).padStart(2,'0')}`;
 }
-function getToday(){const d=new Date();return `${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,'0')}-${String(d.getDate()).padStart(2,'0')}`;}
-function dateOnly(v){if(!v)return '';const s=String(v);const m=s.match(/^\d{4}-\d{2}-\d{2}/);return m?m[0]:'';}
-function publishedTime(item){const n=Number(item.publishedAt||item.published_at||0);if(n>0)return n;const t=Date.parse(item.publishedAt||item.published_at||'');return Number.isFinite(t)?t:0;}
-function remaining(item){const t=publishedTime(item);return t?Math.max(0,t+RETENTION_MS-Date.now()):0;}
-function formatTime(ms){const s=Math.floor(ms/1000),h=Math.floor(s/3600),m=Math.floor(s%3600/60),sec=s%60;return `${h} ঘণ্টা ${m} মিনিট ${sec} সেকেন্ড`;}
-function el(tag,cls,text){const n=document.createElement(tag);if(cls)n.className=cls;if(text!==undefined)n.textContent=text;return n;}
+
+function dateOnly(v){
+ if(!v)return '';
+ const m=String(v).match(/^\d{4}-\d{2}-\d{2}/);
+ return m?m[0]:'';
+}
+
+function publishedTime(item){
+ const n=Number(item.publishedAt||item.published_at||0);
+ if(n>0)return n;
+ const t=Date.parse(item.publishedAt||item.published_at||'');
+ return Number.isFinite(t)?t:0;
+}
+
+function remaining(item){
+ const t=publishedTime(item);
+ return t?Math.max(0,t+RETENTION_MS-Date.now()):0;
+}
+
+function formatTime(ms){
+ const s=Math.floor(ms/1000);
+ const h=Math.floor(s/3600);
+ const m=Math.floor(s%3600/60);
+ const sec=s%60;
+ return `${h} ঘণ্টা ${m} মিনিট ${sec} সেকেন্ড`;
+}
+
+function countryKey(item){
+ const raw=String(
+  item.country||item.countryCode||item.country_code||
+  item.game||item.game_name||item.gameName||''
+ ).toLowerCase().trim();
+
+ if(raw.includes('thai'))return 'thai';
+ if(raw.includes('malaysia')||raw.includes('toto'))return 'malaysia';
+ if(raw.includes('singapore')||raw.includes('pools'))return 'singapore';
+ if(raw.includes('taiwan'))return 'taiwan';
+ if(raw.includes('laos'))return 'laos';
+
+ return '';
+}
+
+function el(tag,cls,text){
+ const n=document.createElement(tag);
+ if(cls)n.className=cls;
+ if(text!==undefined)n.textContent=text;
+ return n;
+}
+
+function showMessage(text,type='success'){
+ const box=document.getElementById('message');
+ box.textContent=text;
+ box.className='message '+type;
+ box.style.display='block';
+}
+
+function selectCountry(key){
+ if(!countries[key])return;
+
+ selectedCountry=key;
+
+ document.querySelectorAll('.country-card').forEach(card=>{
+  card.classList.toggle('selected',card.dataset.country===key);
+ });
+
+ document.getElementById('selectedFlag').textContent=countries[key].flag;
+ document.getElementById('selectedCountryName').textContent=countries[key].name;
+ document.getElementById('selectedNote').classList.add('show');
+
+ const section=document.getElementById('publishSection');
+ section.style.display='block';
+
+ document.getElementById('message').style.display='none';
+
+ section.scrollIntoView({behavior:'smooth',block:'start'});
+}
+
+document.querySelectorAll('.country-card').forEach(card=>{
+ card.addEventListener('click',()=>{
+  selectCountry(card.dataset.country);
+ });
+});
+
+document.getElementById('cancelBtn').addEventListener('click',()=>{
+ selectedCountry=null;
+ document.getElementById('publishSection').style.display='none';
+ document.getElementById('selectedNote').classList.remove('show');
+
+ document.querySelectorAll('.country-card').forEach(card=>{
+  card.classList.remove('selected');
+ });
+
+ document.getElementById('resultForm').reset();
+ document.getElementById('drawDate').value=getToday();
+ document.getElementById('publishSection').scrollIntoView({behavior:'smooth'});
+});
+
 function render(){
- const list=document.getElementById('resultList');list.replaceChildren();
+ const list=document.getElementById('resultList');
+ list.replaceChildren();
+
  document.getElementById('totalResults').textContent=results.length;
- document.getElementById('todayResults').textContent=results.filter(x=>dateOnly(x.date||x.draw_date)===getToday()).length;
- document.getElementById('latestDate').textContent=results.length?dateOnly(results[0].date||results[0].draw_date)||'—':'—';
- if(!results.length){list.append(el('div','empty','এখনো কোনো ফলাফল প্রকাশ করা হয়নি।'));return;}
- results.forEach(item=>{
-  const card=el('div','result'),head=el('div','result-head');head.append(el('div','result-date','Draw Date: '+(dateOnly(item.date||item.draw_date)||'—')),el('span','published','Published'));
+
+ document.getElementById('todayResults').textContent=
+  results.filter(x=>dateOnly(x.date||x.draw_date)===getToday()).length;
+
+ document.getElementById('latestDate').textContent=
+  results.length?(dateOnly(results[0].date||results[0].draw_date)||'—'):'—';
+
+ const visible=activeFilter==='all'
+  ?results
+  :results.filter(x=>countryKey(x)===activeFilter);
+
+ if(!visible.length){
+  list.append(el('div','empty','এই ক্যাটাগরিতে কোনো ফলাফল পাওয়া যায়নি।'));
+  return;
+ }
+
+ visible.forEach(item=>{
+  const card=el('div','result');
+  const head=el('div','result-head');
+  const headLeft=el('div','');
+
+  headLeft.append(
+   el('div','result-date','Draw Date: '+(dateOnly(item.date||item.draw_date)||'—'))
+  );
+
+  const key=countryKey(item);
+  if(key){
+   headLeft.append(
+    el('div','result-country',countries[key].flag+' '+countries[key].name)
+   );
+  }else{
+   headLeft.append(
+    el('div','result-country','Country information unavailable')
+   );
+  }
+
+  head.append(headLeft,el('span','published','Published'));
+
   const numbers=el('div','numbers');
-  const front=Array.isArray(item.frontThree)?item.frontThree:(Array.isArray(item.front_three)?item.front_three:[]);
-  [['First Prize',item.firstPrize||item.first_prize],['Last Two',item.lastTwo||item.last_two],['Front Three',front.join(', ')||'—']].forEach(([label,value])=>{const box=el('div','number-box');box.append(el('small','',label),el('strong','',String(value||'—')));numbers.append(box);});
-  const timer=el('div','timer');const left=remaining(item);if(left<=0){timer.classList.add('expired');timer.textContent='৭২ ঘণ্টা শেষ হয়েছে। Publish-এর আগের Submission Number Reports থেকে লুকানো হয়েছে।';}else{timer.textContent='৭২ ঘণ্টার Report Retention: '+formatTime(left)+' বাকি।';}
-  card.append(head,numbers,timer);list.append(card);
+  const front=Array.isArray(item.frontThree)
+   ?item.frontThree
+   :(Array.isArray(item.front_three)?item.front_three:[]);
+
+  [
+   ['First Prize',item.firstPrize||item.first_prize],
+   ['Last Two',item.lastTwo||item.last_two],
+   ['Front Three',front.join(', ')||'—']
+  ].forEach(([label,value])=>{
+   const box=el('div','number-box');
+   box.append(
+    el('small','',label),
+    el('strong','',String(value||'—'))
+   );
+   numbers.append(box);
+  });
+
+  const timer=el('div','timer');
+  const left=remaining(item);
+
+  if(left<=0){
+   timer.classList.add('expired');
+   timer.textContent='৭২ ঘণ্টা শেষ হয়েছে। Submission Number Reports থেকে লুকানোর নিয়ম সার্ভারে কার্যকর থাকতে হবে।';
+  }else{
+   timer.textContent='৭২ ঘণ্টার Report Retention: '+formatTime(left)+' বাকি।';
+  }
+
+  card.append(head,numbers,timer);
+  list.append(card);
  });
 }
-async function loadResults(){const data=await api('/admin/results');results=Array.isArray(data.results)?data.results:[];render();}
-async function checkAdmin(){if(!token()){location.href='login.html';return false;}try{const data=await api('/auth/me');const user=data.user||data.profile||{};if(String(user.role||'').toLowerCase()!=='admin'){location.href='login.html';return false;}return true;}catch(e){sessionStorage.removeItem(TOKEN_KEY);location.href='login.html';return false;}}
+
+async function loadResults(){
+ const data=await api('/admin/results');
+ results=Array.isArray(data.results)?data.results:[];
+ render();
+}
+
+async function checkAdmin(){
+ if(!token()){
+  location.href='login.html';
+  return false;
+ }
+
+ try{
+  const data=await api('/auth/me');
+  const user=data.user||data.profile||{};
+
+  if(String(user.role||'').toLowerCase()!=='admin'){
+   location.href='login.html';
+   return false;
+  }
+
+  return true;
+ }catch(e){
+  sessionStorage.removeItem(TOKEN_KEY);
+  location.href='login.html';
+  return false;
+ }
+}
+
 document.getElementById('resultForm').addEventListener('submit',async function(event){
- event.preventDefault();const date=document.getElementById('drawDate').value,first=document.getElementById('firstPrize').value.trim(),last=document.getElementById('lastTwo').value.trim(),frontRaw=document.getElementById('frontThree').value.trim();
- if(!date){showMessage('Draw Date নির্বাচন করুন।','error');return;}
- if(!/^\d{1,6}$/.test(first)){showMessage('First Prize-এ ১ থেকে ৬ ডিজিটের সংখ্যা লিখুন।','error');return;}
- if(!/^\d{1,2}$/.test(last)){showMessage('Last Two-তে ১ বা ২ ডিজিটের সংখ্যা লিখুন।','error');return;}
- const fronts=frontRaw?frontRaw.split(',').map(x=>x.trim()):[];if(fronts.some(x=>!/^\d{3}$/.test(x))){showMessage('Front Three-এর প্রতিটি নম্বর অবশ্যই ৩ ডিজিটের হতে হবে।','error');return;}
- const btn=document.getElementById('publishBtn');btn.disabled=true;btn.textContent='Publishing...';
- try{const data=await api('/admin/results',{method:'POST',body:JSON.stringify({drawDate:date,firstPrize:first,lastTwo:last,frontThree:[...new Set(fronts)]})});const s=data.settlement||{};showMessage(`ফলাফল সফলভাবে Publish হয়েছে। মোট যাচাই: ${s.checked||0} টি Bet | WIN: ${s.won||0} টি | LOSS: ${s.lost||0} টি। ৭২ ঘণ্টার Timer সার্ভারে সংরক্ষিত হয়েছে।`,'success');this.reset();document.getElementById('drawDate').value=getToday();await loadResults();}
- catch(error){showMessage(error.message||'ফলাফল Publish করা যায়নি।','error');}
- finally{btn.disabled=false;btn.textContent='Publish Result';}
+ event.preventDefault();
+
+ if(!selectedCountry){
+  showMessage('প্রথমে একটি Country Card নির্বাচন করুন।','error');
+  return;
+ }
+
+ const date=document.getElementById('drawDate').value;
+ const first=document.getElementById('firstPrize').value.trim();
+ const last=document.getElementById('lastTwo').value.trim();
+ const frontRaw=document.getElementById('frontThree').value.trim();
+
+ if(!date){
+  showMessage('Draw Date নির্বাচন করুন।','error');
+  return;
+ }
+
+ if(!/^\d{1,6}$/.test(first)){
+  showMessage('First Prize-এ ১ থেকে ৬ ডিজিটের সংখ্যা লিখুন।','error');
+  return;
+ }
+
+ if(!/^\d{1,2}$/.test(last)){
+  showMessage('Last Two-তে ১ বা ২ ডিজিটের সংখ্যা লিখুন।','error');
+  return;
+ }
+
+ const fronts=frontRaw?frontRaw.split(',').map(x=>x.trim()):[];
+
+ if(fronts.some(x=>!/^\d{3}$/.test(x))){
+  showMessage('Front Three-এর প্রতিটি নম্বর অবশ্যই ৩ ডিজিটের হতে হবে।','error');
+  return;
+ }
+
+ const btn=document.getElementById('publishBtn');
+ btn.disabled=true;
+ btn.textContent='Publishing...';
+
+ try{
+  const payload={
+   country:selectedCountry,
+   countryName:countries[selectedCountry].name,
+   drawDate:date,
+   firstPrize:first.padStart(6,'0'),
+   lastTwo:last.padStart(2,'0'),
+   frontThree:[...new Set(fronts)]
+  };
+
+  const data=await api('/admin/results',{
+   method:'POST',
+   body:JSON.stringify(payload)
+  });
+
+  const s=data.settlement||{};
+
+  showMessage(
+   `ফলাফল সফলভাবে Publish হয়েছে। ${countries[selectedCountry].name} | মোট যাচাই: ${s.checked||0} টি Bet | WIN: ${s.won||0} টি | LOSS: ${s.lost||0} টি।`,
+   'success'
+  );
+
+  this.reset();
+  document.getElementById('drawDate').value=getToday();
+
+  await loadResults();
+
+ }catch(error){
+  showMessage(error.message||'ফলাফল Publish করা যায়নি।','error');
+ }finally{
+  btn.disabled=false;
+  btn.textContent='✓ Publish Result';
+ }
 });
-document.getElementById('logoutBtn').addEventListener('click',async()=>{try{await api('/auth/logout',{method:'POST'});}catch(e){}sessionStorage.removeItem(TOKEN_KEY);location.href='login.html';});
-(async()=>{document.getElementById('drawDate').value=getToday();if(await checkAdmin()){try{await loadResults();}catch(e){showMessage(e.message||'Results load করা যায়নি।','error');}}})();
-setInterval(()=>{if(results.length)render();},1000);
+
+document.querySelectorAll('.filter-btn').forEach(btn=>{
+ btn.addEventListener('click',()=>{
+  activeFilter=btn.dataset.filter;
+
+  document.querySelectorAll('.filter-btn').forEach(b=>{
+   b.classList.toggle('active',b===btn);
+  });
+
+  render();
+ });
+});
+
+document.getElementById('logoutBtn').addEventListener('click',async()=>{
+ try{
+  await api('/auth/logout',{method:'POST'});
+ }catch(e){}
+
+ sessionStorage.removeItem(TOKEN_KEY);
+ location.href='login.html';
+});
+
+(async()=>{
+ document.getElementById('drawDate').value=getToday();
+
+ if(await checkAdmin()){
+  try{
+   await loadResults();
+  }catch(e){
+   document.getElementById('resultList').textContent=
+    'Results load করা যায়নি: '+e.message;
+  }
+ }
+})();
+
+setInterval(()=>{
+ if(results.length)render();
+},1000);
 </script>
+
 </body>
 </html>
