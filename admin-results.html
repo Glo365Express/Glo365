@@ -26,7 +26,7 @@ h2{font-size:19px;margin-bottom:16px}
 .stat small{color:#777;font-size:13px;line-height:1.6}
 .stat strong{display:block;font-size:25px;margin-top:8px;overflow-wrap:anywhere}
 
-/* COUNTRY SELECTOR */
+/* COUNTRY CARDS */
 .country-intro{display:flex;justify-content:space-between;align-items:center;gap:10px;flex-wrap:wrap;margin-bottom:15px}
 .country-intro h2{margin:0}
 .country-intro span{font-size:11px;color:#888}
@@ -77,9 +77,7 @@ h2{font-size:19px;margin-bottom:16px}
 
 /* FORM */
 #publishSection{display:none}
-.selected-heading{
- display:flex;align-items:center;gap:12px;margin-bottom:16px;
-}
+.selected-heading{display:flex;align-items:center;gap:12px;margin-bottom:16px}
 .selected-flag{
  width:48px;height:48px;border-radius:13px;
  display:flex;align-items:center;justify-content:center;
@@ -93,6 +91,13 @@ label{display:block;font-size:13px;font-weight:700;margin:13px 0 7px}
 input{width:100%;padding:13px;border:1px solid #ddd;border-radius:10px;font-size:15px;outline:none;background:white}
 input:focus{border-color:#e6a600;box-shadow:0 0 0 3px #ffb90020}
 .grid{display:grid;grid-template-columns:repeat(2,1fr);gap:12px}
+.back3-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:12px}
+#thaiBack3Field{
+ display:none;margin-top:14px;padding:14px;
+ border:1px solid #f1d5dc;background:#fff8fa;border-radius:13px;
+}
+.back3-title{font-size:14px;font-weight:800;color:#b32643;margin-bottom:5px}
+.back3-help{font-size:11px;color:#98717a;line-height:1.5}
 .help{font-size:11px;color:#888;margin-top:6px;line-height:1.5}
 .publish-btn{width:100%;margin-top:19px;padding:15px!important;font-size:15px!important;border-radius:11px!important}
 .cancel-btn{background:#edf0f4;color:#555;width:100%;margin-top:9px}
@@ -110,6 +115,8 @@ input:focus{border-color:#e6a600;box-shadow:0 0 0 3px #ffb90020}
 .number-box{background:#f7f7f8;border-radius:9px;padding:11px;text-align:center;min-width:0}
 .number-box small{display:block;color:#777;font-size:11px;margin-bottom:7px}
 .number-box strong{font-size:17px;overflow-wrap:anywhere}
+.number-box.back3-box{background:#fff1f4;border:1px solid #f6d6df}
+.number-box.back3-box small{color:#b32643}
 .timer{margin-top:12px;padding:11px;border-radius:9px;background:#fff7dc;color:#765600;font-size:12px;line-height:1.7}
 .timer.expired{background:#ffe8e8;color:#a51f1f}
 .empty{text-align:center;color:#888;padding:25px;font-size:13px}
@@ -145,7 +152,6 @@ button:disabled{opacity:.6;cursor:wait}
  </div>
 </header>
 
-<!-- STATISTICS -->
 <div class="stats">
  <div class="stat">
   <small>মোট প্রকাশিত ফলাফল</small>
@@ -161,7 +167,6 @@ button:disabled{opacity:.6;cursor:wait}
  </div>
 </div>
 
-<!-- COUNTRY CARDS -->
 <section class="card">
  <div class="country-intro">
   <h2>🌍 Select Country</h2>
@@ -227,7 +232,6 @@ button:disabled{opacity:.6;cursor:wait}
  </div>
 </section>
 
-<!-- PUBLISH FORM -->
 <section class="card" id="publishSection">
 
  <div class="selected-heading">
@@ -270,6 +274,23 @@ button:disabled{opacity:.6;cursor:wait}
   <input id="frontThree" type="text" placeholder="যেমন: 123, 456, 789">
   <div class="help">কমা দিয়ে আলাদা করে ৩ ডিজিটের নম্বর লিখুন।</div>
 
+  <!-- THAI ONLY BACK 3 -->
+  <div id="thaiBack3Field">
+   <div class="back3-title">🇹🇭 Thai Back 3 Numbers</div>
+   <div class="back3-help">Thai Government Lotto-এর দুটি Back 3 নম্বর লিখুন।</div>
+
+   <div class="back3-grid">
+    <div>
+     <label for="backThreeOne">Back 3 - Number 1</label>
+     <input id="backThreeOne" type="text" inputmode="numeric" maxlength="3" placeholder="যেমন: 123">
+    </div>
+    <div>
+     <label for="backThreeTwo">Back 3 - Number 2</label>
+     <input id="backThreeTwo" type="text" inputmode="numeric" maxlength="3" placeholder="যেমন: 456">
+    </div>
+   </div>
+  </div>
+
   <button class="primary publish-btn" id="publishBtn" type="submit">
    ✓ Publish Result
   </button>
@@ -281,7 +302,6 @@ button:disabled{opacity:.6;cursor:wait}
  <div id="message" class="message"></div>
 </section>
 
-<!-- PUBLISHED RESULTS -->
 <section class="card">
  <h2>📋 প্রকাশিত ফলাফল</h2>
  <div class="filter-row" id="filterRow">
@@ -298,7 +318,6 @@ button:disabled{opacity:.6;cursor:wait}
 </section>
 
 <footer class="footer">© 2026 GLO 365. All Rights Reserved.</footer>
-
 </div>
 
 <script>
@@ -329,13 +348,10 @@ async function api(path,options={}){
   'Content-Type':'application/json',
   ...(options.headers||{})
  };
-
  if(token())headers.Authorization='Bearer '+token();
 
  const response=await fetch(API_BASE_URL+path,{
-  ...options,
-  headers,
-  credentials:'include'
+  ...options,headers,credentials:'include'
  });
 
  let data={};
@@ -344,7 +360,6 @@ async function api(path,options={}){
  if(!response.ok){
   throw new Error(data.message||data.error||`Request failed (${response.status})`);
  }
-
  return data;
 }
 
@@ -360,9 +375,10 @@ function dateOnly(v){
 }
 
 function publishedTime(item){
- const n=Number(item.publishedAt||item.published_at||0);
+ const raw=item.publishedAt||item.published_at||'';
+ const n=Number(raw);
  if(n>0)return n;
- const t=Date.parse(item.publishedAt||item.published_at||'');
+ const t=Date.parse(raw);
  return Number.isFinite(t)?t:0;
 }
 
@@ -421,9 +437,16 @@ function selectCountry(key){
  document.getElementById('selectedCountryName').textContent=countries[key].name;
  document.getElementById('selectedNote').classList.add('show');
 
+ // Back 3 is only available for Thai Government Lotto.
+ const back3Field=document.getElementById('thaiBack3Field');
+ const isThai=key==='thai';
+
+ back3Field.style.display=isThai?'block':'none';
+ document.getElementById('backThreeOne').required=isThai;
+ document.getElementById('backThreeTwo').required=isThai;
+
  const section=document.getElementById('publishSection');
  section.style.display='block';
-
  document.getElementById('message').style.display='none';
 
  section.scrollIntoView({behavior:'smooth',block:'start'});
@@ -446,6 +469,10 @@ document.getElementById('cancelBtn').addEventListener('click',()=>{
 
  document.getElementById('resultForm').reset();
  document.getElementById('drawDate').value=getToday();
+ document.getElementById('thaiBack3Field').style.display='none';
+ document.getElementById('backThreeOne').required=false;
+ document.getElementById('backThreeTwo').required=false;
+
  document.getElementById('publishSection').scrollIntoView({behavior:'smooth'});
 });
 
@@ -454,7 +481,6 @@ function render(){
  list.replaceChildren();
 
  document.getElementById('totalResults').textContent=results.length;
-
  document.getElementById('todayResults').textContent=
   results.filter(x=>dateOnly(x.date||x.draw_date)===getToday()).length;
 
@@ -481,18 +507,15 @@ function render(){
 
   const key=countryKey(item);
   if(key){
-   headLeft.append(
-    el('div','result-country',countries[key].flag+' '+countries[key].name)
-   );
+   headLeft.append(el('div','result-country',countries[key].flag+' '+countries[key].name));
   }else{
-   headLeft.append(
-    el('div','result-country','Country information unavailable')
-   );
+   headLeft.append(el('div','result-country','Country information unavailable'));
   }
 
   head.append(headLeft,el('span','published','Published'));
 
   const numbers=el('div','numbers');
+
   const front=Array.isArray(item.frontThree)
    ?item.frontThree
    :(Array.isArray(item.front_three)?item.front_three:[]);
@@ -503,12 +526,25 @@ function render(){
    ['Front Three',front.join(', ')||'—']
   ].forEach(([label,value])=>{
    const box=el('div','number-box');
-   box.append(
-    el('small','',label),
-    el('strong','',String(value||'—'))
-   );
+   box.append(el('small','',label),el('strong','',String(value||'—')));
    numbers.append(box);
   });
+
+  // Display two Back 3 numbers on Thai results only.
+  if(key==='thai'){
+   const back=Array.isArray(item.backThree)
+    ?item.backThree
+    :Array.isArray(item.back_three)
+     ?item.back_three
+     :[];
+
+   const backBox=el('div','number-box back3-box');
+   backBox.append(
+    el('small','','Back 3 (Two Numbers)'),
+    el('strong','',back.length?back.join(', '):'—')
+   );
+   numbers.append(backBox);
+  }
 
   const timer=el('div','timer');
   const left=remaining(item);
@@ -545,7 +581,6 @@ async function checkAdmin(){
    location.href='login.html';
    return false;
   }
-
   return true;
  }catch(e){
   sessionStorage.removeItem(TOKEN_KEY);
@@ -589,6 +624,21 @@ document.getElementById('resultForm').addEventListener('submit',async function(e
   return;
  }
 
+ // Validate two Thai Back 3 numbers.
+ let backThree=[];
+
+ if(selectedCountry==='thai'){
+  const backOne=document.getElementById('backThreeOne').value.trim();
+  const backTwo=document.getElementById('backThreeTwo').value.trim();
+
+  if(!/^\d{3}$/.test(backOne)||!/^\d{3}$/.test(backTwo)){
+   showMessage('Thai Back 3-এর দুটি ঘরেই ঠিক ৩ ডিজিটের নম্বর লিখুন।','error');
+   return;
+  }
+
+  backThree=[backOne,backTwo];
+ }
+
  const btn=document.getElementById('publishBtn');
  btn.disabled=true;
  btn.textContent='Publishing...';
@@ -602,6 +652,10 @@ document.getElementById('resultForm').addEventListener('submit',async function(e
    lastTwo:last.padStart(2,'0'),
    frontThree:[...new Set(fronts)]
   };
+
+  if(selectedCountry==='thai'){
+   payload.backThree=backThree;
+  }
 
   const data=await api('/admin/results',{
    method:'POST',
@@ -617,6 +671,10 @@ document.getElementById('resultForm').addEventListener('submit',async function(e
 
   this.reset();
   document.getElementById('drawDate').value=getToday();
+
+  // Keep the selected country and its correct fields visible.
+  document.getElementById('thaiBack3Field').style.display=
+   selectedCountry==='thai'?'block':'none';
 
   await loadResults();
 
@@ -666,6 +724,5 @@ setInterval(()=>{
  if(results.length)render();
 },1000);
 </script>
-
 </body>
 </html>
