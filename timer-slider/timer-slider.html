@@ -1,3 +1,4 @@
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -47,7 +48,7 @@ html,body{
   <iframe
     id="timerFrame"
     class="timer-frame"
-    title="Thailand draw timer"
+    title="Thailand timer"
     src="Thai-Timer.html"
     loading="eager"
     scrolling="no">
@@ -65,75 +66,82 @@ html,body{
     timer-slider.html
     Thai-Timer.html
     Singapore-Timer.html
-    Malaysia-Timer.html
 */
 
 const TIMER_CARDS = [
 
   {
-    file: "Thai-Timer.html",
-    title: "Thailand timer"
-  }
+    file:"Thai-Timer.html",
+    title:"Thailand timer"
+  },
 
-  // Singapore and Malaysia will be added
-  // after their timer files are created.
+  {
+    file:"Singapore-Timer.html",
+    title:"Singapore Pools timer"
+  }
 
 ];
 
-const CHANGE_INTERVAL = 15000;
+const CHANGE_INTERVAL=15000;
 
-const frame = document.getElementById("timerFrame");
+const frame=document.getElementById("timerFrame");
 
-let activeIndex = 0;
-let rotationTimer = null;
+let activeIndex=0;
+let rotationTimer=null;
 
-function showCard(index) {
+function showCard(index){
 
-  if (!TIMER_CARDS.length) return;
+  if(!TIMER_CARDS.length)return;
 
-  activeIndex = index % TIMER_CARDS.length;
+  activeIndex=index%TIMER_CARDS.length;
 
-  const card = TIMER_CARDS[activeIndex];
+  const card=TIMER_CARDS[activeIndex];
 
-  frame.title = card.title;
-  frame.src = card.file;
+  frame.title=card.title;
+  frame.src=card.file;
 }
 
-function startSlider() {
+function stopSlider(){
 
-  if (rotationTimer) {
+  if(rotationTimer){
     clearInterval(rotationTimer);
-    rotationTimer = null;
+    rotationTimer=null;
   }
 
-  showCard(activeIndex);
-
-  if (TIMER_CARDS.length > 1) {
-
-    rotationTimer = setInterval(() => {
-
-      showCard(
-        (activeIndex + 1) % TIMER_CARDS.length
-      );
-
-    }, CHANGE_INTERVAL);
-
-  }
 }
 
-startSlider();
+function startSlider(){
 
-document.addEventListener("visibilitychange", () => {
+  stopSlider();
 
-  if (
-    !document.hidden &&
-    TIMER_CARDS.length > 1 &&
-    !rotationTimer
-  ) {
+  if(document.hidden)return;
+
+  if(TIMER_CARDS.length<=1){
+    showCard(activeIndex);
+    return;
+  }
+
+  rotationTimer=setInterval(()=>{
+
+    showCard(
+      (activeIndex+1)%TIMER_CARDS.length
+    );
+
+  },CHANGE_INTERVAL);
+
+}
+
+document.addEventListener("visibilitychange",()=>{
+
+  if(document.hidden){
+    stopSlider();
+  }else{
     startSlider();
   }
 
 });
+
+startSlider();
 
 </script>
 
