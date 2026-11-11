@@ -274,13 +274,17 @@ input[readonly]{
 <body>
 
 <div class="page">
+
  <div class="login-circle">
+
   <div class="form-content">
 
    <div class="logo">GLO <span>365</span></div>
+
    <div class="subtitle">Welcome Thailand Lottery</div>
 
    <div class="tabs">
+
     <button type="button" class="tab active" id="loginTab">
      SIGN IN
     </button>
@@ -288,73 +292,108 @@ input[readonly]{
     <button type="button" class="tab" id="registerTab">
      SIGN UP
     </button>
+
    </div>
 
    <div class="form-panel active" id="loginPanel">
+
     <h2>SIGN IN</h2>
 
     <form id="loginForm">
+
      <div class="form-group">
-      <input id="loginUsername" type="text"
+      <input
+       id="loginUsername"
+       type="text"
        placeholder="Username or Email"
-       autocomplete="username" required>
+       autocomplete="username"
+       required
+      >
      </div>
 
      <div class="form-group">
-      <input id="loginPassword" type="password"
+      <input
+       id="loginPassword"
+       type="password"
        placeholder="Password"
-       autocomplete="current-password" required>
+       autocomplete="current-password"
+       required
+      >
      </div>
 
      <button class="action-btn" id="loginButton" type="submit">
       Login
      </button>
+
     </form>
+
    </div>
 
    <div class="form-panel" id="registerPanel">
+
     <h2>CREATE ACCOUNT</h2>
 
     <form id="registerForm">
 
      <div class="form-group">
-      <input id="registerUsername" type="text"
+      <input
+       id="registerUsername"
+       type="text"
        placeholder="Choose Username"
-       minlength="3" maxlength="30"
+       minlength="3"
+       maxlength="30"
        autocomplete="username"
-       autocapitalize="none" required>
+       autocapitalize="none"
+       required
+      >
 
-      <div id="usernameStatus"
-       class="username-status" aria-live="polite"></div>
+      <div id="usernameStatus" class="username-status" aria-live="polite"></div>
      </div>
 
      <div class="form-group">
-      <input id="registerEmail" type="email"
+      <input
+       id="registerEmail"
+       type="email"
        placeholder="Email Address"
        maxlength="150"
-       autocomplete="email" required>
+       autocomplete="email"
+       required
+      >
      </div>
 
      <div class="form-group">
-      <input id="registerPassword" type="password"
+      <input
+       id="registerPassword"
+       type="password"
        placeholder="Create Password (6-16 characters)"
-       minlength="6" maxlength="16"
-       autocomplete="new-password" required>
+       minlength="6"
+       maxlength="16"
+       autocomplete="new-password"
+       required
+      >
      </div>
 
      <div class="form-group">
-      <input id="confirmPassword" type="password"
+      <input
+       id="confirmPassword"
+       type="password"
        placeholder="Confirm Password"
-       minlength="6" maxlength="16"
-       autocomplete="new-password" required>
+       minlength="6"
+       maxlength="16"
+       autocomplete="new-password"
+       required
+      >
      </div>
 
      <div class="form-group">
-      <input id="referralCode" type="text"
+      <input
+       id="referralCode"
+       type="text"
        placeholder="Referral Code (Optional)"
        maxlength="30"
        autocomplete="off"
-       autocapitalize="characters">
+       autocapitalize="characters"
+      >
      </div>
 
      <button class="action-btn" id="registerButton" type="submit">
@@ -362,13 +401,17 @@ input[readonly]{
      </button>
 
     </form>
+
    </div>
 
   </div>
+
  </div>
 
  <div class="loader" id="loader"></div>
+
  <div class="message" id="message" role="status" aria-live="polite"></div>
+
 </div>
 
 <script>
@@ -391,11 +434,11 @@ let loginSubmitting=false;
 let registerSubmitting=false;
 
 
-/* REFERRAL LINK HANDLING */
+/* REFERRAL CODE FROM URL */
 
 function getReferralFromURL(){
 
- const params=new URLSearchParams(location.search);
+ const params=new URLSearchParams(window.location.search);
 
  const code=
   params.get("ref")||
@@ -407,6 +450,9 @@ function getReferralFromURL(){
 
 const referralFromURL=getReferralFromURL();
 
+
+/* APPLY REFERRAL CODE */
+
 function applyReferralCode(){
 
  const input=$("referralCode");
@@ -417,20 +463,21 @@ function applyReferralCode(){
 
   input.value=referralFromURL;
 
-  /* Preserve the affiliate's referral code */
+  /* URL referral code cannot be changed */
   input.readOnly=true;
+
+  input.placeholder="Referral Code Applied";
 
  }else{
 
   input.readOnly=false;
-
-  if(!input.value){
-   input.placeholder="Referral Code (Optional)";
-  }
+  input.placeholder="Referral Code (Optional)";
  }
 }
 
-/* Apply immediately and whenever the signup tab opens */
+
+/* INITIAL REFERRAL SETUP */
+
 applyReferralCode();
 
 
@@ -442,6 +489,7 @@ function isEnglishText(value){
 }
 
 function englishError(error,fallback){
+
  const message=error&&error.message;
 
  if(isEnglishText(message)&&message.trim()){
@@ -452,6 +500,7 @@ function englishError(error,fallback){
 }
 
 function showMessage(message,type){
+
  const box=$("message");
 
  if(!isEnglishText(message)){
@@ -463,17 +512,20 @@ function showMessage(message,type){
 }
 
 function clearMessage(){
+
  const box=$("message");
+
  box.textContent="";
  box.className="message";
 }
 
 function setLoading(loading){
+
  $("loader").style.display=loading?"block":"none";
 }
 
 
-/* TAB */
+/* TAB SWITCHING */
 
 function showTab(tab){
 
@@ -493,16 +545,31 @@ function showTab(tab){
 }
 
 $("loginTab").addEventListener("click",()=>{
+
  if(!loginSubmitting&&!registerSubmitting){
   showTab("login");
  }
+
 });
 
 $("registerTab").addEventListener("click",()=>{
+
  if(!loginSubmitting&&!registerSubmitting){
   showTab("register");
  }
+
 });
+
+
+/* AUTOMATIC SIGN UP FOR REFERRAL LINKS */
+
+if(referralFromURL){
+
+ showTab("register");
+
+ applyReferralCode();
+
+}
 
 
 /* REQUEST WITH TIMEOUT */
@@ -510,11 +577,14 @@ $("registerTab").addEventListener("click",()=>{
 async function requestWithTimeout(url,options={},timeout=LOGIN_TIMEOUT){
 
  const controller=new AbortController();
+
  let timedOut=false;
 
  const timer=setTimeout(()=>{
+
   timedOut=true;
   controller.abort();
+
  },timeout);
 
  try{
@@ -527,9 +597,15 @@ async function requestWithTimeout(url,options={},timeout=LOGIN_TIMEOUT){
   let result;
 
   try{
+
    result=await response.json();
+
   }catch(_){
-   throw new Error("Invalid server response. Please try again.");
+
+   throw new Error(
+    "Invalid server response. Please try again."
+   );
+
   }
 
   if(!response.ok||result.success===false){
@@ -541,6 +617,7 @@ async function requestWithTimeout(url,options={},timeout=LOGIN_TIMEOUT){
      ?serverMessage
      :"The request could not be completed. Please try again."
    );
+
   }
 
   return result;
@@ -548,24 +625,37 @@ async function requestWithTimeout(url,options={},timeout=LOGIN_TIMEOUT){
  }catch(error){
 
   if(timedOut){
-   throw new Error("Connection timed out. Please try again.");
+
+   throw new Error(
+    "Connection timed out. Please try again."
+   );
+
   }
 
   if(error.name==="AbortError"){
-   throw new Error("The connection was interrupted. Please try again.");
+
+   throw new Error(
+    "The connection was interrupted. Please try again."
+   );
+
   }
 
   if(error instanceof TypeError){
+
    throw new Error(
     "Unable to connect to the server. Please check your internet connection."
    );
+
   }
 
   throw error;
 
  }finally{
+
   clearTimeout(timer);
+
  }
+
 }
 
 
@@ -586,6 +676,7 @@ async function apiRequest(endpoint,data,timeout=LOGIN_TIMEOUT){
   },
   timeout
  );
+
 }
 
 
@@ -603,11 +694,14 @@ async function getUsernameAvailability(username){
   {
    method:"GET",
    credentials:"include",
-   headers:{"Accept":"application/json"},
+   headers:{
+    "Accept":"application/json"
+   },
    cache:"no-store"
   },
   USERNAME_TIMEOUT
  );
+
 }
 
 
@@ -616,9 +710,11 @@ async function getUsernameAvailability(username){
 function saveSession(token,user){
 
  if(!token||!user||!user.id){
+
   throw new Error(
    "Invalid account information received from the server."
   );
+
  }
 
  try{
@@ -635,7 +731,9 @@ function saveSession(token,user){
   throw new Error(
    "Your browser could not save the login session."
   );
+
  }
+
 }
 
 
@@ -648,16 +746,21 @@ function redirectByRole(user){
   .toLowerCase();
 
  if(role==="admin"){
+
   location.replace("admin.html");
   return;
+
  }
 
  if(role==="affiliate"){
+
   location.replace("affiliate-profile.html");
   return;
+
  }
 
  location.replace("home.html");
+
 }
 
 
@@ -673,6 +776,7 @@ function setUsernameStatus(message,type){
 
  box.textContent=message;
  box.className="username-status "+(type||"");
+
 }
 
 
@@ -697,6 +801,7 @@ async function checkUsername(username,version){
    );
 
    return;
+
   }
 
   usernameAvailable=data.available;
@@ -722,7 +827,9 @@ async function checkUsername(username,version){
    "Unable to check username. Please try again.",
    "status-warning"
   );
+
  }
+
 }
 
 
@@ -735,12 +842,15 @@ $("registerUsername").addEventListener("input",function(){
  const username=this.value.trim().toLowerCase();
 
  usernameCheckVersion++;
+
  usernameAvailable=null;
  usernameCheckReady=false;
 
  if(!username){
+
   setUsernameStatus("Please enter a username.","");
   return;
+
  }
 
  if(!/^[a-z0-9_]{3,30}$/.test(username)){
@@ -751,15 +861,22 @@ $("registerUsername").addEventListener("input",function(){
   );
 
   return;
+
  }
 
- setUsernameStatus("Checking Username...","status-checking");
+ setUsernameStatus(
+  "Checking Username...",
+  "status-checking"
+ );
 
  const version=usernameCheckVersion;
 
  usernameTimer=setTimeout(()=>{
+
   checkUsername(username,version);
+
  },500);
+
 });
 
 
@@ -788,11 +905,14 @@ $("loginForm").addEventListener("submit",async function(event){
   );
 
   return;
+
  }
 
  loginSubmitting=true;
+
  button.disabled=true;
  button.textContent="PLEASE WAIT...";
+
  setLoading(true);
 
  try{
@@ -808,7 +928,9 @@ $("loginForm").addEventListener("submit",async function(event){
 
   saveSession(result.token,result.user);
 
+  /* No success message */
   button.textContent="OPENING ACCOUNT...";
+
   redirectByRole(result.user);
 
  }catch(error){
@@ -824,8 +946,11 @@ $("loginForm").addEventListener("submit",async function(event){
   loginSubmitting=false;
   button.disabled=false;
   button.textContent="Login";
+
   setLoading(false);
+
  }
+
 });
 
 
@@ -850,11 +975,12 @@ $("registerForm").addEventListener("submit",async function(event){
  const password=$("registerPassword").value;
  const confirm=$("confirmPassword").value;
 
- /* Always read the referral code from the URL first */
+ /* Restore URL referral code before registration */
  applyReferralCode();
 
  const referralCode=$("referralCode")
   .value.trim().toUpperCase();
+
 
  if(!/^[a-z0-9_]{3,30}$/.test(username)){
 
@@ -864,12 +990,18 @@ $("registerForm").addEventListener("submit",async function(event){
   );
 
   return;
+
  }
 
  if(!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)){
 
-  showMessage("Please enter a valid email address.","error");
+  showMessage(
+   "Please enter a valid email address.",
+   "error"
+  );
+
   return;
+
  }
 
  if(password.length<6||password.length>16){
@@ -880,12 +1012,18 @@ $("registerForm").addEventListener("submit",async function(event){
   );
 
   return;
+
  }
 
  if(password!==confirm){
 
-  showMessage("Passwords do not match.","error");
+  showMessage(
+   "Passwords do not match.",
+   "error"
+  );
+
   return;
+
  }
 
  if(
@@ -893,13 +1031,21 @@ $("registerForm").addEventListener("submit",async function(event){
   !/^[A-Z0-9_-]{2,30}$/.test(referralCode)
  ){
 
-  showMessage("Please enter a valid referral code.","error");
+  showMessage(
+   "Please enter a valid referral code.",
+   "error"
+  );
+
   return;
+
  }
 
+
  registerSubmitting=true;
+
  button.disabled=true;
  button.textContent="CHECKING...";
+
  setLoading(true);
 
  try{
@@ -909,7 +1055,10 @@ $("registerForm").addEventListener("submit",async function(event){
 
   const check=await getUsernameAvailability(username);
 
-  if(check.valid===false||check.available===false){
+  if(
+   check.valid===false||
+   check.available===false
+  ){
 
    usernameAvailable=false;
    usernameCheckReady=true;
@@ -922,6 +1071,7 @@ $("registerForm").addEventListener("submit",async function(event){
    throw new Error(
     "This username is already taken. Please choose another one."
    );
+
   }
 
   usernameAvailable=true;
@@ -940,9 +1090,11 @@ $("registerForm").addEventListener("submit",async function(event){
    password
   };
 
-  /* Send affiliate referral code to backend */
+  /* Attach referral code to registration request */
   if(referralCode){
+
    payload.referral_code=referralCode;
+
   }
 
   const result=await apiRequest(
@@ -976,6 +1128,7 @@ $("registerForm").addEventListener("submit",async function(event){
     "Account created successfully. Please sign in.",
     "success"
    );
+
   }
 
  }catch(error){
@@ -991,10 +1144,14 @@ $("registerForm").addEventListener("submit",async function(event){
  }finally{
 
   registerSubmitting=false;
+
   button.disabled=false;
   button.textContent="Create Account";
+
   setLoading(false);
+
  }
+
 });
 
 </script>
