@@ -1,263 +1,1024 @@
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<meta name="theme-color" content="#071a35">
-<title>Malaysia Toto</title>
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="theme-color" content="#17142e">
+<title>Malaysia Toto - GLO 365</title>
 
 <style>
-*{
-    margin:0;
-    padding:0;
-    box-sizing:border-box;
-}
+*{margin:0;padding:0;box-sizing:border-box}
 
 body{
-    font-family:Arial,sans-serif;
-    background:#f1f6fc;
-    color:#172b45;
-    min-height:100vh;
+ font-family:Arial,sans-serif;
+ background:#eef7fd;
+ color:#173b59;
 }
 
-.header{
-    background:linear-gradient(135deg,#071a35,#124b86);
-    color:white;
-    padding:25px 18px;
-    text-align:center;
+.app{
+ max-width:600px;
+ margin:auto;
+ min-height:100vh;
 }
 
-.logo{
-    font-size:25px;
-    font-weight:900;
-    letter-spacing:1px;
+.home-header{
+ background:linear-gradient(120deg,#0755a5,#168fdf);
+ text-align:center;
+ padding:23px 10px 25px;
+ color:white;
 }
 
-.header p{
-    margin-top:7px;
-    color:#c5dcf8;
-    font-size:13px;
+.home-header h1{
+ font-size:clamp(24px,6.5vw,35px);
+ font-weight:900;
 }
 
-.container{
-    max-width:500px;
-    margin:30px auto;
-    padding:15px;
+.home-header p{
+ font-size:13px;
+ margin-top:8px;
+ color:#e0f2ff;
 }
 
-.section-title{
-    font-size:19px;
-    font-weight:bold;
-    margin-bottom:15px;
+.home{
+ padding:24px 15px 35px;
+}
+
+.home-title{
+ font-size:20px;
+ font-weight:900;
+ margin-bottom:20px;
+ color:#194765;
+}
+
+.grid{
+ display:grid;
+ grid-template-columns:repeat(2,minmax(0,1fr));
+ gap:14px;
 }
 
 .card{
-    background:white;
-    border-radius:16px;
-    padding:25px 18px;
-    text-align:center;
-    box-shadow:0 5px 22px rgba(20,55,95,.09);
-    border:1px solid #e2eaf4;
-    cursor:pointer;
-    transition:.2s;
+ width:100%;
+ border:2px solid #b3e1f5;
+ border-radius:25px;
+ background:linear-gradient(145deg,#35baf0,#0879c9);
+ padding:17px 9px;
+ color:white;
+ text-align:center;
+ min-height:210px;
+ cursor:pointer;
+ box-shadow:0 7px 18px #0878bd25,
+ inset 0 0 0 4px #ffffff25;
 }
 
-.card:active{
-    transform:scale(.97);
+.card:active{transform:scale(.98)}
+
+.crown{font-size:43px}
+
+.balls{
+ display:flex;
+ justify-content:center;
+ gap:5px;
+ margin:12px 0;
 }
 
-.card-icon{
-    font-size:42px;
-    margin-bottom:12px;
+.balls span{
+ width:39px;
+ height:39px;
+ flex-shrink:0;
+ border-radius:50%;
+ background:#effaff;
+ color:#173c5a;
+ border:5px solid #37d0f1;
+ display:grid;
+ place-items:center;
+ font-size:16px;
+ font-weight:900;
 }
 
 .card h2{
-    font-size:21px;
-    color:#123c70;
+ font-size:27px;
+ margin-top:8px;
 }
 
 .card p{
-    color:#8494a8;
-    font-size:13px;
-    margin-top:8px;
+ font-size:12px;
+ font-weight:bold;
+ margin-top:6px;
 }
 
-.tap{
-    display:inline-block;
-    margin-top:18px;
-    background:#1687d5;
-    color:white;
-    padding:11px 28px;
-    border-radius:30px;
-    font-size:13px;
-    font-weight:bold;
+.play{
+ background:white;
+ color:#1167a5;
+ border-radius:30px;
+ padding:10px 8px;
+ margin-top:13px;
+ font-size:13px;
+ font-weight:900;
+}
+
+.game{
+ display:none;
+ min-height:100vh;
+ background:#17142e;
+}
+
+.game.active{display:block}
+
+.game-header{
+ min-height:88px;
+ background:linear-gradient(120deg,#0755a5,#168fdf);
+ display:flex;
+ align-items:center;
+ justify-content:center;
+ position:relative;
+ padding:15px 60px;
+ color:white;
+}
+
+.game-header h2{
+ font-size:clamp(22px,6vw,30px);
+ font-weight:900;
+ text-align:center;
+}
+
+.back{
+ position:absolute;
+ left:12px;
+ top:50%;
+ transform:translateY(-50%);
+ width:43px;
+ height:43px;
+ border:0;
+ border-radius:12px;
+ background:#fff;
+ color:#126ca8;
+ font-size:27px;
+ font-weight:bold;
+ cursor:pointer;
+}
+
+.entry-panel{
+ background:linear-gradient(145deg,#19172f,#100e29);
+ min-height:calc(100vh - 88px);
+ padding:12px 8px 25px;
+ color:#e7edff;
+}
+
+.draw-status{
+ background:#252d50;
+ border:1px solid #465779;
+ border-radius:14px;
+ padding:13px 8px;
+ margin:0 2px 13px;
+ text-align:center;
+ font-size:13px;
+ line-height:1.5;
+ min-height:65px;
+ display:flex;
+ flex-direction:column;
+ justify-content:center;
+ gap:4px;
+}
+
+.draw-status strong{
+ color:#ff88a9;
+ font-size:17px;
+}
+
+.draw-status #statusText{
+ color:#e0e8fa;
+ font-size:13px;
+}
+
+.table-head,.entry-row{
+ display:grid;
+ grid-template-columns:22px minmax(0,1.2fr) minmax(0,.9fr) minmax(0,.9fr) 17px;
+ gap:4px;
+ align-items:center;
+}
+
+.table-head{
+ text-align:center;
+ font-size:clamp(9px,2.5vw,11px);
+ font-weight:900;
+ color:#c5d5ed;
+ padding:8px 0 10px;
+}
+
+.entry-row{margin-bottom:7px}
+
+.index{
+ text-align:center;
+ font-weight:bold;
+ font-size:13px;
+ color:#dce8ff;
+}
+
+.entry-row input{
+ width:100%;
+ min-width:0;
+ height:43px;
+ border:2px solid #b9d8ed;
+ border-radius:11px;
+ background:linear-gradient(145deg,#fff,#e8f4ff);
+ text-align:center;
+ color:#145c91;
+ font-size:clamp(12px,3.5vw,16px);
+ outline:none;
+ padding:3px;
+}
+
+.entry-row input::placeholder{color:#8b9eae}
+
+.entry-row input:focus{
+ border-color:#ffd35d;
+ box-shadow:0 0 0 2px #ffd35d38;
+}
+
+.entry-row .prize{
+ background:linear-gradient(145deg,#eaf7ff,#cce9ff);
+ color:#0865a7;
+ font-weight:900;
+}
+
+.remove{
+ background:none;
+ border:0;
+ color:#f27c9f;
+ font-size:21px;
+ font-weight:900;
+ cursor:pointer;
+}
+
+.add-area{
+ display:flex;
+ justify-content:flex-end;
+ padding:7px 0 18px;
+}
+
+.add{
+ width:45px;
+ height:45px;
+ border-radius:50%;
+ border:2px solid #70bfff;
+ background:linear-gradient(135deg,#168fe5,#075ab0);
+ color:white;
+ font-size:29px;
+ font-weight:bold;
+ cursor:pointer;
+}
+
+.total-box{
+ border:2px solid #43587d;
+ border-radius:15px;
+ background:linear-gradient(120deg,#203b61,#20264c);
+ padding:14px 6px;
+ text-align:center;
+ font-size:clamp(14px,3.8vw,19px);
+ margin:0 2px 10px;
+ color:#e5efff;
+}
+
+.total-box strong{
+ color:#ffe36d;
+ font-weight:900;
+}
+
+.prize-box{
+ background:linear-gradient(110deg,#172b55,#662077);
+ border-color:#886b93;
+}
+
+.prize-box strong{
+ font-size:clamp(22px,5.5vw,28px);
+}
+
+.message{
+ display:none;
+ padding:10px;
+ margin:10px 2px;
+ border-radius:10px;
+ text-align:center;
+ font-size:12px;
+ line-height:1.5;
+}
+
+.message.error{
+ display:block;
+ background:#642b43;
+ color:white;
+}
+
+.message.info{
+ display:block;
+ background:#253a5d;
+ color:#dceaff;
+}
+
+.message.success{display:none}
+
+.place{
+ width:calc(100% - 4px);
+ margin:16px 2px 10px;
+ padding:14px 8px;
+ border-radius:13px;
+ border:2px solid #b16bd9;
+ background:linear-gradient(100deg,#087bd5,#8b12a7);
+ color:white;
+ font-size:clamp(18px,5vw,23px);
+ font-weight:900;
+ cursor:pointer;
+}
+
+.place:disabled{
+ opacity:.5;
+ cursor:not-allowed;
 }
 
 .footer{
-    text-align:center;
-    color:#91a0b3;
-    font-size:12px;
-    padding:25px 10px;
+ text-align:center;
+ padding:18px;
+ background:#eef7fd;
+ color:#8da4b5;
+ font-size:11px;
 }
 
-/* Maintenance Popup */
-
-.overlay{
-    position:fixed;
-    inset:0;
-    background:rgba(3,15,32,.78);
-    display:none;
-    align-items:center;
-    justify-content:center;
-    padding:20px;
-    z-index:1000;
-}
-
-.overlay.show{
-    display:flex;
-}
-
-.popup{
-    width:100%;
-    max-width:380px;
-    background:white;
-    border-radius:22px;
-    padding:30px 23px;
-    text-align:center;
-    animation:appear .3s ease;
-}
-
-@keyframes appear{
-    from{
-        opacity:0;
-        transform:translateY(20px) scale(.95);
-    }
-    to{
-        opacity:1;
-        transform:translateY(0) scale(1);
-    }
-}
-
-.warning{
-    width:75px;
-    height:75px;
-    background:#fff3dc;
-    border-radius:50%;
-    display:flex;
-    align-items:center;
-    justify-content:center;
-    font-size:36px;
-    margin:0 auto 18px;
-}
-
-.popup h2{
-    color:#153b68;
-    font-size:22px;
-    margin-bottom:13px;
-}
-
-.popup p{
-    color:#66768b;
-    font-size:14px;
-    line-height:1.7;
-}
-
-.status{
-    display:inline-block;
-    margin:18px 0;
-    background:#fff3dc;
-    color:#bd7915;
-    padding:8px 15px;
-    border-radius:20px;
-    font-size:11px;
-    font-weight:bold;
-    letter-spacing:.5px;
-}
-
-.close-btn{
-    width:100%;
-    border:none;
-    background:linear-gradient(135deg,#1687d5,#1261ae);
-    color:white;
-    padding:14px;
-    border-radius:12px;
-    font-size:14px;
-    font-weight:bold;
-    cursor:pointer;
+@media(max-width:360px){
+ .home{padding:18px 10px}
+ .grid{gap:10px}
+ .card{min-height:190px;padding:13px 6px}
+ .balls{gap:3px}
+ .balls span{
+  width:34px;
+  height:34px;
+  font-size:14px;
+ }
+ .table-head,.entry-row{
+  grid-template-columns:20px minmax(0,1.2fr) minmax(0,.9fr) minmax(0,.9fr) 15px;
+  gap:3px;
+ }
+ .entry-row input{
+  height:40px;
+  border-radius:9px;
+  font-size:11px;
+ }
+ .index{font-size:12px}
+ .remove{font-size:19px}
 }
 </style>
 </head>
 
 <body>
 
-<header class="header">
-    <div class="logo">🇲🇾 MALAYSIA TOTO</div>
-    <p>Your Daily Results & Information Portal</p>
+<div class="app">
+
+<section id="home">
+
+<header class="home-header">
+<h1>🇲🇾 MALAYSIA TOTO</h1>
+<p>GLO 365 · MALAYSIA GAMES</p>
 </header>
 
-<main class="container">
+<div class="home">
 
-    <div class="section-title">Available Services</div>
+<div class="home-title">👑 CHOOSE YOUR GAME</div>
 
-    <div class="card" onclick="showMaintenance()">
-        <div class="card-icon">🎯</div>
-        <h2>Malaysia Toto</h2>
-        <p>Tap to access the latest information</p>
-        <span class="tap">TAP TO OPEN</span>
-    </div>
+<div class="grid">
 
-</main>
+<button class="card" onclick="openGame('2D')">
+<div class="crown">👑</div>
+<div class="balls"><span>2</span><span>8</span></div>
+<h2>2D</h2>
+<p>2 DIGIT GAME</p>
+<div class="play">PLAY NOW ➜</div>
+</button>
+
+<button class="card" onclick="openGame('3D')">
+<div class="crown">👑</div>
+<div class="balls"><span>1</span><span>3</span><span>6</span></div>
+<h2>3D</h2>
+<p>3 DIGIT GAME</p>
+<div class="play">PLAY NOW ➜</div>
+</button>
+
+<button class="card" onclick="openGame('4D')">
+<div class="crown">👑</div>
+<div class="balls"><span>7</span><span>2</span><span>9</span><span>4</span></div>
+<h2>4D</h2>
+<p>4 DIGIT GAME</p>
+<div class="play">PLAY NOW ➜</div>
+</button>
+
+</div>
+</div>
+</section>
+
+<section class="game" id="game">
+
+<header class="game-header">
+<button class="back" onclick="goHome()">‹</button>
+<h2 id="gameTitle">2D NUMBER</h2>
+</header>
+
+<div class="entry-panel">
+
+<div class="draw-status">
+<strong id="statusTitle">LOADING GAME STATUS</strong>
+<div id="statusText">Connecting to GLO 365 server...</div>
+</div>
+
+<div class="table-head">
+<span>#</span>
+<span>NUMBER</span>
+<span>AMOUNT</span>
+<span>PRIZE</span>
+<span></span>
+</div>
+
+<div id="rows"></div>
+
+<div class="add-area">
+<button class="add" onclick="addRow()">+</button>
+</div>
+
+<div class="total-box">
+Total Amount = <strong id="totalAmount">0.00</strong> GLO
+</div>
+
+<div class="total-box prize-box">
+Estimated Prize = <strong id="totalPrize">0.00</strong> GLO
+</div>
+
+<div class="message" id="message"></div>
+
+<button class="place" id="placeBet" disabled>
+PLACE BET
+</button>
+
+</div>
+</section>
 
 <footer class="footer">
-    © 2026 Malaysia Toto. All Rights Reserved.
+© 2026 GLO 365 · MALAYSIA TOTO
 </footer>
 
-<!-- Maintenance Popup -->
-
-<div class="overlay" id="maintenance">
-    <div class="popup">
-
-        <div class="warning">⚙️</div>
-
-        <h2>Temporary Maintenance</h2>
-
-        <p>
-        We sincerely apologize for the inconvenience.
-        Our servers are currently undergoing scheduled
-        maintenance to improve your experience.
-        <br><br>
-        Please try again later. Thank you for your
-        patience and understanding.
-        </p>
-
-        <div class="status">
-            ● SYSTEM UNDER MAINTENANCE
-        </div>
-
-        <button class="close-btn" onclick="closeMaintenance()">
-            UNDERSTOOD
-        </button>
-
-    </div>
 </div>
 
 <script>
-function showMaintenance(){
-    document.getElementById("maintenance")
-    .classList.add("show");
+"use strict";
+
+const API_BASE="https://glo365.onrender.com/api";
+const TOKEN_KEY="glo365_token";
+
+const MIN_ROWS=10;
+const MAX_ROWS=50;
+
+const games={
+ "2D":{title:"2D NUMBER",digits:2},
+ "3D":{title:"3D NUMBER",digits:3},
+ "4D":{title:"4D NUMBER",digits:4}
+};
+
+let currentGame="2D";
+let rows=[];
+let drawSettings=null;
+let walletBalance=0;
+let isSubmitting=false;
+let statusTimer=null;
+
+const $=id=>document.getElementById(id);
+
+function token(){
+ return sessionStorage.getItem(TOKEN_KEY)||"";
 }
 
-function closeMaintenance(){
-    document.getElementById("maintenance")
-    .classList.remove("show");
+async function api(path,options={}){
+
+ const auth=token();
+
+ const headers={
+  "Content-Type":"application/json",
+  ...(options.headers||{})
+ };
+
+ if(auth)headers.Authorization="Bearer "+auth;
+
+ const response=await fetch(API_BASE+path,{
+  ...options,
+  headers,
+  credentials:"include"
+ });
+
+ let data={};
+
+ try{data=await response.json()}catch(e){}
+
+ if(!response.ok){
+  throw new Error(
+   data.message||data.error||
+   "Server request failed ("+response.status+")"
+  );
+ }
+
+ return data;
 }
 
-document.getElementById("maintenance")
-.addEventListener("click",function(e){
-    if(e.target===this){
-        closeMaintenance();
-    }
+function showMessage(text,type="info"){
+ const el=$("message");
+ el.textContent=text;
+ el.className="message "+type;
+}
+
+function money(value){
+ return (Number(value)||0).toFixed(2);
+}
+
+function openGame(game){
+
+ if(!games[game])return;
+
+ currentGame=game;
+
+ $("home").style.display="none";
+ $("game").classList.add("active");
+
+ $("gameTitle").textContent=games[game].title;
+
+ resetRows();
+ updateTotals();
+
+ showMessage("Connecting to GLO 365 server...","info");
+
+ loadGameData();
+
+ window.scrollTo(0,0);
+}
+
+function goHome(){
+
+ $("game").classList.remove("active");
+ $("home").style.display="block";
+
+ if(statusTimer){
+  clearInterval(statusTimer);
+  statusTimer=null;
+ }
+
+ window.scrollTo(0,0);
+}
+
+function resetRows(){
+
+ rows=[];
+
+ for(let i=0;i<MIN_ROWS;i++){
+  rows.push({number:"",amount:""});
+ }
+
+ renderRows();
+}
+
+function addRow(){
+
+ if(rows.length>=MAX_ROWS){
+  showMessage("Maximum 50 rows allowed.","error");
+  return;
+ }
+
+ rows.push({number:"",amount:""});
+
+ renderRows();
+}
+
+function getPrize(amount){
+
+ const rate=Number(drawSettings?.prize_rate)||0;
+
+ return Math.max(0,Number(amount)||0)*rate;
+}
+
+function renderRows(){
+
+ const container=$("rows");
+
+ container.replaceChildren();
+
+ rows.forEach((row,index)=>{
+
+  const line=document.createElement("div");
+  line.className="entry-row";
+
+  const serial=document.createElement("span");
+  serial.className="index";
+  serial.textContent=(index+1)+".";
+
+  const number=document.createElement("input");
+  number.placeholder="Number";
+  number.inputMode="numeric";
+  number.maxLength=games[currentGame].digits;
+  number.value=row.number;
+
+  const amount=document.createElement("input");
+  amount.placeholder="Amount";
+  amount.type="number";
+  amount.inputMode="decimal";
+  amount.min="0.01";
+  amount.step="0.01";
+  amount.value=row.amount;
+
+  const prize=document.createElement("input");
+  prize.className="prize";
+  prize.readOnly=true;
+  prize.value=money(getPrize(row.amount));
+
+  const remove=document.createElement("button");
+  remove.className="remove";
+  remove.type="button";
+  remove.textContent="×";
+
+  number.addEventListener("input",()=>{
+
+   number.value=number.value
+    .replace(/\D/g,"")
+    .slice(0,games[currentGame].digits);
+
+   row.number=number.value;
+
+   updateTotals();
+  });
+
+  amount.addEventListener("input",()=>{
+
+   row.amount=amount.value;
+
+   prize.value=money(getPrize(row.amount));
+
+   updateTotals();
+  });
+
+  remove.addEventListener("click",()=>{
+
+   if(rows.length>MIN_ROWS){
+    rows.splice(index,1);
+   }else{
+    rows[index]={number:"",amount:""};
+   }
+
+   renderRows();
+   updateTotals();
+  });
+
+  line.append(serial,number,amount,prize,remove);
+
+  container.appendChild(line);
+
+ });
+
+}
+
+function updateTotals(){
+
+ let total=0;
+ let prize=0;
+
+ rows.forEach(row=>{
+
+  const amount=Math.max(0,Number(row.amount)||0);
+
+  total+=amount;
+  prize+=getPrize(amount);
+
+ });
+
+ $("totalAmount").textContent=money(total);
+ $("totalPrize").textContent=money(prize);
+}
+
+function applySettings(settings){
+
+ drawSettings=settings||null;
+
+ updateTotals();
+ updateStatus();
+}
+
+function updateStatus(){
+
+ const settings=drawSettings;
+
+ if(!settings){
+
+  setStatus(
+   "BETTING UNAVAILABLE",
+   "Draw settings are not configured.",
+   false
+  );
+
+  return;
+ }
+
+ const drawAt=new Date(settings.draw_at).getTime();
+
+ if(!Number.isFinite(drawAt)){
+
+  setStatus(
+   "BETTING UNAVAILABLE",
+   "Invalid draw schedule.",
+   false
+  );
+
+  return;
+ }
+
+ const remaining=drawAt-Date.now();
+
+ const lockRemaining=remaining-(45*60*1000);
+
+ if(
+  settings.betting_locked===true||
+  settings.betting_enabled!==true||
+  lockRemaining<=0
+ ){
+
+  setStatus(
+   "BETTING CLOSED",
+   "Betting closes 45 minutes before draw time.",
+   false
+  );
+
+  return;
+ }
+
+ const h=Math.floor(lockRemaining/3600000);
+ const m=Math.floor(lockRemaining%3600000/60000);
+ const s=Math.floor(lockRemaining%60000/1000);
+
+ setStatus(
+  "BETTING IS OPEN",
+  "Betting closes in "+h+"h "+m+"m "+s+"s",
+  true
+ );
+}
+
+function setStatus(title,message,open){
+
+ $("statusTitle").textContent=title;
+ $("statusText").textContent=message;
+
+ $("statusTitle").style.color=
+  open?"#62e5ad":"#ff88a9";
+
+ $("placeBet").disabled=!open||isSubmitting;
+}
+
+async function loadGameData(){
+
+ try{
+
+  if(!token()){
+
+   showMessage(
+    "Please log in to your GLO 365 account first.",
+    "error"
+   );
+
+   setStatus(
+    "LOGIN REQUIRED",
+    "Please log in to continue.",
+    false
+   );
+
+   return;
+  }
+
+  const [meResult,settingsResult]=await Promise.all([
+
+   api("/malaysia/me"),
+
+   api("/malaysia/settings/"+currentGame)
+
+  ]);
+
+  if(!meResult.success||!meResult.user){
+
+   throw new Error("Could not verify your account.");
+  }
+
+  walletBalance=Number(meResult.user.balance)||0;
+
+  if(!settingsResult.success||!settingsResult.settings){
+
+   throw new Error(
+    "Admin has not configured this game's draw yet."
+   );
+  }
+
+  applySettings(settingsResult.settings);
+
+  $("message").className="message";
+
+  if(statusTimer)clearInterval(statusTimer);
+
+  statusTimer=setInterval(updateStatus,1000);
+
+ }catch(error){
+
+  console.error("Malaysia game error:",error);
+
+  showMessage(
+   error.message||"Could not connect to server.",
+   "error"
+  );
+
+  $("placeBet").disabled=true;
+
+  setStatus(
+   "SERVER CONNECTION ERROR",
+   "Please try again later.",
+   false
+  );
+
+ }
+}
+
+function validateNormalRows(){
+
+ const digits=games[currentGame].digits;
+
+ const selected=rows.filter(row=>
+  row.number.trim()!==""||row.amount!==""
+ );
+
+ if(!selected.length){
+
+  throw new Error("Please enter at least one number.");
+ }
+
+ for(const row of selected){
+
+  if(!new RegExp("^[0-9]{"+digits+"}$").test(row.number)){
+
+   throw new Error(
+    "Enter a valid "+digits+" digit number."
+   );
+  }
+
+  const amount=Number(row.amount);
+
+  if(
+   !Number.isFinite(amount)||
+   amount<=0||
+   amount>100000
+  ){
+
+   throw new Error(
+    "Enter a valid amount for every number."
+   );
+  }
+
+ }
+
+ return selected;
+}
+
+async function submitNormalBets(){
+
+ const selected=validateNormalRows();
+
+ const total=selected.reduce(
+  (sum,row)=>sum+Number(row.amount),
+  0
+ );
+
+ if(total>walletBalance){
+
+  throw new Error("Insufficient demo points balance.");
+ }
+
+ const groups=new Map();
+
+ selected.forEach(row=>{
+
+  const amount=Number(row.amount).toFixed(2);
+
+  if(!groups.has(amount)){
+   groups.set(amount,[]);
+  }
+
+  groups.get(amount).push(row.number);
+
+ });
+
+ let completed=0;
+
+ for(const [amount,selections] of groups){
+
+  const result=await api("/malaysia/bets",{
+
+   method:"POST",
+
+   body:JSON.stringify({
+
+    game:currentGame,
+
+    amount:Number(amount),
+
+    selections
+
+   })
+
+  });
+
+  if(!result.success){
+
+   throw new Error(
+    result.message||"Bet submission failed."
+   );
+  }
+
+  if(result.balance!==undefined){
+
+   walletBalance=Number(result.balance);
+  }
+
+  completed+=selections.length;
+ }
+
+ showMessage(
+  completed+" bet(s) submitted successfully.",
+  "success"
+ );
+
+ resetRows();
+ updateTotals();
+}
+
+$("placeBet").addEventListener("click",async()=>{
+
+ if(isSubmitting)return;
+
+ try{
+
+  if(!token()){
+
+   throw new Error(
+    "Please log in to your GLO 365 account."
+   );
+  }
+
+  if(!drawSettings){
+
+   throw new Error(
+    "Draw settings are not available."
+   );
+  }
+
+  if(
+   drawSettings.betting_locked||
+   drawSettings.betting_enabled!==true
+  ){
+
+   throw new Error("Betting is currently closed.");
+  }
+
+  isSubmitting=true;
+
+  $("placeBet").disabled=true;
+  $("placeBet").textContent="PLEASE WAIT...";
+
+  showMessage(
+   "Submitting your demo points bet...",
+   "info"
+  );
+
+  await submitNormalBets();
+
+ }catch(error){
+
+  showMessage(
+   error.message||"Bet submission failed.",
+   "error"
+  );
+
+ }finally{
+
+  isSubmitting=false;
+
+  $("placeBet").textContent="PLACE BET";
+
+  updateStatus();
+
+ }
+
 });
+
+setStatus(
+ "LOADING",
+ "Waiting for server...",
+ false
+);
+
 </script>
 
 </body>
