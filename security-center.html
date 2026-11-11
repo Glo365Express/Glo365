@@ -1,3 +1,4 @@
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -5,14 +6,25 @@
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
 <meta name="theme-color" content="#1688df">
 <title>GLO 365 - Security Center</title>
+
 <style>
 *{box-sizing:border-box;margin:0;padding:0}
-:root{--blue:#1688df;--deep:#075da8;--bg:#f1f7fc;--text:#20364b;--muted:#8295a5;--line:#e2edf5;--green:#16834a;--amber:#a56b13}
+:root{
+ --blue:#1688df;--deep:#075da8;--bg:#f1f7fc;
+ --text:#20364b;--muted:#8295a5;--line:#e2edf5;
+ --green:#16834a;--amber:#a56b13
+}
 body{font-family:Arial,sans-serif;background:var(--bg);color:var(--text);min-height:100vh}
 .app{max-width:560px;min-height:100vh;margin:auto;background:#fff;display:flex;flex-direction:column}
-header{padding:18px 16px;background:linear-gradient(120deg,#0755a5,#1688df,#45b5f5);color:#fff;display:flex;align-items:center;gap:12px;box-shadow:0 4px 14px #1688df25}
+header{
+ padding:18px 16px;background:linear-gradient(120deg,#0755a5,#1688df,#45b5f5);
+ color:#fff;display:flex;align-items:center;gap:12px;
+ box-shadow:0 4px 14px #1688df25
+}
 .back{width:38px;height:38px;border:0;border-radius:50%;background:#ffffff25;color:white;font-size:22px;cursor:pointer}
-.header-title{flex:1}.header-title h1{font-size:19px}.header-title p{font-size:11px;color:#e4f5ff;margin-top:4px}
+.header-title{flex:1}
+.header-title h1{font-size:19px}
+.header-title p{font-size:11px;color:#e4f5ff;margin-top:4px}
 .content{padding:16px 14px 22px;flex:1}
 .intro{padding:16px;border-radius:15px;background:linear-gradient(135deg,#eaf6ff,#f6fbff);border:1px solid #d7ebfa;margin-bottom:16px}
 .intro-row{display:flex;align-items:center;gap:12px}
@@ -29,185 +41,277 @@ header{padding:18px 16px;background:linear-gradient(120deg,#0755a5,#1688df,#45b5
 .item-main small{display:block;font-size:11px;color:var(--muted);line-height:1.45;margin-top:4px}
 .state{font-size:10px;font-weight:800;color:var(--amber);background:#fff6e6;padding:6px 8px;border-radius:20px;white-space:nowrap}
 .state.ready{color:var(--green);background:#eaf8ef}
-.chevron{color:#91a5b5;font-size:20px}
 button{font-family:inherit}
 .action{border:0;border-radius:9px;background:#eaf4fc;color:#17699f;font-size:11px;font-weight:800;padding:9px 11px;cursor:pointer;white-space:nowrap}
 .action:disabled{opacity:.55;cursor:not-allowed}
+
 .password-card{padding:15px}
 .password-card h3{font-size:14px;color:#17466d;margin-bottom:5px}
 .password-card>p{font-size:11px;color:var(--muted);line-height:1.5;margin-bottom:13px}
 .field{margin-bottom:12px}
 label{display:block;font-size:11px;font-weight:700;color:#526b80;margin:0 0 6px 3px}
-input,select{width:100%;height:45px;border:1px solid #d7e6f1;border-radius:10px;padding:0 12px;font-size:13px;color:var(--text);outline:none;background:#fbfdff}
+input,select{
+ width:100%;height:45px;border:1px solid #d7e6f1;border-radius:10px;
+ padding:0 12px;font-size:13px;color:var(--text);outline:none;background:#fbfdff
+}
 input:focus,select:focus{border-color:var(--blue);box-shadow:0 0 0 3px #1688df18}
 .primary{width:100%;height:46px;border:0;border-radius:10px;background:linear-gradient(120deg,#087acb,#25a7ed);color:#fff;font-size:13px;font-weight:800;cursor:pointer}
 .primary:disabled{opacity:.55;cursor:not-allowed}
 .notice{display:none;padding:11px 12px;margin:0 0 12px;border-radius:9px;font-size:12px;line-height:1.5}
-.notice.show{display:block}.notice.error{background:#fff0f0;color:#b52c2c}.notice.success{background:#eaf8ef;color:#197842}.notice.info{background:#edf7ff;color:#17699f}
+.notice.show{display:block}
+.notice.error{background:#fff0f0;color:#b52c2c}
+.notice.success{background:#eaf8ef;color:#197842}
+.notice.info{background:#edf7ff;color:#17699f}
 .small-note{font-size:10px;color:#91a3b1;line-height:1.5;margin-top:10px}
 .logout{width:100%;height:45px;border:1px solid #f0d7d7;border-radius:10px;background:#fff7f7;color:#b52c2c;font-size:13px;font-weight:800;cursor:pointer;margin-top:5px}
+
+/* Identity verification inside Security overview */
+.verify-expand{
+ display:none;background:#f8fbfe;border-top:1px solid #edf3f8;
+ padding:14px
+}
+.verify-expand.open{display:block}
+.verify-description{font-size:11px;color:var(--muted);line-height:1.55;margin-bottom:13px}
+.verify-grid{display:grid;grid-template-columns:1fr 1fr;gap:0 10px}
+.verify-field{margin-bottom:12px;min-width:0}
+.verify-field.full{grid-column:1/-1}
+.verify-field label{font-size:11px}
+.verify-error{display:none;background:#fff0f0;color:#b52c2c;border:1px solid #f5d4d4;border-radius:9px;padding:10px 11px;font-size:11px;line-height:1.5;margin-bottom:12px}
+.verify-error.show{display:block}
+.verify-record{display:grid;grid-template-columns:1fr 1fr;gap:9px}
+.verify-value{min-width:0;background:#fff;border:1px solid #e0ebf3;border-radius:10px;padding:11px}
+.verify-value small{display:block;color:#8295a5;font-size:10px;font-weight:800;text-transform:uppercase;margin-bottom:8px}
+.verify-value strong{display:block;color:#29465d;font-size:13px;overflow-wrap:anywhere}
+.verify-note{margin-top:12px;padding:11px;background:#f1f7fc;border:1px solid #e1edf5;border-radius:10px;color:#82919d;font-size:10px;line-height:1.6}
+.verify-toggle{border:0;background:#eaf4fc;color:#17699f;padding:8px 11px;border-radius:9px;font-size:11px;font-weight:800;white-space:nowrap;cursor:pointer}
+.verify-toggle:active,.action:active{transform:scale(.98)}
+
 .bottom-nav{position:sticky;bottom:0;background:#fff;border-top:1px solid var(--line);display:flex;justify-content:space-around;padding:10px 4px 13px}
 .bottom-nav a{flex:1;text-decoration:none;color:#8295a5;font-size:10px;display:flex;flex-direction:column;align-items:center;gap:4px}
-.bottom-nav strong{font-size:21px}.bottom-nav a.active{color:#087acb}
+.bottom-nav strong{font-size:21px}
+.bottom-nav a.active{color:#087acb}
 footer{text-align:center;color:#a0afbb;font-size:10px;padding:10px 0 14px}
 
-/* Identity verification */
-.verification-card{padding:15px}
-.verification-heading{display:flex;align-items:center;justify-content:space-between;gap:8px;margin-bottom:8px}
-.verification-heading h3{font-size:15px;color:#17466d}
-.verification-status{font-size:10px;font-weight:800;color:var(--amber);background:#fff6e6;padding:6px 9px;border-radius:20px;white-space:nowrap}
-.verification-status.done{color:var(--green);background:#eaf8ef}
-.verification-description{font-size:11px;color:#8295a5;line-height:1.55;margin-bottom:13px}
-.verification-grid{display:grid;grid-template-columns:1fr 1fr;gap:0 10px}
-.verification-field{margin-bottom:12px;min-width:0}
-.verification-field.full{grid-column:1/-1}
-.verification-field label{font-size:11px}
-.verification-error{display:none;background:#fff0f0;color:#b52c2c;border:1px solid #f5d4d4;border-radius:9px;padding:10px 11px;font-size:11px;line-height:1.5;margin:0 0 12px}
-.verification-error.show{display:block}
-.verification-record{display:grid;grid-template-columns:1fr 1fr;gap:9px;margin-top:12px}
-.verification-value{min-width:0;background:#f5f9fd;border:1px solid #e0ebf3;border-radius:11px;padding:11px}
-.verification-value small{display:block;color:#8295a5;font-size:10px;font-weight:800;text-transform:uppercase;margin-bottom:8px}
-.verification-value strong{display:block;color:#29465d;font-size:13px;overflow-wrap:anywhere}
-.verification-note{margin-top:12px;padding:11px;background:#f5f9fc;border:1px solid #e1edf5;border-radius:10px;color:#82919d;font-size:10px;line-height:1.6}
-@media(max-width:360px){.verification-grid,.verification-record{grid-template-columns:1fr}}
-@media(min-width:560px){body{padding:18px 0}.app{min-height:calc(100vh - 36px);border-radius:16px;overflow:hidden;box-shadow:0 8px 30px #17466d10}}
+@media(max-width:360px){
+ .verify-grid,.verify-record{grid-template-columns:1fr}
+}
+@media(min-width:560px){
+ body{padding:18px 0}
+ .app{min-height:calc(100vh - 36px);border-radius:16px;overflow:hidden;box-shadow:0 8px 30px #17466d10}
+}
 </style>
 </head>
+
 <body>
 <div class="app">
+
 <header>
  <button class="back" id="backButton" type="button" aria-label="Go back">‹</button>
- <div class="header-title"><h1>Security Center</h1><p>Protect your GLO 365 account</p></div>
+ <div class="header-title">
+  <h1>Security Center</h1>
+  <p>Protect your GLO 365 account</p>
+ </div>
 </header>
+
 <main class="content">
- <section class="intro">
-  <div class="intro-row">
-   <div class="shield">🛡️</div>
-   <div><h2>Account Security</h2><p>Review your account security, complete identity verification, and update your login password.</p></div>
-  </div>
- </section>
 
- <div id="notice" class="notice" role="status" aria-live="polite"></div>
+<section class="intro">
+ <div class="intro-row">
+  <div class="shield">🛡️</div>
+  <div>
+   <h2>Account Security</h2>
+   <p>Review your account security, complete identity verification, and update your login password.</p>
+  </div>
+ </div>
+</section>
 
- <h3 class="section-title">Security overview</h3>
- <section class="card">
-  <div class="item">
-   <div class="item-icon">👤</div>
-   <div class="item-main"><strong>Account</strong><small id="accountSummary">Checking your account...</small></div>
-   <span class="state" id="accountState">Checking</span>
-  </div>
-  <div class="item">
-   <div class="item-icon">✉️</div>
-   <div class="item-main"><strong>Email verification</strong><small id="emailSummary">Verification status is not available from the current API.</small></div>
-   <span class="state" id="emailState">Not confirmed</span>
-  </div>
-  <div class="item">
-   <div class="item-icon">📱</div>
-   <div class="item-main"><strong>Phone verification</strong><small>Phone OTP verification is not yet connected to the server.</small></div>
-   <span class="state">Unavailable</span>
-  </div>
-  <div class="item">
-   <div class="item-icon">🔐</div>
-   <div class="item-main"><strong>Transaction password</strong><small>A separate transaction-password API is not yet available.</small></div>
-   <span class="state">Not configured</span>
-  </div>
- </section>
+<div id="notice" class="notice" role="status" aria-live="polite"></div>
 
- <h3 class="section-title">Identity Verification</h3>
- <section class="card verification-card" aria-labelledby="verificationTitle">
-  <div class="verification-heading">
-   <h3 id="verificationTitle">🛡️ Identity Verification</h3>
-   <span class="verification-status" id="verificationStatus">Loading...</span>
+<h3 class="section-title">Security overview</h3>
+
+<section class="card" id="securityOverview">
+
+ <div class="item">
+  <div class="item-icon">👤</div>
+  <div class="item-main">
+   <strong>Account</strong>
+   <small id="accountSummary">Checking your account...</small>
   </div>
-  <p class="verification-description" id="verificationDescription">Submit your legal details once to complete your GLO 365 account verification.</p>
+  <span class="state" id="accountState">Checking</span>
+ </div>
+
+ <div class="item">
+  <div class="item-icon">✉️</div>
+  <div class="item-main">
+   <strong>Email verification</strong>
+   <small id="emailSummary">Verification status is not available from the current API.</small>
+  </div>
+  <span class="state" id="emailState">Not confirmed</span>
+ </div>
+
+ <div class="item">
+  <div class="item-icon">📱</div>
+  <div class="item-main">
+   <strong>Phone verification</strong>
+   <small>Phone OTP verification is not yet connected to the server.</small>
+  </div>
+  <span class="state">Unavailable</span>
+ </div>
+
+ <div class="item">
+  <div class="item-icon">🔐</div>
+  <div class="item-main">
+   <strong>Transaction password</strong>
+   <small>A separate transaction-password API is not yet available.</small>
+  </div>
+  <span class="state">Not configured</span>
+ </div>
+
+ <!-- Identity verification is part of the same overview card -->
+ <div class="item">
+  <div class="item-icon">🪪</div>
+  <div class="item-main">
+   <strong>Identity Verification</strong>
+   <small id="verificationSummary">Checking verification status...</small>
+  </div>
+  <span class="state" id="verificationState">Checking</span>
+  <button class="verify-toggle" id="verificationToggle" type="button">Open</button>
+ </div>
+
+ <div class="verify-expand" id="verificationPanel">
+
+  <p class="verify-description" id="verificationDescription">
+   Submit your legal details once to complete your GLO 365 account verification.
+  </p>
+
   <form id="verificationForm" autocomplete="off" hidden>
-   <div class="verification-grid">
-    <div class="verification-field full">
+   <div class="verify-grid">
+
+    <div class="verify-field full">
      <label for="verifyLegalName">Full Legal Name</label>
      <input id="verifyLegalName" name="legal_name" type="text" maxlength="120" autocomplete="off" placeholder="Enter your legal name" required>
     </div>
-    <div class="verification-field">
+
+    <div class="verify-field">
      <label for="verifyDocumentType">Document Type</label>
      <select id="verifyDocumentType" name="document_type" required>
-      <option value="">Select document</option><option value="NID">NID</option><option value="PASSPORT">Passport</option>
+      <option value="">Select document</option>
+      <option value="NID">NID</option>
+      <option value="PASSPORT">Passport</option>
      </select>
     </div>
-    <div class="verification-field">
+
+    <div class="verify-field">
      <label for="verifyDocumentNumber">Document Number</label>
      <input id="verifyDocumentNumber" name="document_number" type="text" maxlength="40" autocomplete="off" placeholder="Document number" required>
     </div>
-    <div class="verification-field">
+
+    <div class="verify-field">
      <label for="verifyPhone">Phone Number</label>
      <input id="verifyPhone" name="phone" type="tel" maxlength="25" autocomplete="off" placeholder="+8801XXXXXXXXX" required>
     </div>
-    <div class="verification-field">
+
+    <div class="verify-field">
      <label for="verifyEmail">Email Address</label>
      <input id="verifyEmail" name="email" type="email" maxlength="150" autocomplete="off" placeholder="name@example.com" required>
     </div>
+
    </div>
-   <div class="verification-error" id="verificationError" role="alert"></div>
+
+   <div class="verify-error" id="verificationError" role="alert"></div>
    <button class="primary" id="verificationSubmit" type="submit">Submit Verification Details</button>
   </form>
-  <div id="verificationRecord" class="verification-record" hidden></div>
-  <div class="verification-note" id="verificationNote">Your submitted information is encrypted on the server. After submission, you cannot view the full details or change them. Only authorized Admins can access the full information. Automatic format checks do not confirm that an identity document is genuine through a government database.</div>
- </section>
 
- <h3 class="section-title">Login password</h3>
- <section class="card password-card">
-  <h3>Change login password</h3>
-  <p>Use your current password to set a new password. The new password must contain 6–16 characters.</p>
-  <form id="passwordForm">
-   <div class="field">
-    <label for="currentPassword">Current password</label>
-    <input id="currentPassword" type="password" autocomplete="current-password" maxlength="128" required>
-   </div>
-   <div class="field">
-    <label for="newPassword">New password</label>
-    <input id="newPassword" type="password" autocomplete="new-password" minlength="6" maxlength="16" required>
-   </div>
-   <div class="field">
-    <label for="confirmPassword">Confirm new password</label>
-    <input id="confirmPassword" type="password" autocomplete="new-password" minlength="6" maxlength="16" required>
-   </div>
-   <button class="primary" id="changeButton" type="submit">Update Password</button>
-  </form>
-  <p class="small-note">Never share your password, PIN, or OTP with anyone, including support staff.</p>
- </section>
+  <div id="verificationRecord" class="verify-record" hidden></div>
 
- <h3 class="section-title">Other account settings</h3>
- <section class="card">
-  <div class="item">
-   <div class="item-icon">🪪</div>
-   <div class="item-main"><strong>Account information</strong><small>Review your personal information and linked contact details.</small></div>
-   <button class="action" type="button" onclick="location.href='my-account.html'">Open</button>
+  <div class="verify-note" id="verificationNote">
+   Your submitted information is encrypted on the server. After submission, you cannot view the full details or change them. Only authorized Admins can access the full information. Automatic format checks do not confirm that an identity document is genuine through a government database.
   </div>
-  <div class="item">
-   <div class="item-icon">💳</div>
-   <div class="item-main"><strong>Link E-wallet</strong><small>Wallet linking is not yet connected to a verified server API.</small></div>
-   <span class="state">Unavailable</span>
-  </div>
- </section>
 
- <button class="logout" id="logoutButton" type="button">Log Out</button>
+ </div>
+</section>
+
+<h3 class="section-title">Login password</h3>
+
+<section class="card password-card">
+ <h3>Change login password</h3>
+ <p>Use your current password to set a new password. The new password must contain 6–16 characters.</p>
+
+ <form id="passwordForm">
+
+  <div class="field">
+   <label for="currentPassword">Current password</label>
+   <input id="currentPassword" type="password" autocomplete="current-password" maxlength="128" required>
+  </div>
+
+  <div class="field">
+   <label for="newPassword">New password</label>
+   <input id="newPassword" type="password" autocomplete="new-password" minlength="6" maxlength="16" required>
+  </div>
+
+  <div class="field">
+   <label for="confirmPassword">Confirm new password</label>
+   <input id="confirmPassword" type="password" autocomplete="new-password" minlength="6" maxlength="16" required>
+  </div>
+
+  <button class="primary" id="changeButton" type="submit">Update Password</button>
+ </form>
+
+ <p class="small-note">Never share your password, PIN, or OTP with anyone, including support staff.</p>
+</section>
+
+<h3 class="section-title">Other account settings</h3>
+
+<section class="card">
+ <div class="item">
+  <div class="item-icon">🪪</div>
+  <div class="item-main">
+   <strong>Account information</strong>
+   <small>Review your personal information and linked contact details.</small>
+  </div>
+  <button class="action" type="button" onclick="location.href='my-account.html'">Open</button>
+ </div>
+
+ <div class="item">
+  <div class="item-icon">💳</div>
+  <div class="item-main">
+   <strong>Link E-wallet</strong>
+   <small>Wallet linking is not yet connected to a verified server API.</small>
+  </div>
+  <span class="state">Unavailable</span>
+ </div>
+</section>
+
+<button class="logout" id="logoutButton" type="button">Log Out</button>
+
 </main>
+
 <nav class="bottom-nav">
  <a href="home.html"><strong>⌂</strong>Home</a>
  <a href="mybets.html"><strong>🎯</strong>My Bets</a>
  <a href="results.html"><strong>🏆</strong>Results</a>
  <a href="profile.html" class="active"><strong>♙</strong>Profile</a>
 </nav>
+
 <footer>GLO 365 · Security Center</footer>
 </div>
+
 <script>
 "use strict";
+
 const API_BASE_URL="https://glo365.onrender.com/api";
 const TOKEN_KEY="glo365_token";
 const $=id=>document.getElementById(id);
+
 let currentUser=null;
 let redirecting=false;
 let isSubmittingVerification=false;
 
-function getToken(){try{return sessionStorage.getItem(TOKEN_KEY)||"";}catch(_){return "";}}
+function getToken(){
+ try{return sessionStorage.getItem(TOKEN_KEY)||"";}
+ catch(_){return "";}
+}
+
 function clearSession(){
  try{
   sessionStorage.removeItem(TOKEN_KEY);
@@ -215,12 +319,22 @@ function clearSession(){
   sessionStorage.removeItem("glo365_session");
  }catch(_){}
 }
+
 function showNotice(message,type="error"){
- const box=$("notice");box.textContent=message;box.className="notice show "+type;
+ const box=$("notice");
+ box.textContent=message;
+ box.className="notice show "+type;
 }
-function clearNotice(){const box=$("notice");box.textContent="";box.className="notice";}
+
+function clearNotice(){
+ const box=$("notice");
+ box.textContent="";
+ box.className="notice";
+}
+
 async function apiRequest(path,options={}){
  const token=getToken();
+
  const response=await fetch(API_BASE_URL+path,{
   method:options.method||"GET",
   credentials:"include",
@@ -232,33 +346,54 @@ async function apiRequest(path,options={}){
   },
   body:options.body?JSON.stringify(options.body):undefined
  });
+
  let data={};
  try{data=await response.json();}catch(_){}
+
  if(response.status===401){
   clearSession();
-  if(!redirecting){redirecting=true;location.replace("login.html");}
+  if(!redirecting){
+   redirecting=true;
+   location.replace("login.html");
+  }
   throw new Error("Your session has expired. Please sign in again.");
  }
+
  if(!response.ok||data.success===false){
   throw new Error(data.message||data.error||"Request failed. Please try again.");
  }
+
  return data;
 }
+
 function unwrapUser(data){
  if(data?.user)return data.user;
  if(data?.data?.user)return data.data.user;
  if(data?.data&&typeof data.data==="object")return data.data;
  return data||{};
 }
+
 async function loadAccount(){
  const data=await apiRequest("/auth/me");
  currentUser=unwrapUser(data);
- if(!currentUser||!currentUser.id)throw new Error("Unable to verify your account.");
+
+ if(!currentUser||!currentUser.id){
+  throw new Error("Unable to verify your account.");
+ }
+
  const status=String(currentUser.status||"active").toLowerCase();
- $("accountSummary").textContent=(currentUser.username?"@"+currentUser.username+" · ":"")+"Account status: "+status;
+
+ $("accountSummary").textContent=
+  (currentUser.username?"@"+currentUser.username+" · ":"")+
+  "Account status: "+status;
+
  $("accountState").textContent=status==="active"?"Active":"Review";
  $("accountState").className="state"+(status==="active"?" ready":"");
- const verified=currentUser.email_verified===true||currentUser.emailVerified===true;
+
+ const verified=
+  currentUser.email_verified===true||
+  currentUser.emailVerified===true;
+
  if(verified){
   $("emailSummary").textContent="Your email is marked as verified by the server.";
   $("emailState").textContent="Verified";
@@ -266,50 +401,91 @@ async function loadAccount(){
  }
 }
 
-/* Identity verification: data is submitted once; only masked server data is rendered. */
+/* Verification panel */
 function verificationError(message){
- const box=$("verificationError");box.textContent=message;box.classList.add("show");
+ const box=$("verificationError");
+ box.textContent=message;
+ box.classList.add("show");
 }
+
 function clearVerificationError(){
- const box=$("verificationError");box.textContent="";box.classList.remove("show");
+ const box=$("verificationError");
+ box.textContent="";
+ box.classList.remove("show");
 }
+
 function addVerificationValue(label,value){
- const box=document.createElement("div");box.className="verification-value";
- const title=document.createElement("small");title.textContent=label;
- const content=document.createElement("strong");content.textContent=value||"—";
- box.append(title,content);$("verificationRecord").appendChild(box);
+ const box=document.createElement("div");
+ box.className="verify-value";
+
+ const title=document.createElement("small");
+ title.textContent=label;
+
+ const content=document.createElement("strong");
+ content.textContent=value||"—";
+
+ box.append(title,content);
+ $("verificationRecord").appendChild(box);
 }
+
 function lockVerificationForm(){
  $("verificationForm").hidden=true;
- [...$("verificationForm").elements].forEach(element=>element.disabled=true);
+ [...$("verificationForm").elements].forEach(element=>{
+  element.disabled=true;
+ });
 }
+
 function renderVerification(record){
  lockVerificationForm();
- $("verificationStatus").textContent="✓ Submission Verified";
- $("verificationStatus").classList.add("done");
- $("verificationDescription").textContent="Your details have been submitted. For your privacy, only masked information is displayed here.";
- const panel=$("verificationRecord");panel.hidden=false;panel.replaceChildren();
+
+ $("verificationSummary").textContent="Your identity details have been submitted.";
+ $("verificationState").textContent="Verified";
+ $("verificationState").className="state ready";
+
+ $("verificationDescription").textContent=
+  "Your details have been submitted. For your privacy, only masked information is displayed here.";
+
+ const panel=$("verificationRecord");
+ panel.hidden=false;
+ panel.replaceChildren();
+
  addVerificationValue("Legal Name",record.legal_name);
  addVerificationValue("Document Type",record.document_type);
  addVerificationValue("Document Number",record.document_number);
  addVerificationValue("Phone Number",record.phone);
  addVerificationValue("Email Address",record.email);
 }
+
 async function loadVerification(){
  const data=await apiRequest("/verification/me");
+
  if(data.submitted&&data.verification){
   renderVerification(data.verification);
  }else{
-  $("verificationStatus").textContent="Not Submitted";
-  $("verificationStatus").classList.remove("done");
-  $("verificationDescription").textContent="Submit your legal details once to complete your GLO 365 account verification.";
+  $("verificationSummary").textContent="Identity verification is not submitted.";
+  $("verificationState").textContent="Not Submitted";
+  $("verificationState").className="state";
+
+  $("verificationDescription").textContent=
+   "Submit your legal details once to complete your GLO 365 account verification.";
+
   $("verificationForm").hidden=false;
  }
 }
+
+$("verificationToggle").addEventListener("click",()=>{
+ const panel=$("verificationPanel");
+ const isOpen=panel.classList.toggle("open");
+
+ $("verificationToggle").textContent=isOpen?"Close":"Open";
+});
+
 $("verificationForm").addEventListener("submit",async event=>{
  event.preventDefault();
+
  if(isSubmittingVerification)return;
  clearVerificationError();
+
  const payload={
   legal_name:$("verifyLegalName").value.trim(),
   document_type:$("verifyDocumentType").value,
@@ -317,59 +493,160 @@ $("verificationForm").addEventListener("submit",async event=>{
   phone:$("verifyPhone").value.trim(),
   email:$("verifyEmail").value.trim()
  };
- if(payload.legal_name.length<3){verificationError("Please enter your full legal name.");return;}
- if(!payload.document_type){verificationError("Please select NID or Passport.");return;}
- if(!/^[A-Za-z0-9-]{5,40}$/.test(payload.document_number.replace(/\s+/g,""))){verificationError("Please enter a valid document number format.");return;}
- if(!/^\+?[0-9\s()-]{8,22}$/.test(payload.phone)){verificationError("Please enter a valid phone number.");return;}
- if(!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(payload.email)){verificationError("Please enter a valid email address.");return;}
- const button=$("verificationSubmit");isSubmittingVerification=true;button.disabled=true;button.textContent="Submitting securely...";
+
+ if(payload.legal_name.length<3){
+  verificationError("Please enter your full legal name.");
+  return;
+ }
+
+ if(!payload.document_type){
+  verificationError("Please select NID or Passport.");
+  return;
+ }
+
+ if(!/^[A-Za-z0-9-]{5,40}$/.test(payload.document_number.replace(/\s+/g,""))){
+  verificationError("Please enter a valid document number format.");
+  return;
+ }
+
+ if(!/^\+?[0-9\s()-]{8,22}$/.test(payload.phone)){
+  verificationError("Please enter a valid phone number.");
+  return;
+ }
+
+ if(!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(payload.email)){
+  verificationError("Please enter a valid email address.");
+  return;
+ }
+
+ const button=$("verificationSubmit");
+ isSubmittingVerification=true;
+ button.disabled=true;
+ button.textContent="Submitting securely...";
+
  try{
-  const result=await apiRequest("/verification",{method:"POST",body:payload});
-  if(result.verification)renderVerification(result.verification);
-  else await loadVerification();
+  const result=await apiRequest("/verification",{
+   method:"POST",
+   body:payload
+  });
+
+  if(result.verification){
+   renderVerification(result.verification);
+  }else{
+   await loadVerification();
+  }
+
   $("verificationForm").reset();
   showNotice("Your identity details have been securely submitted.","success");
+
  }catch(error){
   verificationError(error.message||"Unable to submit verification details.");
-  if(/already been submitted/i.test(error.message))await loadVerification().catch(()=>{});
+
+  if(/already been submitted/i.test(error.message)){
+   await loadVerification().catch(()=>{});
+  }
+
  }finally{
   isSubmittingVerification=false;
-  if(!$("verificationForm").hidden){button.disabled=false;button.textContent="Submit Verification Details";}
+
+  if(!$("verificationForm").hidden){
+   button.disabled=false;
+   button.textContent="Submit Verification Details";
+  }
  }
 });
 
-$("backButton").addEventListener("click",()=>history.length>1?history.back():location.href="profile.html");
+/* Back button */
+$("backButton").addEventListener("click",()=>{
+ if(history.length>1)history.back();
+ else location.href="profile.html";
+});
+
+/* Change password */
 $("passwordForm").addEventListener("submit",async event=>{
- event.preventDefault();clearNotice();
+ event.preventDefault();
+ clearNotice();
+
  const current=$("currentPassword").value;
  const next=$("newPassword").value;
  const confirm=$("confirmPassword").value;
- if(next.length<6||next.length>16){showNotice("New password must contain 6–16 characters.");return;}
- if(next!==confirm){showNotice("The new passwords do not match.");return;}
- if(current===next){showNotice("Choose a password different from your current password.");return;}
- const button=$("changeButton");button.disabled=true;button.textContent="UPDATING...";
+
+ if(next.length<6||next.length>16){
+  showNotice("New password must contain 6–16 characters.");
+  return;
+ }
+
+ if(next!==confirm){
+  showNotice("The new passwords do not match.");
+  return;
+ }
+
+ if(current===next){
+  showNotice("Choose a password different from your current password.");
+  return;
+ }
+
+ const button=$("changeButton");
+ button.disabled=true;
+ button.textContent="UPDATING...";
+
  try{
   await apiRequest("/auth/change-password",{
    method:"POST",
-   body:{current_password:current,new_password:next}
+   body:{
+    current_password:current,
+    new_password:next
+   }
   });
+
   $("passwordForm").reset();
-  showNotice("Password updated successfully. Please sign in again with your new password.","success");
+
+  showNotice(
+   "Password updated successfully. Please sign in again with your new password.",
+   "success"
+  );
+
   clearSession();
   setTimeout(()=>location.replace("login.html"),1300);
- }catch(error){showNotice(error.message||"Password could not be updated.");}
- finally{button.disabled=false;button.textContent="Update Password";}
+
+ }catch(error){
+  showNotice(error.message||"Password could not be updated.");
+ }finally{
+  button.disabled=false;
+  button.textContent="Update Password";
+ }
 });
+
+/* Logout */
 $("logoutButton").addEventListener("click",async()=>{
- try{await fetch(API_BASE_URL+"/auth/logout",{method:"POST",credentials:"include",headers:getToken()?{Authorization:"Bearer "+getToken()}:{} });}catch(_){}
- clearSession();location.replace("login.html");
+ try{
+  await fetch(API_BASE_URL+"/auth/logout",{
+   method:"POST",
+   credentials:"include",
+   headers:getToken()?{Authorization:"Bearer "+getToken()}:{}
+  });
+ }catch(_){}
+
+ clearSession();
+ location.replace("login.html");
 });
+
+/* Initialize */
 (async function init(){
  try{
-  if(!getToken()){location.replace("login.html");return;}
+  if(!getToken()){
+   location.replace("login.html");
+   return;
+  }
+
   await loadAccount();
   await loadVerification();
- }catch(error){if(!redirecting)showNotice(error.message||"Unable to load security information.");}
+
+ }catch(error){
+  if(!redirecting){
+   showNotice(error.message||"Unable to load security information.");
+  }
+ }
 })();
 </script>
 </body>
