@@ -38,35 +38,6 @@ body{
  box-shadow:0 0 35px #0008;
 }
 
-.header{
- background:linear-gradient(120deg,#0755a6,#087fc9,#173c91);
- padding:17px 15px;
- display:flex;
- justify-content:space-between;
- align-items:center;
- box-shadow:0 5px 20px #007bff30;
-}
-
-.logo{
- font-size:27px;
- font-weight:900;
- color:#fff;
- letter-spacing:1px;
- text-shadow:0 2px 8px #0005;
-}
-
-.logo span{color:#8be8ff}
-
-.balance{
- background:linear-gradient(135deg,#eafaff,#bde9ff);
- color:#075b9d;
- padding:10px 14px;
- border-radius:30px;
- font-size:13px;
- font-weight:bold;
- box-shadow:0 3px 12px #0003;
-}
-
 .page-title{
  background:linear-gradient(100deg,#1357b7,#168fe8,#713bc3);
  text-align:center;
@@ -90,32 +61,58 @@ body{
  border-bottom:1px solid #303d6b;
 }
 
+/* 3UP STYLE LIVE TIMING CARD */
+
 .lock-notice{
  display:none;
- margin:12px 11px 4px;
- padding:14px 12px;
- background:linear-gradient(135deg,#42202f,#2d1d3d);
- border:1px solid #bd526f;
- border-radius:13px;
+ margin:26px 11px 22px;
+ padding:30px 15px;
+ background:linear-gradient(135deg,#e8fff5,#e8fbff);
+ border:2px solid #b8e6d2;
+ border-radius:24px;
  text-align:center;
- color:#ffb7ca;
- box-shadow:0 4px 15px #0003;
+ color:#207454;
+ box-shadow:0 5px 18px #27ae8020;
 }
 
 .lock-notice.show{display:block}
+
 .lock-notice strong{
  display:block;
- font-size:14px;
+ font-size:25px;
  font-weight:900;
- margin-bottom:5px;
+ margin-bottom:22px;
+ color:#197653;
 }
+
 .lock-notice span{
  display:block;
- font-size:12px;
- line-height:1.6;
+ font-size:18px;
+ line-height:1.8;
+ font-weight:bold;
  overflow-wrap:anywhere;
 }
-.lock-countdown{margin-top:7px;font-weight:bold}
+
+.lock-countdown{
+ margin-top:8px;
+ font-size:23px!important;
+ font-weight:900!important;
+ letter-spacing:1px;
+}
+
+.lock-notice.closed{
+ background:linear-gradient(135deg,#fff0f2,#ffe5e9);
+ border-color:#f3bdc7;
+ color:#b42332;
+}
+
+.lock-notice.closed strong{
+ color:#b42332;
+}
+
+.lock-notice.closed .lock-countdown{
+ color:#b42332;
+}
 
 .bet-area{padding:10px 9px 0}
 
@@ -335,26 +332,25 @@ body{
 }
 
 @media(max-width:380px){
- .logo{font-size:24px}
- .balance{font-size:11px;padding:9px}
  .bet-row input{height:45px;font-size:12px}
  .column-heading{font-size:9px;gap:3px}
  .bet-row{gap:3px}
  .serial{font-size:12px}
  .summary-box{font-size:13px}
+
+ .lock-notice{
+  margin:22px 10px 18px;
+  padding:25px 10px;
+ }
+ .lock-notice strong{font-size:22px}
+ .lock-notice span{font-size:15px}
+ .lock-countdown{font-size:21px!important}
 }
 </style>
 </head>
 
 <body>
 <div class="app">
-
-<header class="header">
- <div class="logo">GLO <span>365</span></div>
- <div class="balance">
-  <span id="balance">0.00</span> Points
- </div>
-</header>
 
 <div class="page-title">SINGLE NUMBER</div>
 <div class="subtitle">Enter 1 Digit Number &amp; Virtual Points</div>
@@ -375,7 +371,9 @@ body{
   <span>RUMBLE (R)</span>
   <span></span>
  </div>
+
  <div id="betRows"></div>
+
  <div class="add-area">
   <button class="add-btn" id="addRow" type="button" title="Add more rows">+</button>
  </div>
@@ -385,6 +383,7 @@ body{
  <div class="summary-box">
   Total Amount = <strong id="totalAmount">0.00</strong> Points
  </div>
+
  <div class="summary-box">
   <div class="discount-line">
    <span>Discount</span>
@@ -394,6 +393,7 @@ body{
    <span>Points</span>
   </div>
  </div>
+
  <div class="summary-box">
   Bet Amount = <strong id="betAmount">0.00</strong> Points
  </div>
@@ -421,7 +421,9 @@ const rowsContainer=document.getElementById("betRows");
 const addButton=document.getElementById("addRow");
 const placeButton=document.getElementById("placeBet");
 
-const balanceElement=document.getElementById("balance");
+/* Header removed. Wallet still loads internally. */
+const balanceElement={textContent:""};
+
 const totalElement=document.getElementById("totalAmount");
 const discountElement=document.getElementById("discountAmount");
 const discountPercentElement=document.getElementById("discountPercent");
@@ -621,8 +623,12 @@ async function loadDrawSettings(){
 
 function formatDrawTime(timestamp){
  return new Date(timestamp).toLocaleString("en-GB",{
-  day:"2-digit",month:"short",year:"numeric",
-  hour:"2-digit",minute:"2-digit",hour12:true
+  day:"2-digit",
+  month:"short",
+  year:"numeric",
+  hour:"2-digit",
+  minute:"2-digit",
+  hour12:true
  });
 }
 
@@ -656,29 +662,49 @@ function getBettingStatus(){
  return {locked:false,reason:"open",remaining};
 }
 
+/* 3UP STYLE LIVE DRAW TIMING */
+
 function updateBettingStatus(){
  const status=getBettingStatus();
  isBetLocked=status.locked;
 
- if(isBetLocked){
-  lockNotice.classList.add("show");
-  betArea.classList.add("locked");
+ lockNotice.classList.add("show");
 
-  if(status.reason==="missing"){
-   lockTitle.textContent="BETTING UNAVAILABLE";
-   lockMessage.textContent="The server draw schedule is unavailable. Please wait for the next valid schedule.";
-   lockCountdown.textContent="";
-  }else{
-   lockTitle.textContent="BETTING CLOSED";
-   lockMessage.textContent=(drawSchedule.drawNumber?"Draw Number: "+drawSchedule.drawNumber+". ":"")+"Draw Time: "+formatDrawTime(drawSchedule.timestamp);
-   lockCountdown.textContent=status.remaining<=0?"The scheduled draw time has passed.":"Draw starts in: "+formatRemaining(status.remaining);
-  }
- }else{
-  lockNotice.classList.remove("show");
-  betArea.classList.remove("locked");
-  lockTitle.textContent="BETTING OPEN";
-  lockMessage.textContent="";
+ if(status.reason==="missing"){
+
+  lockNotice.classList.remove("closed");
+
+  lockTitle.textContent="BETTING UNAVAILABLE";
+
+  lockMessage.textContent=
+   "The server draw schedule is unavailable. Please wait for the next valid schedule.";
+
   lockCountdown.textContent="";
+
+ }else{
+
+  if(status.locked){
+   lockNotice.classList.add("closed");
+   lockTitle.textContent="BETTING IS CLOSED";
+  }else{
+   lockNotice.classList.remove("closed");
+   lockTitle.textContent="BETTING IS OPEN";
+  }
+
+  lockMessage.textContent=
+   "Draw: "+formatDrawTime(drawSchedule.timestamp)+
+   " | Time remaining:";
+
+  lockCountdown.textContent=
+   status.remaining<=0
+    ?"00:00:00"
+    :formatRemaining(status.remaining);
+ }
+
+ if(isBetLocked){
+  betArea.classList.add("locked");
+ }else{
+  betArea.classList.remove("locked");
  }
 
  applyControls();
