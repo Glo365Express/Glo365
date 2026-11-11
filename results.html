@@ -1,10 +1,11 @@
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <meta name="theme-color" content="#0878df">
-<title>Results Center - GLO 365</title>
+<title>GLO 365 Results</title>
 
 <style>
 *{
@@ -17,12 +18,13 @@
 :root{
   --blue:#0878df;
   --dark:#102b49;
-  --muted:#8293a8;
 }
 
 body{
-  font-family:Arial, sans-serif;
-  background:#f3f7ff;
+  font-family:Arial,Helvetica,sans-serif;
+  background:
+    radial-gradient(circle at 10% 10%,#e2f3ff,transparent 35%),
+    linear-gradient(145deg,#f7faff,#eaf3ff);
   color:var(--dark);
   min-height:100vh;
   overflow-x:hidden;
@@ -32,11 +34,12 @@ body{
 .header{
   position:relative;
   overflow:hidden;
-  padding:19px 17px 34px;
+  padding:20px 17px 25px;
   color:white;
-  background:linear-gradient(135deg,#0869d9,#168ff0 55%,#46b8ff);
-  border-radius:0 0 27px 27px;
-  box-shadow:0 9px 25px rgba(0,105,220,.23);
+  background:linear-gradient(130deg,#0759c4,#087fe5,#42b8ff);
+  border-radius:0 0 28px 28px;
+  box-shadow:0 12px 28px rgba(0,105,220,.25);
+  transform-style:preserve-3d;
 }
 
 .header:before,
@@ -44,22 +47,22 @@ body{
   content:"";
   position:absolute;
   border-radius:50%;
-  background:rgba(255,255,255,.09);
+  background:rgba(255,255,255,.10);
   pointer-events:none;
 }
 
 .header:before{
-  width:210px;
-  height:210px;
-  right:-65px;
-  top:-105px;
+  width:230px;
+  height:230px;
+  right:-80px;
+  top:-130px;
 }
 
 .header:after{
-  width:140px;
-  height:140px;
-  right:80px;
-  bottom:-105px;
+  width:150px;
+  height:150px;
+  right:100px;
+  bottom:-120px;
 }
 
 .topbar{
@@ -67,369 +70,305 @@ body{
   z-index:2;
   display:flex;
   align-items:center;
-  gap:12px;
+  gap:13px;
 }
 
 .back{
-  width:39px;
-  height:39px;
-  border:1px solid rgba(255,255,255,.35);
-  background:rgba(255,255,255,.16);
-  backdrop-filter:blur(8px);
-  border-radius:13px;
+  width:46px;
+  height:46px;
+  border:1px solid rgba(255,255,255,.4);
+  background:rgba(255,255,255,.17);
+  backdrop-filter:blur(10px);
+  border-radius:15px;
   color:white;
-  font-size:27px;
-  line-height:1;
+  font-size:29px;
   cursor:pointer;
+  box-shadow:0 5px 12px rgba(0,0,0,.12);
 }
 
 .brand{
-  font-size:20px;
-  font-weight:900;
-  letter-spacing:.8px;
+  font-size:25px;
+  font-weight:1000;
+  letter-spacing:1px;
+  text-shadow:0 3px 0 rgba(0,35,100,.25),
+              0 6px 15px rgba(0,0,0,.2);
 }
 
 .subtitle{
   font-size:11px;
-  opacity:.88;
-  margin-top:3px;
-  letter-spacing:.4px;
-}
-
-.header-content{
-  position:relative;
-  z-index:2;
-  margin-top:27px;
-}
-
-.header-tag{
-  display:inline-flex;
-  align-items:center;
-  gap:6px;
-  background:rgba(255,255,255,.17);
-  border:1px solid rgba(255,255,255,.25);
-  padding:6px 11px;
-  border-radius:20px;
-  font-size:10px;
-  font-weight:bold;
-  letter-spacing:.6px;
-}
-
-.header-title{
-  margin-top:13px;
-  font-size:27px;
-  font-weight:900;
-  letter-spacing:-.5px;
-}
-
-.header-desc{
-  font-size:12px;
   opacity:.9;
-  margin-top:7px;
-  line-height:1.5;
+  margin-top:4px;
+  letter-spacing:1.2px;
 }
 
 /* MAIN */
 .container{
-  padding:23px 15px 30px;
-  max-width:700px;
+  width:100%;
+  max-width:650px;
   margin:auto;
+  padding:27px 17px 35px;
 }
 
-.section-heading{
+/* COUNTRY STACK */
+.country-stack{
   display:flex;
-  align-items:center;
-  justify-content:space-between;
-  margin-bottom:14px;
+  flex-direction:column;
+  gap:23px;
+  perspective:1100px;
 }
 
-.section-heading h2{
-  font-size:17px;
-  font-weight:900;
-  color:#183b61;
-}
-
-.count{
-  background:#e3f1ff;
-  color:#0878df;
-  border:1px solid #d0e7ff;
-  border-radius:20px;
-  padding:6px 10px;
-  font-size:10px;
-  font-weight:900;
-}
-
-/* SLIDER */
-.slider-wrap{
-  position:relative;
-  overflow:hidden;
-}
-
-.country-slider{
-  display:flex;
-  gap:14px;
-  overflow-x:auto;
-  scroll-snap-type:x mandatory;
-  scroll-behavior:smooth;
-  padding:4px 2px 17px;
-  scrollbar-width:none;
-  -webkit-overflow-scrolling:touch;
-}
-
-.country-slider::-webkit-scrollbar{
-  display:none;
-}
-
-/* COUNTRY CARDS */
+/* CARD */
 .country-card{
+  --c1:#b51e3b;
+  --c2:#ed4965;
+  --c3:#ff8b87;
+
   position:relative;
   isolation:isolate;
-  flex:0 0 82%;
-  max-width:320px;
-  min-height:158px;
-  padding:17px;
-  border-radius:21px;
+  width:100%;
+  min-height:155px;
+  padding:20px 17px;
+  border-radius:24px;
   display:flex;
   align-items:center;
-  gap:13px;
+  gap:15px;
   overflow:hidden;
-  text-decoration:none;
   color:white;
-  scroll-snap-align:start;
-  box-shadow:0 9px 20px rgba(25,75,130,.17);
-  transition:transform .22s,box-shadow .22s;
+  text-decoration:none;
+  background:linear-gradient(125deg,var(--c1),var(--c2),var(--c3));
+  background-size:200% 200%;
+  box-shadow:
+    0 12px 22px rgba(0,55,120,.18),
+    inset 0 2px 2px rgba(255,255,255,.38),
+    inset 0 -5px 12px rgba(0,0,0,.12);
+  border:1px solid rgba(255,255,255,.55);
+  transform-style:preserve-3d;
+  animation:
+    cardFloat 4s ease-in-out infinite,
+    colorFlow 7s ease-in-out infinite;
+  transition:transform .3s,filter .3s;
+  will-change:transform,background;
 }
 
-.country-card:active{
-  transform:scale(.97);
+.country-card:nth-child(2){
+  animation-delay:-1.3s,-2s;
+}
+
+.country-card:nth-child(3){
+  animation-delay:-2.5s,-4s;
 }
 
 .country-card:before{
   content:"";
   position:absolute;
   z-index:-1;
-  width:180px;
-  height:180px;
-  right:-60px;
-  top:-75px;
+  width:190px;
+  height:190px;
+  right:-55px;
+  top:-100px;
   border-radius:50%;
-  background:rgba(255,255,255,.13);
+  background:rgba(255,255,255,.18);
+  box-shadow:0 0 35px rgba(255,255,255,.08);
 }
 
 .country-card:after{
   content:"";
   position:absolute;
   z-index:-1;
-  width:130px;
-  height:130px;
-  right:30px;
-  bottom:-100px;
+  width:145px;
+  height:145px;
+  right:65px;
+  bottom:-115px;
   border-radius:50%;
-  background:rgba(255,255,255,.10);
+  background:rgba(255,255,255,.13);
 }
 
-/* Individual colors */
+.country-card:active{
+  transform:scale(.96) rotateX(5deg);
+  filter:brightness(1.15);
+}
+
+/* COUNTRY COLOR ANIMATION */
 .thai{
-  background:linear-gradient(125deg,#b51e3b,#e83e58 55%,#ff776f);
+  --c1:#a50d3c;
+  --c2:#ed345a;
+  --c3:#ff8b77;
 }
 
 .malaysia{
-  background:linear-gradient(125deg,#0752a8,#087fdc 55%,#39b9f4);
+  --c1:#064da8;
+  --c2:#087fe0;
+  --c3:#36c4f4;
 }
 
 .singapore{
-  background:linear-gradient(125deg,#087d70,#0aab91 55%,#4bd5ad);
-}
-
-.taiwan{
-  background:linear-gradient(125deg,#5437bb,#7658e9 55%,#a28bff);
-}
-
-.laos{
-  background:linear-gradient(125deg,#a84b0b,#e47b18 55%,#ffb343);
+  --c1:#006e67;
+  --c2:#08a78e;
+  --c3:#61dfb2;
 }
 
 .flag{
-  width:65px;
-  height:65px;
+  position:relative;
+  width:76px;
+  height:76px;
   flex-shrink:0;
-  border-radius:19px;
-  background:rgba(255,255,255,.19);
-  border:1px solid rgba(255,255,255,.32);
-  backdrop-filter:blur(8px);
+  border-radius:22px;
+  background:rgba(255,255,255,.2);
+  border:1px solid rgba(255,255,255,.4);
+  backdrop-filter:blur(10px);
   display:flex;
   align-items:center;
   justify-content:center;
-  font-size:37px;
-  box-shadow:0 5px 14px rgba(0,0,0,.10);
+  font-size:43px;
+  box-shadow:
+    0 8px 17px rgba(0,0,0,.14),
+    inset 0 1px 3px rgba(255,255,255,.35);
+  transform:translateZ(25px);
 }
 
 .card-info{
   flex:1;
   min-width:0;
+  transform:translateZ(30px);
 }
 
 .card-tag{
   display:inline-block;
-  font-size:8px;
+  font-size:9px;
   font-weight:900;
-  letter-spacing:1px;
-  background:rgba(255,255,255,.19);
-  border:1px solid rgba(255,255,255,.20);
+  letter-spacing:1.5px;
+  background:rgba(255,255,255,.2);
+  border:1px solid rgba(255,255,255,.28);
   border-radius:20px;
-  padding:4px 8px;
-  margin-bottom:8px;
+  padding:5px 11px;
+  margin-bottom:9px;
 }
 
 .card-info h3{
-  font-size:15px;
-  font-weight:900;
-  line-height:1.25;
-  color:white;
+  font-size:18px;
+  font-weight:1000;
+  line-height:1.2;
+  text-shadow:0 2px 5px rgba(0,0,0,.15);
 }
 
 .card-info p{
-  font-size:10px;
-  color:rgba(255,255,255,.82);
+  font-size:11px;
+  color:rgba(255,255,255,.9);
   margin-top:6px;
-  line-height:1.4;
 }
 
 .open-label{
   display:inline-flex;
   align-items:center;
-  gap:5px;
-  margin-top:11px;
-  padding:7px 10px;
-  border-radius:9px;
-  background:white;
-  color:#24496d;
-  font-size:9px;
-  font-weight:900;
-  letter-spacing:.3px;
+  gap:6px;
+  margin-top:12px;
+  padding:9px 13px;
+  border-radius:11px;
+  background:linear-gradient(180deg,#fff,#eaf4ff);
+  color:#164b7c;
+  font-size:10px;
+  font-weight:1000;
+  box-shadow:
+    0 5px 10px rgba(0,0,0,.13),
+    inset 0 1px 2px white;
 }
 
 .arrow{
-  width:29px;
-  height:29px;
+  width:35px;
+  height:35px;
   flex-shrink:0;
   border-radius:50%;
   background:rgba(255,255,255,.2);
-  border:1px solid rgba(255,255,255,.28);
+  border:1px solid rgba(255,255,255,.38);
   display:flex;
   align-items:center;
   justify-content:center;
-  font-size:21px;
+  font-size:25px;
   color:white;
-  margin-left:auto;
+  transform:translateZ(35px);
+  box-shadow:0 4px 10px rgba(0,0,0,.1);
 }
 
-/* DOTS */
-.slider-bottom{
-  display:flex;
-  justify-content:center;
-  align-items:center;
-  gap:9px;
-  margin-top:0;
+/* 3D FLOAT */
+@keyframes cardFloat{
+  0%,100%{
+    transform:translateY(0) rotateX(0deg) rotateY(0deg);
+  }
+  25%{
+    transform:translateY(-5px) rotateX(1.5deg) rotateY(-1deg);
+  }
+  50%{
+    transform:translateY(-2px) rotateX(-1deg) rotateY(1deg);
+  }
+  75%{
+    transform:translateY(-6px) rotateX(1deg) rotateY(0deg);
+  }
 }
 
-.dot{
-  width:7px;
-  height:7px;
-  border-radius:20px;
-  background:#c8d8eb;
-  transition:all .25s;
-}
-
-.dot.active{
-  width:23px;
-  background:#1688e8;
-}
-
-/* SWIPE HINT */
-.swipe-hint{
-  text-align:center;
-  color:#91a2b5;
-  font-size:10px;
-  margin-top:11px;
-}
-
-/* INFO */
-.info-box{
-  position:relative;
-  overflow:hidden;
-  margin-top:25px;
-  background:linear-gradient(115deg,#ffffff,#edf6ff);
-  border:1px solid #dcecff;
-  border-radius:18px;
-  padding:16px;
-  display:flex;
-  gap:13px;
-  align-items:center;
-  box-shadow:0 5px 16px rgba(40,100,160,.06);
-}
-
-.info-icon{
-  width:43px;
-  height:43px;
-  border-radius:14px;
-  flex-shrink:0;
-  background:linear-gradient(135deg,#0878df,#55b5ff);
-  color:white;
-  display:flex;
-  align-items:center;
-  justify-content:center;
-  font-size:22px;
-  box-shadow:0 5px 12px rgba(0,120,220,.20);
-}
-
-.info-text h3{
-  font-size:13px;
-  font-weight:900;
-  color:#244b70;
-  margin-bottom:5px;
-}
-
-.info-text p{
-  font-size:10px;
-  line-height:1.6;
-  color:#8293a7;
+/* COLOR FLOW */
+@keyframes colorFlow{
+  0%,100%{
+    background-position:0% 50%;
+    filter:saturate(1);
+  }
+  50%{
+    background-position:100% 50%;
+    filter:saturate(1.35) brightness(1.08);
+  }
 }
 
 /* FOOTER */
 .footer{
   text-align:center;
-  padding:23px 10px;
-  color:#a0afbf;
+  padding:24px 10px;
+  color:#8ea1b7;
   font-size:10px;
+  letter-spacing:.5px;
 }
 
-/* DESKTOP */
 @media(min-width:600px){
-  .country-card{
-    flex-basis:48%;
+  .container{
+    padding-top:35px;
   }
 
-  .header{
-    padding-left:25px;
-    padding-right:25px;
+  .country-card{
+    min-height:175px;
+    padding:24px;
+  }
+
+  .flag{
+    width:88px;
+    height:88px;
+    font-size:49px;
+  }
+
+  .card-info h3{
+    font-size:21px;
   }
 }
 
 @media(max-width:360px){
   .country-card{
-    flex-basis:88%;
+    min-height:140px;
     padding:14px;
+    gap:11px;
   }
 
   .flag{
-    width:55px;
-    height:55px;
-    font-size:31px;
+    width:62px;
+    height:62px;
+    font-size:35px;
+    border-radius:18px;
   }
 
   .card-info h3{
-    font-size:13px;
+    font-size:15px;
+  }
+}
+
+@media(prefers-reduced-motion:reduce){
+  .country-card{
+    animation:none;
   }
 }
 </style>
@@ -447,160 +386,74 @@ body{
     </div>
   </div>
 
-  <div class="header-content">
-    <div class="header-tag">✦ OFFICIAL RESULTS CENTER</div>
-    <div class="header-title">Lottery Results</div>
-    <div class="header-desc">
-      Explore lottery results from different countries<br>
-      all in one place.
-    </div>
-  </div>
-
 </header>
 
 <main class="container">
 
-  <div class="section-heading">
-    <h2>Select Country</h2>
-    <span class="count">05 COUNTRIES</span>
-  </div>
+  <section class="country-stack">
 
-  <div class="slider-wrap">
+    <!-- THAILAND -->
+    <a class="country-card thai" href="results/thai.html">
 
-    <div class="country-slider" id="countrySlider">
+      <div class="flag">🇹🇭</div>
 
-      <!-- THAILAND -->
-      <a class="country-card thai" href="results/thai.html">
-        <div class="flag">🇹🇭</div>
-        <div class="card-info">
-          <span class="card-tag">THAILAND</span>
-          <h3>Thai Government Lotto</h3>
-          <p>Thailand Lottery Results</p>
-          <span class="open-label">VIEW RESULTS ↗</span>
-        </div>
-        <div class="arrow">›</div>
-      </a>
+      <div class="card-info">
+        <span class="card-tag">THAILAND</span>
+        <h3>Thai Government Lotto</h3>
+        <p>Thailand Lottery Results</p>
+        <span class="open-label">VIEW RESULTS ↗</span>
+      </div>
 
-      <!-- MALAYSIA -->
-      <a class="country-card malaysia" href="results/malaysia.html">
-        <div class="flag">🇲🇾</div>
-        <div class="card-info">
-          <span class="card-tag">MALAYSIA</span>
-          <h3>Malaysia Toto</h3>
-          <p>Malaysia Lottery Results</p>
-          <span class="open-label">VIEW RESULTS ↗</span>
-        </div>
-        <div class="arrow">›</div>
-      </a>
+      <div class="arrow">›</div>
 
-      <!-- SINGAPORE -->
-      <a class="country-card singapore" href="results/Singapore.html">
-        <div class="flag">🇸🇬</div>
-        <div class="card-info">
-          <span class="card-tag">SINGAPORE</span>
-          <h3>Singapore Pools</h3>
-          <p>Singapore Lottery Results</p>
-          <span class="open-label">VIEW RESULTS ↗</span>
-        </div>
-        <div class="arrow">›</div>
-      </a>
+    </a>
 
-      <!-- TAIWAN -->
-      <a class="country-card taiwan" href="results/taiwan.html">
-        <div class="flag">🇹🇼</div>
-        <div class="card-info">
-          <span class="card-tag">TAIWAN</span>
-          <h3>Taiwan Lottery</h3>
-          <p>Taiwan Lottery Results</p>
-          <span class="open-label">VIEW RESULTS ↗</span>
-        </div>
-        <div class="arrow">›</div>
-      </a>
+    <!-- MALAYSIA -->
+    <a class="country-card malaysia" href="results/malaysia.html">
 
-      <!-- LAOS -->
-      <a class="country-card laos" href="results/laos.html">
-        <div class="flag">🇱🇦</div>
-        <div class="card-info">
-          <span class="card-tag">LAOS</span>
-          <h3>Laos Government Lotto</h3>
-          <p>Laos Lottery Results</p>
-          <span class="open-label">VIEW RESULTS ↗</span>
-        </div>
-        <div class="arrow">›</div>
-      </a>
+      <div class="flag">🇲🇾</div>
 
-    </div>
+      <div class="card-info">
+        <span class="card-tag">MALAYSIA</span>
+        <h3>Malaysia Toto</h3>
+        <p>Malaysia Lottery Results</p>
+        <span class="open-label">VIEW RESULTS ↗</span>
+      </div>
 
-  </div>
+      <div class="arrow">›</div>
 
-  <div class="slider-bottom" id="dots">
-    <span class="dot active"></span>
-    <span class="dot"></span>
-    <span class="dot"></span>
-    <span class="dot"></span>
-    <span class="dot"></span>
-  </div>
+    </a>
 
-  <div class="swipe-hint">← SWIPE TO EXPLORE COUNTRIES →</div>
+    <!-- SINGAPORE -->
+    <a class="country-card singapore" href="results/Singapore.html">
 
-  <div class="info-box">
-    <div class="info-icon">✦</div>
-    <div class="info-text">
-      <h3>Welcome to GLO 365 Results</h3>
-      <p>
-        Choose a country to explore its dedicated results page.
-        Each country has its own result design and information.
-      </p>
-    </div>
-  </div>
+      <div class="flag">🇸🇬</div>
+
+      <div class="card-info">
+        <span class="card-tag">SINGAPORE</span>
+        <h3>Singapore Pools</h3>
+        <p>Singapore Lottery Results</p>
+        <span class="open-label">VIEW RESULTS ↗</span>
+      </div>
+
+      <div class="arrow">›</div>
+
+    </a>
+
+  </section>
 
 </main>
 
 <footer class="footer">
-  © 2026 GLO 365. All Rights Reserved.
+  © 2026 GLO 365
 </footer>
 
 <script>
 "use strict";
 
 function goHome(){
-  window.location.href = "home.html";
+  window.location.href="home.html";
 }
-
-const slider = document.getElementById("countrySlider");
-const dots = document.querySelectorAll(".dot");
-const cards = document.querySelectorAll(".country-card");
-
-let scrollTimer;
-
-function updateDots(){
-  let current = 0;
-  let closest = Infinity;
-
-  cards.forEach((card,index)=>{
-    const distance = Math.abs(
-      card.offsetLeft - slider.scrollLeft
-    );
-
-    if(distance < closest){
-      closest = distance;
-      current = index;
-    }
-  });
-
-  dots.forEach((dot,index)=>{
-    dot.classList.toggle("active",index===current);
-  });
-}
-
-slider.addEventListener("scroll",()=>{
-  clearTimeout(scrollTimer);
-  scrollTimer = setTimeout(updateDots,40);
-});
-
-window.addEventListener("resize",updateDots);
-
-updateDots();
 </script>
 
 </body>
