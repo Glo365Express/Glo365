@@ -1,0 +1,241 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="theme-color" content="#07111f">
+<title>Malaysia Result Admin | GLO 365</title>
+<style>
+:root{--bg:#07111f;--panel:#101d2d;--panel2:#14243a;--line:#263a52;--text:#eef5ff;--muted:#91a4bb;--blue:#2389ef;--cyan:#36c6dc;--green:#22c58b;--red:#ff6577;--gold:#ffc857}
+*{box-sizing:border-box}body{margin:0;background:linear-gradient(160deg,#07111f,#0b1728 55%,#07111f);color:var(--text);font-family:Arial,Helvetica,sans-serif;min-height:100vh}
+header{position:sticky;top:0;z-index:5;background:#091626ed;border-bottom:1px solid var(--line);backdrop-filter:blur(12px);padding:13px 16px;display:flex;align-items:center;justify-content:space-between;gap:12px}
+.brand{font-weight:900;letter-spacing:.5px;font-size:18px}.brand span{color:#48a9ff}.sub{font-size:11px;color:var(--muted);margin-top:3px}
+.header-actions{display:flex;gap:8px}.btn{border:1px solid var(--line);background:#17283d;color:var(--text);border-radius:9px;padding:10px 12px;font-weight:700;font-size:12px;cursor:pointer;text-decoration:none}.btn.primary{background:linear-gradient(110deg,#1675df,#20a9d7);border:0}.btn.danger{color:#ff9aa6}
+main{width:min(100%,900px);margin:auto;padding:18px 13px 50px}.intro{padding:17px;border:1px solid var(--line);border-radius:16px;background:linear-gradient(135deg,#132944,#102033);margin-bottom:15px}.intro h1{font-size:21px;margin:0 0 6px}.intro p{font-size:12px;color:var(--muted);line-height:1.55;margin:0}
+.notice{display:none;padding:12px 13px;border-radius:10px;margin:12px 0;font-size:12px;line-height:1.5}.notice.show{display:block}.notice.error{background:#401e2b;border:1px solid #873c50;color:#ffdce2}.notice.success{background:#10382f;border:1px solid #20775f;color:#c9ffed}.notice.info{background:#102c48;border:1px solid #245a85;color:#d7edff}
+.panel{background:var(--panel);border:1px solid var(--line);border-radius:15px;padding:15px;margin:14px 0}.panel h2{font-size:16px;margin:0 0 13px}.meta-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px}.field label{display:block;color:var(--muted);font-size:11px;font-weight:700;margin:0 0 6px}.field input,.field textarea{width:100%;background:#091625;border:1px solid #2a405a;border-radius:9px;color:var(--text);padding:12px;font-size:14px;outline:none}.field input:focus,.field textarea:focus{border-color:var(--blue);box-shadow:0 0 0 2px #2389ef22}.field input::placeholder,.field textarea::placeholder{color:#61758c}
+.games{display:grid;grid-template-columns:1fr;gap:13px}.game{background:var(--panel);border:1px solid var(--line);border-radius:15px;overflow:hidden}.game-head{padding:12px 14px;background:linear-gradient(100deg,#152d48,#112238);display:flex;align-items:center;justify-content:space-between}.game-head strong{font-size:15px;letter-spacing:.6px}.game-head span{font-size:10px;color:var(--muted);background:#0a1929;padding:5px 8px;border-radius:20px}.game-body{padding:13px}.prize-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px}.prize{background:#0b1929;border:1px solid #22374e;border-radius:11px;padding:10px}.prize h3{font-size:11px;margin:0 0 8px;color:#a9c8e9;text-transform:uppercase;letter-spacing:.5px}.prize.first h3{color:var(--gold)}.prize input{width:100%;background:#071321;border:1px solid #2a405a;color:#fff;border-radius:7px;padding:10px;font-size:14px;letter-spacing:1px;outline:none}.prize input:focus{border-color:var(--cyan)}.prize small{display:block;color:#71869d;font-size:10px;margin-top:6px;line-height:1.4}
+.actions{display:flex;gap:9px;flex-wrap:wrap;margin-top:15px}.actions .btn{flex:1;min-width:125px;padding:13px}.section-title{display:flex;align-items:center;justify-content:space-between;gap:10px;margin:22px 2px 10px}.section-title h2{font-size:17px;margin:0}.section-title small{color:var(--muted);font-size:10px}
+.result-list{display:grid;gap:10px}.result-card{background:var(--panel);border:1px solid var(--line);border-radius:12px;padding:13px}.result-top{display:flex;justify-content:space-between;gap:8px;margin-bottom:9px}.result-top b{font-size:13px}.result-top small{color:var(--muted);font-size:10px}.result-numbers{display:grid;grid-template-columns:repeat(3,1fr);gap:7px}.result-numbers div{background:#0a1827;border-radius:8px;padding:8px}.result-numbers strong{display:block;color:#70c8ff;font-size:10px;margin-bottom:5px}.result-numbers span{font-size:12px;overflow-wrap:anywhere}.empty{color:var(--muted);text-align:center;padding:20px;font-size:12px;border:1px dashed var(--line);border-radius:10px}
+footer{text-align:center;color:#647991;font-size:10px;padding:20px}
+@media(min-width:680px){.games{grid-template-columns:1fr 1fr}.game:last-child{grid-column:1/-1}.game:last-child .prize-grid{grid-template-columns:repeat(3,1fr)}}
+@media(max-width:390px){.meta-grid,.prize-grid{grid-template-columns:1fr}.header-actions .btn{padding:9px 8px}.brand{font-size:16px}}
+</style>
+</head>
+<body>
+<header>
+  <div><div class="brand">GLO <span>365</span></div><div class="sub">MALAYSIA RESULT CONTROL</div></div>
+  <div class="header-actions"><a class="btn" href="../admin.html">Dashboard</a><button class="btn danger" id="logoutBtn">Logout</button></div>
+</header>
+<main>
+  <section class="intro">
+    <h1>🇲🇾 Malaysia Toto Result Publisher</h1>
+    <p>Publish a complete draw sheet for 2D, 3D and 4D. Enter the draw number and prize numbers below. Separate multiple Special or Consolation numbers with commas.</p>
+  </section>
+  <div id="notice" class="notice"></div>
+  <section class="panel">
+    <h2>Draw Information</h2>
+    <div class="meta-grid">
+      <div class="field"><label for="drawNumber">DRAW NUMBER</label><input id="drawNumber" maxlength="40" placeholder="Example: 2026-110"></div>
+      <div class="field"><label for="drawDate">DRAW DATE</label><input id="drawDate" type="date"></div>
+    </div>
+  </section>
+  <div class="games">
+    <section class="game" data-game="2D">
+      <div class="game-head"><strong>2D RESULT</strong><span>2 DIGITS</span></div>
+      <div class="game-body"><div class="prize-grid">
+        <div class="prize first"><h3>1st Prize</h3><input data-prize="first" inputmode="numeric" maxlength="2" placeholder="00"></div>
+        <div class="prize"><h3>2nd Prize</h3><input data-prize="second" inputmode="numeric" maxlength="2" placeholder="00"></div>
+        <div class="prize"><h3>3rd Prize</h3><input data-prize="third" inputmode="numeric" maxlength="2" placeholder="00"></div>
+        <div class="prize"><h3>Special</h3><input data-prize="special" placeholder="12, 34, 56"><small>Comma-separated numbers</small></div>
+        <div class="prize"><h3>Consolation</h3><input data-prize="consolation" placeholder="11, 22, 33"><small>Comma-separated numbers</small></div>
+      </div></div>
+    </section>
+    <section class="game" data-game="3D">
+      <div class="game-head"><strong>3D RESULT</strong><span>3 DIGITS</span></div>
+      <div class="game-body"><div class="prize-grid">
+        <div class="prize first"><h3>1st Prize</h3><input data-prize="first" inputmode="numeric" maxlength="3" placeholder="000"></div>
+        <div class="prize"><h3>2nd Prize</h3><input data-prize="second" inputmode="numeric" maxlength="3" placeholder="000"></div>
+        <div class="prize"><h3>3rd Prize</h3><input data-prize="third" inputmode="numeric" maxlength="3" placeholder="000"></div>
+        <div class="prize"><h3>Special</h3><input data-prize="special" placeholder="123, 456"><small>Comma-separated numbers</small></div>
+        <div class="prize"><h3>Consolation</h3><input data-prize="consolation" placeholder="111, 222"><small>Comma-separated numbers</small></div>
+      </div></div>
+    </section>
+    <section class="game" data-game="4D">
+      <div class="game-head"><strong>4D RESULT</strong><span>4 DIGITS</span></div>
+      <div class="game-body"><div class="prize-grid">
+        <div class="prize first"><h3>1st Prize</h3><input data-prize="first" inputmode="numeric" maxlength="4" placeholder="0000"></div>
+        <div class="prize"><h3>2nd Prize</h3><input data-prize="second" inputmode="numeric" maxlength="4" placeholder="0000"></div>
+        <div class="prize"><h3>3rd Prize</h3><input data-prize="third" inputmode="numeric" maxlength="4" placeholder="0000"></div>
+        <div class="prize"><h3>Special</h3><input data-prize="special" placeholder="1234, 5678"><small>Comma-separated numbers</small></div>
+        <div class="prize"><h3>Consolation</h3><input data-prize="consolation" placeholder="1111, 2222"><small>Comma-separated numbers</small></div>
+      </div></div>
+    </section>
+  </div>
+  <div class="actions">
+    <button class="btn" id="clearBtn" type="button">Clear Form</button>
+    <button class="btn primary" id="publishBtn" type="button">Publish Full Result Sheet</button>
+  </div>
+  <div class="section-title"><h2>Published Malaysia Results</h2><small id="resultCount">Loading…</small></div>
+  <div id="results" class="result-list"><div class="empty">Loading published results…</div></div>
+  <footer>GLO 365 · Admin Result Management</footer>
+</main>
+<script>
+(() => {
+  'use strict';
+  const API_BASE_URL = 'https://glo365.onrender.com/api';
+  const TOKEN_KEY = 'glo365_token';
+  const token = sessionStorage.getItem(TOKEN_KEY);
+  const notice = document.getElementById('notice');
+  const publishBtn = document.getElementById('publishBtn');
+  const resultsBox = document.getElementById('results');
+
+  function showNotice(message, type='info') {
+    notice.textContent = message;
+    notice.className = 'notice show ' + type;
+    notice.scrollIntoView({behavior:'smooth',block:'nearest'});
+  }
+  function authHeaders(json=true) {
+    const h = {};
+    if (token) h.Authorization = 'Bearer ' + token;
+    if (json) h['Content-Type'] = 'application/json';
+    return h;
+  }
+  async function api(path, options={}) {
+    const response = await fetch(API_BASE_URL + path, {
+      ...options, headers:{...authHeaders(), ...(options.headers||{})}, credentials:'include'
+    });
+    const data = await response.json().catch(()=>({}));
+    if (!response.ok) {
+      const error = new Error(data.message || data.error || `Request failed (${response.status})`);
+      error.status = response.status;
+      throw error;
+    }
+    return data;
+  }
+  async function verifyAdmin() {
+    if (!token) { location.href='../login.html'; return; }
+    try {
+      const me = await api('/auth/me', {method:'GET',headers:{}});
+      const user = me.user || me.data?.user || me;
+      const role = String(user.role || user.account_type || '').toLowerCase();
+      if (!['admin','superadmin','owner'].includes(role) && user.is_admin !== true) {
+        showNotice('Access denied. Admin account required.', 'error');
+        setTimeout(()=>location.href='../index.html',1600);
+      }
+    } catch(e) {
+      sessionStorage.removeItem(TOKEN_KEY);
+      location.href='../login.html';
+    }
+  }
+  function getGameData(section) {
+    const game = section.dataset.game;
+    const digits = game === '2D' ? 2 : game === '3D' ? 3 : 4;
+    const read = key => section.querySelector(`[data-prize="${key}"]`).value.trim();
+    const split = key => read(key).split(',').map(x=>x.trim()).filter(Boolean);
+    const single = {};
+    for (const key of ['first','second','third']) {
+      const value = read(key);
+      if (value && (!new RegExp(`^\\\\d{${digits}}$`).test(value))) {
+        throw new Error(`${game} ${key} prize must contain exactly ${digits} digits.`);
+      }
+      single[key] = value || null;
+    }
+    const special = split('special'), consolation = split('consolation');
+    for (const value of [...special,...consolation]) {
+      if (!new RegExp(`^\\\\d{${digits}}$`).test(value)) {
+        throw new Error(`${game} Special/Consolation numbers must each contain exactly ${digits} digits.`);
+      }
+    }
+    return {game, prizes:{...single,special,consolation}};
+  }
+  function collectPayload() {
+    const draw_number = document.getElementById('drawNumber').value.trim();
+    const draw_date = document.getElementById('drawDate').value || null;
+    if (!draw_number) throw new Error('Please enter the draw number.');
+    const results = [...document.querySelectorAll('.game')].map(getGameData);
+    const hasAny = results.some(r => Object.values(r.prizes).some(v => Array.isArray(v) ? v.length : Boolean(v)));
+    if (!hasAny) throw new Error('Enter at least one prize number before publishing.');
+    return {draw_number,draw_date,results};
+  }
+  function escapeHtml(value) {
+    return String(value ?? '').replace(/[&<>"']/g, c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+  }
+  function prizeSummary(prizes) {
+    if (!prizes) return '<span>Prize details unavailable</span>';
+    const labels = [['first','1st'],['second','2nd'],['third','3rd'],['special','Special'],['consolation','Consolation']];
+    return labels.map(([key,label])=>{
+      let value = prizes[key];
+      if (Array.isArray(value)) value=value.join(', ');
+      if (!value) return '';
+      return `<div><strong>${label}</strong><span>${escapeHtml(value)}</span></div>`;
+    }).join('');
+  }
+  function renderResults(data) {
+    const rows = Array.isArray(data) ? data : (data.results || data.data || []);
+    document.getElementById('resultCount').textContent = `${rows.length} record(s)`;
+    if (!rows.length) { resultsBox.innerHTML='<div class="empty">No Malaysia results have been published yet.</div>'; return; }
+    const grouped = new Map();
+    rows.forEach(row=>{
+      const key = row.draw_number || row.drawNumber || 'Unknown Draw';
+      if (!grouped.has(key)) grouped.set(key,{date:row.draw_date || row.drawDate || row.published_at || row.publishedAt, games:[]});
+      grouped.get(key).games.push(row);
+    });
+    resultsBox.innerHTML = [...grouped.entries()].map(([draw,group])=>{
+      const cards = group.games.map(row=>{
+        const game = row.game || 'GAME';
+        let prizes = row.prizes;
+        if (typeof prizes === 'string') { try { prizes=JSON.parse(prizes); } catch(_) { prizes=null; } }
+        if (!prizes && row.winning_number) prizes={first:row.winning_number};
+        return `<div class="result-card"><div class="result-top"><b>${escapeHtml(game)} RESULT</b><small>${escapeHtml(row.published_at || row.publishedAt || '')}</small></div><div class="result-numbers">${prizeSummary(prizes)}</div></div>`;
+      }).join('');
+      return `<section class="panel"><div class="result-top"><b>DRAW ${escapeHtml(draw)}</b><small>${escapeHtml(group.date || '')}</small></div>${cards}</section>`;
+    }).join('');
+  }
+  async function loadResults() {
+    try {
+      const data = await api('/admin/malaysia/results?limit=100',{method:'GET',headers:{}});
+      renderResults(data);
+    } catch(e) {
+      resultsBox.innerHTML='<div class="empty">Could not load results: '+escapeHtml(e.message)+'</div>';
+      document.getElementById('resultCount').textContent='Unavailable';
+    }
+  }
+  publishBtn.addEventListener('click', async()=>{
+    let payload;
+    try { payload=collectPayload(); }
+    catch(e) { showNotice(e.message,'error'); return; }
+    publishBtn.disabled=true; publishBtn.textContent='Publishing…';
+    try {
+      const response=await api('/admin/malaysia/results',{
+        method:'POST',body:JSON.stringify(payload)
+      });
+      showNotice(response.message || 'Result sheet published successfully.','success');
+      document.querySelectorAll('.game input').forEach(input=>input.value='');
+      await loadResults();
+    } catch(e) {
+      if (e.status===400 || e.status===422) {
+        showNotice('Backend এখনো পূর্ণ Prize Sheet (prizes JSON) গ্রহণ করার জন্য আপডেট করা হয়নি। বর্তমান API শুধু একটি winning_number রাখে। Backend module আপডেট না করা পর্যন্ত ফলাফল publish হবে না। Server response: '+e.message,'error');
+      } else {
+        showNotice('Publish failed: '+e.message,'error');
+      }
+    } finally {
+      publishBtn.disabled=false; publishBtn.textContent='Publish Full Result Sheet';
+    }
+  });
+  document.getElementById('clearBtn').addEventListener('click',()=>{
+    document.querySelectorAll('.game input').forEach(input=>input.value='');
+    document.getElementById('drawNumber').value='';
+    document.getElementById('drawDate').value='';
+    showNotice('Form cleared.','info');
+  });
+  document.getElementById('logoutBtn').addEventListener('click',async()=>{
+    try { await api('/auth/logout',{method:'POST',body:JSON.stringify({})}); } catch(_){}
+    sessionStorage.removeItem(TOKEN_KEY);
+    location.href='../login.html';
+  });
+  (async()=>{await verifyAdmin(); await loadResults();})();
+})();
+</script>
+</body>
+</html>
