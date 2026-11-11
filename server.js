@@ -2689,8 +2689,8 @@
     registerWalletRoutes(app, routeDependencies);
     registerDailyMillionaireRoutes(app, routeDependencies);
     registerThailandRoutes(app, routeDependencies);
-    registerThailand3UpRoutes(routeDependencies);
-    registerThailand6UpRoutes(routeDependencies);
+    registerThailand3UpRoutes({ app, ...routeDependencies });
+    registerThailand6UpRoutes({ app, ...routeDependencies });
     const initializeSingaporeRoutes = registerSingaporeRoutes(app, routeDependencies);
     const initializeMalaysiaRoutes = registerMalaysiaRoutes(app, routeDependencies);
     registerResultsRoutes(app, routeDependencies);
