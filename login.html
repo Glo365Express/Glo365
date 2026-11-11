@@ -1,5 +1,6 @@
+
 <!DOCTYPE html>
-<html lang="bn">
+<html lang="en">
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
@@ -414,20 +415,8 @@ input::placeholder{color:#8b98a9}
 const API_BASE_URL="https://glo365.onrender.com/api";
 const TOKEN_KEY="glo365_token";
 
-/*
-  LOGIN TIMEOUT:
-  সর্বোচ্চ ১২০ সেকেন্ড অপেক্ষা করবে।
-*/
 const LOGIN_TIMEOUT=120000;
-
-/*
-  REGISTRATION REQUEST TIMEOUT:
-*/
 const REGISTER_TIMEOUT=45000;
-
-/*
-  USERNAME CHECK TIMEOUT:
-*/
 const USERNAME_TIMEOUT=20000;
 
 const $=id=>document.getElementById(id);
@@ -440,10 +429,30 @@ let loginSubmitting=false;
 let registerSubmitting=false;
 
 
-/* MESSAGE */
+/* ENGLISH ONLY MESSAGE HANDLING */
+
+function isEnglishText(value){
+ return typeof value==="string" &&
+        !/[\u0980-\u09FF]/.test(value);
+}
+
+function englishError(error,fallback){
+ const message=error && error.message;
+
+ if(isEnglishText(message) && message.trim()){
+  return message;
+ }
+
+ return fallback;
+}
 
 function showMessage(message,type){
  const box=$("message");
+
+ if(!isEnglishText(message)){
+  message="Something went wrong. Please try again.";
+ }
+
  box.textContent=message;
  box.className="message "+type;
 }
@@ -508,15 +517,17 @@ async function requestWithTimeout(url,options={},timeout=LOGIN_TIMEOUT){
   try{
    result=await response.json();
   }catch(_){
-   throw new Error("সার্ভার থেকে সঠিক উত্তর পাওয়া যায়নি। আবার চেষ্টা করুন।");
+   throw new Error("Invalid server response. Please try again.");
   }
 
   if(!response.ok||result.success===false){
 
+   const serverMessage=result.message||result.error;
+
    throw new Error(
-    result.message||
-    result.error||
-    "অনুরোধটি সম্পন্ন হয়নি। আবার চেষ্টা করুন।"
+    isEnglishText(serverMessage)
+     ?serverMessage
+     :"The request could not be completed. Please try again."
    );
   }
 
@@ -525,32 +536,27 @@ async function requestWithTimeout(url,options={},timeout=LOGIN_TIMEOUT){
  }catch(error){
 
   if(timedOut){
-
    throw new Error(
-    "অনেকক্ষণ অপেক্ষা করার পরও সংযোগ সম্পন্ন হয়নি। অনুগ্রহ করে আবার চেষ্টা করুন।"
+    "Connection timed out. Please try again."
    );
   }
 
   if(error.name==="AbortError"){
-
    throw new Error(
-    "সংযোগটি সম্পন্ন হয়নি। অনুগ্রহ করে আবার চেষ্টা করুন।"
+    "The connection was interrupted. Please try again."
    );
   }
 
   if(error instanceof TypeError){
-
    throw new Error(
-    "সার্ভারের সঙ্গে সংযোগ করা যাচ্ছে না। আপনার ইন্টারনেট সংযোগ পরীক্ষা করে আবার চেষ্টা করুন।"
+    "Unable to connect to the server. Please check your internet connection."
    );
   }
 
   throw error;
 
  }finally{
-
   clearTimeout(timer);
-
  }
 }
 
@@ -604,9 +610,8 @@ async function getUsernameAvailability(username){
 function saveSession(token,user){
 
  if(!token||!user||!user.id){
-
   throw new Error(
-   "সার্ভার থেকে সঠিক Account Information পাওয়া যায়নি।"
+   "Invalid account information received from the server."
   );
  }
 
@@ -622,7 +627,7 @@ function saveSession(token,user){
  }catch(_){
 
   throw new Error(
-   "আপনার Browser Login Session সংরক্ষণ করতে পারেনি।"
+   "Your browser could not save the login session."
   );
  }
 }
@@ -656,10 +661,12 @@ function setUsernameStatus(message,type){
 
  const box=$("usernameStatus");
 
- box.textContent=message;
+ if(!isEnglishText(message)){
+  message="Please enter a valid username.";
+ }
 
- box.className=
-  "username-status "+(type||"");
+ box.textContent=message;
+ box.className="username-status "+(type||"");
 }
 
 
@@ -679,7 +686,7 @@ async function checkUsername(username,version){
    usernameCheckReady=true;
 
    setUsernameStatus(
-    "এই Username ব্যবহার করা যাবে না।",
+    "This username cannot be used.",
     "status-taken"
    );
 
@@ -706,10 +713,9 @@ async function checkUsername(username,version){
   usernameCheckReady=false;
 
   setUsernameStatus(
-   "Username Check করা যাচ্ছে না। আবার চেষ্টা করুন।",
+   "Unable to check username. Please try again.",
    "status-warning"
   );
-
  }
 }
 
@@ -728,15 +734,14 @@ $("registerUsername").addEventListener("input",function(){
  usernameCheckReady=false;
 
  if(!username){
-
-  setUsernameStatus("Username লিখুন।","");
+  setUsernameStatus("Please enter a username.","");
   return;
  }
 
  if(!/^[a-z0-9_]{3,30}$/.test(username)){
 
   setUsernameStatus(
-   "৩-৩০ অক্ষর। শুধু English letter, number ও underscore ব্যবহার করুন।",
+   "Use 3-30 characters: English letters, numbers and underscores only.",
    "status-taken"
   );
 
@@ -753,7 +758,6 @@ $("registerUsername").addEventListener("input",function(){
  usernameTimer=setTimeout(()=>{
   checkUsername(username,version);
  },500);
-
 });
 
 
@@ -777,7 +781,7 @@ $("loginForm").addEventListener("submit",async function(event){
  if(!loginValue||!password){
 
   showMessage(
-   "Username/Email ও Password লিখুন।",
+   "Please enter your username/email and password.",
    "error"
   );
 
@@ -804,36 +808,32 @@ $("loginForm").addEventListener("submit",async function(event){
 
   saveSession(result.token,result.user);
 
-  showMessage(
-   "Login successful. Opening your account...",
-   "success"
-  );
+  /*
+   LOGIN SUCCESS:
+   No success message.
+   Redirect immediately.
+  */
 
-  button.textContent="SUCCESS";
+  button.textContent="OPENING ACCOUNT...";
 
-  setTimeout(()=>{
-   redirectByRole(result.user);
-  },600);
+  redirectByRole(result.user);
 
  }catch(error){
 
   showMessage(
-   error.message||
-   "Login করা সম্ভব হয়নি। আবার চেষ্টা করুন।",
+   englishError(
+    error,
+    "Unable to login. Please check your details and try again."
+   ),
    "error"
   );
 
- }finally{
-
   loginSubmitting=false;
-
   button.disabled=false;
   button.textContent="Login";
 
   setLoading(false);
-
  }
-
 });
 
 
@@ -856,7 +856,6 @@ $("registerForm").addEventListener("submit",async function(event){
   .value.trim().toLowerCase();
 
  const password=$("registerPassword").value;
-
  const confirm=$("confirmPassword").value;
 
  const referralCode=$("referralCode")
@@ -866,7 +865,7 @@ $("registerForm").addEventListener("submit",async function(event){
  if(!/^[a-z0-9_]{3,30}$/.test(username)){
 
   showMessage(
-   "Username ৩-৩০ অক্ষরের হতে হবে। শুধু English letter, number ও underscore ব্যবহার করুন।",
+   "Username must be 3-30 characters. Use English letters, numbers and underscores only.",
    "error"
   );
 
@@ -876,7 +875,7 @@ $("registerForm").addEventListener("submit",async function(event){
  if(!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)){
 
   showMessage(
-   "সঠিক Email Address লিখুন।",
+   "Please enter a valid email address.",
    "error"
   );
 
@@ -886,7 +885,7 @@ $("registerForm").addEventListener("submit",async function(event){
  if(password.length<6||password.length>16){
 
   showMessage(
-   "Password কমপক্ষে ৬ এবং সর্বোচ্চ ১৬ অক্ষরের হতে হবে।",
+   "Password must be between 6 and 16 characters.",
    "error"
   );
 
@@ -896,7 +895,7 @@ $("registerForm").addEventListener("submit",async function(event){
  if(password!==confirm){
 
   showMessage(
-   "দুটি Password মিলছে না।",
+   "Passwords do not match.",
    "error"
   );
 
@@ -909,7 +908,7 @@ $("registerForm").addEventListener("submit",async function(event){
  ){
 
   showMessage(
-   "Referral Code সঠিকভাবে লিখুন।",
+   "Please enter a valid referral code.",
    "error"
   );
 
@@ -927,7 +926,6 @@ $("registerForm").addEventListener("submit",async function(event){
  try{
 
   clearTimeout(usernameTimer);
-
   usernameCheckVersion++;
 
   const check=await getUsernameAvailability(username);
@@ -946,7 +944,7 @@ $("registerForm").addEventListener("submit",async function(event){
    );
 
    throw new Error(
-    "এই Username ব্যবহার করা যাবে না। অন্য Username দিন।"
+    "This username is already taken. Please choose another one."
    );
   }
 
@@ -980,19 +978,19 @@ $("registerForm").addEventListener("submit",async function(event){
 
    saveSession(result.token,result.user);
 
-   showMessage(
-    "অ্যাকাউন্ট সফলভাবে তৈরি হয়েছে। আপনার Home Page খুলছে...",
-    "success"
-   );
-
    $("registerForm").reset();
 
    usernameAvailable=null;
    usernameCheckReady=false;
 
-   setTimeout(()=>{
-    redirectByRole(result.user);
-   },700);
+   button.textContent="ACCOUNT CREATED...";
+
+   /*
+   No success message.
+   Redirect directly after registration.
+   */
+
+   redirectByRole(result.user);
 
   }else{
 
@@ -1003,17 +1001,18 @@ $("registerForm").addEventListener("submit",async function(event){
    showTab("login");
 
    showMessage(
-    "অ্যাকাউন্ট তৈরি হয়েছে। এখন Login করুন।",
+    "Account created successfully. Please sign in.",
     "success"
    );
-
   }
 
  }catch(error){
 
   showMessage(
-   error.message||
-   "অ্যাকাউন্ট তৈরি করা যায়নি। আবার চেষ্টা করুন।",
+   englishError(
+    error,
+    "Unable to create your account. Please try again."
+   ),
    "error"
   );
 
@@ -1025,9 +1024,7 @@ $("registerForm").addEventListener("submit",async function(event){
   button.textContent="Create Account";
 
   setLoading(false);
-
  }
-
 });
 
 </script>
