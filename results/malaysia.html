@@ -1,0 +1,821 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<meta name="theme-color" content="#0754b5">
+<title>Malaysia Sports Toto Result | GLO 365</title>
+
+<style>
+* {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+}
+
+body {
+    font-family: Arial, Helvetica, sans-serif;
+    background: #dcecff;
+    color: #101b2d;
+}
+
+.page {
+    width: 100%;
+    max-width: 1200px;
+    margin: auto;
+    min-height: 100vh;
+    padding: 0 9px 15px;
+    background: linear-gradient(180deg, #e8f4ff, #c9e2ff);
+}
+
+/* ================= HEADER ================= */
+
+.hero {
+    position: relative;
+    overflow: hidden;
+    text-align: center;
+    padding: 22px 8px 19px;
+    color: white;
+    background:
+        radial-gradient(circle at 15% 20%, #258dff 0, transparent 35%),
+        linear-gradient(115deg, #00347e, #0879df 55%, #002d72);
+    border-bottom: 6px solid #f6c52d;
+}
+
+.hero::before {
+    content: "🇲🇾";
+    position: absolute;
+    left: 9px;
+    top: 13px;
+    font-size: clamp(30px, 8vw, 75px);
+    transform: rotate(-8deg);
+}
+
+.hero::after {
+    content: "🏙️";
+    position: absolute;
+    right: 8px;
+    top: 15px;
+    font-size: clamp(25px, 7vw, 65px);
+}
+
+.hero h1 {
+    position: relative;
+    z-index: 1;
+    font-size: clamp(21px, 5.5vw, 49px);
+    font-weight: 1000;
+    line-height: 1.05;
+    text-shadow: 0 3px 4px #001c54;
+    padding: 0 35px;
+}
+
+.hero .subtitle {
+    display: inline-block;
+    margin-top: 8px;
+    padding: 5px 22px;
+    background: linear-gradient(90deg, #d90000, #ff2929, #bd0000);
+    border: 2px solid #ffdb43;
+    border-radius: 5px;
+    color: #fff;
+    font-size: clamp(15px, 4vw, 30px);
+    font-weight: 1000;
+    font-style: italic;
+    box-shadow: 0 3px 5px #001c54;
+}
+
+/* ================= DRAW INFO ================= */
+
+.draw-info {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 9px;
+    max-width: 950px;
+    margin: 12px auto 15px;
+}
+
+.info-box {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 7px;
+    min-width: 0;
+    padding: 10px 5px;
+    background: #f8fcff;
+    border: 2px solid #3179c6;
+    border-radius: 12px;
+    font-size: clamp(11px, 2.6vw, 20px);
+    font-weight: 800;
+    box-shadow: 0 3px 6px #16477b20;
+}
+
+.info-icon {
+    font-size: clamp(17px, 3.8vw, 28px);
+}
+
+.info-value {
+    overflow-wrap: anywhere;
+}
+
+/* ================= THREE COLUMNS ================= */
+
+.results-grid {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 8px;
+    align-items: stretch;
+}
+
+.game-card {
+    min-width: 0;
+    padding: 5px;
+    background: #fff;
+    border: 2px solid #a4c9ec;
+    border-radius: 17px;
+    box-shadow: 0 5px 10px #174b8525;
+}
+
+/* GAME HEADINGS */
+
+.game-heading {
+    text-align: center;
+    padding: 12px 2px;
+    border-radius: 12px;
+    color: white;
+    font-size: clamp(15px, 3.5vw, 28px);
+    font-weight: 1000;
+    text-shadow: 0 2px 3px #0007;
+    white-space: nowrap;
+}
+
+.game-2d .game-heading {
+    background: linear-gradient(120deg, #0786ed, #00328c);
+}
+
+.game-3d .game-heading {
+    background: linear-gradient(120deg, #ad00db, #4b007d);
+}
+
+.game-4d .game-heading {
+    background: linear-gradient(120deg, #ff192e, #99000c);
+}
+
+/* ================= PRIZES ================= */
+
+.prize-row {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) auto;
+    align-items: center;
+    margin-top: 7px;
+    min-height: 57px;
+    overflow: hidden;
+    background: #f9fcff;
+    border: 1.5px solid #9abde2;
+    border-radius: 9px;
+}
+
+.prize-name {
+    height: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 7px 2px;
+    color: #fff;
+    text-align: center;
+    font-size: clamp(9px, 1.9vw, 16px);
+    font-weight: 900;
+    white-space: nowrap;
+}
+
+.game-2d .prize-name {
+    background: linear-gradient(110deg, #0758ba, #002d7b);
+}
+
+.game-3d .prize-name {
+    background: linear-gradient(110deg, #7900b9, #4b007d);
+}
+
+.game-4d .prize-name {
+    background: linear-gradient(110deg, #d50017, #a00010);
+}
+
+.prize-number {
+    min-width: 43px;
+    padding: 7px 6px;
+    color: #ad1010;
+    text-align: center;
+    font-size: clamp(17px, 3.5vw, 30px);
+    font-weight: 1000;
+    letter-spacing: -1px;
+    white-space: nowrap;
+}
+
+/* ================= SPECIAL & CONSOLATION ================= */
+
+.number-group {
+    margin-top: 12px;
+    overflow: hidden;
+    background: white;
+    border: 1px solid #a2c4e7;
+    border-radius: 10px;
+}
+
+.group-heading {
+    padding: 8px 2px;
+    color: #fff;
+    text-align: center;
+    font-size: clamp(12px, 2.7vw, 20px);
+    font-weight: 1000;
+    font-style: italic;
+}
+
+.game-2d .group-heading {
+    background: linear-gradient(110deg, #087de1, #00358e);
+}
+
+.game-3d .group-heading {
+    background: linear-gradient(110deg, #a000ce, #4a0079);
+}
+
+.game-4d .group-heading {
+    background: linear-gradient(110deg, #ed1026, #9b000c);
+}
+
+.numbers-grid {
+    display: grid;
+    grid-template-columns: repeat(5, minmax(0, 1fr));
+    gap: 2px;
+    padding: 5px;
+}
+
+.number-cell {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    min-width: 0;
+    min-height: 48px;
+    padding: 5px 1px;
+    border: 1px solid #9eb5d1;
+    border-radius: 6px;
+    background: #f8fbff;
+    color: #111;
+    text-align: center;
+    font-size: clamp(10px, 2vw, 19px);
+    font-weight: 1000;
+    overflow-wrap: anywhere;
+}
+
+/* ================= FOOTER ================= */
+
+.footer {
+    position: relative;
+    overflow: hidden;
+    margin-top: 17px;
+    padding: 17px 8px;
+    text-align: center;
+    color: white;
+    background: linear-gradient(110deg, #00367f, #0879d7, #00367f);
+    border-top: 6px solid #f4c52d;
+    font-size: clamp(15px, 3.2vw, 24px);
+    font-weight: 1000;
+    font-style: italic;
+    text-shadow: 0 2px 3px #001d50;
+}
+
+.footer small {
+    display: block;
+    margin-top: 4px;
+    font-size: .78em;
+}
+
+.status {
+    margin: 15px 0;
+    padding: 25px 10px;
+    border-radius: 12px;
+    background: white;
+    color: #315477;
+    text-align: center;
+    font-size: 14px;
+    font-weight: bold;
+}
+
+.last-updated {
+    padding: 8px 0 0;
+    text-align: center;
+    color: #52708f;
+    font-size: 10px;
+}
+
+/* ================= MOBILE ================= */
+
+@media (max-width: 500px) {
+
+    .page {
+        padding: 0 4px 10px;
+    }
+
+    .hero {
+        padding: 18px 4px 15px;
+    }
+
+    .hero h1 {
+        font-size: clamp(19px, 5.2vw, 25px);
+        padding: 0 29px;
+    }
+
+    .hero .subtitle {
+        font-size: 15px;
+        padding: 4px 13px;
+    }
+
+    .draw-info {
+        gap: 5px;
+        margin: 9px auto 11px;
+    }
+
+    .info-box {
+        padding: 9px 2px;
+        gap: 3px;
+        font-size: 10px;
+        border-radius: 9px;
+    }
+
+    .info-icon {
+        font-size: 16px;
+    }
+
+    .results-grid {
+        gap: 3px;
+    }
+
+    .game-card {
+        padding: 3px;
+        border-radius: 11px;
+    }
+
+    .game-heading {
+        padding: 10px 1px;
+        font-size: clamp(13px, 3.8vw, 17px);
+        border-radius: 8px;
+    }
+
+    .prize-row {
+        min-height: 43px;
+        margin-top: 5px;
+        border-radius: 7px;
+    }
+
+    .prize-name {
+        font-size: clamp(8px, 2vw, 10px);
+        padding: 5px 1px;
+    }
+
+    .prize-number {
+        min-width: 30px;
+        padding: 5px 2px;
+        font-size: clamp(15px, 4vw, 19px);
+    }
+
+    .number-group {
+        margin-top: 8px;
+        border-radius: 7px;
+    }
+
+    .group-heading {
+        padding: 7px 1px;
+        font-size: clamp(11px, 2.8vw, 13px);
+    }
+
+    .numbers-grid {
+        gap: 2px;
+        padding: 3px;
+    }
+
+    .number-cell {
+        min-height: 36px;
+        padding: 4px 0;
+        font-size: clamp(9px, 2.6vw, 12px);
+        border-radius: 4px;
+    }
+
+    .footer {
+        margin-top: 13px;
+        padding: 14px 5px;
+    }
+}
+
+</style>
+</head>
+
+<body>
+
+<main class="page">
+
+    <!-- HEADER -->
+    <header class="hero">
+        <h1>MALAYSIA SPORTS TOTO</h1>
+        <div class="subtitle">LOTTERY RESULT</div>
+    </header>
+
+    <!-- DRAW DATE AND NUMBER -->
+    <section class="draw-info">
+
+        <div class="info-box">
+            <span class="info-icon">📅</span>
+            <span>Date:</span>
+            <span class="info-value" id="drawDate">—</span>
+        </div>
+
+        <div class="info-box">
+            <span class="info-icon">🎟️</span>
+            <span>Draw No:</span>
+            <span class="info-value" id="drawNumber">—</span>
+        </div>
+
+    </section>
+
+    <!-- RESULTS -->
+    <section id="resultsArea">
+
+        <div class="status">
+            Loading Malaysia Results...
+        </div>
+
+    </section>
+
+    <div class="last-updated" id="lastUpdated"></div>
+
+    <!-- FOOTER -->
+    <footer class="footer">
+        Sports Toto Malaysia
+        <small>Official Lottery Result • GLO 365</small>
+    </footer>
+
+</main>
+
+<script>
+"use strict";
+
+/* =========================================
+   GLO 365 MALAYSIA RESULTS
+========================================= */
+
+const API_BASE_URL = "https://glo365.onrender.com/api";
+
+const GAME_CONFIG = [
+    {
+        game: "2D",
+        className: "game-2d",
+        digits: 2
+    },
+    {
+        game: "3D",
+        className: "game-3d",
+        digits: 3
+    },
+    {
+        game: "4D",
+        className: "game-4d",
+        digits: 4
+    }
+];
+
+/* =========================================
+   SAFE TEXT
+========================================= */
+
+function safeValue(value) {
+    if (value === null || value === undefined || value === "") {
+        return "—";
+    }
+
+    return String(value);
+}
+
+/* =========================================
+   DATE FORMAT
+========================================= */
+
+function formatDate(value) {
+
+    if (!value) return "—";
+
+    const date = new Date(
+        String(value).length === 10
+            ? value + "T00:00:00"
+            : value
+    );
+
+    if (isNaN(date.getTime())) {
+        return String(value);
+    }
+
+    return date.toLocaleDateString("en-GB", {
+        day: "2-digit",
+        month: "2-digit",
+        year: "numeric"
+    });
+}
+
+/* =========================================
+   RESULT DATA COMPATIBILITY
+========================================= */
+
+function getPrizeData(result) {
+
+    if (!result) {
+        return {};
+    }
+
+    return (
+        result.prizes ||
+        result.prize_data ||
+        result.result_data ||
+        {}
+    );
+}
+
+function getPrizeArray(prizes, key, fallback) {
+
+    const value = prizes[key];
+
+    if (Array.isArray(value)) {
+        return value.map(String);
+    }
+
+    if (typeof value === "string" && value.trim()) {
+        return value.split(",").map(x => x.trim());
+    }
+
+    if (
+        typeof fallback === "string" ||
+        typeof fallback === "number"
+    ) {
+        return [String(fallback)];
+    }
+
+    return [];
+}
+
+/* =========================================
+   CREATE PRIZE ROW
+========================================= */
+
+function createPrizeRow(label, number) {
+
+    const row = document.createElement("div");
+    row.className = "prize-row";
+
+    const name = document.createElement("div");
+    name.className = "prize-name";
+    name.textContent = label;
+
+    const value = document.createElement("div");
+    value.className = "prize-number";
+    value.textContent = safeValue(number);
+
+    row.appendChild(name);
+    row.appendChild(value);
+
+    return row;
+}
+
+/* =========================================
+   CREATE SPECIAL / CONSOLATION
+========================================= */
+
+function createNumberGroup(title, numbers) {
+
+    const group = document.createElement("div");
+    group.className = "number-group";
+
+    const heading = document.createElement("div");
+    heading.className = "group-heading";
+    heading.textContent = title;
+
+    const grid = document.createElement("div");
+    grid.className = "numbers-grid";
+
+    for (let i = 0; i < 10; i++) {
+
+        const cell = document.createElement("div");
+        cell.className = "number-cell";
+
+        cell.textContent = safeValue(numbers[i]);
+
+        grid.appendChild(cell);
+    }
+
+    group.appendChild(heading);
+    group.appendChild(grid);
+
+    return group;
+}
+
+/* =========================================
+   CREATE GAME CARD
+========================================= */
+
+function createGameCard(config, result) {
+
+    const prizes = getPrizeData(result);
+
+    const first = getPrizeArray(
+        prizes,
+        "first",
+        result && result.winning_number
+    );
+
+    const second = getPrizeArray(prizes, "second");
+    const third = getPrizeArray(prizes, "third");
+
+    const special = getPrizeArray(prizes, "special");
+    const consolation = getPrizeArray(prizes, "consolation");
+
+    const card = document.createElement("article");
+
+    card.className = "game-card " + config.className;
+
+    const heading = document.createElement("div");
+    heading.className = "game-heading";
+    heading.textContent = config.game + " Result";
+
+    card.appendChild(heading);
+
+    card.appendChild(
+        createPrizeRow("👑 1st Prize", first[0])
+    );
+
+    card.appendChild(
+        createPrizeRow("♛ 2nd Prize", second[0])
+    );
+
+    card.appendChild(
+        createPrizeRow("👑 3rd Prize", third[0])
+    );
+
+    card.appendChild(
+        createNumberGroup("Special", special)
+    );
+
+    card.appendChild(
+        createNumberGroup("Consolation", consolation)
+    );
+
+    return card;
+}
+
+/* =========================================
+   LOAD MALAYSIA RESULTS
+========================================= */
+
+async function loadMalaysiaResults() {
+
+    const area = document.getElementById("resultsArea");
+
+    area.innerHTML = '<div class="status">Loading Malaysia Results...</div>';
+
+    try {
+
+        const response = await fetch(
+            API_BASE_URL + "/malaysia/results?limit=100",
+            {
+                method: "GET",
+                credentials: "include",
+                headers: {
+                    "Accept": "application/json"
+                },
+                cache: "no-store"
+            }
+        );
+
+        let data = {};
+
+        try {
+            data = await response.json();
+        } catch (e) {
+            throw new Error("Invalid server response.");
+        }
+
+        if (!response.ok) {
+            throw new Error(
+                data.message ||
+                data.error ||
+                "Unable to load results."
+            );
+        }
+
+        const results = Array.isArray(data.results)
+            ? data.results
+            : [];
+
+        if (!results.length) {
+
+            area.innerHTML = `
+                <div class="status">
+                    No Malaysia Results Published Yet.
+                </div>
+            `;
+
+            document.getElementById("drawDate").textContent = "—";
+            document.getElementById("drawNumber").textContent = "—";
+
+            return;
+        }
+
+        /*
+         * API should return latest result first.
+         * Keep the latest result separately for 2D, 3D and 4D.
+         */
+
+        const latest = {};
+
+        results.forEach(item => {
+
+            const game = String(
+                item.game || ""
+            ).toUpperCase();
+
+            if (
+                ["2D", "3D", "4D"].includes(game) &&
+                !latest[game]
+            ) {
+                latest[game] = item;
+            }
+
+        });
+
+        const latestResult =
+            latest["2D"] ||
+            latest["3D"] ||
+            latest["4D"];
+
+        if (latestResult) {
+
+            document.getElementById("drawDate").textContent =
+                formatDate(
+                    latestResult.draw_date ||
+                    latestResult.draw_at ||
+                    latestResult.published_at
+                );
+
+            document.getElementById("drawNumber").textContent =
+                safeValue(latestResult.draw_number);
+        }
+
+        /*
+         * Render three columns.
+         */
+
+        const grid = document.createElement("div");
+        grid.className = "results-grid";
+
+        GAME_CONFIG.forEach(config => {
+
+            const result = latest[config.game] || null;
+
+            grid.appendChild(
+                createGameCard(config, result)
+            );
+
+        });
+
+        area.replaceChildren(grid);
+
+        document.getElementById("lastUpdated").textContent =
+            "Last Updated: " +
+            (
+                latestResult && latestResult.published_at
+                    ? new Date(
+                        latestResult.published_at
+                    ).toLocaleString()
+                    : "—"
+            );
+
+    } catch (error) {
+
+        console.error("Malaysia Results Error:", error);
+
+        area.innerHTML = `
+            <div class="status">
+                Unable to load Malaysia Results.<br><br>
+                Please try again later.
+            </div>
+        `;
+    }
+}
+
+/* =========================================
+   AUTO REFRESH
+========================================= */
+
+loadMalaysiaResults();
+
+setInterval(
+    loadMalaysiaResults,
+    60000
+);
+
+</script>
+
+</body>
+  </html>
