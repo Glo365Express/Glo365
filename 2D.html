@@ -33,21 +33,62 @@ body{
  color:#5546c5;font-size:13px;font-weight:bold
 }
 
+/* BETTING STATUS - 3UP STYLE */
 .lock-notice{
- display:none;margin:12px 11px 4px;padding:14px 12px;
- background:linear-gradient(135deg,#fff0f2,#ffe3e8);
- border:1px solid #ffb8c5;border-radius:12px;
- text-align:center;color:#b42332;
- box-shadow:0 3px 12px #e74b6520
+ display:none;
+ margin:26px 11px 22px;
+ padding:30px 15px;
+ background:linear-gradient(135deg,#e8fff5,#e8fbff);
+ border:2px solid #b8e6d2;
+ border-radius:24px;
+ text-align:center;
+ color:#207454;
+ box-shadow:0 5px 18px #27ae8020;
 }
 .lock-notice.show{display:block}
-.lock-notice strong{display:block;font-size:14px;font-weight:900;margin-bottom:5px}
-.lock-notice span{display:block;font-size:12px;line-height:1.6;overflow-wrap:anywhere}
-.lock-countdown{margin-top:7px;font-weight:bold}
+.lock-notice strong{
+ display:block;
+ font-size:25px;
+ font-weight:900;
+ margin-bottom:22px;
+ color:#197653;
+}
+.lock-notice span{
+ display:block;
+ font-size:18px;
+ line-height:1.8;
+ font-weight:bold;
+ overflow-wrap:anywhere;
+}
+.lock-countdown{
+ margin-top:8px;
+ font-size:23px!important;
+ font-weight:900!important;
+ letter-spacing:1px;
+}
+.lock-notice.closed{
+ background:linear-gradient(135deg,#fff0f2,#ffe5e9);
+ border-color:#f3bdc7;
+ color:#b42332;
+}
+.lock-notice.closed strong{
+ color:#b42332;
+}
+.lock-notice.closed .lock-countdown{
+ color:#b42332;
+}
 
 .bet-area{padding:8px 9px 0}
-.bet-area.locked input{background:#f0f0f0;color:#999;border-color:#ddd;cursor:not-allowed}
-.bet-area.locked .remove-btn{opacity:.35;cursor:not-allowed}
+.bet-area.locked input{
+ background:#f0f0f0;
+ color:#999;
+ border-color:#ddd;
+ cursor:not-allowed
+}
+.bet-area.locked .remove-btn{
+ opacity:.35;
+ cursor:not-allowed
+}
 
 .column-heading,.bet-row{
  display:grid;
@@ -55,69 +96,118 @@ body{
  gap:5px
 }
 .column-heading{
- padding:9px 0;font-size:10px;font-weight:bold;
- color:#6255c7;text-align:center;
+ padding:9px 0;
+ font-size:10px;
+ font-weight:bold;
+ color:#6255c7;
+ text-align:center;
  background:linear-gradient(90deg,#f0f5ff,#f5efff,#eafaff);
- border-radius:8px;margin-bottom:8px
+ border-radius:8px;
+ margin-bottom:8px
 }
-.bet-row{align-items:center;margin-bottom:8px}
-.serial{text-align:center;font-size:14px;color:#6255c7;font-weight:bold}
+.bet-row{
+ align-items:center;
+ margin-bottom:8px
+}
+.serial{
+ text-align:center;
+ font-size:14px;
+ color:#6255c7;
+ font-weight:bold
+}
 
 .bet-row input{
- width:100%;min-width:0;height:49px;
+ width:100%;
+ min-width:0;
+ height:49px;
  border:1px solid #d2d8f5;
  background:linear-gradient(145deg,#f4f8ff,#f8f4ff);
- border-radius:10px;text-align:center;
- font-size:14px;color:#283b75;outline:none;padding:4px;
+ border-radius:10px;
+ text-align:center;
+ font-size:14px;
+ color:#283b75;
+ outline:none;
+ padding:4px;
  box-shadow:inset 0 1px 3px #536dfe08;
  transition:.2s
 }
 .bet-row input:focus{
- border-color:#6958e8;background:#fff;
+ border-color:#6958e8;
+ background:#fff;
  box-shadow:0 0 0 3px #7865e825
 }
 .bet-row input::placeholder{color:#9a9fbd}
 .bet-row input[data-field="number"]{
  background:linear-gradient(145deg,#eaf4ff,#f0edff);
- border-color:#c9d2ff;font-weight:bold
+ border-color:#c9d2ff;
+ font-weight:bold
 }
 .bet-row input[data-field="straight"]{
  background:linear-gradient(145deg,#e9f9f1,#f0fff8);
- border-color:#bcebd3;color:#168052
+ border-color:#bcebd3;
+ color:#168052
 }
 .bet-row input[data-field="rumble"]{
  background:linear-gradient(145deg,#fff2e8,#fff8ed);
- border-color:#ffd6b4;color:#c36a20
+ border-color:#ffd6b4;
+ color:#c36a20
 }
 .bet-row input[data-field="number"]:focus,
 .bet-row input[data-field="straight"]:focus,
 .bet-row input[data-field="rumble"]:focus{
- background:#fff;border-color:#6958e8
+ background:#fff;
+ border-color:#6958e8
 }
 .remove-btn{
- border:0;background:transparent;color:#e34e75;
- font-size:20px;font-weight:bold;padding:3px 0;cursor:pointer
+ border:0;
+ background:transparent;
+ color:#e34e75;
+ font-size:20px;
+ font-weight:bold;
+ padding:3px 0;
+ cursor:pointer
 }
 
-.add-area{display:flex;justify-content:flex-end;padding:5px 3px 17px}
+.add-area{
+ display:flex;
+ justify-content:flex-end;
+ padding:5px 3px 17px
+}
 .add-btn{
- width:43px;height:43px;border-radius:50%;
+ width:43px;
+ height:43px;
+ border-radius:50%;
  background:linear-gradient(135deg,#286fe8,#7955e9);
- color:#fff;border:0;font-size:29px;font-weight:bold;
- display:grid;place-items:center;cursor:pointer;
+ color:#fff;
+ border:0;
+ font-size:29px;
+ font-weight:bold;
+ display:grid;
+ place-items:center;
+ cursor:pointer;
  box-shadow:0 5px 13px #6555df45
 }
-.add-btn:disabled{opacity:.4;cursor:not-allowed}
+.add-btn:disabled{
+ opacity:.4;
+ cursor:not-allowed
+}
 
 .summary{padding:5px 11px}
 .summary-box{
  background:linear-gradient(110deg,#edf5ff,#f2efff);
- border:1px solid #d9ddfa;border-radius:12px;
- padding:16px 7px;text-align:center;
- font-size:14px;margin-bottom:9px;color:#53618d;
+ border:1px solid #d9ddfa;
+ border-radius:12px;
+ padding:16px 7px;
+ text-align:center;
+ font-size:14px;
+ margin-bottom:9px;
+ color:#53618d;
  box-shadow:0 3px 10px #354b9b0b
 }
-.summary-box strong{font-weight:900;color:#4058d4}
+.summary-box strong{
+ font-weight:900;
+ color:#4058d4
+}
 .summary-box:nth-child(2){
  background:linear-gradient(110deg,#fff5e8,#fff0f6);
  border-color:#f7d9df
@@ -129,81 +219,138 @@ body{
 }
 .summary-box:nth-child(3) strong{color:#16865d}
 .discount-line{
- display:flex;align-items:center;justify-content:center;
- flex-wrap:wrap;gap:7px
+ display:flex;
+ align-items:center;
+ justify-content:center;
+ flex-wrap:wrap;
+ gap:7px
 }
 .discount-value{
  background:linear-gradient(135deg,#fff,#ffe5ef);
- border:1px solid #f5c6d8;border-radius:7px;
- min-width:55px;padding:7px 9px;
- font-weight:bold;color:#d84f82
+ border:1px solid #f5c6d8;
+ border-radius:7px;
+ min-width:55px;
+ padding:7px 9px;
+ font-weight:bold;
+ color:#d84f82
 }
-.discount-percent{color:#a85b80;font-weight:bold}
-.discount-amount{font-weight:bold;color:#e05b83}
+.discount-percent{
+ color:#a85b80;
+ font-weight:bold
+}
+.discount-amount{
+ font-weight:bold;
+ color:#e05b83
+}
 
 .place-btn{
- width:calc(100% - 22px);margin:17px 11px 0;
+ width:calc(100% - 22px);
+ margin:17px 11px 0;
  padding:16px 8px;
  background:linear-gradient(100deg,#1769e0,#6256e8,#a34ed7);
- border:0;border-radius:11px;color:#fff;
- font-size:17px;font-weight:900;
+ border:0;
+ border-radius:11px;
+ color:#fff;
+ font-size:17px;
+ font-weight:900;
  box-shadow:0 6px 17px #6555df45;
- cursor:pointer;letter-spacing:.4px;
+ cursor:pointer;
+ letter-spacing:.4px;
  transition:.2s
 }
 .place-btn:active{transform:scale(.98)}
 .place-btn:disabled{
- opacity:.6;cursor:not-allowed;
- background:#8999a5;box-shadow:none
+ opacity:.6;
+ cursor:not-allowed;
+ background:#8999a5;
+ box-shadow:none
 }
 
 .ad-container{
- width:100%;min-height:58px;margin:10px auto 8px;
- display:flex;justify-content:center;align-items:center;
- overflow:hidden;background:#fff
+ width:100%;
+ min-height:58px;
+ margin:10px auto 8px;
+ display:flex;
+ justify-content:center;
+ align-items:center;
+ overflow:hidden;
+ background:#fff
 }
-.ad-container iframe{max-width:100%;border:0}
+.ad-container iframe{
+ max-width:100%;
+ border:0
+}
 
 .back-btn{
- display:block;margin:10px auto;border:0;
- background:transparent;color:#5b50c7;
- padding:10px;font-size:13px;cursor:pointer;
+ display:block;
+ margin:10px auto;
+ border:0;
+ background:transparent;
+ color:#5b50c7;
+ padding:10px;
+ font-size:13px;
+ cursor:pointer;
  font-weight:bold
 }
 .notice{
- margin:10px 11px;padding:12px;
+ margin:10px 11px;
+ padding:12px;
  background:linear-gradient(110deg,#edf5ff,#f4efff);
- border:1px solid #dce0f7;border-radius:9px;
- text-align:center;color:#657095;
- font-size:11px;line-height:1.7
+ border:1px solid #dce0f7;
+ border-radius:9px;
+ text-align:center;
+ color:#657095;
+ font-size:11px;
+ line-height:1.7
 }
 .notice strong{color:#5548c7}
 
 .message{
- display:none;margin:12px 11px;padding:11px;
- border-radius:9px;font-size:13px;line-height:1.5;
- white-space:pre-line;overflow-wrap:anywhere
+ display:none;
+ margin:12px 11px;
+ padding:11px;
+ border-radius:9px;
+ font-size:13px;
+ line-height:1.5;
+ white-space:pre-line;
+ overflow-wrap:anywhere
 }
 .message.show{display:block}
 .message.error{
  background:linear-gradient(120deg,#fff0f0,#ffe8ed);
- border:1px solid #f0b8b8;color:#a32635
+ border:1px solid #f0b8b8;
+ color:#a32635
 }
 .message.success{
  background:linear-gradient(120deg,#e9fff2,#e8f9ff);
- border:1px solid #a9e5c2;color:#187344
+ border:1px solid #a9e5c2;
+ color:#187344
 }
 .message.info{
  background:linear-gradient(120deg,#edf5ff,#f2edff);
- border:1px solid #d0d5fa;color:#5148bd
+ border:1px solid #d0d5fa;
+ color:#5148bd
 }
 
 @media(max-width:380px){
- .bet-row input{height:45px;font-size:12px}
- .column-heading{font-size:9px;gap:3px}
+ .bet-row input{
+  height:45px;
+  font-size:12px
+ }
+ .column-heading{
+  font-size:9px;
+  gap:3px
+ }
  .bet-row{gap:3px}
  .serial{font-size:12px}
  .summary-box{font-size:13px}
+ .lock-notice{
+  margin:22px 10px 18px;
+  padding:25px 10px
+ }
+ .lock-notice strong{font-size:22px}
+ .lock-notice span{font-size:15px}
+ .lock-countdown{font-size:21px!important}
 }
 </style>
 </head>
@@ -676,50 +823,53 @@ function getBettingStatus(){
  };
 }
 
+/* =========================================
+   3UP STYLE LIVE DRAW TIMING
+========================================= */
+
 function updateBettingStatus(){
 
  const status=getBettingStatus();
 
  isBetLocked=status.locked;
 
- if(isBetLocked){
+ lockNotice.classList.add("show");
 
-  lockNotice.classList.add("show");
-  betArea.classList.add("locked");
+ if(status.reason==="missing"){
 
-  if(status.reason==="missing"){
+  lockNotice.classList.remove("closed");
 
-   lockTitle.textContent="BETTING UNAVAILABLE";
+  lockTitle.textContent="BETTING UNAVAILABLE";
 
-   lockMessage.textContent=
-    "The server draw schedule is unavailable. Please wait for the next valid schedule.";
+  lockMessage.textContent=
+   "The server draw schedule is unavailable. Please wait for the next valid schedule.";
 
-   lockCountdown.textContent="";
-
-  }else{
-
-   lockTitle.textContent="BETTING CLOSED";
-
-   lockMessage.textContent=
-    (drawSchedule.drawNumber
-     ?"Draw Number: "+drawSchedule.drawNumber+". "
-     :"")+
-    "Draw Time: "+formatDrawTime(drawSchedule.timestamp);
-
-   lockCountdown.textContent=
-    status.remaining<=0
-     ?"The scheduled draw time has passed."
-     :"Draw starts in: "+formatRemaining(status.remaining);
-  }
+  lockCountdown.textContent="";
 
  }else{
 
-  lockNotice.classList.remove("show");
-  betArea.classList.remove("locked");
+  if(status.locked){
+   lockNotice.classList.add("closed");
+   lockTitle.textContent="BETTING IS CLOSED";
+  }else{
+   lockNotice.classList.remove("closed");
+   lockTitle.textContent="BETTING IS OPEN";
+  }
 
-  lockTitle.textContent="BETTING OPEN";
-  lockMessage.textContent="";
-  lockCountdown.textContent="";
+  lockMessage.textContent=
+   "Draw: "+formatDrawTime(drawSchedule.timestamp)+
+   " | Time remaining:";
+
+  lockCountdown.textContent=
+   status.remaining<=0
+    ?"00:00:00"
+    :formatRemaining(status.remaining);
+ }
+
+ if(isBetLocked){
+  betArea.classList.add("locked");
+ }else{
+  betArea.classList.remove("locked");
  }
 
  applyControls();
