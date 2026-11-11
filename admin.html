@@ -1,3 +1,4 @@
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -307,9 +308,8 @@ header:before{
   color:#17649a;
   overflow-wrap:anywhere;
 }
-.menu small{
-  display:none;
-}
+.menu small{display:none}
+
 .menu a.deposit-card,
 .menu a.timer-card{
   background:linear-gradient(140deg,#eaf6ff,#d9efff);
@@ -327,12 +327,8 @@ header:before{
   border-color:#c9b5ff;
   box-shadow:0 4px 13px #7652c915;
 }
-.menu a.millionaire-report-card .emoji{
-  background:#e3d8ff;
-}
-.menu a.millionaire-report-card strong{
-  color:#6840b5;
-}
+.menu a.millionaire-report-card .emoji{background:#e3d8ff}
+.menu a.millionaire-report-card strong{color:#6840b5}
 .menu a.live-card{
   background:linear-gradient(140deg,#fff2f3,#ffe5e9);
   border-color:#ffd0d8;
@@ -357,12 +353,17 @@ header:before{
   border-color:#f4c9d0;
   box-shadow:0 4px 13px rgba(190,40,65,.08);
 }
-.menu a.singapore-card .emoji{
-  background:#ffe1e5;
+.menu a.singapore-card .emoji{background:#ffe1e5}
+.menu a.singapore-card strong{color:#b52b45}
+
+/* MALAYSIA CARD */
+.menu a.malaysia-card{
+  background:linear-gradient(140deg,#fff9e9,#ffedc2);
+  border-color:#f1d99c;
+  box-shadow:0 4px 13px rgba(180,125,20,.09);
 }
-.menu a.singapore-card strong{
-  color:#b52b45;
-}
+.menu a.malaysia-card .emoji{background:#ffedc2}
+.menu a.malaysia-card strong{color:#94600a}
 
 /* BUTTONS */
 button{
@@ -738,6 +739,13 @@ footer{
       <span class="emoji">🇸🇬</span>
       <strong>Singapore</strong>
       <small>Singapore Games Management</small>
+    </a>
+
+    <!-- MALAYSIA GAMES ADMIN CARD -->
+    <a href="admin-malaysia.html" class="malaysia-card">
+      <span class="emoji">🇲🇾</span>
+      <strong>Malaysia</strong>
+      <small>Malaysia 2D, 3D and 4D Games Management</small>
     </a>
 
   </div>
