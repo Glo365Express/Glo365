@@ -1,8 +1,10 @@
+
 "use strict";
 
-// GLO 365 Malaysia Games Module
-// Mounted inside the existing GLO 365 API.
-// Uses the existing users, wallet and authentication system.
+// GLO 365 Malaysia Games + Results Module
+// Existing wallet, authentication, betting and settings are preserved.
+// Malaysia results support 2D, 3D and 4D.
+// Winning bets are settled automatically and paid exactly once.
 
 module.exports = function registerMalaysiaRoutes(app, deps) {
 
@@ -29,7 +31,6 @@ module.exports = function registerMalaysiaRoutes(app, deps) {
   }
 
   function amountOrNull(value) {
-
     const amount = Number(value);
 
     if (
@@ -45,7 +46,6 @@ module.exports = function registerMalaysiaRoutes(app, deps) {
   }
 
   function validSelections(game, selections) {
-
     if (
       !Array.isArray(selections) ||
       selections.length < 1 ||
@@ -63,7 +63,6 @@ module.exports = function registerMalaysiaRoutes(app, deps) {
   }
 
   function isLocked(settings) {
-
     if (
       !settings ||
       !settings.draw_at ||
@@ -81,7 +80,6 @@ module.exports = function registerMalaysiaRoutes(app, deps) {
   }
 
   function publicSettings(row) {
-
     if (!row) return null;
 
     return {
@@ -97,7 +95,6 @@ module.exports = function registerMalaysiaRoutes(app, deps) {
   }
 
   async function getSettings(client, game) {
-
     const result = await client.query(
       `SELECT game, draw_number, draw_at, prize_rate,
               betting_enabled, updated_by, updated_at
@@ -107,6 +104,36 @@ module.exports = function registerMalaysiaRoutes(app, deps) {
     );
 
     return result.rows[0] || null;
+  }
+
+  function normalizeDrawNumber(value) {
+    return cleanText(String(value || ""), 50);
+  }
+
+  function normalizeWinningNumber(game, value) {
+    const digits = Number(game[0]);
+    const number = String(value == null ? "" : value).trim();
+
+    if (!new RegExp(`^[0-9]{${digits}}$`).test(number)) {
+      return null;
+    }
+
+    return number;
+  }
+
+  function normalizeSelections(value) {
+    if (Array.isArray(value)) return value;
+
+    if (typeof value === "string") {
+      try {
+        const parsed = JSON.parse(value);
+        return Array.isArray(parsed) ? parsed : [];
+      } catch (error) {
+        return [];
+      }
+    }
+
+    return [];
   }
 
   // ==========================================
@@ -171,10 +198,33 @@ module.exports = function registerMalaysiaRoutes(app, deps) {
       CREATE INDEX IF NOT EXISTS idx_malaysia_bets_game_draw
         ON malaysia_bets(game, draw_number);
 
+      CREATE TABLE IF NOT EXISTS malaysia_results (
+
+        id BIGSERIAL PRIMARY KEY,
+
+        game VARCHAR(10) NOT NULL
+          CHECK (game IN ('2D','3D','4D')),
+
+        draw_number VARCHAR(50) NOT NULL,
+
+        winning_number VARCHAR(4) NOT NULL,
+
+        published_by BIGINT REFERENCES users(id) ON DELETE SET NULL,
+
+        published_at TIMESTAMPTZ NOT NULL DEFAULT NOW(),
+
+        updated_at TIMESTAMPTZ NOT NULL DEFAULT NOW(),
+
+        UNIQUE(game, draw_number)
+
+      );
+
+      CREATE INDEX IF NOT EXISTS idx_malaysia_results_published
+        ON malaysia_results(published_at DESC);
+
     `);
 
     for (const game of GAMES) {
-
       await pool.query(
         `INSERT INTO malaysia_game_settings
          (game, betting_enabled)
@@ -182,11 +232,9 @@ module.exports = function registerMalaysiaRoutes(app, deps) {
          ON CONFLICT (game) DO NOTHING`,
         [game]
       );
-
     }
 
-    console.log("Malaysia Games database initialized.");
-
+    console.log("Malaysia Games and Results database initialized.");
   }
 
   // ==========================================
@@ -194,7 +242,6 @@ module.exports = function registerMalaysiaRoutes(app, deps) {
   // ==========================================
 
   app.get("/api/malaysia/games", (req, res) => {
-
     res.json({
       success: true,
       games: [
@@ -203,7 +250,6 @@ module.exports = function registerMalaysiaRoutes(app, deps) {
         { id: "4D", name: "4D NUMBER" }
       ]
     });
-
   });
 
   // ==========================================
@@ -225,7 +271,6 @@ module.exports = function registerMalaysiaRoutes(app, deps) {
         success: true,
         settings: result.rows.map(publicSettings)
       });
-
     })
   );
 
@@ -245,7 +290,44 @@ module.exports = function registerMalaysiaRoutes(app, deps) {
         success: true,
         settings: publicSettings(row)
       });
+    })
+  );
 
+  // ==========================================
+  // PUBLIC MALAYSIA RESULTS
+  // ==========================================
+
+  app.get(
+    "/api/malaysia/results",
+    asyncRoute(async (req, res) => {
+
+      const game = req.query.game
+        ? normalizeGame(req.query.game)
+        : null;
+
+      if (game && !isValidGame(game)) {
+        return sendError(res, 400, "Invalid Malaysia game.");
+      }
+
+      const limit = Math.min(
+        Math.max(Number(req.query.limit) || 100, 1),
+        300
+      );
+
+      const result = await pool.query(
+        `SELECT id, game, draw_number, winning_number,
+                published_at, updated_at
+         FROM malaysia_results
+         WHERE ($1::varchar IS NULL OR game = $1)
+         ORDER BY published_at DESC
+         LIMIT $2`,
+        [game, limit]
+      );
+
+      res.json({
+        success: true,
+        results: result.rows
+      });
     })
   );
 
@@ -273,7 +355,6 @@ module.exports = function registerMalaysiaRoutes(app, deps) {
         success: true,
         user: result.rows[0]
       });
-
     })
   );
 
@@ -305,10 +386,8 @@ module.exports = function registerMalaysiaRoutes(app, deps) {
       const client = await pool.connect();
 
       try {
-
         await client.query("BEGIN");
 
-        // Lock the game settings while checking the draw.
         const settingsResult = await client.query(
           `SELECT game, draw_number, draw_at, prize_rate,
                   betting_enabled, updated_by, updated_at
@@ -325,30 +404,19 @@ module.exports = function registerMalaysiaRoutes(app, deps) {
           !settings.draw_number ||
           !settings.draw_at
         ) {
-
           await client.query("ROLLBACK");
-
           return sendError(
             res,
             400,
             "Draw schedule is not configured."
           );
-
         }
 
         if (isLocked(settings)) {
-
           await client.query("ROLLBACK");
-
-          return sendError(
-            res,
-            403,
-            "Betting is closed."
-          );
-
+          return sendError(res, 403, "Betting is closed.");
         }
 
-        // Debit the existing GLO 365 demo wallet.
         const debit = await client.query(
           `UPDATE users
            SET balance = balance - $1
@@ -360,18 +428,14 @@ module.exports = function registerMalaysiaRoutes(app, deps) {
         );
 
         if (!debit.rows.length) {
-
           await client.query("ROLLBACK");
-
           return sendError(
             res,
             400,
             "Insufficient demo points or inactive account."
           );
-
         }
 
-        // Create Malaysia bet.
         const inserted = await client.query(
           `INSERT INTO malaysia_bets
            (user_id, game, draw_number, draw_at,
@@ -391,7 +455,6 @@ module.exports = function registerMalaysiaRoutes(app, deps) {
           ]
         );
 
-        // Record the transaction in the shared wallet ledger.
         await client.query(
           `INSERT INTO wallet_transactions
            (user_id, type, amount, currency, description, reference)
@@ -414,17 +477,11 @@ module.exports = function registerMalaysiaRoutes(app, deps) {
         });
 
       } catch (error) {
-
         await client.query("ROLLBACK").catch(() => {});
-
         throw error;
-
       } finally {
-
         client.release();
-
       }
-
     })
   );
 
@@ -457,7 +514,6 @@ module.exports = function registerMalaysiaRoutes(app, deps) {
         success: true,
         bets: result.rows
       });
-
     })
   );
 
@@ -482,7 +538,6 @@ module.exports = function registerMalaysiaRoutes(app, deps) {
         success: true,
         settings: result.rows.map(publicSettings)
       });
-
     })
   );
 
@@ -500,9 +555,7 @@ module.exports = function registerMalaysiaRoutes(app, deps) {
       );
 
       const drawAt = req.body.draw_at;
-
       const prizeRate = Number(req.body.prize_rate);
-
       const bettingEnabled = req.body.betting_enabled;
 
       if (!isValidGame(game)) {
@@ -581,7 +634,357 @@ module.exports = function registerMalaysiaRoutes(app, deps) {
         message: "Malaysia game settings saved.",
         settings: publicSettings(result.rows[0])
       });
+    })
+  );
 
+  // ==========================================
+  // MALAYSIA RESULT SETTLEMENT
+  // ==========================================
+
+  async function settleMalaysiaResult(client, resultRow) {
+
+    const pending = await client.query(
+      `SELECT id, user_id, game, draw_number,
+              selections, amount, prize_rate
+       FROM malaysia_bets
+       WHERE game = $1
+         AND draw_number = $2
+         AND status = 'pending'
+       ORDER BY id
+       FOR UPDATE`,
+      [resultRow.game, resultRow.draw_number]
+    );
+
+    let checked = 0;
+    let won = 0;
+    let lost = 0;
+    let pointsPaid = 0;
+
+    for (const bet of pending.rows) {
+
+      checked++;
+
+      const selections = normalizeSelections(bet.selections);
+
+      const isWinner = selections.includes(
+        resultRow.winning_number
+      );
+
+      if (isWinner) {
+
+        const amount = Number(bet.amount);
+        const rate = Number(bet.prize_rate);
+
+        const reward = Math.round(amount * rate * 100) / 100;
+
+        if (!Number.isFinite(reward) || reward < 0) {
+          throw new Error(
+            `Invalid reward calculation for Malaysia bet ${bet.id}.`
+          );
+        }
+
+        // Credit the existing demo wallet.
+        const credit = await client.query(
+          `UPDATE users
+           SET balance = balance + $1
+           WHERE id = $2
+           RETURNING balance`,
+          [reward, bet.user_id]
+        );
+
+        if (!credit.rows.length) {
+          throw new Error(
+            `User not found while settling Malaysia bet ${bet.id}.`
+          );
+        }
+
+        // Record reward in the existing wallet ledger.
+        await client.query(
+          `INSERT INTO wallet_transactions
+           (user_id, type, amount, currency, description, reference)
+           VALUES ($1, 'malaysia_win', $2, 'DEMO', $3, $4)`,
+          [
+            bet.user_id,
+            reward,
+            `Malaysia ${bet.game} winning reward`,
+            `MY-WIN-${bet.id}`
+          ]
+        );
+
+        await client.query(
+          `UPDATE malaysia_bets
+           SET status = 'win'
+           WHERE id = $1 AND status = 'pending'`,
+          [bet.id]
+        );
+
+        won++;
+        pointsPaid += reward;
+
+      } else {
+
+        await client.query(
+          `UPDATE malaysia_bets
+           SET status = 'loss'
+           WHERE id = $1 AND status = 'pending'`,
+          [bet.id]
+        );
+
+        lost++;
+      }
+    }
+
+    return {
+      checked,
+      won,
+      lost,
+      pointsPaid: Math.round(pointsPaid * 100) / 100
+    };
+  }
+
+  // ==========================================
+  // ADMIN: PUBLISH ONE OR MULTIPLE RESULTS
+  // ==========================================
+
+  app.post(
+    "/api/admin/malaysia/results",
+    authenticateToken,
+    requireAdmin,
+    asyncRoute(async (req, res) => {
+
+      // Supported formats:
+      //
+      // One result:
+      // {
+      //   "game": "2D",
+      //   "draw_number": "DRAW-100",
+      //   "winning_number": "45"
+      // }
+      //
+      // Multiple results:
+      // {
+      //   "results": [
+      //     {"game":"2D","draw_number":"DRAW-100","winning_number":"45"},
+      //     {"game":"3D","draw_number":"DRAW-100","winning_number":"678"},
+      //     {"game":"4D","draw_number":"DRAW-100","winning_number":"1234"}
+      //   ]
+      // }
+
+      let inputResults = [];
+
+      if (Array.isArray(req.body.results)) {
+        inputResults = req.body.results;
+      } else {
+        inputResults = [req.body];
+      }
+
+      if (
+        !inputResults.length ||
+        inputResults.length > 3
+      ) {
+        return sendError(
+          res,
+          400,
+          "Provide one to three Malaysia game results."
+        );
+      }
+
+      const normalized = [];
+      const seenGames = new Set();
+
+      for (const item of inputResults) {
+
+        const game = normalizeGame(item.game);
+
+        if (!isValidGame(game)) {
+          return sendError(res, 400, "Invalid Malaysia game.");
+        }
+
+        if (seenGames.has(game)) {
+          return sendError(
+            res,
+            400,
+            `Duplicate ${game} result in the same request.`
+          );
+        }
+
+        seenGames.add(game);
+
+        let drawNumber = normalizeDrawNumber(
+          item.draw_number || item.drawNumber
+        );
+
+        // If draw number is omitted, use the configured game draw.
+        if (!drawNumber) {
+          const settings = await getSettings(pool, game);
+          drawNumber = settings
+            ? normalizeDrawNumber(settings.draw_number)
+            : "";
+        }
+
+        if (!drawNumber) {
+          return sendError(
+            res,
+            400,
+            `${game} draw number is not configured.`
+          );
+        }
+
+        const winningNumber = normalizeWinningNumber(
+          game,
+          item.winning_number !== undefined
+            ? item.winning_number
+            : item.winningNumber
+        );
+
+        if (!winningNumber) {
+          return sendError(
+            res,
+            400,
+            `${game} winning number must contain exactly ${game[0]} digits.`
+          );
+        }
+
+        normalized.push({
+          game,
+          draw_number: drawNumber,
+          winning_number: winningNumber
+        });
+      }
+
+      const client = await pool.connect();
+
+      try {
+
+        await client.query("BEGIN");
+
+        const published = [];
+        const totals = {
+          checked: 0,
+          won: 0,
+          lost: 0,
+          pointsPaid: 0
+        };
+
+        for (const item of normalized) {
+
+          // Store or update the published result.
+          const saved = await client.query(
+            `INSERT INTO malaysia_results
+             (game, draw_number, winning_number,
+              published_by, published_at, updated_at)
+             VALUES ($1,$2,$3,$4,NOW(),NOW())
+             ON CONFLICT (game, draw_number)
+             DO UPDATE SET
+               winning_number = EXCLUDED.winning_number,
+               published_by = EXCLUDED.published_by,
+               published_at = NOW(),
+               updated_at = NOW()
+             RETURNING id, game, draw_number,
+                       winning_number, published_at, updated_at`,
+            [
+              item.game,
+              item.draw_number,
+              item.winning_number,
+              req.user.id
+            ]
+          );
+
+          const resultRow = saved.rows[0];
+
+          // Only pending bets are settled.
+          // The transaction and row locks prevent duplicate payouts.
+          const settlement = await settleMalaysiaResult(
+            client,
+            resultRow
+          );
+
+          totals.checked += settlement.checked;
+          totals.won += settlement.won;
+          totals.lost += settlement.lost;
+          totals.pointsPaid += settlement.pointsPaid;
+
+          published.push({
+            result: resultRow,
+            settlement
+          });
+        }
+
+        await client.query("COMMIT");
+
+        await audit(
+          req.user.id,
+          "malaysia_results_published",
+          null,
+          {
+            results: normalized,
+            settlement: totals
+          }
+        );
+
+        res.json({
+          success: true,
+          message: "Malaysia result published successfully.",
+          published,
+          settlement: {
+            checked: totals.checked,
+            won: totals.won,
+            lost: totals.lost,
+            pointsPaid: Math.round(totals.pointsPaid * 100) / 100
+          }
+        });
+
+      } catch (error) {
+
+        await client.query("ROLLBACK").catch(() => {});
+        throw error;
+
+      } finally {
+
+        client.release();
+      }
+    })
+  );
+
+  // ==========================================
+  // ADMIN: VIEW PUBLISHED RESULTS
+  // ==========================================
+
+  app.get(
+    "/api/admin/malaysia/results",
+    authenticateToken,
+    requireAdmin,
+    asyncRoute(async (req, res) => {
+
+      const game = req.query.game
+        ? normalizeGame(req.query.game)
+        : null;
+
+      if (game && !isValidGame(game)) {
+        return sendError(res, 400, "Invalid Malaysia game.");
+      }
+
+      const limit = Math.min(
+        Math.max(Number(req.query.limit) || 100, 1),
+        300
+      );
+
+      const result = await pool.query(
+        `SELECT r.id, r.game, r.draw_number,
+                r.winning_number, r.published_at,
+                r.updated_at, u.username AS published_by_username
+         FROM malaysia_results r
+         LEFT JOIN users u ON u.id = r.published_by
+         WHERE ($1::varchar IS NULL OR r.game = $1)
+         ORDER BY r.published_at DESC
+         LIMIT $2`,
+        [game, limit]
+      );
+
+      res.json({
+        success: true,
+        results: result.rows
+      });
     })
   );
 
@@ -625,7 +1028,6 @@ module.exports = function registerMalaysiaRoutes(app, deps) {
         success: true,
         bets: result.rows
       });
-
     })
   );
 
@@ -651,12 +1053,10 @@ module.exports = function registerMalaysiaRoutes(app, deps) {
         success: true,
         summary: result.rows[0]
       });
-
     })
   );
 
-  console.log("Malaysia Games routes registered.");
+  console.log("Malaysia Games and Results routes registered.");
 
   return initializeMalaysiaDatabase;
-
 };
