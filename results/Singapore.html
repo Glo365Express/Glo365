@@ -1,0 +1,452 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,viewport-fit=cover">
+<meta name="theme-color" content="#0877df">
+<title>Singapore Results | GLO 365</title>
+
+<style>
+:root{
+ --blue:#0877df;--blue2:#0756bd;--light:#eaf4ff;
+ --bg:#f3f7fc;--text:#172b46;--muted:#75869b;
+ --border:#e2eaf4;--white:#fff;--green:#0caa72;
+ --shadow:0 5px 18px rgba(16,67,120,.08)
+}
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:Arial,Helvetica,sans-serif;background:var(--bg);color:var(--text);padding-bottom:85px}
+button{font:inherit;cursor:pointer}
+.app{width:100%;max-width:650px;margin:auto;min-height:100vh;background:var(--bg)}
+.header{height:62px;background:linear-gradient(110deg,#0877df,#0755bd);display:flex;align-items:center;justify-content:space-between;padding:0 16px;color:white;position:sticky;top:0;z-index:20;box-shadow:0 3px 12px #064e9a25}
+.logo{font-size:23px;font-weight:900;letter-spacing:-1px}
+.logo span{color:#bde5ff}
+.header-actions{display:flex;align-items:center;gap:10px}
+.header-btn{width:37px;height:37px;border:1px solid #ffffff45;background:#ffffff1c;border-radius:12px;color:white;display:grid;place-items:center;font-size:17px}
+.content{padding:13px 12px 25px}
+.banner{position:relative;overflow:hidden;min-height:144px;border-radius:17px;padding:17px;color:white;background:radial-gradient(circle at 90% 15%,#ffffff27,transparent 35%),linear-gradient(125deg,#0877df,#0647a1 75%);box-shadow:var(--shadow)}
+.banner:after{content:"";position:absolute;width:180px;height:180px;border:1px solid #ffffff20;border-radius:50%;right:-70px;bottom:-115px;box-shadow:0 0 0 17px #ffffff08,0 0 0 35px #ffffff07}
+.banner-top{display:flex;align-items:center;gap:10px;position:relative;z-index:1}
+.flag{width:54px;height:37px;border-radius:5px;overflow:hidden;background:linear-gradient(to bottom,#ed2939 50%,#fff 50%);display:flex;align-items:flex-start;padding:4px 6px;box-shadow:0 2px 6px #001d4835}
+.flag-symbol{color:#fff;font-size:17px;line-height:16px;text-shadow:0 1px 2px #9d1c28}
+.banner-brand{font-size:10px;letter-spacing:2px;font-weight:800;color:#c8e7ff}
+.banner-title{font-size:24px;font-weight:900;margin-top:5px;letter-spacing:.5px}
+.banner-sub{font-size:11px;color:#d9edff;margin-top:5px;letter-spacing:.6px}
+.banner-tag{display:inline-flex;margin-top:11px;background:#ffffff20;border:1px solid #ffffff35;padding:5px 10px;border-radius:20px;font-size:9px;font-weight:800;letter-spacing:1px}
+.game-tabs{display:grid;grid-template-columns:repeat(4,1fr);gap:7px;margin:15px 0}
+.game-tab{border:1px solid var(--border);border-radius:11px;min-height:54px;background:white;color:#52657c;display:flex;flex-direction:column;justify-content:center;align-items:center;gap:3px;font-weight:800;box-shadow:0 2px 7px #163f7008}
+.game-tab strong{font-size:16px}.game-tab small{font-size:9px;font-weight:600}
+.game-tab.active{color:white;border-color:var(--blue);background:linear-gradient(135deg,#1187f0,#0756bd);box-shadow:0 4px 12px #0877df35}
+.section-head{display:flex;align-items:center;justify-content:space-between;margin:17px 2px 10px}
+.section-title{font-size:15px;font-weight:900;color:#183b63}
+.section-caption{color:var(--muted);font-size:10px;margin-top:4px}
+.latest-tag{color:#078d64;background:#e3f8f0;border-radius:20px;padding:5px 9px;font-size:9px;font-weight:800}
+.draw-card{background:white;border:1px solid var(--border);border-radius:15px;overflow:hidden;margin-bottom:13px;box-shadow:var(--shadow)}
+.draw-card-head{background:linear-gradient(100deg,#edf6ff,#f8fbff);padding:12px 13px;display:flex;justify-content:space-between;align-items:center;border-bottom:1px solid var(--border)}
+.draw-heading{font-size:13px;font-weight:900;color:#15528d}
+.draw-meta{font-size:10px;color:var(--muted);margin-top:5px}
+.draw-number{color:#075fbd;background:#e0efff;padding:6px 9px;border-radius:8px;font-size:10px;font-weight:900}
+.draw-body{padding:13px}
+.prize-section{margin-bottom:15px}.prize-section:last-child{margin-bottom:0}
+.prize-title{display:flex;align-items:center;justify-content:space-between;margin-bottom:8px}
+.prize-name{font-size:11px;font-weight:900;color:#41566f}
+.prize-count{font-size:9px;color:#8a99aa}
+.number-grid{display:grid;grid-template-columns:repeat(5,minmax(0,1fr));gap:7px}
+.number-box{min-width:0;min-height:51px;background:#f3f8ff;border:1px solid #e2edfa;border-radius:9px;display:flex;flex-direction:column;align-items:center;justify-content:center}
+.number-box.primary{background:linear-gradient(145deg,#0877df,#0756bd);border-color:transparent;color:white;min-height:65px}
+.number-value{font-size:19px;font-weight:900;letter-spacing:1px;color:#075cbb;overflow-wrap:anywhere}
+.number-box.primary .number-value{color:white;font-size:25px}
+.number-caption{font-size:8px;color:#8394a8;margin-top:4px;font-weight:700}
+.number-box.primary .number-caption{color:#d5ebff}
+.derived-note{display:flex;align-items:center;gap:7px;background:#edf6ff;color:#28639c;border:1px solid #dcecff;padding:9px 11px;border-radius:9px;font-size:10px;line-height:1.5;margin-bottom:12px}
+.lotto-balls{display:grid;grid-template-columns:repeat(6,1fr);gap:7px;margin:7px 0 14px}
+.lotto-ball{aspect-ratio:1;max-height:54px;border-radius:50%;background:linear-gradient(145deg,#1592ef,#0759bd);color:white;display:grid;place-items:center;font-size:19px;font-weight:900;box-shadow:0 3px 7px #0759bd30}
+.additional-wrap{background:#fff8e9;border:1px solid #ffebc6;padding:12px;border-radius:11px;display:flex;justify-content:space-between;align-items:center}
+.additional-label{font-size:11px;font-weight:800;color:#9a6417}
+.additional-value{width:37px;height:37px;border-radius:50%;display:grid;place-items:center;color:white;background:linear-gradient(145deg,#ffb739,#e47b05);font-weight:900}
+.prize-table{width:100%;border-collapse:collapse;font-size:10px}
+.prize-table th{background:#edf5ff;color:#35638f;padding:10px 7px;text-align:left}
+.prize-table td{padding:11px 7px;border-bottom:1px solid #edf1f6;color:#53667d}
+.prize-table tr:last-child td{border-bottom:0}
+.group-badge{width:23px;height:23px;display:grid;place-items:center;border-radius:7px;background:#e7f2ff;color:#0867c8;font-weight:900}
+.prize-amount{font-weight:900;color:#087c5a;text-align:right}
+.history-card{background:white;border:1px solid var(--border);border-radius:12px;padding:12px;margin-bottom:9px;display:flex;justify-content:space-between;align-items:center;gap:10px}
+.history-info strong{font-size:12px;color:#28547e}
+.history-info small{display:block;font-size:10px;color:var(--muted);margin-top:5px}
+.history-action{border:0;background:#eaf4ff;color:#0868c8;border-radius:8px;padding:8px 10px;font-size:10px;font-weight:800}
+.history-results{display:none;padding:12px;background:#f7faff;border:1px solid var(--border);border-radius:10px;margin:-3px 0 10px}
+.state-card{background:white;border:1px solid var(--border);border-radius:14px;padding:28px 16px;text-align:center;box-shadow:var(--shadow)}
+.state-icon{font-size:30px;margin-bottom:10px}
+.state-title{font-size:14px;font-weight:900;color:#36516e}
+.state-text{font-size:11px;line-height:1.6;color:var(--muted);margin-top:7px}
+.retry-btn{margin-top:13px;background:var(--blue);color:white;border:0;padding:9px 18px;border-radius:9px;font-size:11px;font-weight:800}
+.loader{width:27px;height:27px;border:3px solid #dcecff;border-top-color:var(--blue);border-radius:50%;margin:0 auto 12px;animation:spin .8s linear infinite}
+@keyframes spin{to{transform:rotate(360deg)}}
+.footer-note{text-align:center;font-size:9px;color:#8b9aae;line-height:1.6;padding:12px 15px 20px}
+.bottom-nav{position:fixed;bottom:0;left:50%;transform:translateX(-50%);width:100%;max-width:650px;height:67px;background:white;border-top:1px solid #e4eaf2;display:grid;grid-template-columns:repeat(4,1fr);z-index:30;padding-bottom:env(safe-area-inset-bottom);box-shadow:0 -3px 15px #123c6c0b}
+.nav-item{border:0;background:transparent;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:4px;color:#8493a5;font-size:9px;font-weight:700}
+.nav-item strong{font-size:19px}.nav-item.active{color:var(--blue)}
+@media(min-width:500px){.content{padding:17px}.banner{min-height:160px}.number-grid{gap:10px}}
+</style>
+</head>
+
+<body>
+<div class="app">
+
+<header class="header">
+ <div class="logo">GLO <span>365</span></div>
+ <div class="header-actions">
+  <button class="header-btn" type="button" onclick="location.href='../../notifications.html'" aria-label="Notifications">♧</button>
+  <button class="header-btn" type="button" onclick="location.href='../../profile.html'" aria-label="Profile">♙</button>
+ </div>
+</header>
+
+<main class="content">
+
+<section class="banner">
+ <div class="banner-top">
+  <div class="flag"><span class="flag-symbol">☾</span></div>
+  <div>
+   <div class="banner-brand">SINGAPORE POOLS</div>
+   <div class="banner-title">SINGAPORE RESULTS</div>
+   <div class="banner-sub">Official Draw Results Information</div>
+  </div>
+ </div>
+ <div class="banner-tag">🇸🇬 SINGAPORE GAMES</div>
+</section>
+
+<div class="game-tabs">
+ <button class="game-tab" data-game="2D" onclick="selectGame('2D')"><strong>2D</strong><small>2 DIGIT</small></button>
+ <button class="game-tab" data-game="3D" onclick="selectGame('3D')"><strong>3D</strong><small>3 DIGIT</small></button>
+ <button class="game-tab active" data-game="4D" onclick="selectGame('4D')"><strong>4D</strong><small>4 DIGIT</small></button>
+ <button class="game-tab" data-game="649" onclick="selectGame('649')"><strong>6/49</strong><small>TOTO</small></button>
+</div>
+
+<div class="section-head">
+ <div>
+  <div class="section-title" id="sectionTitle">4D Winning Results</div>
+  <div class="section-caption" id="sectionCaption">Singapore 4D draw results</div>
+ </div>
+ <span class="latest-tag">● RESULTS</span>
+</div>
+
+<div id="resultsContainer">
+ <div class="state-card"><div class="loader"></div><div class="state-title">Loading Results</div><div class="state-text">Please wait while we retrieve the latest results.</div></div>
+</div>
+
+<div class="section-head" id="historyHeading" style="display:none">
+ <div><div class="section-title">Previous Draws</div><div class="section-caption">Previously published results</div></div>
+</div>
+<div id="historyContainer"></div>
+
+<div class="footer-note">
+ GLO 365 Singapore Results<br>
+ 2D and 3D numbers are derived from published 4D results.
+</div>
+</main>
+
+<nav class="bottom-nav">
+ <button class="nav-item" onclick="location.href='../../home.html'"><strong>⌂</strong>Home</button>
+ <button class="nav-item" onclick="location.href='../../mybets.html'"><strong>◎</strong>My Bets</button>
+ <button class="nav-item active" onclick="location.href='../../results.html'"><strong>♛</strong>Results</button>
+ <button class="nav-item" onclick="location.href='../../profile.html'"><strong>♙</strong>Profile</button>
+</nav>
+
+</div>
+
+<script>
+"use strict";
+
+const API_BASE_URL = "https://glo365.onrender.com/api";
+const RESULT_LIMIT = 100;
+let activeGame = "4D";
+let loading = false;
+let allResults = {"2D":[],"3D":[],"4D":[],"649":[]};
+
+function escapeHTML(value){
+ return String(value ?? "").replace(/[&<>"']/g,c=>({
+  "&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"
+ }[c]));
+}
+
+function formatDate(value){
+ if(!value) return "Date unavailable";
+ const date = new Date(value);
+ if(Number.isNaN(date.getTime())) return escapeHTML(value);
+ return date.toLocaleDateString("en-GB",{day:"2-digit",month:"short",year:"numeric"});
+}
+
+function showLoading(){
+ document.getElementById("resultsContainer").innerHTML=`
+ <div class="state-card"><div class="loader"></div><div class="state-title">Loading Results</div><div class="state-text">Please wait while we retrieve published results.</div></div>`;
+}
+
+function showEmpty(){
+ document.getElementById("resultsContainer").innerHTML=`
+ <div class="state-card"><div class="state-icon">🏆</div><div class="state-title">No Published Results Yet</div><div class="state-text">There are currently no published results for this game. Please check again later.</div></div>`;
+}
+
+function showError(){
+ document.getElementById("resultsContainer").innerHTML=`
+ <div class="state-card"><div class="state-icon">⚠️</div><div class="state-title">Unable to Load Results</div><div class="state-text">We are temporarily unable to connect to the results server. Please try again.</div><button class="retry-btn" onclick="loadResults()">Try Again</button></div>`;
+}
+
+async function apiGet(path){
+ const response=await fetch(API_BASE_URL+path,{
+  method:"GET",
+  headers:{"Accept":"application/json"},
+  cache:"no-store"
+ });
+ const data=await response.json().catch(()=>({}));
+ if(!response.ok || data.success===false){
+  throw new Error(data.message||"API request failed.");
+ }
+ return data;
+}
+
+function getRows(data){
+ if(Array.isArray(data.results)) return data.results;
+ if(Array.isArray(data.data?.results)) return data.data.results;
+ if(Array.isArray(data.data)) return data.data;
+ return [];
+}
+
+/* 2D AND 3D ARE GENERATED FROM THE 4D RESULT */
+
+function deriveNumbers(row,game){
+ const digits=game==="2D"?2:3;
+ const source=[
+  {category:"1ST PRIZE",numbers:[row.first_prize]},
+  {category:"2ND PRIZE",numbers:[row.second_prize]},
+  {category:"3RD PRIZE",numbers:[row.third_prize]},
+  {category:"STARTER PRIZES",numbers:Array.isArray(row.starter_numbers)?row.starter_numbers:[]},
+  {category:"CONSOLATION PRIZES",numbers:Array.isArray(row.consolation_numbers)?row.consolation_numbers:[]}
+ ];
+ const seen=new Set();
+
+ return source.map(group=>{
+  const numbers=[];
+  group.numbers.forEach(value=>{
+   if(value===null || value===undefined) return;
+   const raw=String(value).trim();
+   if(!/^\d{4}$/.test(raw)) return;
+   const derived=raw.slice(-digits);
+   if(seen.has(derived)) return;
+   seen.add(derived);
+   numbers.push(derived);
+  });
+  return {category:group.category,numbers};
+ });
+}
+
+function makeDerivedRows(rows,game){
+ return rows.map(row=>({
+  ...row,
+  categories:deriveNumbers(row,game)
+ }));
+}
+
+async function loadResults(){
+ if(loading) return;
+ loading=true;
+ showLoading();
+
+ try{
+  const [fourD,six49]=await Promise.all([
+   apiGet(`/singapore/results?game=4D&limit=${RESULT_LIMIT}`),
+   apiGet(`/singapore/results?game=649&limit=${RESULT_LIMIT}`)
+  ]);
+
+  const rows4D=getRows(fourD);
+  const rows649=getRows(six49);
+
+  allResults["4D"]=rows4D;
+  allResults["2D"]=makeDerivedRows(rows4D,"2D");
+  allResults["3D"]=makeDerivedRows(rows4D,"3D");
+  allResults["649"]=rows649;
+
+  renderResults();
+ }catch(error){
+  console.error("Singapore results:",error);
+  showError();
+ }finally{
+  loading=false;
+ }
+}
+
+function selectGame(game){
+ if(!["2D","3D","4D","649"].includes(game)) return;
+ activeGame=game;
+
+ document.querySelectorAll(".game-tab").forEach(button=>{
+  button.classList.toggle("active",button.dataset.game===game);
+ });
+
+ const titles={
+  "2D":["2D Winning Results","GLO 365 derived 2-digit results"],
+  "3D":["3D Winning Results","GLO 365 derived 3-digit results"],
+  "4D":["4D Winning Results","Singapore 4D draw results"],
+  "649":["TOTO 6/49 Results","Six winning numbers and additional number"]
+ };
+
+ document.getElementById("sectionTitle").textContent=titles[game][0];
+ document.getElementById("sectionCaption").textContent=titles[game][1];
+ renderResults();
+}
+
+function renderResults(){
+ const container=document.getElementById("resultsContainer");
+ const history=document.getElementById("historyContainer");
+ const historyHeading=document.getElementById("historyHeading");
+ const rows=allResults[activeGame]||[];
+
+ history.innerHTML="";
+
+ if(!rows.length){
+  showEmpty();
+  historyHeading.style.display="none";
+  return;
+ }
+
+ const latest=rows[0];
+
+ if(activeGame==="4D") container.innerHTML=render4D(latest);
+ else if(activeGame==="2D"||activeGame==="3D") container.innerHTML=renderDerived(latest,activeGame);
+ else container.innerHTML=render649(latest);
+
+ if(rows.length>1){
+  historyHeading.style.display="flex";
+  history.innerHTML=rows.slice(1).map((row,index)=>`
+   <div class="history-card">
+    <div class="history-info"><strong>Draw #${escapeHTML(row.draw_number)}</strong><small>${formatDate(row.draw_date)}</small></div>
+    <button class="history-action" onclick="toggleHistory(${index})">View Results</button>
+   </div>
+   <div class="history-results" id="history-${index}">${renderHistoryItem(row)}</div>
+  `).join("");
+ }else{
+  historyHeading.style.display="none";
+ }
+}
+
+function numberBox(number,label,primary=false){
+ if(number===null||number===undefined||String(number)==="") return "";
+ return `<div class="number-box ${primary?"primary":""}">
+  <div class="number-value">${escapeHTML(number)}</div>
+  <div class="number-caption">${escapeHTML(label)}</div>
+ </div>`;
+}
+
+function render4D(row){
+ const starter=Array.isArray(row.starter_numbers)?row.starter_numbers:[];
+ const consolation=Array.isArray(row.consolation_numbers)?row.consolation_numbers:[];
+
+ return `<div class="draw-card">
+  <div class="draw-card-head">
+   <div><div class="draw-heading">SINGAPORE 4D RESULT</div><div class="draw-meta">${formatDate(row.draw_date)}</div></div>
+   <div class="draw-number">DRAW #${escapeHTML(row.draw_number)}</div>
+  </div>
+  <div class="draw-body">
+   <div class="prize-section">
+    <div class="prize-title"><span class="prize-name">TOP PRIZES</span><span class="prize-count">3 WINNERS</span></div>
+    <div class="number-grid" style="grid-template-columns:repeat(3,1fr)">
+     ${numberBox(row.first_prize,"1ST PRIZE",true)}
+     ${numberBox(row.second_prize,"2ND PRIZE",true)}
+     ${numberBox(row.third_prize,"3RD PRIZE",true)}
+    </div>
+   </div>
+   <div class="prize-section">
+    <div class="prize-title"><span class="prize-name">STARTER PRIZES</span><span class="prize-count">${starter.length} NUMBERS</span></div>
+    <div class="number-grid">${starter.map((n,i)=>numberBox(n,"STARTER "+(i+1))).join("")}</div>
+   </div>
+   <div class="prize-section">
+    <div class="prize-title"><span class="prize-name">CONSOLATION PRIZES</span><span class="prize-count">${consolation.length} NUMBERS</span></div>
+    <div class="number-grid">${consolation.map((n,i)=>numberBox(n,"CONSOLATION "+(i+1))).join("")}</div>
+   </div>
+  </div>
+ </div>`;
+}
+
+function renderDerived(row,game){
+ const categories=Array.isArray(row.categories)?row.categories:[];
+ const title=game==="2D"?"2 DIGIT RESULTS":"3 DIGIT RESULTS";
+
+ return `<div class="draw-card">
+  <div class="draw-card-head">
+   <div><div class="draw-heading">${title}</div><div class="draw-meta">${formatDate(row.draw_date)}</div></div>
+   <div class="draw-number">DRAW #${escapeHTML(row.draw_number)}</div>
+  </div>
+  <div class="draw-body">
+   <div class="derived-note">ℹ️ These numbers are automatically derived from the published 4D result.</div>
+   ${categories.map(category=>`
+    <div class="prize-section">
+     <div class="prize-title"><span class="prize-name">${escapeHTML(category.category)}</span><span class="prize-count">${category.numbers.length} NUMBERS</span></div>
+     <div class="number-grid">
+      ${category.numbers.length?category.numbers.map(n=>numberBox(n,game)).join(""):'<div class="state-text">No unique numbers in this category.</div>'}
+     </div>
+    </div>
+   `).join("")}
+  </div>
+ </div>`;
+}
+
+function render649(row){
+ const numbers=Array.isArray(row.winning_numbers)?row.winning_numbers:[];
+ const groups=Array.isArray(row.prize_groups)?row.prize_groups:[];
+
+ return `<div class="draw-card">
+  <div class="draw-card-head">
+   <div><div class="draw-heading">SINGAPORE TOTO 6/49</div><div class="draw-meta">${formatDate(row.draw_date)}</div></div>
+   <div class="draw-number">DRAW #${escapeHTML(row.draw_number)}</div>
+  </div>
+  <div class="draw-body">
+   <div class="prize-section">
+    <div class="prize-title"><span class="prize-name">WINNING NUMBERS</span><span class="prize-count">MATCH 6</span></div>
+    <div class="lotto-balls">${numbers.map(n=>`<div class="lotto-ball">${escapeHTML(n)}</div>`).join("")}</div>
+   </div>
+   <div class="additional-wrap">
+    <span class="additional-label">ADDITIONAL NUMBER</span>
+    <span class="additional-value">${row.additional_number===null||row.additional_number===undefined?"—":escapeHTML(row.additional_number)}</span>
+   </div>
+   <div class="prize-section" style="margin-top:17px">
+    <div class="prize-title"><span class="prize-name">PRIZE GROUPS</span><span class="prize-count">GROUP 1–7</span></div>
+    <table class="prize-table">
+     <thead><tr><th>GROUP</th><th>MATCH</th><th style="text-align:right">PRIZE</th></tr></thead>
+     <tbody>
+      ${groups.map(group=>`
+       <tr>
+        <td><span class="group-badge">${escapeHTML(group.group)}</span></td>
+        <td>${escapeHTML(group.category)}</td>
+        <td class="prize-amount">${group.amount?escapeHTML(group.amount):"Not published"}</td>
+       </tr>
+      `).join("")}
+     </tbody>
+    </table>
+   </div>
+  </div>
+ </div>`;
+}
+
+function renderHistoryItem(row){
+ if(activeGame==="4D") return render4D(row);
+ if(activeGame==="649") return render649(row);
+ return renderDerived(row,activeGame);
+}
+
+function toggleHistory(index){
+ const element=document.getElementById("history-"+index);
+ if(!element) return;
+ element.style.display=element.style.display==="block"?"none":"block";
+}
+
+selectGame("4D");
+loadResults();
+
+setInterval(()=>{
+ if(!document.hidden) loadResults();
+},60000);
+
+document.addEventListener("visibilitychange",()=>{
+ if(!document.hidden) loadResults();
+});
+</script>
+</body>
+</html>
