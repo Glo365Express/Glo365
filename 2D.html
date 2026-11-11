@@ -19,20 +19,6 @@ body{
  background:#fff;padding-bottom:25px;
  box-shadow:0 0 30px #354b9b15
 }
-.header{
- background:linear-gradient(120deg,#3155d9,#6558e8,#9b55df);
- padding:17px 15px;display:flex;
- justify-content:space-between;align-items:center;
- box-shadow:0 4px 15px #514bd52b
-}
-.logo{font-size:27px;font-weight:900;color:#fff}
-.logo span{color:#ffe58a}
-.balance{
- background:linear-gradient(135deg,#fff,#e9f5ff);
- color:#4055c7;padding:10px 14px;
- border-radius:30px;font-size:13px;font-weight:bold;
- box-shadow:0 3px 10px #142c6a25
-}
 .page-title{
  background:linear-gradient(100deg,#1769e0,#6555e8,#a34ed7);
  text-align:center;padding:16px 10px;
@@ -213,8 +199,6 @@ body{
 }
 
 @media(max-width:380px){
- .logo{font-size:24px}
- .balance{font-size:11px;padding:9px}
  .bet-row input{height:45px;font-size:12px}
  .column-heading{font-size:9px;gap:3px}
  .bet-row{gap:3px}
@@ -226,11 +210,6 @@ body{
 
 <body>
 <div class="app">
-
-<header class="header">
- <div class="logo">GLO <span>365</span></div>
- <div class="balance"><span id="balance">0.00</span> Points</div>
-</header>
 
 <div class="page-title">2D NUMBER</div>
 <div class="subtitle">Enter 2 Digit Number &amp; Virtual Points</div>
@@ -330,7 +309,10 @@ const rowsContainer=document.getElementById("betRows");
 const addButton=document.getElementById("addRow");
 const placeButton=document.getElementById("placeBet");
 
-const balanceElement=document.getElementById("balance");
+/* Header and visible balance removed.
+   Wallet balance is still loaded and used internally. */
+const balanceElement={textContent:""};
+
 const totalElement=document.getElementById("totalAmount");
 const discountElement=document.getElementById("discountAmount");
 const discountPercentElement=document.getElementById("discountPercent");
@@ -784,8 +766,6 @@ function applyControls(){
 
 /* =========================================
    DISCOUNT
-   Current generic 2D API has no separate
-   discount setting. Keep discount at 0.
 ========================================= */
 
 function loadDiscount(){
@@ -1065,8 +1045,6 @@ function validateRows(rows){
 
 /* =========================================
    BACKEND SELECTION FORMAT
-   Generic API expects:
-   game_name, selection, amount
 ========================================= */
 
 function makeSelection(rows){
@@ -1090,22 +1068,6 @@ function makeSelection(rows){
 
 /* =========================================
    SUBMIT BET
-   Actual backend:
-   POST /api/demo/bets
-
-   Body:
-   {
-     game_name: "2D",
-     selection: "...",
-     amount: 10
-   }
-
-   Server handles:
-   - 45-minute cutoff
-   - Balance validation
-   - Balance deduction
-   - PostgreSQL insert
-   - Wallet transaction
 ========================================= */
 
 async function submitBet(){
@@ -1180,8 +1142,6 @@ async function submitBet(){
 
  try{
 
-  /* Refresh authoritative server data before submit. */
-
   await loadWallet();
   await loadDrawSettings();
 
@@ -1198,12 +1158,6 @@ async function submitBet(){
    );
   }
 
-  /*
-   * IMPORTANT:
-   * apiRequest serializes the body itself.
-   * Do not JSON.stringify this object here.
-   */
-
   const response=await apiRequest("/demo/bets",{
    method:"POST",
    body:{
@@ -1212,12 +1166,6 @@ async function submitBet(){
     amount:amounts.finalAmount
    }
   });
-
-  /*
-   * Generic backend response currently returns
-   * bet, but not the updated balance.
-   * Therefore reload wallet from server.
-   */
 
   await loadWallet();
 
