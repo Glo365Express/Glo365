@@ -1,9 +1,10 @@
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
-<meta name="theme-color" content="#2196e8">
+<meta name="theme-color" content="#087acb">
 <title>GLO 365 - My Bets</title>
 
 <style>
@@ -11,7 +12,9 @@
 
 body{
  font-family:Arial,sans-serif;
- background:#f1f7fc;
+ background:
+ radial-gradient(circle at 15% 10%,#e2f4ff,transparent 35%),
+ linear-gradient(145deg,#edf6ff,#f7faff);
  color:#172b45;
 }
 
@@ -19,9 +22,9 @@ body{
  max-width:520px;
  min-height:100vh;
  margin:auto;
- background:#fff;
+ background:rgba(255,255,255,.94);
  padding-bottom:85px;
- box-shadow:0 0 20px #163c5c0a;
+ box-shadow:0 0 25px #163c5c0c;
 }
 
 /* HEADER AD */
@@ -55,7 +58,7 @@ header{
 /* HEADING */
 
 .heading{
- padding:17px 14px 10px;
+ padding:16px 14px 9px;
  display:flex;
  justify-content:space-between;
  align-items:center;
@@ -64,6 +67,7 @@ header{
 .heading h2{
  font-size:20px;
  color:#17466d;
+ font-weight:900;
 }
 
 .heading small{
@@ -77,15 +81,29 @@ header{
  display:grid;
  grid-template-columns:1fr 1fr;
  gap:9px;
- padding:5px 12px 14px;
+ padding:5px 12px 13px;
 }
 
 .summary-card{
- background:linear-gradient(145deg,#eaf6ff,#d9efff);
- border:1px solid #c9e5f7;
- border-radius:11px;
- padding:12px 7px;
+ position:relative;
+ overflow:hidden;
+ background:linear-gradient(135deg,#eaf7ff,#d8efff);
+ border:1px solid #c5e5fa;
+ border-radius:13px;
+ padding:11px 7px;
  text-align:center;
+ box-shadow:0 4px 10px #087acb0d;
+}
+
+.summary-card:after{
+ content:"";
+ position:absolute;
+ width:65px;
+ height:65px;
+ right:-30px;
+ top:-35px;
+ border-radius:50%;
+ background:#fff7;
 }
 
 .summary-card strong{
@@ -104,41 +122,124 @@ header{
 /* SECTION */
 
 .section-title{
- font-size:13px;
- font-weight:bold;
+ font-size:12px;
+ font-weight:900;
  color:#17466d;
- padding:5px 13px 10px;
+ padding:5px 13px 9px;
 }
 
 .bet-list{
  padding:0 10px;
+ perspective:1100px;
 }
 
-/* BET CARD */
+/* PREMIUM VISITING CARD */
 
 .bet-card{
- border:1px solid #d8e9f5;
- border-radius:11px;
+ --card1:#087acb;
+ --card2:#0756a7;
+
+ position:relative;
+ isolation:isolate;
+ border:1px solid #b9dcf2;
+ border-radius:13px;
  margin-bottom:9px;
  overflow:hidden;
- background:white;
- box-shadow:0 2px 7px #087acb0a;
+ background:linear-gradient(125deg,#ffffff,#f1f9ff);
+ box-shadow:
+  0 5px 12px rgba(0,75,140,.09),
+  inset 0 1px 2px #fff;
+ transform-style:preserve-3d;
+ animation:cardFloat 5s ease-in-out infinite;
+ transition:transform .3s,box-shadow .3s;
+ will-change:transform;
 }
 
+.bet-card:nth-child(2n){
+ animation-delay:-1.5s;
+}
+
+.bet-card:nth-child(3n){
+ animation-delay:-3s;
+}
+
+.bet-card:before{
+ content:"";
+ position:absolute;
+ z-index:3;
+ pointer-events:none;
+ top:0;
+ left:-120%;
+ width:65%;
+ height:100%;
+ background:linear-gradient(
+  110deg,
+  transparent,
+  rgba(255,255,255,.48),
+  transparent
+ );
+ transform:skewX(-18deg);
+ animation:cardShine 7s ease-in-out infinite;
+}
+
+.bet-card:after{
+ content:"";
+ position:absolute;
+ z-index:0;
+ right:-45px;
+ top:-55px;
+ width:130px;
+ height:130px;
+ border-radius:50%;
+ background:radial-gradient(circle,#4bbaff20,transparent 70%);
+ pointer-events:none;
+}
+
+.bet-card:active{
+ transform:scale(.985) rotateX(2deg);
+ box-shadow:0 2px 6px rgba(0,75,140,.12);
+}
+
+@keyframes cardFloat{
+ 0%,100%{
+  transform:translateY(0) rotateX(0deg) rotateY(0deg);
+ }
+ 25%{
+  transform:translateY(-2px) rotateX(.7deg) rotateY(-.5deg);
+ }
+ 50%{
+  transform:translateY(0) rotateX(-.5deg) rotateY(.5deg);
+ }
+ 75%{
+  transform:translateY(-2px) rotateX(.5deg) rotateY(0deg);
+ }
+}
+
+@keyframes cardShine{
+ 0%,55%{left:-120%}
+ 80%,100%{left:150%}
+}
+
+/* CARD HEADER */
+
 .bet-header{
- background:#edf7fe;
- padding:9px 10px;
+ position:relative;
+ z-index:1;
+ background:linear-gradient(110deg,#e6f5ff,#f4faff);
+ padding:7px 9px;
  display:flex;
  justify-content:space-between;
  align-items:center;
  gap:7px;
- border-bottom:1px solid #d9eaf6;
+ border-bottom:1px solid #d4e8f6;
+ min-height:43px;
 }
 
 .game-name{
- font-size:13px;
- font-weight:900;
+ font-size:12px;
+ font-weight:1000;
  color:#087acb;
+ letter-spacing:.2px;
 }
 
 .bet-id{
@@ -148,29 +249,34 @@ header{
 }
 
 .status{
- padding:5px 8px;
+ padding:4px 7px;
  border-radius:20px;
- font-size:9px;
- font-weight:bold;
+ font-size:8px;
+ font-weight:900;
  white-space:nowrap;
+ box-shadow:inset 0 1px 2px #ffffff90;
 }
 
-.running{background:#e5f3ff;color:#087acb}
-.win{background:#e1f8e8;color:#16813a}
-.loss{background:#ffe5e5;color:#c62828}
+.running{background:#dff1ff;color:#087acb}
+.win{background:#dcf8e6;color:#16813a}
+.loss{background:#ffe2e2;color:#c62828}
 .cancelled{background:#edf1f5;color:#667788}
 
 /* CARD BODY */
 
 .bet-body{
- padding:9px 10px;
+ position:relative;
+ z-index:1;
+ padding:7px 9px 8px;
 }
 
 .bet-date{
- font-size:10px;
+ font-size:9px;
  color:#7890a4;
- margin-bottom:7px;
+ margin-bottom:5px;
 }
+
+/* NUMBER TABLE */
 
 .columns,
 .number-row{
@@ -181,16 +287,16 @@ header{
 }
 
 .columns{
- font-size:9px;
- font-weight:bold;
+ font-size:8px;
+ font-weight:900;
  color:#66849d;
- padding:6px 4px;
+ padding:5px 4px;
  border-bottom:1px solid #dceaf4;
 }
 
 .number-row{
- font-size:11px;
- padding:7px 4px;
+ font-size:10px;
+ padding:5px 4px;
  border-bottom:1px solid #e7f0f6;
  color:#405b72;
 }
@@ -205,7 +311,7 @@ header{
 }
 
 .number{
- font-weight:bold;
+ font-weight:1000;
  letter-spacing:1px;
  color:#087acb;
 }
@@ -216,16 +322,17 @@ header{
  display:inline-flex;
  align-items:center;
  justify-content:flex-end;
- gap:5px;
- font-weight:bold;
+ gap:4px;
+ font-weight:900;
  color:#087acb;
  white-space:nowrap;
+ font-size:10px;
 }
 
 .glo-symbol{
- width:17px;
- height:17px;
- min-width:17px;
+ width:15px;
+ height:15px;
+ min-width:15px;
  display:inline-flex;
  align-items:center;
  justify-content:center;
@@ -233,19 +340,19 @@ header{
  background:linear-gradient(145deg,#39b8ff,#087acb);
  border:1px solid #bce8ff;
  color:#fff;
- font-size:10px;
+ font-size:9px;
  font-weight:900;
- box-shadow:0 1px 3px #087acb30;
+ box-shadow:0 2px 4px #087acb30;
 }
 
 /* AMOUNT BOX */
 
 .amount-box{
- background:#f4faff;
- border:1px solid #dcebf5;
+ background:linear-gradient(120deg,#f0f8ff,#e8f5ff);
+ border:1px solid #d5e9f7;
  border-radius:8px;
- padding:7px 9px;
- margin-top:8px;
+ padding:5px 8px;
+ margin-top:6px;
 }
 
 .amount-line{
@@ -253,28 +360,28 @@ header{
  justify-content:space-between;
  align-items:center;
  gap:8px;
- font-size:10px;
- padding:4px 0;
+ font-size:9px;
+ padding:3px 0;
  color:#668095;
 }
 
 .amount-line.final{
  border-top:1px solid #d2e4f1;
- margin-top:4px;
- padding-top:7px;
+ margin-top:3px;
+ padding-top:5px;
  color:#17466d;
- font-size:12px;
- font-weight:bold;
+ font-size:11px;
+ font-weight:1000;
 }
 
 /* RESULT NOTE */
 
 .result-note{
- margin-top:7px;
- padding:7px 9px;
+ margin-top:6px;
+ padding:6px 8px;
  border-radius:7px;
- font-size:10px;
- font-weight:bold;
+ font-size:9px;
+ font-weight:900;
 }
 
 .result-note.win{
@@ -318,11 +425,12 @@ header{
  padding:10px 23px;
  border:0;
  border-radius:8px;
- background:#2196e8;
+ background:linear-gradient(135deg,#2196e8,#0865bc);
  color:white;
  font-weight:bold;
  cursor:pointer;
  font-size:12px;
+ box-shadow:0 4px 10px #087acb30;
 }
 
 /* MESSAGE */
@@ -363,11 +471,12 @@ nav{
  transform:translateX(-50%);
  width:100%;
  max-width:520px;
- background:white;
+ background:rgba(255,255,255,.97);
+ backdrop-filter:blur(12px);
  border-top:1px solid #dceaf4;
  display:flex;
  justify-content:space-around;
- padding:10px 4px 15px;
+ padding:9px 4px 15px;
  z-index:10;
  box-shadow:0 -3px 12px #00000008;
 }
@@ -414,17 +523,30 @@ nav button.active{
 }
 
 @media(max-width:380px){
+
  .columns,.number-row{
   grid-template-columns:1fr 53px 53px;
  }
+
  .heading h2{font-size:19px}
- .bet-header{padding:8px}
- .bet-body{padding:8px}
+
+ .bet-header{padding:6px 8px}
+ .bet-body{padding:6px 8px 7px}
+
  .glo-symbol{
-  width:15px;
-  height:15px;
-  min-width:15px;
-  font-size:9px;
+  width:14px;
+  height:14px;
+  min-width:14px;
+  font-size:8px;
+ }
+}
+
+@media(prefers-reduced-motion:reduce){
+ .bet-card{
+  animation:none;
+ }
+ .bet-card:before{
+  animation:none;
  }
 }
 </style>
@@ -685,7 +807,7 @@ function appendLine(parent,label,value,final=false){
 
  line.append(labelElement,makeGloAmount(value));
 
- parent.appendChild(line);
+ parent.append(line);
 }
 
 /* BET CARD */
