@@ -19,43 +19,11 @@ body{
     color:#064477;
     min-height:100vh;
 }
-.top-area{
-    width:100%;
-    max-width:650px;
-    height:58px;
-    margin:0 auto;
-    padding:9px 14px;
-    display:flex;
-    align-items:center;
-    justify-content:flex-start;
-    background:transparent;
-}
-.back-btn{
-    width:43px;
-    height:43px;
-    display:flex;
-    align-items:center;
-    justify-content:center;
-    border-radius:15px;
-    color:#fff;
-    text-decoration:none;
-    font-size:29px;
-    font-weight:700;
-    line-height:1;
-    background:linear-gradient(145deg,#087fda,#0752a4);
-    border:2px solid #ffffff;
-    box-shadow:0 3px 10px #075ba944,inset 0 1px 2px #ffffff66;
-    transition:transform .15s ease,filter .15s ease;
-}
-.back-btn:active{
-    transform:scale(.93);
-    filter:brightness(1.12);
-}
 .container{
     width:100%;
     max-width:650px;
     margin:auto;
-    padding:5px 12px 30px;
+    padding:0 12px 30px;
 }
 
 /* Official Thailand Government Lottery photo banner */
@@ -78,18 +46,40 @@ body{
     object-position:center 38%;
 }
 
-/* Section title */
+/* Premium 3D royal section heading */
 .section-title{
     display:flex;
     align-items:center;
     gap:9px;
-    margin:10px 3px 14px;
-    color:#075baa;
-    font-size:18px;
-    font-weight:900;
+    margin:22px 3px 17px;
+    min-height:42px;
 }
-.section-title span{
-    font-size:23px;
+.title-crown{
+    display:inline-block;
+    font-size:29px;
+    line-height:1;
+    filter:drop-shadow(0 3px 1px #9b5a00aa);
+    animation:crownFloat 2.8s ease-in-out infinite;
+}
+.title-text{
+    display:inline-block;
+    font-size:clamp(18px,5vw,25px);
+    line-height:1.15;
+    font-weight:1000;
+    letter-spacing:.35px;
+    color:#0870bd;
+    background:linear-gradient(180deg,#ffffff 0%,#e6f8ff 13%,#58c9ff 34%,#0875c8 57%,#064987 78%,#0b6eb5 100%);
+    -webkit-background-clip:text;
+    background-clip:text;
+    -webkit-text-fill-color:transparent;
+    filter:drop-shadow(0 2px 0 #03477f)
+           drop-shadow(0 4px 1px #6aaed0)
+           drop-shadow(0 6px 3px #06447755);
+    text-shadow:0 1px 0 #ffffff;
+}
+@keyframes crownFloat{
+    0%,100%{transform:translateY(0) rotate(-3deg);}
+    50%{transform:translateY(-3px) rotate(3deg);}
 }
 
 /* Game grid */
@@ -148,6 +138,21 @@ body{
     z-index:2;
     white-space:nowrap;
 }
+/* Animated PLAY NOW lettering: a soft moving shine */
+.play-btn span:first-child{
+    display:inline-block;
+    background:linear-gradient(100deg,#064b91 0%,#064b91 34%,#39a9ff 48%,#064b91 62%,#064b91 100%);
+    background-size:220% 100%;
+    background-position:100% 50%;
+    -webkit-background-clip:text;
+    background-clip:text;
+    color:transparent;
+    animation:playNowShine 2.4s ease-in-out infinite;
+}
+@keyframes playNowShine{
+    0%,15%{background-position:100% 50%;}
+    75%,100%{background-position:0% 50%;}
+}
 .arrow{
     width:36px;
     height:36px;
@@ -162,6 +167,14 @@ body{
 }
 .pink-arrow{background:#ee1681;}
 .green-arrow{background:#08a65c;}
+.arrow{animation:arrowPulse 1.5s ease-in-out infinite;}
+@keyframes arrowPulse{
+    0%,100%{transform:scale(1);}
+    50%{transform:scale(1.10);}
+}
+@media(prefers-reduced-motion:reduce){
+    .play-btn span:first-child,.arrow{animation:none;}
+}
 .footer-note{
     text-align:center;
     color:#39749e;
@@ -188,11 +201,6 @@ body{
 
 <body>
 
-<!-- Only a back button: no colored title header -->
-<nav class="top-area" aria-label="Page navigation">
-    <a href="home.html" class="back-btn" aria-label="Back to Home">‹</a>
-</nav>
-
 <main class="container">
 
     <section class="thailand-banner" aria-label="Thailand Government Lottery">
@@ -200,8 +208,8 @@ body{
     </section>
 
     <div class="section-title">
-        <span>👑</span>
-        CHOOSE YOUR GAME
+        <span class="title-crown">👑</span>
+        <span class="title-text">CHOOSE YOUR GAME</span>
     </div>
 
     <section class="game-grid" aria-label="Choose your game">
