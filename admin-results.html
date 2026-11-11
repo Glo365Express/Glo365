@@ -1,143 +1,679 @@
+
 <!DOCTYPE html>
 <html lang="bn">
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
-<meta name="theme-color" content="#ffb900">
+<meta name="theme-color" content="#0878df">
 <title>GLO 365 - Result Admin</title>
+
 <style>
-*{box-sizing:border-box;margin:0;padding:0}
-body{font-family:Arial,sans-serif;background:#f2f3f5;color:#202127}
-.app{max-width:1050px;margin:auto;padding:16px}
-.header{display:flex;justify-content:space-between;align-items:center;gap:12px;flex-wrap:wrap;margin-bottom:20px}
-.brand{font-size:25px;font-weight:900}.brand span{color:#e6a600}
-.actions{display:flex;gap:8px;flex-wrap:wrap}
-button,a.btn{border:0;border-radius:10px;padding:12px 16px;font-weight:700;cursor:pointer;text-decoration:none;font-size:14px}
-.back{background:#202127;color:#fff}.logout{background:#ffe4e4;color:#bd2525}
-.card{background:#fff;border-radius:18px;padding:20px;margin-bottom:17px;box-shadow:0 4px 16px #00000008}
-.intro{margin-bottom:17px}.intro h1{font-size:21px;margin-bottom:7px}.intro p{font-size:12px;color:#858585;line-height:1.6}
-.country-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:13px}
-.country-card{position:relative;overflow:hidden;isolation:isolate;min-height:135px;border:0;border-radius:17px;padding:16px;display:flex;align-items:center;gap:12px;text-align:left;color:white;box-shadow:0 7px 17px #00000016;transition:.2s;cursor:pointer;width:100%}
-.country-card:before{content:"";position:absolute;z-index:-1;width:145px;height:145px;border-radius:50%;right:-55px;top:-70px;background:#ffffff20}
-.country-card:after{content:"";position:absolute;z-index:-1;width:100px;height:100px;border-radius:50%;right:30px;bottom:-75px;background:#ffffff15}
-.country-card:active{transform:scale(.98)}
-.thai{background:linear-gradient(130deg,#a81432,#ef405c)}
-.malaysia{background:linear-gradient(130deg,#064a9d,#1597f0)}
-.singapore{background:linear-gradient(130deg,#08766b,#23b99b)}
-.taiwan{background:linear-gradient(130deg,#4930a7,#9273ff)}
-.laos{background:linear-gradient(130deg,#a9470b,#f39a25)}
-.flag{width:55px;height:55px;flex-shrink:0;display:flex;align-items:center;justify-content:center;border-radius:15px;background:#ffffff25;border:1px solid #ffffff55;font-size:32px}
-.info{min-width:0;flex:1}.info small{display:block;font-size:9px;letter-spacing:1px;font-weight:900;margin-bottom:7px;color:#ffffffcf}
-.info strong{display:block;font-size:15px;line-height:1.35}.info em{display:block;font-style:normal;font-size:10px;margin-top:7px;color:#ffffffd9}
-.arrow{width:27px;height:27px;border-radius:50%;display:flex;align-items:center;justify-content:center;background:#ffffff30;font-size:20px;flex-shrink:0}
-.footer{text-align:center;color:#aaa;font-size:11px;padding:20px}
-.loading{position:fixed;inset:0;background:#f2f3f5;display:flex;align-items:center;justify-content:center;z-index:10;font-size:14px;color:#555}
-@media(max-width:600px){.app{padding:12px}.brand{font-size:23px}.country-grid{grid-template-columns:1fr}.country-card{min-height:112px}.card{padding:15px}}
+*{
+  box-sizing:border-box;
+  margin:0;
+  padding:0;
+  -webkit-tap-highlight-color:transparent;
+}
+
+:root{
+  --blue:#0878df;
+  --dark:#102b49;
+}
+
+body{
+  font-family:Arial,Helvetica,sans-serif;
+  background:
+    radial-gradient(circle at 10% 5%,#d9edff,transparent 35%),
+    radial-gradient(circle at 95% 45%,#dceeff,transparent 35%),
+    linear-gradient(145deg,#f4f8ff,#eaf3ff);
+  color:var(--dark);
+  min-height:100vh;
+  overflow-x:hidden;
+}
+
+.app{
+  max-width:900px;
+  margin:auto;
+  padding:20px 15px 35px;
+}
+
+/* HEADER */
+
+.header{
+  position:relative;
+  overflow:hidden;
+  padding:20px;
+  border-radius:21px;
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  gap:12px;
+  flex-wrap:wrap;
+  color:white;
+  background:linear-gradient(120deg,#0754ae,#087fdf,#36b8ff,#0754ae);
+  background-size:300% 300%;
+  animation:headerFlow 8s ease infinite;
+  box-shadow:
+    0 12px 28px #0878df35,
+    inset 0 1px 1px #ffffff55;
+}
+
+.header:before{
+  content:"";
+  position:absolute;
+  width:180px;
+  height:180px;
+  border:1px solid #ffffff30;
+  border-radius:50%;
+  right:-50px;
+  top:-100px;
+  box-shadow:0 0 30px #ffffff20;
+  pointer-events:none;
+}
+
+.header:after{
+  content:"";
+  position:absolute;
+  width:110px;
+  height:110px;
+  border-radius:50%;
+  right:100px;
+  bottom:-85px;
+  background:#ffffff13;
+  pointer-events:none;
+}
+
+@keyframes headerFlow{
+  0%,100%{background-position:0% 50%}
+  50%{background-position:100% 50%}
+}
+
+.brand{
+  position:relative;
+  z-index:1;
+  font-size:26px;
+  font-weight:1000;
+  letter-spacing:1px;
+  text-shadow:0 3px 5px #003c8060;
+}
+
+.brand span{
+  color:#ffe16b;
+}
+
+.brand small{
+  font-size:12px;
+  color:#ffffffd9;
+  letter-spacing:0;
+}
+
+.actions{
+  position:relative;
+  z-index:1;
+  display:flex;
+  gap:8px;
+}
+
+button,a.btn{
+  border:0;
+  border-radius:11px;
+  padding:11px 15px;
+  font-weight:800;
+  cursor:pointer;
+  text-decoration:none;
+  font-size:12px;
+  transition:.25s;
+}
+
+.back{
+  background:#ffffffeb;
+  color:#0756a9;
+}
+
+.logout{
+  background:#ffeded;
+  color:#c52b3b;
+}
+
+.back:active,.logout:active{
+  transform:scale(.94);
+}
+
+/* INTRO */
+
+.intro{
+  text-align:center;
+  padding:29px 8px 23px;
+}
+
+.intro-tag{
+  display:inline-block;
+  padding:7px 14px;
+  border-radius:30px;
+  color:#0878df;
+  background:#e2f2ff;
+  border:1px solid #c6e5ff;
+  font-size:10px;
+  font-weight:900;
+  letter-spacing:1px;
+  margin-bottom:12px;
+}
+
+.intro h1{
+  font-size:25px;
+  font-weight:1000;
+  color:#123d69;
+  margin-bottom:9px;
+}
+
+.intro p{
+  max-width:480px;
+  margin:auto;
+  color:#71879d;
+  font-size:12px;
+  line-height:1.7;
+}
+
+/* COUNTRY GRID */
+
+.country-grid{
+  display:grid;
+  grid-template-columns:repeat(3,minmax(0,1fr));
+  gap:16px;
+  perspective:1000px;
+  padding:10px 2px 22px;
+}
+
+/* 3D CARDS */
+
+.country-card{
+  position:relative;
+  isolation:isolate;
+  overflow:hidden;
+  min-height:230px;
+  width:100%;
+  padding:19px 12px;
+  border:1px solid #ffffff65;
+  border-radius:22px;
+  color:white;
+  text-align:center;
+  display:flex;
+  flex-direction:column;
+  align-items:center;
+  justify-content:center;
+  gap:12px;
+  cursor:pointer;
+  transform-style:preserve-3d;
+  box-shadow:
+    0 13px 22px #073d7928,
+    inset 0 1px 2px #ffffff80;
+  transition:
+    transform .35s ease,
+    box-shadow .35s ease,
+    filter .35s ease;
+  animation:cardFloat 4s ease-in-out infinite;
+}
+
+.country-card:nth-child(2){
+  animation-delay:.6s;
+}
+
+.country-card:nth-child(3){
+  animation-delay:1.2s;
+}
+
+@keyframes cardFloat{
+  0%,100%{transform:translateY(0) rotateX(0deg)}
+  50%{transform:translateY(-8px) rotateX(2deg)}
+}
+
+.country-card:hover{
+  transform:translateY(-12px) rotateX(7deg) rotateY(-5deg) scale(1.025);
+  box-shadow:
+    0 23px 35px #073d7945,
+    0 0 22px var(--glow),
+    inset 0 1px 3px #ffffffaa;
+  filter:brightness(1.08);
+}
+
+.country-card:active{
+  transform:scale(.95) rotateX(4deg);
+}
+
+.country-card:before{
+  content:"";
+  position:absolute;
+  z-index:-1;
+  width:190px;
+  height:190px;
+  right:-80px;
+  top:-95px;
+  border:1px solid #ffffff45;
+  border-radius:50%;
+  box-shadow:0 0 30px #ffffff20;
+}
+
+.country-card:after{
+  content:"";
+  position:absolute;
+  z-index:-1;
+  width:150px;
+  height:150px;
+  left:-80px;
+  bottom:-90px;
+  border-radius:50%;
+  background:#ffffff18;
+  filter:blur(2px);
+}
+
+/* COLOR MOTION */
+
+.thai{
+  --glow:#ff526c;
+  background:linear-gradient(135deg,#a80e35,#ec365c,#ff7c72,#b51742);
+  background-size:300% 300%;
+  animation:cardFloat 4s ease-in-out infinite,colorMove 7s ease infinite;
+}
+
+.malaysia{
+  --glow:#38c7ff;
+  background:linear-gradient(135deg,#06469c,#087ddd,#36c4ff,#0751a7);
+  background-size:300% 300%;
+  animation:cardFloat 4s ease-in-out infinite .6s,colorMove 8s ease infinite;
+}
+
+.singapore{
+  --glow:#43e2c0;
+  background:linear-gradient(135deg,#06695f,#0aa88f,#45d6ae,#08786d);
+  background-size:300% 300%;
+  animation:cardFloat 4s ease-in-out infinite 1.2s,colorMove 9s ease infinite;
+}
+
+@keyframes colorMove{
+  0%,100%{background-position:0% 50%}
+  50%{background-position:100% 50%}
+}
+
+/* CARD CONTENT */
+
+.flag{
+  width:75px;
+  height:75px;
+  flex-shrink:0;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  border-radius:23px;
+  background:#ffffff25;
+  border:1px solid #ffffff65;
+  box-shadow:
+    0 8px 16px #001b3c35,
+    inset 0 1px 3px #ffffff70;
+  font-size:43px;
+  transform:translateZ(30px);
+  backdrop-filter:blur(8px);
+}
+
+.info{
+  position:relative;
+  z-index:1;
+  transform:translateZ(22px);
+}
+
+.info small{
+  display:block;
+  font-size:9px;
+  letter-spacing:2px;
+  font-weight:1000;
+  margin-bottom:8px;
+  color:#ffffffdf;
+}
+
+.info strong{
+  display:block;
+  font-size:15px;
+  line-height:1.35;
+  text-shadow:0 2px 5px #002c5a40;
+}
+
+.info em{
+  display:block;
+  font-style:normal;
+  font-size:10px;
+  margin-top:7px;
+  color:#ffffffdb;
+}
+
+.open-label{
+  display:inline-flex;
+  align-items:center;
+  justify-content:center;
+  gap:7px;
+  margin-top:14px;
+  padding:9px 14px;
+  border-radius:10px;
+  background:#ffffffed;
+  color:#15518c;
+  font-size:10px;
+  font-weight:1000;
+  box-shadow:0 5px 12px #002d5935;
+  transform:translateZ(35px);
+  transition:.25s;
+}
+
+.country-card:hover .open-label{
+  transform:translateZ(45px) scale(1.06);
+}
+
+.arrow{
+  position:absolute;
+  right:12px;
+  top:12px;
+  width:25px;
+  height:25px;
+  border-radius:50%;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  background:#ffffff30;
+  border:1px solid #ffffff45;
+  font-size:19px;
+}
+
+/* FOOTER */
+
+.footer{
+  text-align:center;
+  color:#91a6ba;
+  font-size:10px;
+  padding:20px 8px;
+}
+
+/* LOADING */
+
+.loading{
+  position:fixed;
+  inset:0;
+  background:linear-gradient(135deg,#0754ae,#168fe8,#49bfff);
+  display:flex;
+  flex-direction:column;
+  align-items:center;
+  justify-content:center;
+  z-index:100;
+  color:white;
+  font-size:14px;
+  font-weight:bold;
+  gap:14px;
+}
+
+.loader{
+  width:42px;
+  height:42px;
+  border:4px solid #ffffff50;
+  border-top-color:white;
+  border-radius:50%;
+  animation:spin .8s linear infinite;
+}
+
+@keyframes spin{
+  to{transform:rotate(360deg)}
+}
+
+/* MOBILE */
+
+@media(max-width:650px){
+  .app{padding:13px 12px 25px}
+  .header{padding:17px;border-radius:17px}
+  .brand{font-size:23px}
+  .country-grid{
+    grid-template-columns:1fr;
+    gap:15px;
+    padding:5px 2px 20px;
+  }
+  .country-card{
+    min-height:155px;
+    flex-direction:row;
+    justify-content:flex-start;
+    text-align:left;
+    padding:18px;
+    border-radius:19px;
+    gap:15px;
+  }
+  .flag{
+    width:66px;
+    height:66px;
+    font-size:37px;
+    border-radius:19px;
+  }
+  .info strong{font-size:16px}
+  .info small{font-size:9px}
+  .info em{font-size:10px}
+  .open-label{margin-top:9px}
+  .arrow{right:14px;top:14px}
+  .intro{padding:25px 5px 18px}
+  .intro h1{font-size:23px}
+}
+
+@media(prefers-reduced-motion:reduce){
+  *,*::before,*::after{
+    animation-duration:.01ms!important;
+    transition-duration:.01ms!important;
+    scroll-behavior:auto!important;
+  }
+}
 </style>
 </head>
+
 <body>
-<div class="loading" id="loading">Checking admin access...</div>
+
+<div class="loading" id="loading">
+  <div class="loader"></div>
+  Checking admin access...
+</div>
+
 <main class="app" id="app" style="display:none">
+
 <header class="header">
- <div class="brand">GLO <span>365</span> <small style="font-size:13px;color:#777">/ Result Admin</small></div>
- <div class="actions">
-  <a class="btn back" href="admin.html">← Dashboard</a>
-  <button class="logout" id="logoutBtn" type="button">Logout</button>
- </div>
+  <div class="brand">
+    GLO <span>365</span>
+    <small>/ Result Admin</small>
+  </div>
+
+  <div class="actions">
+    <a class="btn back" href="admin.html">← Dashboard</a>
+    <button class="logout" id="logoutBtn" type="button">Logout</button>
+  </div>
 </header>
 
-<section class="card">
- <div class="intro">
+<section class="intro">
+  <div class="intro-tag">✦ OFFICIAL RESULT MANAGEMENT</div>
   <h1>🌍 Result Management</h1>
-  <p>একটি দেশ নির্বাচন করুন। নির্বাচিত দেশের আলাদা Admin পেজ থেকে ফলাফল Publish করতে পারবেন।</p>
- </div>
-
- <div class="country-grid">
-  <button type="button" class="country-card thai" data-page="thai.html">
-   <span class="flag">🇹🇭</span>
-   <span class="info"><small>THAILAND</small><strong>Thai Government Lotto</strong><em>Publish Thailand Results</em></span>
-   <span class="arrow">›</span>
-  </button>
-
-  <button type="button" class="country-card malaysia" data-page="malaysia.html">
-   <span class="flag">🇲🇾</span>
-   <span class="info"><small>MALAYSIA</small><strong>Malaysia Toto</strong><em>Publish Malaysia 2D / 3D / 4D</em></span>
-   <span class="arrow">›</span>
-  </button>
-
-  <button type="button" class="country-card singapore" data-page="singapore.html">
-   <span class="flag">🇸🇬</span>
-   <span class="info"><small>SINGAPORE</small><strong>Singapore Pools</strong><em>Publish Singapore Results</em></span>
-   <span class="arrow">›</span>
-  </button>
-
-  <button type="button" class="country-card taiwan" data-page="taiwan.html">
-   <span class="flag">🇹🇼</span>
-   <span class="info"><small>TAIWAN</small><strong>Taiwan Lottery</strong><em>Publish Taiwan Results</em></span>
-   <span class="arrow">›</span>
-  </button>
-
-  <button type="button" class="country-card laos" data-page="laos.html">
-   <span class="flag">🇱🇦</span>
-   <span class="info"><small>LAOS</small><strong>Laos Government Lotto</strong><em>Publish Laos Results</em></span>
-   <span class="arrow">›</span>
-  </button>
- </div>
+  <p>
+    Select a country to manage and publish its lottery results.
+    Each country has its own dedicated result management page.
+  </p>
 </section>
 
-<footer class="footer">© 2026 GLO 365. All Rights Reserved.</footer>
+<section class="country-grid">
+
+  <!-- THAILAND -->
+  <button type="button" class="country-card thai" data-page="thai.html">
+    <span class="flag">🇹🇭</span>
+    <span class="info">
+      <small>THAILAND</small>
+      <strong>Thai Government Lotto</strong>
+      <em>Publish Thailand Results</em>
+      <span class="open-label">MANAGE RESULTS ↗</span>
+    </span>
+    <span class="arrow">›</span>
+  </button>
+
+  <!-- MALAYSIA -->
+  <button type="button" class="country-card malaysia" data-page="malaysia.html">
+    <span class="flag">🇲🇾</span>
+    <span class="info">
+      <small>MALAYSIA</small>
+      <strong>Malaysia Toto</strong>
+      <em>Publish Malaysia 2D / 3D / 4D</em>
+      <span class="open-label">MANAGE RESULTS ↗</span>
+    </span>
+    <span class="arrow">›</span>
+  </button>
+
+  <!-- SINGAPORE -->
+  <button type="button" class="country-card singapore" data-page="singapore.html">
+    <span class="flag">🇸🇬</span>
+    <span class="info">
+      <small>SINGAPORE</small>
+      <strong>Singapore Pools</strong>
+      <em>Publish Singapore Results</em>
+      <span class="open-label">MANAGE RESULTS ↗</span>
+    </span>
+    <span class="arrow">›</span>
+  </button>
+
+</section>
+
+<footer class="footer">
+  © 2026 GLO 365. All Rights Reserved.
+</footer>
+
 </main>
 
 <script>
 'use strict';
+
 const API_BASE_URL='https://glo365.onrender.com/api';
 const TOKEN_KEY='glo365_token';
-function getToken(){return sessionStorage.getItem(TOKEN_KEY)||'';}
+
+function getToken(){
+  try{
+    return sessionStorage.getItem(TOKEN_KEY)||'';
+  }catch(error){
+    return '';
+  }
+}
 
 async function api(path,options={}){
- const headers={'Accept':'application/json','Content-Type':'application/json',...(options.headers||{})};
- const token=getToken();
- if(token)headers.Authorization='Bearer '+token;
- const response=await fetch(API_BASE_URL+path,{...options,headers,credentials:'include'});
- let data={};
- try{data=await response.json();}catch(e){}
- if(!response.ok)throw new Error(data.message||data.error||'Request failed ('+response.status+')');
- return data;
+
+  const headers={
+    'Accept':'application/json',
+    'Content-Type':'application/json',
+    ...(options.headers||{})
+  };
+
+  const token=getToken();
+
+  if(token){
+    headers.Authorization='Bearer '+token;
+  }
+
+  const response=await fetch(API_BASE_URL+path,{
+    ...options,
+    headers,
+    credentials:'include'
+  });
+
+  let data={};
+
+  try{
+    data=await response.json();
+  }catch(error){}
+
+  if(!response.ok){
+    throw new Error(
+      data.message||
+      data.error||
+      'Request failed ('+response.status+')'
+    );
+  }
+
+  return data;
 }
+
+/* ADMIN ACCESS */
 
 async function checkAdmin(){
- if(!getToken()){location.href='login.html';return false;}
- try{
-  const data=await api('/auth/me');
-  const user=data.user||data.profile||data;
-  if(String(user.role||'').toLowerCase()!=='admin'){
-   location.href='login.html';return false;
+
+  if(!getToken()){
+    location.href='login.html';
+    return false;
   }
-  return true;
- }catch(error){
-  sessionStorage.removeItem(TOKEN_KEY);
-  location.href='login.html';
-  return false;
- }
+
+  try{
+
+    const data=await api('/auth/me');
+    const user=data.user||data.profile||data;
+
+    if(String(user.role||'').toLowerCase()!=='admin'){
+      location.href='login.html';
+      return false;
+    }
+
+    return true;
+
+  }catch(error){
+
+    try{
+      sessionStorage.removeItem(TOKEN_KEY);
+    }catch(_){}
+
+    location.href='login.html';
+    return false;
+  }
 }
 
+/* COUNTRY NAVIGATION */
+
 document.querySelectorAll('.country-card').forEach(card=>{
- card.addEventListener('click',()=>{
-  location.href='result-admin/'+card.dataset.page;
- });
+
+  card.addEventListener('click',()=>{
+
+    const page=card.dataset.page;
+
+    if(page){
+      location.href='result-admin/'+page;
+    }
+
+  });
+
 });
+
+/* LOGOUT */
 
 document.getElementById('logoutBtn').addEventListener('click',async()=>{
- try{await api('/auth/logout',{method:'POST'});}catch(error){}
- sessionStorage.removeItem(TOKEN_KEY);
- location.href='login.html';
+
+  const button=document.getElementById('logoutBtn');
+
+  button.disabled=true;
+  button.textContent='Logging out...';
+
+  try{
+    await api('/auth/logout',{method:'POST'});
+  }catch(error){}
+
+  try{
+    sessionStorage.removeItem(TOKEN_KEY);
+  }catch(_){}
+
+  location.href='login.html';
+
 });
 
+/* INITIALIZE */
+
 (async()=>{
- const allowed=await checkAdmin();
- document.getElementById('loading').style.display='none';
- if(allowed)document.getElementById('app').style.display='block';
+
+  const allowed=await checkAdmin();
+
+  document.getElementById('loading').style.display='none';
+
+  if(allowed){
+    document.getElementById('app').style.display='block';
+  }
+
 })();
 </script>
+
 </body>
 </html>
