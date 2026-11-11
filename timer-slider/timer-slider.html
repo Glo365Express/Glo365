@@ -5,10 +5,13 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <meta name="theme-color" content="#ffffff">
+
 <title>GLO 365 Timer Slider</title>
 
 <style>
-*{box-sizing:border-box}
+*{
+  box-sizing:border-box;
+}
 
 html,body{
   margin:0;
@@ -49,7 +52,7 @@ html,body{
     id="timerFrame"
     class="timer-frame"
     title="Thailand timer"
-    src="Thai-Timer.html"
+    src="Thailand/Thai-Timer.html"
     loading="eager"
     scrolling="no">
   </iframe>
@@ -64,48 +67,72 @@ html,body{
 
   timer-slider/
     timer-slider.html
-    Thai-Timer.html
-    Singapore-Timer.html
+
+    Thailand/
+      Thai-Timer.html
+
+    Singapore/
+      Singapore-Timer.html
+
+    Taiwan/
+      Taiwan-Timer.html
+
+    Malaysia/
+      Malaysia-Timer.html
 */
 
 const TIMER_CARDS = [
 
   {
-    file:"Thai-Timer.html",
+    file:"Thailand/Thai-Timer.html",
     title:"Thailand timer"
   },
 
   {
-    file:"Singapore-Timer.html",
+    file:"Singapore/Singapore-Timer.html",
     title:"Singapore Pools timer"
+  },
+
+  {
+    file:"Taiwan/Taiwan-Timer.html",
+    title:"Taiwan timer"
+  },
+
+  {
+    file:"Malaysia/Malaysia-Timer.html",
+    title:"Malaysia timer"
   }
 
 ];
 
-const CHANGE_INTERVAL=15000;
+// প্রতি ৭ সেকেন্ডে Timer পরিবর্তন হবে
+const CHANGE_INTERVAL = 7000;
 
-const frame=document.getElementById("timerFrame");
+const frame = document.getElementById("timerFrame");
 
-let activeIndex=0;
-let rotationTimer=null;
+let activeIndex = 0;
+let rotationTimer = null;
 
 function showCard(index){
 
-  if(!TIMER_CARDS.length)return;
+  if(!TIMER_CARDS.length) return;
 
-  activeIndex=index%TIMER_CARDS.length;
+  activeIndex = index % TIMER_CARDS.length;
 
-  const card=TIMER_CARDS[activeIndex];
+  const card = TIMER_CARDS[activeIndex];
 
-  frame.title=card.title;
-  frame.src=card.file;
+  frame.title = card.title;
+  frame.src = card.file;
+
 }
 
 function stopSlider(){
 
   if(rotationTimer){
+
     clearInterval(rotationTimer);
-    rotationTimer=null;
+    rotationTimer = null;
+
   }
 
 }
@@ -114,33 +141,40 @@ function startSlider(){
 
   stopSlider();
 
-  if(document.hidden)return;
+  if(document.hidden) return;
 
-  if(TIMER_CARDS.length<=1){
+  if(TIMER_CARDS.length <= 1){
+
     showCard(activeIndex);
     return;
+
   }
 
-  rotationTimer=setInterval(()=>{
+  rotationTimer = setInterval(()=>{
 
     showCard(
-      (activeIndex+1)%TIMER_CARDS.length
+      (activeIndex + 1) % TIMER_CARDS.length
     );
 
-  },CHANGE_INTERVAL);
+  }, CHANGE_INTERVAL);
 
 }
 
 document.addEventListener("visibilitychange",()=>{
 
   if(document.hidden){
+
     stopSlider();
+
   }else{
+
     startSlider();
+
   }
 
 });
 
+// Slider চালু
 startSlider();
 
 </script>
