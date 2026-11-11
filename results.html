@@ -3,1195 +3,383 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
-<meta name="theme-color" content="#a90012">
-<title>GLO 365 - Live Results</title>
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="theme-color" content="#1688df">
+<title>Results - GLO 365</title>
 
 <style>
-*{box-sizing:border-box;margin:0;padding:0}
-
-:root{
- --red:#b90018;
- --red-dark:#79000e;
- --gold:#ffd45c;
- --border:#ead5d5;
- --text:#263746;
- --muted:#71869a;
- --bg:#fff5f5;
- --navy:#102d49;
+*{
+  margin:0;
+  padding:0;
+  box-sizing:border-box;
+  -webkit-tap-highlight-color:transparent;
 }
 
 body{
- font-family:Arial,sans-serif;
- background:var(--bg);
- color:var(--text);
+  font-family:Arial, sans-serif;
+  background:#f2f7fc;
+  color:#172b45;
+  min-height:100vh;
 }
 
-.app{
- max-width:520px;
- min-height:100vh;
- margin:auto;
- background:#fff;
- padding-bottom:35px;
- overflow:hidden;
+.header{
+  background:linear-gradient(135deg,#1688df,#0870c7);
+  color:white;
+  padding:19px 16px 23px;
+  border-radius:0 0 22px 22px;
+  box-shadow:0 4px 14px rgba(0,90,170,.16);
 }
 
-/* WINNER BANNER */
-
-header{
- width:100%;
- padding:9px 10px 5px;
- background:#fff;
+.topbar{
+  display:flex;
+  align-items:center;
+  gap:12px;
 }
 
-.banner-image{
- display:block;
- width:100%;
- height:105px;
- object-fit:cover;
- object-position:center;
- border-radius:10px;
+.back{
+  width:37px;
+  height:37px;
+  border:1px solid rgba(255,255,255,.35);
+  background:rgba(255,255,255,.15);
+  border-radius:11px;
+  color:white;
+  font-size:22px;
+  cursor:pointer;
 }
 
-/* LOTTERY CARDS */
-
-.game-slider{
- width:100%;
- overflow:hidden;
- padding:10px 0 13px;
- background:#fff;
+.brand{
+  font-size:19px;
+  font-weight:800;
+  letter-spacing:.5px;
 }
 
-.game-track{
- display:flex;
- width:max-content;
- gap:9px;
- animation:moveCards 18s linear infinite;
+.subtitle{
+  font-size:12px;
+  opacity:.9;
+  margin-top:3px;
 }
 
-.game-slider:hover .game-track{
- animation-play-state:paused;
+.header-title{
+  margin-top:22px;
+  font-size:23px;
+  font-weight:800;
 }
 
-.game-card{
- flex-shrink:0;
- width:145px;
- height:43px;
- border:1px solid #f0c7a0;
- border-radius:9px;
- background:linear-gradient(110deg,#fff2c8,#ffe09a,#fff5d8);
- color:#7b2800;
- font-size:12px;
- font-weight:900;
- letter-spacing:.2px;
- cursor:pointer;
- box-shadow:0 2px 6px #8b000015;
+.header-desc{
+  font-size:12px;
+  opacity:.9;
+  margin-top:6px;
 }
 
-.game-card.active{
- background:linear-gradient(110deg,#a90012,#ed2638);
- border-color:#ffbd55;
- color:#fff;
- box-shadow:0 3px 10px #b9001835;
+.container{
+  padding:19px 14px 30px;
+  max-width:650px;
+  margin:auto;
 }
 
-@keyframes moveCards{
- from{transform:translateX(0)}
- to{transform:translateX(-50%)}
+.section-heading{
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  margin-bottom:13px;
 }
 
-/* SEARCH */
-
-.search-area{
- padding:8px 13px 5px;
+.section-heading h2{
+  font-size:17px;
+  color:#173c60;
 }
 
-.search-box{
- width:100%;
- height:47px;
- border:1px solid var(--border);
- outline:none;
- border-radius:10px;
- background:#fff8f8;
- padding:0 14px;
- font-size:14px;
- color:var(--text);
+.section-heading span{
+  font-size:11px;
+  color:#1688df;
+  font-weight:bold;
 }
 
-.search-box:focus{
- border-color:var(--red);
- box-shadow:0 0 0 3px #b9001815;
+.slider-wrap{
+  position:relative;
+  overflow:hidden;
 }
 
-/* DATE */
-
-.date-area{
- padding:17px 12px 9px;
- text-align:center;
+.country-slider{
+  display:flex;
+  gap:12px;
+  overflow-x:auto;
+  scroll-snap-type:x mandatory;
+  scroll-behavior:smooth;
+  padding:3px 2px 13px;
+  scrollbar-width:none;
 }
 
-.date-title{
- font-size:19px;
- font-weight:900;
- margin-bottom:13px;
- color:var(--red);
+.country-slider::-webkit-scrollbar{
+  display:none;
 }
 
-.selected-game-title{
- display:inline-block;
- margin-bottom:12px;
- padding:6px 15px;
- border-radius:20px;
- background:#fff0d5;
- color:#9a3500;
- font-size:12px;
- font-weight:900;
+.country-card{
+  flex:0 0 76%;
+  max-width:290px;
+  min-height:132px;
+  background:white;
+  border:1px solid #dceafa;
+  border-radius:17px;
+  padding:15px;
+  display:flex;
+  align-items:center;
+  gap:13px;
+  text-decoration:none;
+  color:#17334f;
+  box-shadow:0 4px 13px rgba(28,91,145,.07);
+  scroll-snap-align:start;
+  transition:transform .2s,box-shadow .2s;
 }
 
-.previous-btn{
- border:1px solid #edcaca;
- background:#fff2f2;
- color:var(--red);
- font-size:13px;
- font-weight:bold;
- padding:8px 13px;
- border-radius:25px;
- cursor:pointer;
+.country-card:active{
+  transform:scale(.97);
 }
 
-.previous-btn span{
- display:inline-grid;
- place-items:center;
- width:22px;
- height:22px;
- margin-left:5px;
- background:var(--red);
- color:white;
- border-radius:50%;
+.flag{
+  width:58px;
+  height:58px;
+  border-radius:14px;
+  background:#edf6ff;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  font-size:32px;
+  flex-shrink:0;
 }
 
-/* RESULTS */
-
-.result-content{
- padding:5px 13px 15px;
+.card-info{
+  flex:1;
+  min-width:0;
 }
 
-.result-section{
- text-align:center;
- margin-top:15px;
- background:#fff;
- border:1px solid var(--border);
- border-radius:11px;
- padding:12px 8px;
- box-shadow:0 2px 8px #7b001008;
+.card-info h3{
+  font-size:15px;
+  font-weight:800;
+  line-height:1.3;
 }
 
-.result-label{
- color:var(--red);
- font-size:16px;
- font-weight:900;
- margin-bottom:12px;
+.card-info p{
+  font-size:11px;
+  color:#8192a5;
+  margin-top:6px;
 }
 
-.first-result{
- font-size:57px;
- font-weight:900;
- letter-spacing:2px;
- color:var(--navy);
- padding:3px 0 9px;
- overflow-wrap:anywhere;
+.open-label{
+  display:inline-block;
+  margin-top:10px;
+  padding:5px 10px;
+  border-radius:7px;
+  background:#e8f4ff;
+  color:#0879d1;
+  font-size:10px;
+  font-weight:bold;
 }
 
-.two-result{
- font-size:49px;
- font-weight:900;
- color:var(--red);
- padding:3px 0 9px;
+.arrow{
+  font-size:23px;
+  color:#1688df;
+  font-weight:bold;
 }
 
-.three-results{
- display:grid;
- grid-template-columns:1fr 1fr;
- gap:9px;
- padding:0 10px 5px;
+.dots{
+  display:flex;
+  justify-content:center;
+  gap:6px;
+  margin-top:1px;
 }
 
-.three-results div{
- font-size:37px;
- font-weight:900;
- color:var(--red);
- background:#fff1f1;
- border:1px solid #f0d0d0;
- border-radius:9px;
- padding:9px 5px;
+.dot{
+  width:7px;
+  height:7px;
+  border-radius:10px;
+  background:#c8d9e9;
 }
 
-.result-info{
- text-align:center;
- color:var(--muted);
- font-size:12px;
- padding:13px 10px 8px;
- white-space:pre-line;
- overflow-wrap:anywhere;
+.dot.active{
+  width:20px;
+  background:#1688df;
 }
 
-/* GO HOME BUTTON */
-
-.home-button-area{
- padding:8px 13px 18px;
+.info-box{
+  margin-top:24px;
+  background:white;
+  border:1px solid #dfebf7;
+  border-radius:15px;
+  padding:16px;
+  display:flex;
+  gap:12px;
+  align-items:flex-start;
 }
 
-.home-button{
- width:100%;
- min-height:48px;
- display:flex;
- align-items:center;
- justify-content:center;
- gap:9px;
- border:0;
- border-radius:11px;
- background:linear-gradient(110deg,#0876d5,#1687e8,#0755a8);
- color:#fff;
- font-size:14px;
- font-weight:900;
- letter-spacing:.5px;
- cursor:pointer;
- box-shadow:0 5px 15px #0876d540;
+.info-icon{
+  width:36px;
+  height:36px;
+  border-radius:11px;
+  background:#e8f4ff;
+  color:#1688df;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  font-size:19px;
+  flex-shrink:0;
 }
 
-.home-button:active{
- transform:scale(.98);
+.info-text h3{
+  font-size:13px;
+  margin-bottom:5px;
+  color:#244b70;
 }
 
-/* BOTTOM ADVERTISEMENT */
-
-.ad-banner{
- margin:10px 13px 18px;
- min-height:85px;
- border:1px solid var(--border);
- border-radius:10px;
- background:#fffafa;
- display:flex;
- align-items:center;
- justify-content:center;
- padding:10px;
- overflow:hidden;
+.info-text p{
+  font-size:11px;
+  line-height:1.6;
+  color:#8090a2;
 }
 
-.ad-content{
- width:100%;
- text-align:center;
+.footer{
+  text-align:center;
+  padding:22px 10px;
+  color:#9aa9b8;
+  font-size:10px;
 }
 
-.ad-label{
- display:block;
- font-size:9px;
- color:#8298aa;
- margin-bottom:6px;
- letter-spacing:1px;
- font-weight:bold;
-}
-
-.ad-frame{
- width:100%;
- min-height:50px;
- display:flex;
- justify-content:center;
- align-items:center;
- overflow:hidden;
-}
-
-.ad-frame iframe{
- max-width:100%;
- border:0;
-}
-
-/* HISTORY MODAL */
-
-.modal{
- display:none;
- position:fixed;
- inset:0;
- background:#071c2dcc;
- z-index:30;
- align-items:center;
- justify-content:center;
- padding:20px;
-}
-
-.modal.show{display:flex}
-
-.modal-box{
- background:white;
- width:100%;
- max-width:450px;
- max-height:85vh;
- border-radius:13px;
- overflow:hidden;
- display:flex;
- flex-direction:column;
-}
-
-.modal-header{
- background:var(--red);
- color:white;
- padding:15px;
- display:flex;
- align-items:center;
- justify-content:space-between;
- font-size:17px;
- font-weight:bold;
-}
-
-.close-btn{
- border:0;
- background:none;
- color:white;
- font-size:29px;
- cursor:pointer;
-}
-
-.date-list{overflow-y:auto}
-
-.date-item{
- width:100%;
- padding:16px 14px;
- display:flex;
- justify-content:space-between;
- align-items:center;
- border:0;
- border-bottom:1px solid #edf3f8;
- background:white;
- text-align:left;
- font-size:13px;
- color:var(--text);
- cursor:pointer;
-}
-
-.date-item.selected{
- color:var(--red);
- font-weight:bold;
- background:#fff4f4;
-}
-
-.radio{
- width:22px;
- height:22px;
- border:2px solid var(--red);
- border-radius:50%;
- display:grid;
- place-items:center;
- flex-shrink:0;
-}
-
-.date-item.selected .radio:after{
- content:"";
- width:10px;
- height:10px;
- border-radius:50%;
- background:var(--red);
-}
-
-/* STATISTICS */
-
-.statistics{
- display:none;
- padding:18px 13px;
-}
-
-.stat-card{
- padding:16px;
- background:#fff;
- border:1px solid var(--border);
- border-radius:11px;
- margin-bottom:11px;
-}
-
-.stat-card h3{
- font-size:14px;
- margin-bottom:10px;
- color:var(--red);
-}
-
-.stat-card p{
- font-size:13px;
- color:#61788b;
- line-height:1.8;
- white-space:pre-line;
-}
-
-.empty{
- text-align:center;
- padding:27px 10px;
- color:var(--muted);
- font-size:13px;
-}
-
-@media(max-width:380px){
- .banner-image{height:88px}
- .game-card{width:130px;height:40px;font-size:11px}
- .date-title{font-size:17px}
- .first-result{font-size:49px}
- .two-result{font-size:42px}
- .three-results div{font-size:32px}
- .result-label{font-size:15px}
+@media(min-width:600px){
+  .country-card{
+    flex-basis:48%;
+  }
 }
 </style>
 </head>
 
 <body>
 
-<div class="app">
+<header class="header">
+  <div class="topbar">
+    <button class="back" onclick="goHome()" aria-label="Go back">‹</button>
+    <div>
+      <div class="brand">GLO 365</div>
+      <div class="subtitle">Results Center</div>
+    </div>
+  </div>
 
-<!-- WINNER IMAGE BANNER -->
-<header>
- <img
-  class="banner-image"
-  src="1000013847.jpg"
-  alt="GLO 365 Winner Banner"
- >
+  <div class="header-title">Lottery Results</div>
+  <div class="header-desc">Select a country to view its results</div>
 </header>
 
-<!-- MOVING LOTTERY CARDS -->
-<section class="game-slider">
- <div class="game-track" id="gameTrack">
+<main class="container">
 
-  <button class="game-card active" data-game="thai">
-   THAI Gov. Lotto
-  </button>
-
-  <button class="game-card" data-game="malaysia">
-   MALAYSIA TOTO
-  </button>
-
-  <button class="game-card" data-game="singapore">
-   SINGAPORE 4D
-  </button>
-
-  <button class="game-card active" data-game="thai" aria-hidden="true">
-   THAI Gov. Lotto
-  </button>
-
-  <button class="game-card" data-game="malaysia" aria-hidden="true">
-   MALAYSIA TOTO
-  </button>
-
-  <button class="game-card" data-game="singapore" aria-hidden="true">
-   SINGAPORE 4D
-  </button>
-
- </div>
-</section>
-
-<!-- SEARCH -->
-<div class="search-area">
- <input
-  class="search-box"
-  id="searchInput"
-  type="search"
-  placeholder="🔍 Search result or draw date..."
- >
-</div>
-
-<!-- DATE -->
-<section class="date-area">
-
- <div class="selected-game-title" id="selectedGameTitle">
-  THAI Gov. Lotto
- </div>
-
- <div class="date-title" id="drawDate">
-  Draw Date: Loading...
- </div>
-
- <button class="previous-btn" onclick="openHistory()">
-  Previous Results <span>⌄</span>
- </button>
-
-</section>
-
-<!-- RESULTS -->
-<section id="resultsContent" class="result-content">
-
- <div class="result-section">
-  <div class="result-label">1st Prize</div>
-  <div class="first-result" id="firstPrize">XXXXXX</div>
- </div>
-
- <div class="result-section">
-  <div class="result-label">Last 2 Digits</div>
-  <div class="two-result" id="lastTwo">XX</div>
- </div>
-
- <div class="result-section">
-  <div class="result-label">Front 3 Digits</div>
-  <div class="three-results">
-   <div id="frontThree1">XXX</div>
-   <div id="frontThree2">XXX</div>
-  </div>
- </div>
-
- <div class="result-info" id="resultInfo">
-  Loading results...
- </div>
-
- <!-- GO TO HOME -->
- <div class="home-button-area">
-  <button class="home-button" id="goHomeButton" type="button">
-   <span>←</span> GO TO HOME
-  </button>
- </div>
-
-</section>
-
-<!-- BOTTOM ADVERTISEMENT -->
-<section class="ad-banner" id="resultsAdBanner">
- <div class="ad-content">
-  <span class="ad-label">ADVERTISEMENT</span>
-
-  <div class="ad-frame">
-   <script>
-    var atOptions={
-     'key':'ab837cf0ea9c26ae43b7bc4e05a0b5de',
-     'format':'iframe',
-     'height':50,
-     'width':320,
-     'params':{}
-    };
-   </script>
-   <script src="https://bicea.org/22/ab837cf0ea9c26ae43b7bc4e05a0b5de"></script>
-  </div>
- </div>
-</section>
-
-<!-- STATISTICS -->
-<section id="statisticsContent" class="statistics">
- <div class="stat-card">
-  <h3>📊 Result Statistics</h3>
-  <p id="statisticsText">
-   Select a published draw to view statistics.
-  </p>
- </div>
-
- <div class="stat-card">
-  <h3>📅 Available Draws</h3>
-  <p id="drawCount">0 published results</p>
- </div>
-</section>
-
-<!-- HISTORY MODAL -->
-<div class="modal" id="historyModal">
- <div class="modal-box">
-
-  <div class="modal-header">
-   <span>Previous Results</span>
-   <button class="close-btn" onclick="closeHistory()">×</button>
+  <div class="section-heading">
+    <h2>Select Country</h2>
+    <span>5 COUNTRIES</span>
   </div>
 
-  <div class="date-list" id="dateList"></div>
+  <div class="slider-wrap">
+    <div class="country-slider" id="countrySlider">
 
- </div>
-</div>
+      <a class="country-card" href="results/thai.html">
+        <div class="flag">🇹🇭</div>
+        <div class="card-info">
+          <h3>Thai Government Lotto</h3>
+          <p>Thailand Lottery Results</p>
+          <span class="open-label">VIEW RESULTS</span>
+        </div>
+        <div class="arrow">›</div>
+      </a>
 
-</div>
+      <a class="country-card" href="results/malaysia.html">
+        <div class="flag">🇲🇾</div>
+        <div class="card-info">
+          <h3>Malaysia Toto</h3>
+          <p>Malaysia Lottery Results</p>
+          <span class="open-label">VIEW RESULTS</span>
+        </div>
+        <div class="arrow">›</div>
+      </a>
+
+      <a class="country-card" href="results/singapore.html">
+        <div class="flag">🇸🇬</div>
+        <div class="card-info">
+          <h3>Singapore Pools</h3>
+          <p>Singapore Lottery Results</p>
+          <span class="open-label">VIEW RESULTS</span>
+        </div>
+        <div class="arrow">›</div>
+      </a>
+
+      <a class="country-card" href="results/taiwan.html">
+        <div class="flag">🇹🇼</div>
+        <div class="card-info">
+          <h3>Taiwan Lottery</h3>
+          <p>Taiwan Lottery Results</p>
+          <span class="open-label">VIEW RESULTS</span>
+        </div>
+        <div class="arrow">›</div>
+      </a>
+
+      <a class="country-card" href="results/laos.html">
+        <div class="flag">🇱🇦</div>
+        <div class="card-info">
+          <h3>Laos Government Lotto</h3>
+          <p>Laos Lottery Results</p>
+          <span class="open-label">VIEW RESULTS</span>
+        </div>
+        <div class="arrow">›</div>
+      </a>
+
+    </div>
+  </div>
+
+  <div class="dots" id="dots">
+    <span class="dot active"></span>
+    <span class="dot"></span>
+    <span class="dot"></span>
+    <span class="dot"></span>
+    <span class="dot"></span>
+  </div>
+
+  <div class="info-box">
+    <div class="info-icon">ⓘ</div>
+    <div class="info-text">
+      <h3>Results Information</h3>
+      <p>Select your preferred country above to open its dedicated results page. Each country has a separate page with its own result format.</p>
+    </div>
+  </div>
+
+</main>
+
+<footer class="footer">
+  © 2026 GLO 365. All Rights Reserved.
+</footer>
 
 <script>
-"use strict";
-
-const API_BASE_URL="https://glo365.onrender.com/api";
-const TOKEN_KEY="glo365_token";
-
-const GAME_NAMES={
- thai:"THAI Gov. Lotto",
- malaysia:"MALAYSIA TOTO",
- singapore:"SINGAPORE 4D"
-};
-
-let allResults=[];
-let results=[];
-let selectedResult=null;
-let selectedGame="thai";
-let loadError="";
-
-/* SESSION */
-
-function getToken(){
- try{
-  return sessionStorage.getItem(TOKEN_KEY)||"";
- }catch(e){
-  return "";
- }
+function goHome(){
+  window.location.href = "home.html";
 }
 
-/* API */
-
-async function apiRequest(path,options={}){
-
- const headers={...(options.headers||{})};
- const token=getToken();
-
- if(token){
-  headers.Authorization="Bearer "+token;
- }
-
- if(options.body&&!headers["Content-Type"]){
-  headers["Content-Type"]="application/json";
- }
-
- const response=await fetch(API_BASE_URL+path,{
-  ...options,
-  headers,
-  credentials:"include",
-  cache:"no-store"
- });
-
- let data={};
-
- try{
-  data=await response.json();
- }catch(e){
-  throw new Error("Server returned an invalid response.");
- }
-
- if(!response.ok){
-  throw new Error(
-   data.message||
-   data.error||
-   ("Request failed ("+response.status+")")
-  );
- }
-
- return data;
-}
-
-/* GAME CATEGORY DETECTION */
-
-function detectGame(row){
-
- const fields=[
-  row.game,
-  row.game_name,
-  row.gameName,
-  row.lottery,
-  row.lottery_name,
-  row.lotteryName,
-  row.category,
-  row.result_type,
-  row.resultType,
-  row.type,
-  row.provider
- ];
-
- const value=fields
-  .filter(v=>v!==undefined&&v!==null)
-  .join(" ")
-  .toLowerCase()
-  .replace(/[_-]+/g," ");
-
- if(
-  value.includes("malaysia")||
-  value.includes("magnum")||
-  value.includes("sports toto")||
-  value.includes("damacai")||
-  value.includes("toto")
- ){
-  return "malaysia";
- }
-
- if(
-  value.includes("singapore")||
-  value.includes("singapore 4d")||
-  value.includes("sg 4d")
- ){
-  return "singapore";
- }
-
- if(
-  value.includes("thai")||
-  value.includes("thailand")||
-  value.includes("gov lotto")||
-  value.includes("government lottery")
- ){
-  return "thai";
- }
-
- if(!value.trim()){
-  return "thai";
- }
-
- return "unknown";
-}
-
-/* DATE FORMAT */
-
-function formatDate(date){
-
- if(!date)return "Unknown Date";
-
- const value=String(date).slice(0,10);
- const d=new Date(value+"T00:00:00");
-
- if(Number.isNaN(d.getTime()))return value;
-
- return d.toLocaleDateString("en-GB",{
-  day:"2-digit",
-  month:"long",
-  year:"numeric"
- });
-}
-
-/* PUBLISHED DATE - DATE ONLY, NO TIME */
-
-function formatPublishedDate(value){
-
- if(!value)return "";
-
- const date=new Date(value);
-
- if(Number.isNaN(date.getTime())){
-  return "";
- }
-
- return date.toLocaleDateString("en-GB",{
-  day:"2-digit",
-  month:"short",
-  year:"numeric"
- });
-}
-
-/* FRONT THREE NORMALIZER */
-
-function normalizeFrontThree(value){
-
- if(Array.isArray(value)){
-  return value
-   .map(v=>String(v).trim())
-   .filter(Boolean);
- }
-
- if(typeof value==="number"){
-  return [String(value)];
- }
-
- if(typeof value==="string"){
-  return value
-   .split(/[,;\s]+/)
-   .map(v=>v.trim())
-   .filter(Boolean);
- }
-
- return [];
-}
-
-/* NORMALIZE RESULT */
-
-function normalizeResult(row){
-
- const frontValue=
-  row.frontThree ??
-  row.front_three ??
-  row.front3 ??
-  row.front_3 ??
-  row.frontThreeNumbers ??
-  row.front_three_numbers ??
-  [];
-
- return {
-
-  id:row.id,
-
-  game:detectGame(row),
-
-  date:
-   row.date||
-   row.drawDate||
-   row.draw_date,
-
-  firstPrize:String(
-   row.firstPrize ??
-   row.first_prize ??
-   row.first ??
-   ""
-  ).trim(),
-
-  lastTwo:String(
-   row.lastTwo ??
-   row.last_two ??
-   row.last2 ??
-   ""
-  ).trim(),
-
-  frontThree:normalizeFrontThree(frontValue),
-
-  publishedAt:
-   row.publishedAt||
-   row.published_at||
-   null
- };
-}
-
-/* LOAD RESULTS */
-
-async function loadResults(){
-
- const info=document.getElementById("resultInfo");
-
- info.textContent="Loading results from server...";
-
- try{
-
-  const data=await apiRequest("/results");
-
-  if(data.success===false){
-   throw new Error(data.message||"Could not load results.");
-  }
-
-  const rows=
-   Array.isArray(data)
-    ?data
-    :Array.isArray(data.results)
-     ?data.results
-     :Array.isArray(data.data)
-      ?data.data
-      :Array.isArray(data.rows)
-       ?data.rows
-       :[];
-
-  allResults=rows
-   .map(normalizeResult)
-   .filter(r=>
-    r.date&&
-    r.firstPrize&&
-    r.lastTwo&&
-    r.frontThree.length>=1
-   )
-   .sort((a,b)=>
-    String(b.date).localeCompare(String(a.date))
-   );
-
-  loadError="";
-
-  applyGameFilter();
-
- }catch(error){
-
-  console.error("Results loading error:",error);
-
-  loadError=error.message||"Unable to connect to results server.";
-
-  allResults=[];
-  results=[];
-  selectedResult=null;
-
-  showEmptyResult("Unable to load results.\n"+loadError);
-
-  renderStatistics();
- }
-}
-
-/* FILTER BY SELECTED GAME */
-
-function applyGameFilter(){
-
- results=allResults.filter(result=>
-  result.game===selectedGame
- );
-
- const search=document.getElementById("searchInput").value.trim();
-
- if(search){
-  searchResults(search);
- }else{
-  renderLatest();
- }
-
- renderStatistics();
-}
-
-/* SELECT GAME */
-
-function selectGame(game){
-
- if(!GAME_NAMES[game])return;
-
- selectedGame=game;
-
- document.getElementById("selectedGameTitle").textContent=
-  GAME_NAMES[game];
-
- document.querySelectorAll(".game-card").forEach(card=>{
-
-  card.classList.toggle(
-   "active",
-   card.dataset.game===game
-  );
-
- });
-
- document.getElementById("searchInput").value="";
-
- selectedResult=null;
-
- applyGameFilter();
-}
-
-/* CARD EVENTS */
-
-document.getElementById("gameTrack").addEventListener(
- "click",
- function(event){
-
-  const card=event.target.closest(".game-card");
-
-  if(!card)return;
-
-  selectGame(card.dataset.game);
- }
-);
-
-/* DISPLAY RESULT */
-
-function showResult(result){
-
- if(!result)return;
-
- selectedResult=result;
-
- document.getElementById("drawDate").textContent=
-  "Draw Date: "+formatDate(result.date);
-
- document.getElementById("firstPrize").textContent=
-  result.firstPrize||"XXXXXX";
-
- document.getElementById("lastTwo").textContent=
-  result.lastTwo||"XX";
-
- document.getElementById("frontThree1").textContent=
-  result.frontThree[0]||"XXX";
-
- document.getElementById("frontThree2").textContent=
-  result.frontThree[1]||"XXX";
-
- const publishedDate=formatPublishedDate(result.publishedAt);
-
- document.getElementById("resultInfo").textContent=
-  publishedDate
-   ?"Result Published · "+publishedDate
-   :"Result Published";
-
- renderStatistics();
-}
-
-/* EMPTY RESULT */
-
-function showEmptyResult(message){
-
- document.getElementById("drawDate").textContent=
-  loadError
-   ?"Server Connection Error"
-   :"Draw Date: Not Published";
-
- document.getElementById("firstPrize").textContent="XXXXXX";
- document.getElementById("lastTwo").textContent="XX";
- document.getElementById("frontThree1").textContent="XXX";
- document.getElementById("frontThree2").textContent="XXX";
-
- document.getElementById("resultInfo").textContent=message;
-}
-
-/* LATEST RESULT */
-
-function renderLatest(){
-
- if(results.length===0){
-
-  selectedResult=null;
-
-  showEmptyResult(
-   loadError
-    ?"Unable to load results."
-    :"No "+GAME_NAMES[selectedGame]+" results published yet."
-  );
-
-  renderStatistics();
-
-  return;
- }
-
- showResult(results[0]);
-}
-
-/* PREVIOUS RESULTS */
-
-function openHistory(){
-
- const modal=document.getElementById("historyModal");
- const list=document.getElementById("dateList");
-
- list.replaceChildren();
-
- if(results.length===0){
-
-  const empty=document.createElement("div");
-  empty.className="empty";
-  empty.textContent="No previous results available.";
-
-  list.appendChild(empty);
-
- }else{
-
-  results.forEach(result=>{
-
-   const button=document.createElement("button");
-   button.className="date-item";
-
-   if(
-    selectedResult&&
-    String(selectedResult.date)===String(result.date)
-   ){
-    button.classList.add("selected");
-   }
-
-   const date=document.createElement("span");
-
-   date.textContent="Draw Date: "+formatDate(result.date);
-
-   const radio=document.createElement("span");
-   radio.className="radio";
-
-   button.append(date,radio);
-
-   button.addEventListener("click",()=>{
-    showResult(result);
-    closeHistory();
-   });
-
-   list.appendChild(button);
-
+const slider = document.getElementById("countrySlider");
+const dots = document.querySelectorAll(".dot");
+const cards = document.querySelectorAll(".country-card");
+
+slider.addEventListener("scroll",()=>{
+  let current = 0;
+  let closest = Infinity;
+
+  cards.forEach((card,index)=>{
+    const distance = Math.abs(
+      card.offsetLeft - slider.scrollLeft
+    );
+
+    if(distance < closest){
+      closest = distance;
+      current = index;
+    }
   });
 
- }
-
- modal.classList.add("show");
-}
-
-function closeHistory(){
- document.getElementById("historyModal").classList.remove("show");
-}
-
-document.getElementById("historyModal").addEventListener(
- "click",
- function(event){
-  if(event.target===this)closeHistory();
- }
-);
-
-/* SEARCH */
-
-function searchResults(raw){
-
- const query=raw.trim().toLowerCase();
-
- if(!query){
-  renderLatest();
-  return;
- }
-
- const found=results.filter(result=>{
-
-  const searchable=[
-   result.date,
-   result.firstPrize,
-   result.lastTwo,
-   ...result.frontThree
-  ].join(" ").toLowerCase();
-
-  return searchable.includes(query);
-
- });
-
- if(found.length){
-
-  showResult(found[0]);
-
- }else{
-
-  selectedResult=null;
-
-  showEmptyResult(
-   "No matching "+GAME_NAMES[selectedGame]+" result found."
-  );
-
-  renderStatistics();
- }
-}
-
-document.getElementById("searchInput").addEventListener(
- "input",
- function(){
-  searchResults(this.value);
- }
-);
-
-/* GO TO HOME */
-
-document.getElementById("goHomeButton").addEventListener(
- "click",
- function(){
-  location.href="home.html";
- }
-);
-
-/* STATISTICS */
-
-function renderStatistics(){
-
- const text=document.getElementById("statisticsText");
-
- document.getElementById("drawCount").textContent=
-  results.length+" published draw records";
-
- if(!selectedResult){
-
-  text.textContent=
-   results.length===0
-    ?"No "+GAME_NAMES[selectedGame]+" result available."
-    :"Select a published draw to view statistics.";
-
-  return;
- }
-
- text.textContent=
-  "Game: "+GAME_NAMES[selectedGame]+
-  "\nDraw Date: "+formatDate(selectedResult.date)+
-  "\n1st Prize: "+(selectedResult.firstPrize||"XXXXXX")+
-  "\nLast 2: "+(selectedResult.lastTwo||"XX")+
-  "\nFront 3: "+
-  (selectedResult.frontThree[0]||"XXX")+
-  " / "+
-  (selectedResult.frontThree[1]||"XXX");
-}
-
-/* REFRESH */
-
-window.addEventListener("focus",()=>{
- loadResults();
+  dots.forEach((dot,index)=>{
+    dot.classList.toggle("active",index===current);
+  });
 });
-
-window.addEventListener("pageshow",()=>{
- loadResults();
-});
-
-document.addEventListener("visibilitychange",()=>{
- if(!document.hidden){
-  loadResults();
- }
-});
-
-/* INITIAL LOAD */
-
-loadResults();
-
 </script>
 
 </body>
