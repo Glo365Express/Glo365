@@ -2669,10 +2669,10 @@
     const registerThailand3UpRoutes = require("./src/games/thailand/3up");
     const registerThailand6UpRoutes = require("./src/games/thailand/6up");
     const registerSingaporeRoutes = require("./src/games/singapore");
+    const registerMalaysiaRoutes = require("./src/games/malaysia");
 
     const routeDependencies = {
-  app,
-  pool,
+      pool,
       authenticateToken,
       requireAdmin,
       asyncRoute,
@@ -2692,6 +2692,7 @@
     registerThailand3UpRoutes(routeDependencies);
     registerThailand6UpRoutes(routeDependencies);
     const initializeSingaporeRoutes = registerSingaporeRoutes(app, routeDependencies);
+    const initializeMalaysiaRoutes = registerMalaysiaRoutes(app, routeDependencies);
     registerResultsRoutes(app, routeDependencies);
 
     // 404
@@ -2879,6 +2880,9 @@
 
         // Initialize Singapore-specific tables after the shared users table exists.
         await initializeSingaporeRoutes();
+
+        // Initialize Malaysia-specific tables after the shared users table exists.
+        await initializeMalaysiaRoutes();
 
         await bootstrapAdmin();
 
