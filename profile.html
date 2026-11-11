@@ -1,3 +1,4 @@
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -5,324 +6,1245 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <meta name="theme-color" content="#2196e8">
 <title>GLO 365 - My Profile</title>
+
 <style>
-:root{--blue:#2196e8;--blue-dark:#087acb;--blue-light:#eaf5fd;--border:#d8e9f5;--text:#18344b;--muted:#71869a;--bg:#f1f7fc;--red:#e34c59}
+:root{
+ --blue:#2196e8;
+ --blue-dark:#087acb;
+ --blue-light:#eaf5fd;
+ --border:#d8e9f5;
+ --text:#18344b;
+ --muted:#71869a;
+ --bg:#f1f7fc;
+ --red:#e34c59;
+}
+
 *{box-sizing:border-box}
-body{margin:0;background:var(--bg);color:var(--text);font-family:Arial,Helvetica,sans-serif;padding-bottom:85px}
+
+body{
+ margin:0;
+ background:var(--bg);
+ color:var(--text);
+ font-family:Arial,Helvetica,sans-serif;
+ padding-bottom:85px;
+}
+
 button,input,select{font:inherit}
-.header{background:linear-gradient(135deg,var(--blue),var(--blue-dark));color:white;padding:14px 16px;font-size:20px;font-weight:800;box-shadow:0 3px 12px #087acb30}
-.container{max-width:650px;margin:auto;padding:11px}
-.card{background:white;border:1px solid var(--border);border-radius:15px;padding:14px;margin-bottom:12px;box-shadow:0 3px 12px #1c5d8510}
-.profile-top{position:relative;overflow:hidden;padding:10px 12px;background:linear-gradient(135deg,#f9fcff,#e4f2fc);border:1px solid #d5e8f6;border-radius:17px;box-shadow:0 3px 12px #087acb12}
-.profile-top:after{content:"";position:absolute;width:100px;height:100px;right:-40px;bottom:-55px;border-radius:50%;background:#087acb09;pointer-events:none}
-.profile-main{display:flex;align-items:center;gap:10px;position:relative;z-index:1}
-.avatar{width:58px;height:58px;flex-shrink:0;border-radius:50%;background:var(--blue-light);border:3px solid white;display:flex;align-items:center;justify-content:center;overflow:hidden;box-shadow:0 3px 10px #087acb25}
-.avatar img{width:100%;height:100%;object-fit:cover}
-.profile-details{flex:1;min-width:0}.profile-name{font-size:15px;font-weight:800;margin:0 0 3px;overflow-wrap:anywhere}
-.user-id{font-size:10px;color:var(--muted);margin-bottom:3px;overflow-wrap:anywhere}
-.bio{font-size:10px;color:#64798b;margin:3px 0;line-height:1.3}
-.verified{display:inline-block;background:#e7f8ef;color:#13834e;padding:3px 7px;border-radius:20px;font-size:9px;font-weight:700;margin-top:2px}
-.unverified{background:#fff5df;color:#a66b00}
-.balance-box{position:relative;z-index:2;margin-top:11px;padding:10px 12px;border:1px solid #d4e7f6;background:#ffffffd9;border-radius:12px;display:flex;justify-content:space-between;align-items:center;gap:8px}
-.balance-info{display:flex;align-items:center;gap:9px;min-width:0}.balance-icon{width:34px;height:34px;flex-shrink:0;display:flex;align-items:center;justify-content:center;border-radius:10px;background:#fff3d9;font-size:21px}
-.balance-label{font-size:10px;color:#71869a;font-weight:700}.balance-value{font-size:17px;font-weight:900;color:#087acb;margin-top:3px;overflow-wrap:anywhere}
-.refresh-balance{border:1px solid #cce4f5;background:#eaf5fd;color:#087acb;padding:8px 11px;border-radius:20px;font-size:11px;font-weight:800;cursor:pointer;flex-shrink:0}
-.refresh-balance:disabled{opacity:.5}.refresh-balance.loading span{display:inline-block;animation:refreshSpin .8s linear infinite}
-@keyframes refreshSpin{to{transform:rotate(360deg)}}
-.profile-buttons{display:flex;gap:8px;margin-top:9px;position:relative;z-index:1}
-.btn{flex:1;border:0;border-radius:25px;padding:8px 10px;font-size:11px;font-weight:800;cursor:pointer;text-align:center;text-decoration:none;white-space:nowrap;display:flex;justify-content:center;align-items:center;min-height:32px}
-.btn-blue{background:linear-gradient(135deg,var(--blue),var(--blue-dark));color:white;box-shadow:0 3px 8px #087acb25}
-.btn-light{background:white;color:var(--blue-dark);border:1px solid #d9eaf6;box-shadow:0 2px 7px #087acb12}.btn:active{transform:scale(.97)}
-/* VERIFICATION */
-.verification-card{border:1px solid #cfe4f4}
-.verification-title{display:flex;align-items:center;justify-content:space-between;gap:8px;margin-bottom:7px}
-.verification-title h3{margin:0;font-size:15px;color:#24445d}
-.verification-subtitle{font-size:11px;color:#71869a;line-height:1.5;margin:0 0 12px}
-.verification-status{display:inline-block;padding:5px 9px;border-radius:20px;background:#fff5df;color:#986400;font-size:10px;font-weight:800;white-space:nowrap}
-.verification-status.done{background:#e7f8ef;color:#13834e}
-.verify-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px}
-.verify-field{min-width:0}.verify-field.full{grid-column:1/-1}
-.verify-field label{display:block;font-size:11px;font-weight:700;color:#405b70;margin:0 0 5px}
-.verify-field input,.verify-field select{width:100%;min-height:42px;border:1px solid #d7e6f1;border-radius:9px;padding:10px;background:#fbfdff;color:#18344b;font-size:13px;outline:none}
-.verify-field input:focus,.verify-field select:focus{border-color:#2196e8;box-shadow:0 0 0 3px #2196e81a}
-.verify-field input:disabled,.verify-field select:disabled{background:#f1f5f8;color:#6d7f8e}
-.verify-submit{width:100%;border:0;border-radius:25px;min-height:43px;margin-top:13px;background:linear-gradient(135deg,var(--blue),var(--blue-dark));color:#fff;font-weight:800;font-size:13px;cursor:pointer}
-.verify-submit:disabled{opacity:.55;cursor:not-allowed}
-.verify-note{font-size:10px;line-height:1.55;color:#7b8994;background:#f5f9fc;border:1px solid #e2edf5;padding:9px;border-radius:9px;margin-top:11px}
-.verify-record{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:12px}
-.verify-value{background:#f6fafe;border:1px solid #e0edf6;border-radius:9px;padding:9px;min-width:0}
-.verify-value small{display:block;color:#8293a1;font-size:9px;font-weight:700;margin-bottom:5px;text-transform:uppercase}
-.verify-value strong{font-size:12px;overflow-wrap:anywhere;color:#29465c}
-.verify-error{display:none;background:#fff0f0;color:#b52e3a;border:1px solid #ffd5d8;padding:9px;border-radius:9px;font-size:11px;margin-top:10px}
-.verify-error.show{display:block}
-.member-heading{display:flex;align-items:center;gap:9px;margin:18px 0 10px}
-.member-heading h3{margin:0;font-size:14px;color:#34495a;white-space:nowrap}
-.member-heading:after{content:"";height:1px;flex:1;background:#dce8f0}
-.member-menu{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:16px 7px;padding:8px 0 17px}
-.member-item{min-width:0;text-decoration:none;color:#52616d;display:flex;flex-direction:column;align-items:center;text-align:center;gap:6px;cursor:pointer;-webkit-tap-highlight-color:transparent}
-.member-icon{width:57px;height:57px;border-radius:50%;background:linear-gradient(145deg,#fff8e8,#fff0cc);border:1px solid #f1dfb8;display:flex;align-items:center;justify-content:center;font-size:25px;box-shadow:0 3px 9px #b98b2a12;transition:.15s}
-.member-item:active .member-icon{transform:scale(.94)}
-.member-item strong{font-size:10px;line-height:1.35;font-weight:600;overflow-wrap:anywhere}
-.bottom-nav{position:fixed;bottom:0;left:0;right:0;height:67px;background:white;border-top:1px solid var(--border);display:grid;grid-template-columns:repeat(4,1fr);z-index:20;box-shadow:0 -3px 12px #123c6010}
-.nav-item{text-decoration:none;color:#8295a6;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:4px;font-size:11px}
-.nav-item span{font-size:20px}.nav-item.active{color:var(--blue-dark);font-weight:800}
-.nav-profile-img{width:27px;height:27px;border-radius:50%;object-fit:cover;display:block;border:2px solid #d8e9f5;background:#eaf5fd}
-.nav-item.active .nav-profile-img{border:2px solid var(--blue)}
-.modal-overlay{position:fixed;inset:0;background:rgba(12,30,48,.58);backdrop-filter:blur(4px);-webkit-backdrop-filter:blur(4px);z-index:100;display:flex;align-items:center;justify-content:center;padding:20px;opacity:0;visibility:hidden;transition:.25s}
-.modal-overlay.show{opacity:1;visibility:visible}
-.logout-modal{width:100%;max-width:340px;background:#fff;border-radius:21px;padding:24px 20px 20px;text-align:center;box-shadow:0 18px 55px #0003;transform:translateY(18px) scale(.96);transition:.25s}
-.modal-overlay.show .logout-modal{transform:translateY(0) scale(1)}
-.logout-icon{width:72px;height:72px;border-radius:22px;margin:0 auto 15px;display:flex;align-items:center;justify-content:center;background:linear-gradient(145deg,#fff0e9,#ffe0d8);font-size:34px}
-.logout-modal h3{margin:0;color:#243c50;font-size:20px;font-weight:900}
-.logout-modal p{margin:10px 0 21px;color:#8393a0;font-size:12px;line-height:1.7}
-.logout-actions{display:flex;gap:10px}.modal-btn{flex:1;border:0;border-radius:25px;min-height:44px;font-size:13px;font-weight:900;cursor:pointer}
-.cancel-btn{color:#587084;background:#edf3f8}.confirm-logout{color:white;background:linear-gradient(135deg,#ef6871,#d83c50);box-shadow:0 4px 12px #df526044}
+
+.header{
+ background:linear-gradient(135deg,var(--blue),var(--blue-dark));
+ color:white;
+ padding:14px 16px;
+ font-size:20px;
+ font-weight:800;
+ box-shadow:0 3px 12px #087acb30;
+}
+
+.container{
+ max-width:650px;
+ margin:auto;
+ padding:11px;
+}
+
+.card{
+ background:white;
+ border:1px solid var(--border);
+ border-radius:15px;
+ padding:14px;
+ margin-bottom:12px;
+ box-shadow:0 3px 12px #1c5d8510;
+}
+
+/* PROFILE CARD */
+
+.profile-top{
+ position:relative;
+ overflow:hidden;
+ padding:10px 12px;
+ background:linear-gradient(135deg,#f9fcff,#e4f2fc);
+ border:1px solid #d5e8f6;
+ border-radius:17px;
+ box-shadow:0 3px 12px #087acb12;
+}
+
+.profile-top:after{
+ content:"";
+ position:absolute;
+ width:100px;
+ height:100px;
+ right:-40px;
+ bottom:-55px;
+ border-radius:50%;
+ background:#087acb09;
+ pointer-events:none;
+}
+
+.profile-main{
+ display:flex;
+ align-items:center;
+ gap:10px;
+ position:relative;
+ z-index:1;
+}
+
+.avatar{
+ width:58px;
+ height:58px;
+ flex-shrink:0;
+ border-radius:50%;
+ background:var(--blue-light);
+ border:3px solid white;
+ display:flex;
+ align-items:center;
+ justify-content:center;
+ overflow:hidden;
+ box-shadow:0 3px 10px #087acb25;
+}
+
+.avatar img{
+ width:100%;
+ height:100%;
+ object-fit:cover;
+}
+
+.profile-details{
+ flex:1;
+ min-width:0;
+}
+
+.profile-name{
+ font-size:15px;
+ font-weight:800;
+ margin:0 0 3px;
+ overflow-wrap:anywhere;
+}
+
+.user-id{
+ font-size:10px;
+ color:var(--muted);
+ margin-bottom:3px;
+ overflow-wrap:anywhere;
+}
+
+.bio{
+ font-size:10px;
+ color:#64798b;
+ margin:3px 0;
+ line-height:1.3;
+}
+
+.verified{
+ display:inline-block;
+ background:#e7f8ef;
+ color:#13834e;
+ padding:3px 7px;
+ border-radius:20px;
+ font-size:9px;
+ font-weight:700;
+ margin-top:2px;
+}
+
+.unverified{
+ background:#fff5df;
+ color:#a66b00;
+}
+
+/* WALLET */
+
+.balance-box{
+ position:relative;
+ z-index:2;
+ margin-top:11px;
+ padding:10px 12px;
+ border:1px solid #d4e7f6;
+ background:#ffffffd9;
+ border-radius:12px;
+ display:flex;
+ justify-content:space-between;
+ align-items:center;
+ gap:8px;
+}
+
+.balance-info{
+ display:flex;
+ align-items:center;
+ gap:9px;
+ min-width:0;
+}
+
+.balance-icon{
+ width:34px;
+ height:34px;
+ flex-shrink:0;
+ display:flex;
+ align-items:center;
+ justify-content:center;
+ border-radius:10px;
+ background:#fff3d9;
+ font-size:21px;
+}
+
+.balance-label{
+ font-size:10px;
+ color:#71869a;
+ font-weight:700;
+}
+
+.balance-value{
+ font-size:17px;
+ font-weight:900;
+ color:#087acb;
+ margin-top:3px;
+ overflow-wrap:anywhere;
+}
+
+.refresh-balance{
+ border:1px solid #cce4f5;
+ background:#eaf5fd;
+ color:#087acb;
+ padding:8px 11px;
+ border-radius:20px;
+ font-size:11px;
+ font-weight:800;
+ cursor:pointer;
+ flex-shrink:0;
+}
+
+.refresh-balance:disabled{opacity:.5}
+
+.refresh-balance.loading span{
+ display:inline-block;
+ animation:refreshSpin .8s linear infinite;
+}
+
+@keyframes refreshSpin{
+ to{transform:rotate(360deg)}
+}
+
+.profile-buttons{
+ display:flex;
+ gap:8px;
+ margin-top:9px;
+ position:relative;
+ z-index:1;
+}
+
+.btn{
+ flex:1;
+ border:0;
+ border-radius:25px;
+ padding:8px 10px;
+ font-size:11px;
+ font-weight:800;
+ cursor:pointer;
+ text-align:center;
+ text-decoration:none;
+ white-space:nowrap;
+ display:flex;
+ justify-content:center;
+ align-items:center;
+ min-height:32px;
+}
+
+.btn-blue{
+ background:linear-gradient(135deg,var(--blue),var(--blue-dark));
+ color:white;
+ box-shadow:0 3px 8px #087acb25;
+}
+
+.btn-light{
+ background:white;
+ color:var(--blue-dark);
+ border:1px solid #d9eaf6;
+ box-shadow:0 2px 7px #087acb12;
+}
+
+.btn:active{transform:scale(.97)}
+
+/* MEMBER CENTER */
+
+.member-heading{
+ display:flex;
+ align-items:center;
+ gap:9px;
+ margin:18px 0 10px;
+}
+
+.member-heading h3{
+ margin:0;
+ font-size:14px;
+ color:#34495a;
+ white-space:nowrap;
+}
+
+.member-heading:after{
+ content:"";
+ height:1px;
+ flex:1;
+ background:#dce8f0;
+}
+
+.member-menu{
+ display:grid;
+ grid-template-columns:repeat(4,minmax(0,1fr));
+ gap:16px 7px;
+ padding:8px 0 17px;
+}
+
+.member-item{
+ min-width:0;
+ text-decoration:none;
+ color:#52616d;
+ display:flex;
+ flex-direction:column;
+ align-items:center;
+ text-align:center;
+ gap:6px;
+ cursor:pointer;
+ -webkit-tap-highlight-color:transparent;
+}
+
+.member-icon{
+ width:57px;
+ height:57px;
+ border-radius:50%;
+ background:linear-gradient(145deg,#fff8e8,#fff0cc);
+ border:1px solid #f1dfb8;
+ display:flex;
+ align-items:center;
+ justify-content:center;
+ font-size:25px;
+ box-shadow:0 3px 9px #b98b2a12;
+ transition:.15s;
+}
+
+.member-item:active .member-icon{
+ transform:scale(.94);
+}
+
+.member-item strong{
+ font-size:10px;
+ line-height:1.35;
+ font-weight:600;
+ overflow-wrap:anywhere;
+}
+
+/* BOTTOM NAVIGATION */
+
+.bottom-nav{
+ position:fixed;
+ bottom:0;
+ left:0;
+ right:0;
+ height:67px;
+ background:white;
+ border-top:1px solid var(--border);
+ display:grid;
+ grid-template-columns:repeat(4,1fr);
+ z-index:20;
+ box-shadow:0 -3px 12px #123c6010;
+}
+
+.nav-item{
+ text-decoration:none;
+ color:#8295a6;
+ display:flex;
+ flex-direction:column;
+ align-items:center;
+ justify-content:center;
+ gap:4px;
+ font-size:11px;
+}
+
+.nav-item span{font-size:20px}
+
+.nav-item.active{
+ color:var(--blue-dark);
+ font-weight:800;
+}
+
+.nav-profile-img{
+ width:27px;
+ height:27px;
+ border-radius:50%;
+ object-fit:cover;
+ display:block;
+ border:2px solid #d8e9f5;
+ background:#eaf5fd;
+}
+
+.nav-item.active .nav-profile-img{
+ border:2px solid var(--blue);
+}
+
+/* LOGOUT MODAL */
+
+.modal-overlay{
+ position:fixed;
+ inset:0;
+ background:rgba(12,30,48,.58);
+ backdrop-filter:blur(4px);
+ -webkit-backdrop-filter:blur(4px);
+ z-index:100;
+ display:flex;
+ align-items:center;
+ justify-content:center;
+ padding:20px;
+ opacity:0;
+ visibility:hidden;
+ transition:.25s;
+}
+
+.modal-overlay.show{
+ opacity:1;
+ visibility:visible;
+}
+
+.logout-modal{
+ width:100%;
+ max-width:340px;
+ background:#fff;
+ border-radius:21px;
+ padding:24px 20px 20px;
+ text-align:center;
+ box-shadow:0 18px 55px #0003;
+ transform:translateY(18px) scale(.96);
+ transition:.25s;
+}
+
+.modal-overlay.show .logout-modal{
+ transform:translateY(0) scale(1);
+}
+
+.logout-icon{
+ width:72px;
+ height:72px;
+ border-radius:22px;
+ margin:0 auto 15px;
+ display:flex;
+ align-items:center;
+ justify-content:center;
+ background:linear-gradient(145deg,#fff0e9,#ffe0d8);
+ font-size:34px;
+}
+
+.logout-modal h3{
+ margin:0;
+ color:#243c50;
+ font-size:20px;
+ font-weight:900;
+}
+
+.logout-modal p{
+ margin:10px 0 21px;
+ color:#8393a0;
+ font-size:12px;
+ line-height:1.7;
+}
+
+.logout-actions{
+ display:flex;
+ gap:10px;
+}
+
+.modal-btn{
+ flex:1;
+ border:0;
+ border-radius:25px;
+ min-height:44px;
+ font-size:13px;
+ font-weight:900;
+ cursor:pointer;
+}
+
+.cancel-btn{
+ color:#587084;
+ background:#edf3f8;
+}
+
+.confirm-logout{
+ color:white;
+ background:linear-gradient(135deg,#ef6871,#d83c50);
+ box-shadow:0 4px 12px #df526044;
+}
+
 .confirm-logout:disabled{opacity:.6}
-.toast{position:fixed;left:50%;bottom:85px;transform:translate(-50%,20px);background:#173d5d;color:white;padding:12px 18px;border-radius:12px;font-size:13px;font-weight:700;opacity:0;visibility:hidden;transition:.25s;z-index:120;width:max-content;max-width:90%;text-align:center}
-.toast.show{opacity:1;visibility:visible;transform:translate(-50%,0)}
-@media(max-width:380px){.container{padding:9px}.profile-top{padding:9px 10px}.avatar{width:54px;height:54px}.profile-name{font-size:14px}.member-menu{gap:14px 5px}.member-icon{width:53px;height:53px;font-size:23px}.member-item strong{font-size:9px}.btn{padding:7px 8px;font-size:10px}.verify-grid{grid-template-columns:1fr}}
-@media(max-width:320px){.member-icon{width:47px;height:47px;font-size:21px}.member-item strong{font-size:8px}.profile-main{gap:8px}.balance-value{font-size:15px}}
+
+/* TOAST */
+
+.toast{
+ position:fixed;
+ left:50%;
+ bottom:85px;
+ transform:translate(-50%,20px);
+ background:#173d5d;
+ color:white;
+ padding:12px 18px;
+ border-radius:12px;
+ font-size:13px;
+ font-weight:700;
+ opacity:0;
+ visibility:hidden;
+ transition:.25s;
+ z-index:120;
+ width:max-content;
+ max-width:90%;
+ text-align:center;
+}
+
+.toast.show{
+ opacity:1;
+ visibility:visible;
+ transform:translate(-50%,0);
+}
+
+/* MOBILE */
+
+@media(max-width:380px){
+ .container{padding:9px}
+ .profile-top{padding:9px 10px}
+ .avatar{width:54px;height:54px}
+ .profile-name{font-size:14px}
+ .member-menu{gap:14px 5px}
+ .member-icon{width:53px;height:53px;font-size:23px}
+ .member-item strong{font-size:9px}
+ .btn{padding:7px 8px;font-size:10px}
+}
+
+@media(max-width:320px){
+ .member-icon{width:47px;height:47px;font-size:21px}
+ .member-item strong{font-size:8px}
+ .profile-main{gap:8px}
+ .balance-value{font-size:15px}
+}
 </style>
 </head>
+
 <body>
+
 <header class="header">👤 My Profile</header>
+
 <main class="container">
+
+<!-- PROFILE CARD -->
 <section class="card profile-top">
-  <div class="profile-main">
-    <div class="avatar" id="avatar">👤</div>
-    <div class="profile-details">
-      <div class="profile-name" id="profileName">Loading...</div>
-      <div class="user-id" id="userId">User ID: --</div>
-      <div id="accountStatus"></div>
-      <div class="bio" id="profileBio">Loading profile...</div>
+
+ <div class="profile-main">
+
+  <div class="avatar" id="avatar">👤</div>
+
+  <div class="profile-details">
+
+   <div class="profile-name" id="profileName">
+    Loading...
+   </div>
+
+   <div class="user-id" id="userId">
+    User ID: --
+   </div>
+
+   <div id="accountStatus"></div>
+
+   <div class="bio" id="profileBio">
+    Loading profile...
+   </div>
+
+  </div>
+ </div>
+
+ <!-- WALLET BALANCE -->
+ <div class="balance-box">
+
+  <div class="balance-info">
+
+   <div class="balance-icon">💵</div>
+
+   <div>
+    <div class="balance-label">WALLET BALANCE</div>
+
+    <div class="balance-value">
+     <span id="walletBalance">0.00</span>
     </div>
+   </div>
+
   </div>
-  <div class="balance-box">
-    <div class="balance-info">
-      <div class="balance-icon">💵</div>
-      <div><div class="balance-label">WALLET BALANCE</div><div class="balance-value"><span id="walletBalance">0.00</span><small style="font-size:10px"></small></div></div>
-    </div>
-    <button class="refresh-balance" id="refreshBalanceBtn" type="button" onclick="refreshBalance()"><span>↻</span> Refresh</button>
-  </div>
-  <div class="profile-buttons">
-    <a class="btn btn-light" href="deposit.html">＋ Deposit</a>
-    <a class="btn btn-blue" href="withdraw.html">↗ Withdraw</a>
-  </div>
+
+  <button
+   class="refresh-balance"
+   id="refreshBalanceBtn"
+   type="button"
+   onclick="refreshBalance()">
+
+   <span>↻</span> Refresh
+
+  </button>
+
+ </div>
+
+ <!-- DEPOSIT / WITHDRAW -->
+ <div class="profile-buttons">
+
+  <a class="btn btn-light" href="deposit.html">
+   ＋ Deposit
+  </a>
+
+  <a class="btn btn-blue" href="withdraw.html">
+   ↗ Withdraw
+  </a>
+
+ </div>
+
 </section>
 
-<section class="card verification-card" id="verificationCard">
-  <div class="verification-title">
-    <h3>🛡️ Identity Verification</h3>
-    <span class="verification-status" id="verificationStatus">Not Submitted</span>
-  </div>
-  <p class="verification-subtitle" id="verificationSubtitle">Submit your legal details once to complete your GLO 365 profile verification.</p>
-  <form id="verificationForm" autocomplete="off">
-    <div class="verify-grid">
-      <div class="verify-field full"><label for="verifyLegalName">Full Legal Name</label><input id="verifyLegalName" name="legal_name" type="text" maxlength="120" placeholder="Enter your name as shown on document" required></div>
-      <div class="verify-field"><label for="verifyDocumentType">Document Type</label><select id="verifyDocumentType" name="document_type" required><option value="">Select document</option><option value="NID">NID</option><option value="PASSPORT">Passport</option></select></div>
-      <div class="verify-field"><label for="verifyDocumentNumber">Document Number</label><input id="verifyDocumentNumber" name="document_number" type="text" maxlength="40" placeholder="Document number" required></div>
-      <div class="verify-field"><label for="verifyPhone">Phone Number</label><input id="verifyPhone" name="phone" type="tel" maxlength="25" placeholder="+8801XXXXXXXXX" required></div>
-      <div class="verify-field"><label for="verifyEmail">Email Address</label><input id="verifyEmail" name="email" type="email" maxlength="150" placeholder="name@example.com" required></div>
-    </div>
-    <div class="verify-error" id="verificationError" role="alert"></div>
-    <button class="verify-submit" id="verificationSubmit" type="submit">Submit Verification Details</button>
-  </form>
-  <div id="verificationRecord" hidden></div>
-  <div class="verify-note">Your submitted information is encrypted on the server. After submission, you cannot view the full details or change them. Only authorized Admins can access the full information. Automatic format checks do not confirm that an identity document is genuine through a government database.</div>
-</section>
-
-<div class="member-heading"><h3>MEMBER CENTER</h3></div>
-<section class="member-menu">
-  <a class="member-item" href="rewards.html"><span class="member-icon">🏆</span><strong>My Rewards</strong></a>
-  <a class="member-item" href="history.html"><span class="member-icon">📊</span><strong>Bet History</strong></a>
-  <a class="member-item" href="profit-loss.html"><span class="member-icon">💰</span><strong>Profit & Loss</strong></a>
-  <a class="member-item" href="deposit-history.html"><span class="member-icon">📥</span><strong>Deposit Records</strong></a>
-  <a class="member-item" href="withdraw-records.html"><span class="member-icon">📤</span><strong>Withdrawal Records</strong></a>
-  <a class="member-item" href="transaction-history.html"><span class="member-icon">🧾</span><strong>Transaction History</strong></a>
-  <a class="member-item" href="my-account.html"><span class="member-icon">👤</span><strong>My Account</strong></a>
-  <a class="member-item" href="security-center.html"><span class="member-icon">🛡️</span><strong>Security Center</strong></a>
-  <a class="member-item" href="mailto:support@glo365.com"><span class="member-icon">✉️</span><strong>Email</strong></a>
-  <a class="member-item" href="feedback.html"><span class="member-icon">💬</span><strong>Feedback</strong></a>
-  <a class="member-item" href="https://github.com/Glo365Express/Glo365/releases/latest/download/GLO-365.apk"><span class="member-icon">📱</span><strong>Download App</strong></a>
-  <a class="member-item" href="support.html"><span class="member-icon">🎧</span><strong>Customer Service</strong></a>
-  <a class="member-item" href="help.html"><span class="member-icon">❔</span><strong>Help Center</strong></a>
-  <div class="member-item" onclick="logout()"><span class="member-icon">🚪</span><strong>Logout</strong></div>
-</section>
-</main>
-<nav class="bottom-nav">
-  <a class="nav-item" href="home.html"><span>🏠</span>Home</a>
-  <a class="nav-item" href="mybets.html"><span>🎯</span>My Bets</a>
-  <a class="nav-item" href="results.html"><span>🏆</span>Results</a>
-  <a class="nav-item active" href="profile.html"><img class="nav-profile-img" id="navProfileAvatar" alt="Profile">Profile</a>
-</nav>
-<div class="modal-overlay" id="logoutModal">
-  <div class="logout-modal">
-    <div class="logout-icon">🚪</div><h3>Logout Account?</h3>
-    <p>Are you sure you want to logout from your GLO 365 account? You will need to login again to access your account.</p>
-    <div class="logout-actions">
-      <button class="modal-btn cancel-btn" type="button" onclick="closeLogoutModal()">Cancel</button>
-      <button class="modal-btn confirm-logout" id="confirmLogoutBtn" type="button" onclick="confirmLogout()">Logout</button>
-    </div>
-  </div>
+<!-- MEMBER CENTER -->
+<div class="member-heading">
+ <h3>MEMBER CENTER</h3>
 </div>
+
+<section class="member-menu">
+
+ <a class="member-item" href="rewards.html">
+  <span class="member-icon">🏆</span>
+  <strong>My Rewards</strong>
+ </a>
+
+ <a class="member-item" href="history.html">
+  <span class="member-icon">📊</span>
+  <strong>Bet History</strong>
+ </a>
+
+ <a class="member-item" href="profit-loss.html">
+  <span class="member-icon">💰</span>
+  <strong>Profit & Loss</strong>
+ </a>
+
+ <a class="member-item" href="deposit-history.html">
+  <span class="member-icon">📥</span>
+  <strong>Deposit Records</strong>
+ </a>
+
+ <a class="member-item" href="withdraw-records.html">
+  <span class="member-icon">📤</span>
+  <strong>Withdrawal Records</strong>
+ </a>
+
+ <a class="member-item" href="transaction-history.html">
+  <span class="member-icon">🧾</span>
+  <strong>Transaction History</strong>
+ </a>
+
+ <a class="member-item" href="my-account.html">
+  <span class="member-icon">👤</span>
+  <strong>My Account</strong>
+ </a>
+
+ <a class="member-item" href="security-center.html">
+  <span class="member-icon">🛡️</span>
+  <strong>Security Center</strong>
+ </a>
+
+ <a class="member-item" href="mailto:support@glo365.com">
+  <span class="member-icon">✉️</span>
+  <strong>Email</strong>
+ </a>
+
+ <a class="member-item" href="feedback.html">
+  <span class="member-icon">💬</span>
+  <strong>Feedback</strong>
+ </a>
+
+ <a class="member-item"
+ href="https://github.com/Glo365Express/Glo365/releases/latest/download/GLO-365.apk">
+
+  <span class="member-icon">📱</span>
+  <strong>Download App</strong>
+
+ </a>
+
+ <a class="member-item" href="support.html">
+  <span class="member-icon">🎧</span>
+  <strong>Customer Service</strong>
+ </a>
+
+ <a class="member-item" href="help.html">
+  <span class="member-icon">❔</span>
+  <strong>Help Center</strong>
+ </a>
+
+ <div class="member-item" onclick="logout()">
+  <span class="member-icon">🚪</span>
+  <strong>Logout</strong>
+ </div>
+
+</section>
+
+</main>
+
+<!-- BOTTOM NAVIGATION -->
+<nav class="bottom-nav">
+
+ <a class="nav-item" href="home.html">
+  <span>🏠</span>
+  Home
+ </a>
+
+ <a class="nav-item" href="mybets.html">
+  <span>🎯</span>
+  My Bets
+ </a>
+
+ <a class="nav-item" href="results.html">
+  <span>🏆</span>
+  Results
+ </a>
+
+ <a class="nav-item active" href="profile.html">
+  <img
+   class="nav-profile-img"
+   id="navProfileAvatar"
+   alt="Profile">
+  Profile
+ </a>
+
+</nav>
+
+<!-- LOGOUT MODAL -->
+<div class="modal-overlay" id="logoutModal">
+
+ <div class="logout-modal">
+
+  <div class="logout-icon">🚪</div>
+
+  <h3>Logout Account?</h3>
+
+  <p>
+   Are you sure you want to logout from your GLO 365 account?
+   You will need to login again to access your account.
+  </p>
+
+  <div class="logout-actions">
+
+   <button
+    class="modal-btn cancel-btn"
+    type="button"
+    onclick="closeLogoutModal()">
+    Cancel
+   </button>
+
+   <button
+    class="modal-btn confirm-logout"
+    id="confirmLogoutBtn"
+    type="button"
+    onclick="confirmLogout()">
+    Logout
+   </button>
+
+  </div>
+
+ </div>
+</div>
+
 <div class="toast" id="toast"></div>
 
 <script>
 (function(){
+
 "use strict";
+
 const API_BASE="https://glo365.onrender.com/api";
 const TOKEN_KEY="glo365_token";
-let token=sessionStorage.getItem(TOKEN_KEY)||"";
-let currentUser=null,currentProfile={},isLoggingOut=false,isRefreshingBalance=false,isSubmittingVerification=false;
-const DEFAULT_AVATAR=`<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 120 120"><defs><linearGradient id="bg" x1="0" y1="0" x2="1" y2="1"><stop offset="0%" stop-color="#dceeff"/><stop offset="100%" stop-color="#ffffff"/></linearGradient></defs><circle cx="60" cy="60" r="60" fill="url(#bg)"/><path d="M10 120 Q14 80 60 80 Q106 80 110 120Z" fill="#1878ce"/><path d="M48 75 L48 89 Q60 101 72 89 L72 75Z" fill="#e9b58f"/><ellipse cx="60" cy="52" rx="26" ry="31" fill="#e9b58f"/><path d="M34 48 Q28 13 59 12 Q91 12 86 49 L79 35 Q60 26 42 37Z" fill="#172d4c"/><ellipse cx="49" cy="55" rx="3" ry="2.7" fill="#25364a"/><ellipse cx="71" cy="55" rx="3" ry="2.7" fill="#25364a"/><path d="M44 48 Q49 45 54 48 M66 48 Q71 45 76 48" fill="none" stroke="#172d4c" stroke-width="2.5"/><path d="M60 57 L57 65 Q60 68 63 65" fill="none" stroke="#b77d67" stroke-width="1.5"/><path d="M51 72 Q60 78 69 72" fill="none" stroke="#9c5551" stroke-width="2.5"/><path d="M43 88 L60 101 L77 88" fill="none" stroke="#fff" stroke-width="3" opacity=".7"/></svg>`;
-const FALLBACK_AVATAR="data:image/svg+xml;charset=UTF-8,"+encodeURIComponent(DEFAULT_AVATAR);
 
-function toast(message){const el=document.getElementById("toast");el.textContent=message;el.classList.add("show");clearTimeout(toast.timer);toast.timer=setTimeout(()=>el.classList.remove("show"),2800)}
+let token=sessionStorage.getItem(TOKEN_KEY)||"";
+
+let currentUser=null;
+let currentProfile={};
+let isLoggingOut=false;
+let isRefreshingBalance=false;
+
+/* DEFAULT AVATAR */
+
+const DEFAULT_AVATAR=`
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 120 120">
+<defs>
+<linearGradient id="bg" x1="0" y1="0" x2="1" y2="1">
+<stop offset="0%" stop-color="#dceeff"/>
+<stop offset="100%" stop-color="#ffffff"/>
+</linearGradient>
+</defs>
+
+<circle cx="60" cy="60" r="60" fill="url(#bg)"/>
+
+<path d="M10 120 Q14 80 60 80 Q106 80 110 120Z"
+fill="#1878ce"/>
+
+<path d="M48 75 L48 89 Q60 101 72 89 L72 75Z"
+fill="#e9b58f"/>
+
+<ellipse cx="60" cy="52" rx="26" ry="31" fill="#e9b58f"/>
+
+<path d="M34 48 Q28 13 59 12 Q91 12 86 49 L79 35 Q60 26 42 37Z"
+fill="#172d4c"/>
+
+<ellipse cx="49" cy="55" rx="3" ry="2.7" fill="#25364a"/>
+<ellipse cx="71" cy="55" rx="3" ry="2.7" fill="#25364a"/>
+
+<path d="M44 48 Q49 45 54 48 M66 48 Q71 45 76 48"
+fill="none" stroke="#172d4c" stroke-width="2.5"/>
+
+<path d="M60 57 L57 65 Q60 68 63 65"
+fill="none" stroke="#b77d67" stroke-width="1.5"/>
+
+<path d="M51 72 Q60 78 69 72"
+fill="none" stroke="#9c5551" stroke-width="2.5"/>
+
+<path d="M43 88 L60 101 L77 88"
+fill="none" stroke="#fff" stroke-width="3" opacity=".7"/>
+
+</svg>`;
+
+const FALLBACK_AVATAR=
+"data:image/svg+xml;charset=UTF-8,"+
+encodeURIComponent(DEFAULT_AVATAR);
+
+
+/* TOAST MESSAGE */
+
+function toast(message){
+
+ const el=document.getElementById("toast");
+
+ el.textContent=message;
+ el.classList.add("show");
+
+ clearTimeout(toast.timer);
+
+ toast.timer=setTimeout(()=>{
+  el.classList.remove("show");
+ },2800);
+
+}
+
+
+/* API REQUEST */
+
 async function api(path,options={}){
+
  const headers={...(options.headers||{})};
- if(token)headers.Authorization="Bearer "+token;
- if(options.body&&!headers["Content-Type"])headers["Content-Type"]="application/json";
- const response=await fetch(API_BASE+path,{...options,headers,credentials:"include",cache:"no-store"});
- let data={};try{data=await response.json()}catch(e){}
- if(response.status===401){sessionStorage.removeItem(TOKEN_KEY);throw new Error("Session expired. Please login again.")}
- if(!response.ok||data.success===false)throw new Error(data.message||data.error||"Request failed ("+response.status+")");
+
+ if(token){
+  headers.Authorization="Bearer "+token;
+ }
+
+ if(options.body&&!headers["Content-Type"]){
+  headers["Content-Type"]="application/json";
+ }
+
+ const response=await fetch(API_BASE+path,{
+  ...options,
+  headers,
+  credentials:"include",
+  cache:"no-store"
+ });
+
+ let data={};
+
+ try{
+  data=await response.json();
+ }catch(e){}
+
+ if(response.status===401){
+
+  sessionStorage.removeItem(TOKEN_KEY);
+
+  throw new Error("Session expired. Please login again.");
+
+ }
+
+ if(!response.ok||data.success===false){
+
+  throw new Error(
+   data.message||
+   data.error||
+   "Request failed ("+response.status+")"
+  );
+
+ }
+
  return data;
+
 }
+
+
+/* AVATAR */
+
 function setAvatar(source){
- const imageSource=source||FALLBACK_AVATAR,main=document.getElementById("avatar");main.innerHTML="";
- const img=document.createElement("img");img.alt="Profile picture";img.src=imageSource;img.onerror=()=>{img.onerror=null;img.src=FALLBACK_AVATAR};main.appendChild(img);
- const nav=document.getElementById("navProfileAvatar");nav.src=imageSource;nav.onerror=()=>{nav.onerror=null;nav.src=FALLBACK_AVATAR};
+
+ const imageSource=source||FALLBACK_AVATAR;
+
+ const main=document.getElementById("avatar");
+
+ main.innerHTML="";
+
+ const img=document.createElement("img");
+
+ img.alt="Profile picture";
+ img.src=imageSource;
+
+ img.onerror=()=>{
+  img.onerror=null;
+  img.src=FALLBACK_AVATAR;
+ };
+
+ main.appendChild(img);
+
+ const nav=document.getElementById("navProfileAvatar");
+
+ nav.src=imageSource;
+
+ nav.onerror=()=>{
+  nav.onerror=null;
+  nav.src=FALLBACK_AVATAR;
+ };
+
 }
-function extractUser(data){return data.user||data.profile||data.account||data}
-function extractProfile(data){return data.profile||data.user||data}
+
+
+/* USER DATA */
+
+function extractUser(data){
+
+ return data.user||
+ data.profile||
+ data.account||
+ data;
+
+}
+
+function extractProfile(data){
+
+ return data.profile||
+ data.user||
+ data;
+
+}
+
+
+/* RENDER PROFILE */
+
 function renderProfile(){
+
  if(!currentUser)return;
+
  const username=currentUser.username||"";
- const fullName=currentProfile.full_name||currentProfile.fullName||currentUser.full_name||currentUser.fullName||username;
+
+ const fullName=
+ currentProfile.full_name||
+ currentProfile.fullName||
+ currentUser.full_name||
+ currentUser.fullName||
+ username;
+
  document.getElementById("profileName").textContent=fullName;
- document.getElementById("userId").textContent="User ID: "+username;
- document.getElementById("profileBio").textContent=currentProfile.bio||"Welcome to GLO 365";
- const status=String(currentUser.status||"active").toLowerCase(),statusEl=document.getElementById("accountStatus");
- if(status==="active")statusEl.innerHTML='<span class="verified">✓ Active Account</span>';
- else{const statusText=document.createElement("span");statusText.className="verified unverified";statusText.textContent=status.toUpperCase();statusEl.innerHTML="";statusEl.appendChild(statusText)}
- setAvatar(currentProfile.avatar||currentUser.avatar||FALLBACK_AVATAR);
+
+ document.getElementById("userId").textContent=
+ "User ID: "+username;
+
+ document.getElementById("profileBio").textContent=
+ currentProfile.bio||"Welcome to GLO 365";
+
+ const status=String(
+  currentUser.status||"active"
+ ).toLowerCase();
+
+ const statusEl=document.getElementById("accountStatus");
+
+ if(status==="active"){
+
+  statusEl.innerHTML=
+  '<span class="verified">✓ Active Account</span>';
+
+ }else{
+
+  const statusText=document.createElement("span");
+
+  statusText.className="verified unverified";
+  statusText.textContent=status.toUpperCase();
+
+  statusEl.innerHTML="";
+  statusEl.appendChild(statusText);
+
+ }
+
+ setAvatar(
+  currentProfile.avatar||
+  currentUser.avatar||
+  FALLBACK_AVATAR
+ );
+
 }
-async function loadProfile(){const data=await api("/profile");currentProfile=extractProfile(data)||{};renderProfile()}
+
+
+/* LOAD PROFILE */
+
+async function loadProfile(){
+
+ const data=await api("/profile");
+
+ currentProfile=extractProfile(data)||{};
+
+ renderProfile();
+
+}
+
+
+/* LOAD WALLET */
+
 async function loadBalance(){
- const data=await api("/wallet"),wallet=data.wallet||data;
- const balance=wallet.balance??wallet.wallet_balance??wallet.points??0,numericBalance=Number(balance);
- if(!Number.isFinite(numericBalance))throw new Error("Invalid wallet balance received.");
- document.getElementById("walletBalance").textContent=numericBalance.toFixed(2);
+
+ const data=await api("/wallet");
+
+ const wallet=data.wallet||data;
+
+ const balance=
+ wallet.balance??
+ wallet.wallet_balance??
+ wallet.points??
+ 0;
+
+ const numericBalance=Number(balance);
+
+ if(!Number.isFinite(numericBalance)){
+
+  throw new Error("Invalid wallet balance received.");
+
+ }
+
+ document.getElementById("walletBalance").textContent=
+ numericBalance.toFixed(2);
+
 }
+
+
+/* REFRESH BALANCE */
+
 window.refreshBalance=async function(){
+
  if(isRefreshingBalance)return;
- const btn=document.getElementById("refreshBalanceBtn");isRefreshingBalance=true;btn.disabled=true;btn.classList.add("loading");btn.innerHTML="<span>↻</span> Loading";
- try{await loadBalance();toast("Wallet balance updated successfully.")}
- catch(error){toast(error.message||"Unable to refresh balance.");if(/session|login|token/i.test(error.message))setTimeout(()=>location.replace("login.html"),1200)}
- finally{isRefreshingBalance=false;btn.disabled=false;btn.classList.remove("loading");btn.innerHTML="<span>↻</span> Refresh"}
+
+ const btn=document.getElementById("refreshBalanceBtn");
+
+ isRefreshingBalance=true;
+
+ btn.disabled=true;
+ btn.classList.add("loading");
+ btn.innerHTML="<span>↻</span> Loading";
+
+ try{
+
+  await loadBalance();
+
+  toast("Wallet balance updated successfully.");
+
+ }catch(error){
+
+  toast(error.message||"Unable to refresh balance.");
+
+  if(/session|login|token/i.test(error.message)){
+
+   setTimeout(()=>{
+    location.replace("login.html");
+   },1200);
+
+  }
+
+ }finally{
+
+  isRefreshingBalance=false;
+
+  btn.disabled=false;
+  btn.classList.remove("loading");
+  btn.innerHTML="<span>↻</span> Refresh";
+
+ }
+
 };
 
-/* IDENTITY VERIFICATION */
-const verificationForm=document.getElementById("verificationForm");
-const verificationStatus=document.getElementById("verificationStatus");
-const verificationSubtitle=document.getElementById("verificationSubtitle");
-const verificationError=document.getElementById("verificationError");
-function showVerificationError(message){verificationError.textContent=message;verificationError.classList.add("show")}
-function clearVerificationError(){verificationError.textContent="";verificationError.classList.remove("show")}
-function addVerificationValue(container,label,value){
- const box=document.createElement("div");box.className="verify-value";
- const small=document.createElement("small");small.textContent=label;
- const strong=document.createElement("strong");strong.textContent=value||"—";
- box.append(small,strong);container.appendChild(box);
-}
-function lockVerificationForm(){
- [...verificationForm.elements].forEach(el=>el.disabled=true);
- verificationForm.hidden=true;
-}
-function renderVerification(record){
- lockVerificationForm();
- const status=String(record.status||"submitted").toLowerCase();
- verificationStatus.textContent=status==="verified"?"✓ Submission Verified":"✓ Details Submitted";
- verificationStatus.classList.add("done");
- verificationSubtitle.textContent="Your details have been submitted. For your privacy, only masked information is displayed here.";
- const panel=document.getElementById("verificationRecord");panel.hidden=false;panel.className="verify-record";panel.innerHTML="";
- addVerificationValue(panel,"Legal Name",record.legal_name);
- addVerificationValue(panel,"Document Type",record.document_type);
- addVerificationValue(panel,"Document Number",record.document_number);
- addVerificationValue(panel,"Phone Number",record.phone);
- addVerificationValue(panel,"Email Address",record.email);
-}
-async function loadVerification(){
- const data=await api("/verification/me");
- if(data.submitted&&data.verification)renderVerification(data.verification);
- else{
-  verificationStatus.textContent="Not Submitted";
-  verificationSubtitle.textContent="Submit your legal details once to complete your GLO 365 profile verification.";
-  verificationForm.hidden=false;
- }
-}
-verificationForm.addEventListener("submit",async function(event){
- event.preventDefault();if(isSubmittingVerification)return;clearVerificationError();
- const payload={
-  legal_name:document.getElementById("verifyLegalName").value.trim(),
-  document_type:document.getElementById("verifyDocumentType").value,
-  document_number:document.getElementById("verifyDocumentNumber").value.trim(),
-  phone:document.getElementById("verifyPhone").value.trim(),
-  email:document.getElementById("verifyEmail").value.trim()
- };
- if(payload.legal_name.length<3){showVerificationError("Please enter your full legal name.");return}
- if(!payload.document_type){showVerificationError("Please select NID or Passport.");return}
- if(!/^[A-Za-z0-9-]{5,40}$/.test(payload.document_number.replace(/\s+/g,""))){showVerificationError("Please enter a valid document number format.");return}
- if(!/^\+?[0-9\s()-]{8,22}$/.test(payload.phone)){showVerificationError("Please enter a valid phone number.");return}
- if(!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(payload.email)){showVerificationError("Please enter a valid email address.");return}
- const btn=document.getElementById("verificationSubmit");isSubmittingVerification=true;btn.disabled=true;btn.textContent="Submitting securely...";
+
+/* LOGOUT MODAL */
+
+window.logout=function(){
+
+ if(isLoggingOut)return;
+
+ document.getElementById("logoutModal")
+ .classList.add("show");
+
+};
+
+window.closeLogoutModal=function(){
+
+ if(isLoggingOut)return;
+
+ document.getElementById("logoutModal")
+ .classList.remove("show");
+
+};
+
+
+/* CONFIRM LOGOUT */
+
+window.confirmLogout=async function(){
+
+ if(isLoggingOut)return;
+
+ isLoggingOut=true;
+
+ const btn=document.getElementById("confirmLogoutBtn");
+
+ btn.disabled=true;
+ btn.textContent="Logging out...";
+
  try{
-  const result=await api("/verification",{method:"POST",body:JSON.stringify(payload)});
-  if(result.verification)renderVerification(result.verification);
-  else await loadVerification();
-  verificationForm.reset();toast("Your details have been securely submitted.");
+
+  await fetch(API_BASE+"/auth/logout",{
+
+   method:"POST",
+
+   credentials:"include",
+
+   headers:token?
+   {Authorization:"Bearer "+token}:{}
+
+  });
+
  }catch(error){
-  showVerificationError(error.message||"Unable to submit verification details.");
-  if(/already been submitted/i.test(error.message))await loadVerification().catch(()=>{});
- }finally{isSubmittingVerification=false;if(!verificationForm.hidden){btn.disabled=false;btn.textContent="Submit Verification Details"}}
+
+  console.warn("Logout request:",error.message);
+
+ }
+
+ sessionStorage.removeItem(TOKEN_KEY);
+ sessionStorage.removeItem("glo365_user");
+ sessionStorage.removeItem("glo365_session");
+ sessionStorage.removeItem("glo365_pending_deposit");
+
+ location.replace("login.html");
+
+};
+
+
+/* MODAL EVENTS */
+
+document.getElementById("logoutModal")
+.addEventListener("click",function(event){
+
+ if(event.target===this){
+
+  closeLogoutModal();
+
+ }
+
 });
 
-window.logout=function(){if(isLoggingOut)return;document.getElementById("logoutModal").classList.add("show")};
-window.closeLogoutModal=function(){if(isLoggingOut)return;document.getElementById("logoutModal").classList.remove("show")};
-window.confirmLogout=async function(){
- if(isLoggingOut)return;isLoggingOut=true;const btn=document.getElementById("confirmLogoutBtn");btn.disabled=true;btn.textContent="Logging out...";
- try{await fetch(API_BASE+"/auth/logout",{method:"POST",credentials:"include",headers:token?{Authorization:"Bearer "+token}:{}})}catch(error){console.warn("Logout request:",error.message)}
- sessionStorage.removeItem(TOKEN_KEY);sessionStorage.removeItem("glo365_user");sessionStorage.removeItem("glo365_session");sessionStorage.removeItem("glo365_pending_deposit");location.replace("login.html");
-};
-document.getElementById("logoutModal").addEventListener("click",function(event){if(event.target===this)closeLogoutModal()});
-document.addEventListener("keydown",function(event){if(event.key==="Escape")closeLogoutModal()});
+document.addEventListener("keydown",function(event){
+
+ if(event.key==="Escape"){
+
+  closeLogoutModal();
+
+ }
+
+});
+
+
+/* INITIALIZE PROFILE */
 
 async function initialize(){
- document.getElementById("profileName").textContent="Loading...";
- document.getElementById("profileBio").textContent="Checking your account...";
+
+ document.getElementById("profileName").textContent=
+ "Loading...";
+
+ document.getElementById("profileBio").textContent=
+ "Checking your account...";
+
  setAvatar(FALLBACK_AVATAR);
+
  try{
-  if(!token){location.replace("login.html");return}
-  const authData=await api("/auth/me");currentUser=extractUser(authData);
-  if(!currentUser||!currentUser.username)throw new Error("Your account information could not be loaded.");
-  await Promise.all([loadProfile(),loadBalance(),loadVerification()]);
+
+  if(!token){
+
+   location.replace("login.html");
+
+   return;
+
+  }
+
+  const authData=await api("/auth/me");
+
+  currentUser=extractUser(authData);
+
+  if(!currentUser||!currentUser.username){
+
+   throw new Error(
+    "Your account information could not be loaded."
+   );
+
+  }
+
+  await Promise.all([
+   loadProfile(),
+   loadBalance()
+  ]);
+
  }catch(error){
+
   console.error("Profile initialization error:",error);
-  if(/401|403|unauthorized|token|authentication|session/i.test(error.message)){sessionStorage.removeItem(TOKEN_KEY);location.replace("login.html");return}
-  document.getElementById("profileName").textContent="Unable to load";
-  document.getElementById("profileBio").textContent=error.message;
+
+  if(
+   /401|403|unauthorized|token|authentication|session/i
+   .test(error.message)
+  ){
+
+   sessionStorage.removeItem(TOKEN_KEY);
+
+   location.replace("login.html");
+
+   return;
+
+  }
+
+  document.getElementById("profileName").textContent=
+  "Unable to load";
+
+  document.getElementById("profileBio").textContent=
+  error.message;
+
   toast(error.message||"Could not load your profile.");
+
  }
+
 }
+
+
+/* PAGE RELOAD */
+
 window.addEventListener("pageshow",()=>{
+
  if(currentUser&&!isLoggingOut){
+
   loadProfile().catch(error=>console.error(error));
+
   loadBalance().catch(error=>console.error(error));
-  loadVerification().catch(error=>console.error(error));
+
  }
+
 });
+
+
 initialize();
+
 })();
 </script>
+
 </body>
 </html>
