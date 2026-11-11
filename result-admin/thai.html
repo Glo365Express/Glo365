@@ -6,16 +6,16 @@
 <meta name="theme-color" content="#07111f">
 <title>Thai Lottery Admin | GLO 365</title>
 <style>
-:root{--bg:#07111f;--panel:#101d2d;--panel2:#14243a;--line:#263a52;--text:#eef5ff;--muted:#91a4bb;--blue:#2389ef;--cyan:#36c6dc;--green:#22c58b;--red:#ff6577;--gold:#ffc857}
+:root{--panel:#101d2d;--line:#263a52;--text:#eef5ff;--muted:#91a4bb;--blue:#2389ef;--cyan:#36c6dc;--red:#ff6577;--gold:#ffc857}
 *{box-sizing:border-box}body{margin:0;background:linear-gradient(160deg,#07111f,#0b1728 55%,#07111f);color:var(--text);font-family:Arial,Helvetica,sans-serif;min-height:100vh}
 header{position:sticky;top:0;z-index:5;background:#091626ed;border-bottom:1px solid var(--line);backdrop-filter:blur(12px);padding:13px 16px;display:flex;align-items:center;justify-content:space-between;gap:12px}
 .brand{font-weight:900;letter-spacing:.5px;font-size:18px}.brand span{color:#48a9ff}.sub{font-size:11px;color:var(--muted);margin-top:3px}.header-actions{display:flex;gap:8px}
-.btn{border:1px solid var(--line);background:#17283d;color:var(--text);border-radius:9px;padding:10px 12px;font-weight:700;font-size:12px;cursor:pointer;text-decoration:none}.btn.primary{background:linear-gradient(110deg,#1675df,#20a9d7);border:0}.btn.danger{color:#ff9aa6}
+.btn{border:1px solid var(--line);background:#17283d;color:var(--text);border-radius:9px;padding:10px 12px;font-weight:700;font-size:12px;cursor:pointer;text-decoration:none}.btn.primary{background:linear-gradient(110deg,#1675df,#20a9d7);border:0}.btn.danger{color:#ff9aa6}.btn:disabled{opacity:.55;cursor:wait}
 main{width:min(100%,900px);margin:auto;padding:18px 13px 50px}.intro{padding:17px;border:1px solid var(--line);border-radius:16px;background:linear-gradient(135deg,#132944,#102033);margin-bottom:15px}.intro h1{font-size:21px;margin:0 0 6px}.intro p{font-size:12px;color:var(--muted);line-height:1.55;margin:0}
-.notice{display:none;padding:12px 13px;border-radius:10px;margin:12px 0;font-size:12px;line-height:1.5}.notice.show{display:block}.notice.error{background:#401e2b;border:1px solid #873c50;color:#ffdce2}.notice.success{background:#10382f;border:1px solid #20775f;color:#c9ffed}.notice.info{background:#102c48;border:1px solid #245a85;color:#d7edff}
+.notice{display:none;padding:12px 13px;border-radius:10px;margin:12px 0;font-size:12px;line-height:1.5;overflow-wrap:anywhere}.notice.show{display:block}.notice.error{background:#401e2b;border:1px solid #873c50;color:#ffdce2}.notice.success{background:#10382f;border:1px solid #20775f;color:#c9ffed}.notice.info{background:#102c48;border:1px solid #245a85;color:#d7edff}
 .panel{background:var(--panel);border:1px solid var(--line);border-radius:15px;padding:15px;margin:14px 0}.panel h2{font-size:16px;margin:0 0 13px}.meta-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px}
-.field label{display:block;color:var(--muted);font-size:11px;font-weight:700;margin:0 0 6px}.field input{width:100%;background:#091625;border:1px solid #2a405a;border-radius:9px;color:var(--text);padding:12px;font-size:14px;outline:none}.field input:focus{border-color:var(--blue);box-shadow:0 0 0 2px #2389ef22}.field input::placeholder{color:#61758c}
-.prize-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px}.prize{background:#0b1929;border:1px solid #22374e;border-radius:11px;padding:11px}.prize h3{font-size:11px;margin:0 0 8px;color:#a9c8e9;text-transform:uppercase;letter-spacing:.5px}.prize.first h3{color:var(--gold)}.prize input{width:100%;background:#071321;border:1px solid #2a405a;color:#fff;border-radius:7px;padding:10px;font-size:14px;outline:none}.prize input:focus{border-color:var(--cyan)}.prize small{display:block;color:#71869d;font-size:10px;margin-top:6px;line-height:1.4}
+.field label{display:block;color:var(--muted);font-size:11px;font-weight:700;margin:0 0 6px}.field input{width:100%;background:#091625;border:1px solid #2a405a;border-radius:9px;color:var(--text);padding:12px;font-size:14px;outline:none;min-height:48px}.field input:focus{border-color:var(--blue);box-shadow:0 0 0 2px #2389ef22}.field input::placeholder{color:#61758c}
+.prize-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px}.prize{background:#0b1929;border:1px solid #22374e;border-radius:11px;padding:11px}.prize h3{font-size:11px;margin:0 0 8px;color:#a9c8e9;text-transform:uppercase;letter-spacing:.5px}.prize.first h3{color:var(--gold)}.prize input{width:100%;background:#071321;border:1px solid #2a405a;color:#fff;border-radius:7px;padding:12px;font-size:15px;outline:none;min-height:48px}.prize input:focus{border-color:var(--cyan)}.prize small{display:block;color:#71869d;font-size:10px;margin-top:6px;line-height:1.4}
 .actions{display:flex;gap:9px;flex-wrap:wrap;margin-top:15px}.actions .btn{flex:1;min-width:125px;padding:13px}.section-title{display:flex;align-items:center;justify-content:space-between;gap:10px;margin:22px 2px 10px}.section-title h2{font-size:17px;margin:0}.section-title small{color:var(--muted);font-size:10px}
 .result-card{background:var(--panel);border:1px solid var(--line);border-radius:12px;padding:13px;margin-bottom:10px}.result-top{display:flex;justify-content:space-between;gap:8px;margin-bottom:9px}.result-top b{font-size:13px}.result-top small{color:var(--muted);font-size:10px}.result-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:7px}.result-grid div{background:#0a1827;border-radius:8px;padding:8px}.result-grid strong{display:block;color:#70c8ff;font-size:10px;margin-bottom:5px}.result-grid span{font-size:12px;overflow-wrap:anywhere}.empty{color:var(--muted);text-align:center;padding:20px;font-size:12px;border:1px dashed var(--line);border-radius:10px}
 @media(max-width:390px){.meta-grid,.prize-grid{grid-template-columns:1fr}.header-actions .btn{padding:9px 8px}.brand{font-size:16px}}
@@ -24,44 +24,49 @@ main{width:min(100%,900px);margin:auto;padding:18px 13px 50px}.intro{padding:17p
 <body>
 <header>
   <div><div class="brand">GLO <span>365</span></div><div class="sub">THAI LOTTERY RESULT CONTROL</div></div>
-  <div class="header-actions"><a class="btn" href="../admin.html">Dashboard</a><button class="btn danger" id="logoutBtn">Logout</button></div>
+  <div class="header-actions"><a class="btn" href="../admin.html">Dashboard</a><button class="btn danger" id="logoutBtn" type="button">Logout</button></div>
 </header>
 <main>
   <section class="intro">
     <h1>🇹🇭 Thai Government Lottery</h1>
-    <p>Enter the official draw information and prize numbers. For categories with multiple winning numbers, separate each number with commas. Keep every number at its official digit length.</p>
+    <p>Publish the Thai result fields currently supported by the GLO 365 backend. Enter the official draw date, 1st Prize and Last 2 Digits. First 3 Digits are optional.</p>
   </section>
-  <div id="notice" class="notice"></div>
+  <div id="notice" class="notice" role="status" aria-live="polite"></div>
+
   <section class="panel">
     <h2>Draw Information</h2>
     <div class="meta-grid">
-      <div class="field"><label for="drawNumber">DRAW NUMBER / PERIOD</label><input id="drawNumber" maxlength="40" placeholder="Example: 16-11-2026"></div>
-      <div class="field"><label for="drawDate">DRAW DATE</label><input id="drawDate" type="date"></div>
+      <div class="field"><label for="drawNumber">DRAW NUMBER / PERIOD</label><input id="drawNumber" maxlength="40" placeholder="Example: 2577"></div>
+      <div class="field"><label for="drawDate">DRAW DATE *</label><input id="drawDate" type="date" required></div>
     </div>
   </section>
+
   <section class="panel">
-    <h2>Main Prizes</h2>
+    <h2>Supported Prize Results</h2>
     <div class="prize-grid">
-      <div class="prize first"><h3>1st Prize · 6 Digits</h3><input id="firstPrize" inputmode="numeric" maxlength="6" placeholder="000000"></div>
-      <div class="prize"><h3>Adjacent 1st Prize · 6 Digits</h3><input id="adjacentFirst" placeholder="000000, 000000"><small>Usually two numbers</small></div>
-      <div class="prize"><h3>2nd Prize · 6 Digits</h3><input id="secondPrize" placeholder="000000, 000000"><small>Enter all five numbers, separated by commas</small></div>
-      <div class="prize"><h3>3rd Prize · 6 Digits</h3><input id="thirdPrize" placeholder="000000, 000000"><small>Enter all ten numbers, separated by commas</small></div>
-      <div class="prize"><h3>4th Prize · 6 Digits</h3><input id="fourthPrize" placeholder="000000, 000000"><small>Enter all fifty numbers, separated by commas</small></div>
-      <div class="prize"><h3>5th Prize · 6 Digits</h3><input id="fifthPrize" placeholder="000000, 000000"><small>Enter all one hundred numbers, separated by commas</small></div>
+      <div class="prize first">
+        <h3>1st Prize · 6 Digits *</h3>
+        <input id="firstPrize" inputmode="numeric" autocomplete="off" maxlength="6" placeholder="000000" aria-label="1st Prize, six digits">
+        <small>Enter exactly one 6-digit number</small>
+      </div>
+      <div class="prize first">
+        <h3>Last 2 Digits *</h3>
+        <input id="lastTwo" inputmode="numeric" autocomplete="off" maxlength="2" placeholder="00" aria-label="Last 2 Digits">
+        <small>Enter exactly one 2-digit number</small>
+      </div>
+      <div class="prize">
+        <h3>First 3 Digits</h3>
+        <input id="firstThree" inputmode="numeric" autocomplete="off" placeholder="000, 000" aria-label="First 3 Digits">
+        <small>Optional · Separate multiple numbers with commas</small>
+      </div>
     </div>
   </section>
-  <section class="panel">
-    <h2>Last / Front Number Prizes</h2>
-    <div class="prize-grid">
-      <div class="prize"><h3>First 3 Digits</h3><input id="firstThree" inputmode="numeric" placeholder="000, 000"><small>Usually two numbers</small></div>
-      <div class="prize"><h3>Last 3 Digits</h3><input id="lastThree" inputmode="numeric" placeholder="000, 000"><small>Usually two numbers</small></div>
-      <div class="prize first"><h3>Last 2 Digits</h3><input id="lastTwo" inputmode="numeric" maxlength="2" placeholder="00"></div>
-    </div>
-  </section>
+
   <div class="actions">
     <button class="btn" id="clearBtn" type="button">Clear Form</button>
     <button class="btn primary" id="publishBtn" type="button">Publish Thai Result</button>
   </div>
+
   <div class="section-title"><h2>Published Thai Results</h2><small id="resultCount">Loading…</small></div>
   <div id="results"><div class="empty">Loading published results…</div></div>
 </main>
@@ -70,25 +75,38 @@ main{width:min(100%,900px);margin:auto;padding:18px 13px 50px}.intro{padding:17p
   'use strict';
   const API_BASE_URL='https://glo365.onrender.com/api';
   const TOKEN_KEY='glo365_token';
-  const token=sessionStorage.getItem(TOKEN_KEY);
   const notice=document.getElementById('notice');
   const publishBtn=document.getElementById('publishBtn');
   const resultsBox=document.getElementById('results');
-  const fields={
-    first:'firstPrize', adjacent_first:'adjacentFirst', second:'secondPrize',
-    third:'thirdPrize', fourth:'fourthPrize', fifth:'fifthPrize',
-    first_three:'firstThree', last_three:'lastThree', last_two:'lastTwo'
-  };
-  function showNotice(message,type='info'){notice.textContent=message;notice.className='notice show '+type;notice.scrollIntoView({behavior:'smooth',block:'nearest'});}
-  function headers(){const h={'Content-Type':'application/json'};if(token)h.Authorization='Bearer '+token;return h;}
+  const $=id=>document.getElementById(id);
+  let token=sessionStorage.getItem(TOKEN_KEY);
+
+  function showNotice(message,type='info'){
+    notice.textContent=message;
+    notice.className='notice show '+type;
+    notice.scrollIntoView({behavior:'smooth',block:'nearest'});
+  }
+  function headers(){
+    const h={'Content-Type':'application/json'};
+    if(token)h.Authorization='Bearer '+token;
+    return h;
+  }
   async function api(path,options={}){
-    const response=await fetch(API_BASE_URL+path,{...options,headers:{...headers(),...(options.headers||{})},credentials:'include'});
+    const response=await fetch(API_BASE_URL+path,{
+      ...options,
+      headers:{...headers(),...(options.headers||{})},
+      credentials:'include'
+    });
     const data=await response.json().catch(()=>({}));
-    if(!response.ok){const e=new Error(data.message||data.error||`Request failed (${response.status})`);e.status=response.status;throw e;}
+    if(!response.ok){
+      const error=new Error(data.message||data.error||`Request failed (${response.status})`);
+      error.status=response.status;
+      throw error;
+    }
     return data;
   }
   async function verifyAdmin(){
-    if(!token){location.href='../login.html';return;}
+    if(!token){location.href='../login.html';return false;}
     try{
       const me=await api('/auth/me',{method:'GET'});
       const user=me.user||me.data?.user||me;
@@ -96,86 +114,140 @@ main{width:min(100%,900px);margin:auto;padding:18px 13px 50px}.intro{padding:17p
       if(!['admin','superadmin','owner'].includes(role)&&user.is_admin!==true){
         showNotice('Access denied. Admin account required.','error');
         setTimeout(()=>location.href='../index.html',1600);
+        return false;
       }
-    }catch(e){sessionStorage.removeItem(TOKEN_KEY);location.href='../login.html';}
+      return true;
+    }catch(error){
+      sessionStorage.removeItem(TOKEN_KEY);
+      location.href='../login.html';
+      return false;
+    }
   }
-  function splitNumbers(id,digits,required=false){
-    const raw=document.getElementById(id).value.trim();
-    if(!raw){if(required)throw new Error('Please enter the 1st Prize number.');return [];}
-    const values=raw.split(',').map(v=>v.trim()).filter(Boolean);
-    // Use [0-9] rather than an over-escaped \\d pattern.
-    const pattern=new RegExp('^[0-9]{'+digits+'}$');
-    if(values.some(v=>!pattern.test(v)))throw new Error(`Every number in ${id} must contain exactly ${digits} digits.`);
+
+  function requiredDigits(id,digits,label){
+    const value=$(id).value.trim();
+    if(!new RegExp('^[0-9]{'+digits+'}$').test(value)){
+      throw new Error(label+' must contain exactly '+digits+' digits.');
+    }
+    return value;
+  }
+  function optionalThreeDigits(){
+    const raw=$('firstThree').value.trim();
+    if(!raw)return [];
+    const values=raw.split(',').map(value=>value.trim());
+    if(values.some(value=>!/^[0-9]{3}$/.test(value))){
+      throw new Error('Every First 3 Digits number must contain exactly 3 digits.');
+    }
     return values;
   }
   function collectPayload(){
-    const draw_number=document.getElementById('drawNumber').value.trim();
-    if(!draw_number)throw new Error('Please enter the draw number or period.');
-    const prizes={
-      first:splitNumbers(fields.first,6,true)[0],
-      adjacent_first:splitNumbers(fields.adjacent_first,6),
-      second:splitNumbers(fields.second,6),
-      third:splitNumbers(fields.third,6),
-      fourth:splitNumbers(fields.fourth,6),
-      fifth:splitNumbers(fields.fifth,6),
-      first_three:splitNumbers(fields.first_three,3),
-      last_three:splitNumbers(fields.last_three,3),
-      last_two:splitNumbers(fields.last_two,2)[0]||null
+    const drawDate=$('drawDate').value;
+    if(!drawDate)throw new Error('Please select a valid Draw Date.');
+    const drawNumber=$('drawNumber').value.trim();
+    const firstPrize=requiredDigits('firstPrize',6,'1st Prize');
+    const lastTwo=requiredDigits('lastTwo',2,'Last 2 Digits');
+    const frontThree=optionalThreeDigits();
+
+    // Match the legacy result API field names; do not send unsupported prize categories.
+    return {
+      country:'THAI',
+      drawNumber,
+      drawDate,
+      firstPrize,
+      lastTwo,
+      frontThree
     };
-    return {country:'THAI',draw_number,draw_date:document.getElementById('drawDate').value||null,prizes};
   }
-  function esc(v){return String(v??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));}
+
+  function esc(value){
+    return String(value??'').replace(/[&<>"']/g,char=>({
+      '&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'
+    }[char]));
+  }
+  function dateLabel(value){
+    if(!value)return '—';
+    const date=new Date(value);
+    return Number.isNaN(date.getTime())?String(value):date.toLocaleDateString();
+  }
   function showResults(data){
     const rows=Array.isArray(data)?data:(data.results||data.data||[]);
-    document.getElementById('resultCount').textContent=rows.length+' record(s)';
-    if(!rows.length){resultsBox.innerHTML='<div class="empty">No Thai results have been published yet.</div>';return;}
+    $('resultCount').textContent=rows.length+' record(s)';
+    if(!rows.length){
+      resultsBox.innerHTML='<div class="empty">No Thai results have been published yet.</div>';
+      return;
+    }
     resultsBox.innerHTML=rows.map(row=>{
-      let prizes=row.prizes;
-      if(typeof prizes==='string'){try{prizes=JSON.parse(prizes);}catch(_){prizes=null;}}
-      if(!prizes)prizes={first:row.winning_number||'—'};
-      const labels=[['first','1st Prize'],['adjacent_first','Adjacent 1st'],['second','2nd Prize'],['third','3rd Prize'],['fourth','4th Prize'],['fifth','5th Prize'],['first_three','First 3 Digits'],['last_three','Last 3 Digits'],['last_two','Last 2 Digits']];
-      const items=labels.map(([key,label])=>{
-        let value=prizes[key];if(Array.isArray(value))value=value.join(', ');
-        if(!value)return '';
-        return `<div><strong>${label}</strong><span>${esc(value)}</span></div>`;
-      }).join('');
-      return `<article class="result-card"><div class="result-top"><b>DRAW ${esc(row.draw_number||row.drawNumber||'')}</b><small>${esc(row.draw_date||row.drawDate||row.published_at||'')}</small></div><div class="result-grid">${items||'<span>Prize details unavailable</span>'}</div></article>`;
+      const first=row.firstPrize??row.first_prize??row.winning_number??'—';
+      const last=row.lastTwo??row.last_two??'—';
+      let front=row.frontThree??row.front_three??[];
+      if(typeof front==='string'){
+        try{const parsed=JSON.parse(front);front=Array.isArray(parsed)?parsed:front;}catch(_){}
+      }
+      if(Array.isArray(front))front=front.join(', ');
+      const draw=row.drawNumber??row.draw_number??row.draw_no??'';
+      const date=row.drawDate??row.draw_date??row.date??row.published_at;
+      return `<article class="result-card">
+        <div class="result-top"><b>DRAW ${esc(draw||'—')}</b><small>${esc(dateLabel(date))}</small></div>
+        <div class="result-grid">
+          <div><strong>1ST PRIZE</strong><span>${esc(first)}</span></div>
+          <div><strong>LAST 2 DIGITS</strong><span>${esc(last)}</span></div>
+          ${front?`<div><strong>FIRST 3 DIGITS</strong><span>${esc(front)}</span></div>`:''}
+        </div>
+      </article>`;
     }).join('');
   }
+
   async function loadResults(){
     try{
       const data=await api('/admin/results?country=THAI&limit=100',{method:'GET'});
       showResults(data);
-    }catch(e){
-      resultsBox.innerHTML='<div class="empty">Could not load Thai results: '+esc(e.message)+'</div>';
-      document.getElementById('resultCount').textContent='Unavailable';
+    }catch(error){
+      resultsBox.innerHTML='<div class="empty">Could not load Thai results: '+esc(error.message)+'</div>';
+      $('resultCount').textContent='Unavailable';
     }
   }
+  function clearForm(){
+    ['drawNumber','drawDate','firstPrize','lastTwo','firstThree'].forEach(id=>$(id).value='');
+  }
+
   publishBtn.addEventListener('click',async()=>{
-    let payload;try{payload=collectPayload();}catch(e){showNotice(e.message,'error');return;}
-    publishBtn.disabled=true;publishBtn.textContent='Publishing…';
+    let payload;
+    try{payload=collectPayload();}
+    catch(error){showNotice(error.message,'error');return;}
+
+    publishBtn.disabled=true;
+    publishBtn.textContent='Publishing…';
     try{
-      const response=await api('/admin/results',{method:'POST',body:JSON.stringify(payload)});
+      const response=await api('/admin/results',{
+        method:'POST',
+        body:JSON.stringify(payload)
+      });
       showNotice(response.message||'Thai result published successfully.','success');
-      Object.values(fields).forEach(id=>document.getElementById(id).value='');
+      clearForm();
       await loadResults();
-    }catch(e){
-      if(e.status===400||e.status===422){
-        showNotice('Backend এই পূর্ণ Thai prize sheet গ্রহণ করার জন্য প্রস্তুত নয়, অথবা request format মেলেনি। Backend-এ prizes JSON সংরক্ষণের ব্যবস্থা যোগ করতে হবে। Server response: '+e.message,'error');
-      }else showNotice('Publish failed: '+e.message,'error');
-    }finally{publishBtn.disabled=false;publishBtn.textContent='Publish Thai Result';}
+    }catch(error){
+      showNotice('Publish failed: '+error.message,'error');
+    }finally{
+      publishBtn.disabled=false;
+      publishBtn.textContent='Publish Thai Result';
+    }
   });
-  document.getElementById('clearBtn').addEventListener('click',()=>{
-    Object.values(fields).forEach(id=>document.getElementById(id).value='');
-    document.getElementById('drawNumber').value='';
-    document.getElementById('drawDate').value='';
+
+  $('clearBtn').addEventListener('click',()=>{
+    clearForm();
     showNotice('Form cleared.','info');
   });
-  document.getElementById('logoutBtn').addEventListener('click',async()=>{
+
+  $('logoutBtn').addEventListener('click',async()=>{
     try{await api('/auth/logout',{method:'POST',body:JSON.stringify({})});}catch(_){}
-    sessionStorage.removeItem(TOKEN_KEY);location.href='../login.html';
+    sessionStorage.removeItem(TOKEN_KEY);
+    location.href='../login.html';
   });
-  (async()=>{await verifyAdmin();await loadResults();})();
+
+  (async()=>{
+    const allowed=await verifyAdmin();
+    if(allowed)await loadResults();
+  })();
 })();
 </script>
 </body>
