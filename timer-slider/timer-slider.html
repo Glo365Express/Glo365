@@ -5,13 +5,10 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <meta name="theme-color" content="#ffffff">
-
 <title>GLO 365 Timer Slider</title>
 
 <style>
-*{
-  box-sizing:border-box;
-}
+*{box-sizing:border-box}
 
 html,body{
   margin:0;
@@ -52,7 +49,7 @@ html,body{
     id="timerFrame"
     class="timer-frame"
     title="Thailand timer"
-    src="Thailand/Thai-Timer.html"
+    src="Thai-Timer.html"
     loading="eager"
     scrolling="no">
   </iframe>
@@ -62,50 +59,17 @@ html,body{
 <script>
 "use strict";
 
-/*
-  Folder structure:
-
-  timer-slider/
-    timer-slider.html
-
-    Thailand/
-      Thai-Timer.html
-
-    Singapore/
-      Singapore-Timer.html
-
-    Taiwan/
-      Taiwan-Timer.html
-
-    Malaysia/
-      Malaysia-Timer.html
-*/
-
 const TIMER_CARDS = [
-
   {
-    file:"Thailand/Thai-Timer.html",
+    file:"Thai-Timer.html",
     title:"Thailand timer"
   },
-
   {
-    file:"Singapore/Singapore-Timer.html",
+    file:"Singapore-Timer.html",
     title:"Singapore Pools timer"
-  },
-
-  {
-    file:"Taiwan/Taiwan-Timer.html",
-    title:"Taiwan timer"
-  },
-
-  {
-    file:"Malaysia/Malaysia-Timer.html",
-    title:"Malaysia timer"
   }
-
 ];
 
-// প্রতি ৭ সেকেন্ডে Timer পরিবর্তন হবে
 const CHANGE_INTERVAL = 7000;
 
 const frame = document.getElementById("timerFrame");
@@ -123,18 +87,14 @@ function showCard(index){
 
   frame.title = card.title;
   frame.src = card.file;
-
 }
 
 function stopSlider(){
 
   if(rotationTimer){
-
     clearInterval(rotationTimer);
     rotationTimer = null;
-
   }
-
 }
 
 function startSlider(){
@@ -144,10 +104,8 @@ function startSlider(){
   if(document.hidden) return;
 
   if(TIMER_CARDS.length <= 1){
-
     showCard(activeIndex);
     return;
-
   }
 
   rotationTimer = setInterval(()=>{
@@ -157,24 +115,18 @@ function startSlider(){
     );
 
   }, CHANGE_INTERVAL);
-
 }
 
 document.addEventListener("visibilitychange",()=>{
 
   if(document.hidden){
-
     stopSlider();
-
   }else{
-
     startSlider();
-
   }
 
 });
 
-// Slider চালু
 startSlider();
 
 </script>
