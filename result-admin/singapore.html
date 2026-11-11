@@ -1,0 +1,707 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="theme-color" content="#07111f">
+<title>Singapore Results Admin | GLO 365</title>
+<style>
+:root{--panel:#101d2d;--line:#263a52;--text:#eef5ff;--muted:#91a4bb;--blue:#2389ef;--cyan:#36c6dc;--red:#ff6577;--gold:#ffc857}
+*{box-sizing:border-box}
+body{margin:0;background:linear-gradient(160deg,#07111f,#0b1728 55%,#07111f);color:var(--text);font-family:Arial,Helvetica,sans-serif;min-height:100vh}
+header{position:sticky;top:0;z-index:5;background:#091626ed;border-bottom:1px solid var(--line);backdrop-filter:blur(12px);padding:13px 16px;display:flex;align-items:center;justify-content:space-between;gap:12px}
+.brand{font-weight:900;letter-spacing:.5px;font-size:18px}.brand span{color:#48a9ff}
+.sub{font-size:11px;color:var(--muted);margin-top:3px}
+.header-actions{display:flex;gap:8px}
+.btn{border:1px solid var(--line);background:#17283d;color:var(--text);border-radius:9px;padding:10px 12px;font-weight:700;font-size:12px;cursor:pointer;text-decoration:none}
+.btn.primary{background:linear-gradient(110deg,#1675df,#20a9d7);border:0}
+.btn.danger{color:#ff9aa6}.btn.success{color:#8dffce;border-color:#28785e}
+.btn:disabled{opacity:.55;cursor:wait}
+main{width:min(100%,900px);margin:auto;padding:18px 13px 50px}
+.intro{padding:17px;border:1px solid var(--line);border-radius:16px;background:linear-gradient(135deg,#132944,#102033);margin-bottom:15px}
+.intro h1{font-size:21px;margin:0 0 6px}.intro p{font-size:12px;color:var(--muted);line-height:1.55;margin:0}
+.notice{display:none;padding:12px 13px;border-radius:10px;margin:12px 0;font-size:12px;line-height:1.5;overflow-wrap:anywhere}
+.notice.show{display:block}.notice.error{background:#401e2b;border:1px solid #873c50;color:#ffdce2}
+.notice.success{background:#10382f;border:1px solid #20775f;color:#c9ffed}
+.notice.info{background:#102c48;border:1px solid #245a85;color:#d7edff}
+.panel{background:var(--panel);border:1px solid var(--line);border-radius:15px;padding:15px;margin:14px 0}
+.panel h2{font-size:16px;margin:0 0 13px}
+.tabs{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin:15px 0}
+.tab{padding:13px 8px;border:1px solid var(--line);border-radius:10px;background:#101d2d;color:#a9bed5;font-weight:800;cursor:pointer}
+.tab.active{background:linear-gradient(110deg,#1675df,#168eae);border-color:transparent;color:white}
+.meta-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.field label{display:block;color:var(--muted);font-size:11px;font-weight:700;margin:0 0 6px}
+.field input,.field textarea{width:100%;background:#091625;border:1px solid #2a405a;border-radius:9px;color:var(--text);padding:12px;font-size:14px;outline:none;min-height:46px}
+.field textarea{min-height:85px;resize:vertical;line-height:1.6}
+.field input:focus,.field textarea:focus{border-color:var(--blue);box-shadow:0 0 0 2px #2389ef22}
+.field input::placeholder,.field textarea::placeholder{color:#61758c}
+.prize-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px}
+.prize{background:#0b1929;border:1px solid #22374e;border-radius:11px;padding:11px}
+.prize h3{font-size:11px;margin:0 0 8px;color:#a9c8e9;text-transform:uppercase;letter-spacing:.5px}
+.prize.first h3{color:var(--gold)}
+.prize input{width:100%;background:#071321;border:1px solid #2a405a;color:#fff;border-radius:7px;padding:12px;font-size:15px;outline:none;min-height:46px}
+.prize input:focus{border-color:var(--cyan)}
+.prize small{display:block;color:#71869d;font-size:10px;margin-top:6px;line-height:1.4}
+.actions{display:flex;gap:9px;flex-wrap:wrap;margin-top:15px}
+.actions .btn{flex:1;min-width:115px;padding:13px}
+.section-title{display:flex;align-items:center;justify-content:space-between;gap:10px;margin:22px 2px 10px}
+.section-title h2{font-size:17px;margin:0}.section-title small{color:var(--muted);font-size:10px}
+.result-card{background:var(--panel);border:1px solid var(--line);border-radius:12px;padding:13px;margin-bottom:10px}
+.result-top{display:flex;justify-content:space-between;gap:8px;margin-bottom:9px;align-items:center}
+.result-top b{font-size:13px}.result-top small{color:var(--muted);font-size:10px}
+.result-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:7px}
+.result-grid div{background:#0a1827;border-radius:8px;padding:8px;min-width:0}
+.result-grid strong{display:block;color:#70c8ff;font-size:10px;margin-bottom:5px}
+.result-grid span{font-size:12px;overflow-wrap:anywhere;line-height:1.6}
+.card-actions{display:flex;gap:7px;flex-wrap:wrap;margin-top:11px}
+.card-actions .btn{flex:1}
+.badge{font-size:10px;padding:5px 8px;border-radius:20px;background:#26364a;color:#c6d8ed}
+.badge.published{background:#104332;color:#9affce}
+.badge.draft{background:#493719;color:#ffdb8c}
+.empty{color:var(--muted);text-align:center;padding:20px;font-size:12px;border:1px dashed var(--line);border-radius:10px}
+.hint{font-size:11px;color:var(--muted);line-height:1.6;margin:9px 0 0}
+.preview{background:#0a2634;border:1px solid #1c5364;border-radius:10px;padding:12px;margin-top:12px;font-size:11px;line-height:1.8;color:#bdefff;overflow-wrap:anywhere}
+.hidden{display:none!important}
+@media(max-width:390px){.meta-grid,.prize-grid{grid-template-columns:1fr}.header-actions .btn{padding:9px 8px}.brand{font-size:16px}}
+</style>
+</head>
+<body>
+<header>
+  <div>
+    <div class="brand">GLO <span>365</span></div>
+    <div class="sub">SINGAPORE RESULT CONTROL</div>
+  </div>
+  <div class="header-actions">
+    <a class="btn" href="../admin.html">Dashboard</a>
+    <button class="btn danger" id="logoutBtn" type="button">Logout</button>
+  </div>
+</header>
+
+<main>
+  <section class="intro">
+    <h1>🇸🇬 Singapore Pools Results</h1>
+    <p>Manage Singapore 4D and TOTO 6/49 results. Save results as drafts, verify the information, then publish. Published results are permanently locked.</p>
+  </section>
+
+  <div id="notice" class="notice" role="status" aria-live="polite"></div>
+
+  <div class="tabs">
+    <button class="tab active" data-tab="4d" type="button">4D RESULTS</button>
+    <button class="tab" data-tab="649" type="button">TOTO 6/49</button>
+  </div>
+
+  <!-- 4D FORM -->
+  <section id="form4d">
+    <section class="panel">
+      <h2>4D Draw Information</h2>
+      <div class="meta-grid">
+        <div class="field">
+          <label for="drawNumber4d">DRAW NUMBER *</label>
+          <input id="drawNumber4d" maxlength="50" placeholder="Example: 5234">
+        </div>
+        <div class="field">
+          <label for="drawDate4d">DRAW DATE *</label>
+          <input id="drawDate4d" type="date">
+        </div>
+      </div>
+    </section>
+
+    <section class="panel">
+      <h2>Winning Prize Numbers</h2>
+      <div class="prize-grid">
+        <div class="prize first">
+          <h3>1st Prize · 4 Digits *</h3>
+          <input id="firstPrize" inputmode="numeric" maxlength="4" placeholder="0000">
+        </div>
+        <div class="prize first">
+          <h3>2nd Prize · 4 Digits *</h3>
+          <input id="secondPrize" inputmode="numeric" maxlength="4" placeholder="0000">
+        </div>
+        <div class="prize first">
+          <h3>3rd Prize · 4 Digits *</h3>
+          <input id="thirdPrize" inputmode="numeric" maxlength="4" placeholder="0000">
+        </div>
+      </div>
+    </section>
+
+    <section class="panel">
+      <h2>Starter Numbers · 10 Numbers *</h2>
+      <div class="field">
+        <label for="starterNumbers">ENTER 10 FOUR-DIGIT NUMBERS</label>
+        <textarea id="starterNumbers" placeholder="Example: 1234, 5678, 9012, 3456, 7890, 1122, 3344, 5566, 7788, 9900"></textarea>
+      </div>
+      <p class="hint">Enter exactly 10 numbers separated by commas or new lines. Keep leading zeros.</p>
+    </section>
+
+    <section class="panel">
+      <h2>Consolation Numbers · 10 Numbers *</h2>
+      <div class="field">
+        <label for="consolationNumbers">ENTER 10 FOUR-DIGIT NUMBERS</label>
+        <textarea id="consolationNumbers" placeholder="Enter 10 numbers separated by commas"></textarea>
+      </div>
+      <p class="hint">Enter exactly 10 numbers separated by commas or new lines.</p>
+    </section>
+
+    <section class="panel">
+      <h2>Automatic 2D &amp; 3D Preview</h2>
+      <p class="hint">The last 2 digits and last 3 digits are automatically derived from all 23 entered 4D numbers. Duplicate derived numbers are removed.</p>
+      <div id="derivedPreview" class="preview">Enter the 4D numbers to see the automatic 2D and 3D preview.</div>
+    </section>
+
+    <div class="actions">
+      <button class="btn" id="clear4d" type="button">Clear Form</button>
+      <button class="btn primary" id="save4d" type="button">Save 4D Draft</button>
+    </div>
+  </section>
+
+  <!-- 6/49 FORM -->
+  <section id="form649" class="hidden">
+    <section class="panel">
+      <h2>TOTO 6/49 Draw Information</h2>
+      <div class="meta-grid">
+        <div class="field">
+          <label for="drawNumber649">DRAW NUMBER *</label>
+          <input id="drawNumber649" maxlength="50" placeholder="Example: 4200">
+        </div>
+        <div class="field">
+          <label for="drawDate649">DRAW DATE *</label>
+          <input id="drawDate649" type="date">
+        </div>
+      </div>
+    </section>
+
+    <section class="panel">
+      <h2>Winning Numbers</h2>
+      <div class="prize-grid">
+        <div class="prize"><h3>Winning Numbers · 6 *</h3><input id="winning649" inputmode="numeric" placeholder="3, 8, 14, 22, 35, 47"></div>
+        <div class="prize first"><h3>Additional Number *</h3><input id="additional649" inputmode="numeric" maxlength="2" placeholder="Example: 19"></div>
+      </div>
+      <p class="hint">Enter six unique numbers from 1 to 49. The Additional Number must be different from the six winning numbers.</p>
+    </section>
+
+    <section class="panel">
+      <h2>Prize Groups · Official Information</h2>
+      <p class="hint">Enter verified official prize amounts. Leave an amount blank if it has not been officially confirmed. Do not enter estimated amounts.</p>
+      <div class="prize-grid" id="prizeGroups"></div>
+    </section>
+
+    <div class="actions">
+      <button class="btn" id="clear649" type="button">Clear Form</button>
+      <button class="btn primary" id="save649" type="button">Save 6/49 Draft</button>
+    </div>
+  </section>
+
+  <!-- RESULT LIST -->
+  <div class="section-title">
+    <h2 id="listTitle">4D Result Records</h2>
+    <small id="resultCount">Loading…</small>
+  </div>
+  <div id="results"><div class="empty">Loading results…</div></div>
+</main>
+
+<script>
+(() => {
+'use strict';
+
+const API_BASE_URL = 'https://glo365.onrender.com/api';
+const TOKEN_KEY = 'glo365_token';
+const $ = id => document.getElementById(id);
+
+let token = sessionStorage.getItem(TOKEN_KEY);
+let activeTab = '4d';
+let editingId = null;
+let records = [];
+
+const GROUPS = [
+  'Match 6',
+  'Match 5 + Additional',
+  'Match 5',
+  'Match 4 + Additional',
+  'Match 4',
+  'Match 3 + Additional',
+  'Match 3'
+];
+
+function showNotice(message, type='info') {
+  const box = $('notice');
+  box.textContent = message;
+  box.className = 'notice show ' + type;
+  box.scrollIntoView({behavior:'smooth', block:'nearest'});
+}
+
+function headers() {
+  const h = {'Content-Type':'application/json'};
+  if (token) h.Authorization = 'Bearer ' + token;
+  return h;
+}
+
+async function api(path, options={}) {
+  const response = await fetch(API_BASE_URL + path, {
+    ...options,
+    headers: {...headers(), ...(options.headers || {})},
+    credentials:'include'
+  });
+
+  const data = await response.json().catch(() => ({}));
+
+  if (!response.ok) {
+    const error = new Error(
+      data.message || data.error || `Request failed (${response.status})`
+    );
+    error.status = response.status;
+    throw error;
+  }
+  return data;
+}
+
+async function verifyAdmin() {
+  if (!token) {
+    location.href = '../login.html';
+    return false;
+  }
+
+  try {
+    const me = await api('/auth/me');
+    const user = me.user || me.data?.user || me;
+    const role = String(user.role || user.account_type || '').toLowerCase();
+
+    if (!['admin','superadmin','owner'].includes(role) && user.is_admin !== true) {
+      showNotice('Access denied. Admin account required.', 'error');
+      setTimeout(() => location.href='../index.html', 1500);
+      return false;
+    }
+    return true;
+  } catch (error) {
+    sessionStorage.removeItem(TOKEN_KEY);
+    location.href = '../login.html';
+    return false;
+  }
+}
+
+function esc(value) {
+  return String(value ?? '').replace(/[&<>"']/g, char => ({
+    '&':'&amp;', '<':'&lt;', '>':'&gt;', '"':'&quot;', "'":'&#39;'
+  }[char]));
+}
+
+function dateLabel(value) {
+  if (!value) return '—';
+  const d = new Date(value);
+  return Number.isNaN(d.getTime()) ? String(value) : d.toLocaleDateString();
+}
+
+function splitNumbers(value) {
+  return String(value || '')
+    .split(/[\s,;]+/)
+    .map(x => x.trim())
+    .filter(Boolean);
+}
+
+function fourDigit(value, label) {
+  const v = String(value || '').trim();
+  if (!/^[0-9]{4}$/.test(v)) {
+    throw new Error(label + ' must contain exactly 4 digits.');
+  }
+  return v;
+}
+
+function collect4D() {
+  const drawDate = $('drawDate4d').value;
+  const drawNumber = $('drawNumber4d').value.trim();
+
+  if (!drawDate) throw new Error('Please select the draw date.');
+  if (!drawNumber) throw new Error('Draw number is required.');
+
+  const starter = splitNumbers($('starterNumbers').value);
+  const consolation = splitNumbers($('consolationNumbers').value);
+
+  if (starter.length !== 10 || !starter.every(x => /^[0-9]{4}$/.test(x))) {
+    throw new Error('Starter must contain exactly 10 four-digit numbers.');
+  }
+  if (consolation.length !== 10 || !consolation.every(x => /^[0-9]{4}$/.test(x))) {
+    throw new Error('Consolation must contain exactly 10 four-digit numbers.');
+  }
+
+  return {
+    draw_date: drawDate,
+    draw_number: drawNumber,
+    first_prize: fourDigit($('firstPrize').value, '1st Prize'),
+    second_prize: fourDigit($('secondPrize').value, '2nd Prize'),
+    third_prize: fourDigit($('thirdPrize').value, '3rd Prize'),
+    starter_numbers: starter,
+    consolation_numbers: consolation
+  };
+}
+
+function collect649() {
+  const drawDate = $('drawDate649').value;
+  const drawNumber = $('drawNumber649').value.trim();
+
+  if (!drawDate) throw new Error('Please select the draw date.');
+  if (!drawNumber) throw new Error('Draw number is required.');
+
+  const winning = splitNumbers($('winning649').value).map(Number);
+  if (winning.length !== 6 ||
+      winning.some(n => !Number.isInteger(n) || n < 1 || n > 49) ||
+      new Set(winning).size !== 6) {
+    throw new Error('Enter exactly 6 unique winning numbers from 1 to 49.');
+  }
+
+  const additional = Number($('additional649').value);
+  if (!Number.isInteger(additional) || additional < 1 || additional > 49 ||
+      winning.includes(additional)) {
+    throw new Error('Enter a valid additional number from 1 to 49, different from the winning numbers.');
+  }
+
+  const prizeGroups = GROUPS.map((category, index) => {
+    const raw = $('groupAmount' + (index + 1)).value.trim();
+    return {
+      group: index + 1,
+      category,
+      amount: raw || null
+    };
+  });
+
+  return {
+    draw_date: drawDate,
+    draw_number: drawNumber,
+    winning_numbers: winning,
+    additional_number: additional,
+    prize_groups: prizeGroups
+  };
+}
+
+function getDerived(data) {
+  const categories = [
+    {name:'1st Prize', numbers:[data.first_prize]},
+    {name:'2nd Prize', numbers:[data.second_prize]},
+    {name:'3rd Prize', numbers:[data.third_prize]},
+    {name:'Starter', numbers:data.starter_numbers || []},
+    {name:'Consolation', numbers:data.consolation_numbers || []}
+  ];
+
+  const seen2 = new Set();
+  const seen3 = new Set();
+
+  return categories.map(category => {
+    const two = [];
+    const three = [];
+
+    category.numbers.forEach(number => {
+      const n = String(number);
+      if (!/^[0-9]{4}$/.test(n)) return;
+
+      const last2 = n.slice(-2);
+      const last3 = n.slice(-3);
+
+      if (!seen2.has(last2)) {
+        seen2.add(last2);
+        two.push(last2);
+      }
+      if (!seen3.has(last3)) {
+        seen3.add(last3);
+        three.push(last3);
+      }
+    });
+
+    return {name:category.name, two, three};
+  });
+}
+
+function updatePreview() {
+  try {
+    const data = collect4D();
+    const derived = getDerived(data);
+    $('derivedPreview').innerHTML =
+      '<b>2D RESULTS</b><br>' +
+      derived.map(x => esc(x.name) + ': ' + (x.two.map(esc).join(', ') || '—')).join('<br>') +
+      '<br><br><b>3D RESULTS</b><br>' +
+      derived.map(x => esc(x.name) + ': ' + (x.three.map(esc).join(', ') || '—')).join('<br>');
+  } catch (_) {
+    const values = [
+      $('firstPrize').value, $('secondPrize').value, $('thirdPrize').value,
+      ...splitNumbers($('starterNumbers').value),
+      ...splitNumbers($('consolationNumbers').value)
+    ].filter(x => /^[0-9]{4}$/.test(x));
+
+    if (!values.length) {
+      $('derivedPreview').textContent = 'Enter the 4D numbers to see the automatic 2D and 3D preview.';
+      return;
+    }
+
+    const seen2 = new Set(), seen3 = new Set();
+    const two = [], three = [];
+    values.forEach(n => {
+      const a=n.slice(-2), b=n.slice(-3);
+      if (!seen2.has(a)) {seen2.add(a);two.push(a);}
+      if (!seen3.has(b)) {seen3.add(b);three.push(b);}
+    });
+    $('derivedPreview').innerHTML =
+      '<b>2D PREVIEW:</b> ' + two.map(esc).join(', ') +
+      '<br><b>3D PREVIEW:</b> ' + three.map(esc).join(', ');
+  }
+}
+
+function buildPrizeGroups() {
+  $('prizeGroups').innerHTML = GROUPS.map((name, i) => `
+    <div class="prize">
+      <h3>Group ${i+1} · ${esc(name)}</h3>
+      <input id="groupAmount${i+1}" maxlength="100"
+        placeholder="Official prize amount (optional)">
+      <small>Enter verified official amount only</small>
+    </div>
+  `).join('');
+}
+
+function reset4D() {
+  ['drawNumber4d','drawDate4d','firstPrize','secondPrize','thirdPrize',
+   'starterNumbers','consolationNumbers'].forEach(id => $(id).value='');
+  editingId = null;
+  $('save4d').textContent = 'Save 4D Draft';
+  updatePreview();
+}
+
+function reset649() {
+  ['drawNumber649','drawDate649','winning649','additional649'].forEach(id => $(id).value='');
+  GROUPS.forEach((_, i) => $('groupAmount'+(i+1)).value='');
+  editingId = null;
+  $('save649').textContent = 'Save 6/49 Draft';
+}
+
+function setTab(tab) {
+  activeTab = tab;
+  editingId = null;
+
+  $('form4d').classList.toggle('hidden', tab !== '4d');
+  $('form649').classList.toggle('hidden', tab !== '649');
+
+  document.querySelectorAll('.tab').forEach(button => {
+    button.classList.toggle('active', button.dataset.tab === tab);
+  });
+
+  $('listTitle').textContent = tab === '4d' ? '4D Result Records' : '6/49 Result Records';
+  loadResults();
+}
+
+async function loadResults() {
+  $('results').innerHTML = '<div class="empty">Loading results…</div>';
+  $('resultCount').textContent = 'Loading…';
+
+  try {
+    const path = activeTab === '4d'
+      ? '/admin/singapore/results/4d'
+      : '/admin/singapore/results/649';
+
+    const data = await api(path);
+    records = Array.isArray(data.results) ? data.results : [];
+    renderResults();
+  } catch (error) {
+    $('results').innerHTML = '<div class="empty">Could not load results: ' + esc(error.message) + '</div>';
+    $('resultCount').textContent = 'Unavailable';
+  }
+}
+
+function renderResults() {
+  $('resultCount').textContent = records.length + ' record(s)';
+
+  if (!records.length) {
+    $('results').innerHTML = '<div class="empty">No results found. Save a new result draft above.</div>';
+    return;
+  }
+
+  $('results').innerHTML = records.map(row => {
+    const published = row.published === true;
+    const status = published
+      ? '<span class="badge published">PUBLISHED · LOCKED</span>'
+      : '<span class="badge draft">DRAFT</span>';
+
+    let content = '';
+
+    if (activeTab === '4d') {
+      content = `
+        <div class="result-grid">
+          <div><strong>1ST PRIZE</strong><span>${esc(row.first_prize)}</span></div>
+          <div><strong>2ND PRIZE</strong><span>${esc(row.second_prize)}</span></div>
+          <div><strong>3RD PRIZE</strong><span>${esc(row.third_prize)}</span></div>
+          <div><strong>STARTER</strong><span>${(row.starter_numbers || []).map(esc).join(', ')}</span></div>
+          <div><strong>CONSOLATION</strong><span>${(row.consolation_numbers || []).map(esc).join(', ')}</span></div>
+        </div>`;
+    } else {
+      const groups = Array.isArray(row.prize_groups) ? row.prize_groups : [];
+      content = `
+        <div class="result-grid">
+          <div><strong>WINNING NUMBERS</strong><span>${(row.winning_numbers || []).map(esc).join(', ')}</span></div>
+          <div><strong>ADDITIONAL NUMBER</strong><span>${esc(row.additional_number)}</span></div>
+          ${groups.map(g => `<div><strong>GROUP ${esc(g.group)} · ${esc(g.category)}</strong><span>${esc(g.amount || 'Not provided')}</span></div>`).join('')}
+        </div>`;
+    }
+
+    return `
+      <article class="result-card">
+        <div class="result-top">
+          <div>
+            <b>DRAW ${esc(row.draw_number)}</b><br>
+            <small>${esc(dateLabel(row.draw_date))}</small>
+          </div>
+          ${status}
+        </div>
+        ${content}
+        ${!published ? `
+          <div class="card-actions">
+            <button class="btn" type="button" data-action="edit" data-id="${esc(row.id)}">Edit</button>
+            <button class="btn danger" type="button" data-action="delete" data-id="${esc(row.id)}">Delete</button>
+            <button class="btn success" type="button" data-action="publish" data-id="${esc(row.id)}">Publish</button>
+          </div>` : ''}
+      </article>`;
+  }).join('');
+}
+
+function fill4D(row) {
+  $('drawNumber4d').value = row.draw_number || '';
+  $('drawDate4d').value = String(row.draw_date || '').slice(0,10);
+  $('firstPrize').value = row.first_prize || '';
+  $('secondPrize').value = row.second_prize || '';
+  $('thirdPrize').value = row.third_prize || '';
+  $('starterNumbers').value = (row.starter_numbers || []).join(', ');
+  $('consolationNumbers').value = (row.consolation_numbers || []).join(', ');
+  editingId = row.id;
+  $('save4d').textContent = 'Update 4D Draft';
+  updatePreview();
+  window.scrollTo({top:0,behavior:'smooth'});
+}
+
+function fill649(row) {
+  $('drawNumber649').value = row.draw_number || '';
+  $('drawDate649').value = String(row.draw_date || '').slice(0,10);
+  $('winning649').value = (row.winning_numbers || []).join(', ');
+  $('additional649').value = row.additional_number ?? '';
+  const groups = row.prize_groups || [];
+  groups.forEach(g => {
+    if (g.group >= 1 && g.group <= 7) {
+      $('groupAmount'+g.group).value = g.amount || '';
+    }
+  });
+  editingId = row.id;
+  $('save649').textContent = 'Update 6/49 Draft';
+  window.scrollTo({top:0,behavior:'smooth'});
+}
+
+async function saveResult(game) {
+  let payload;
+
+  try {
+    payload = game === '4d' ? collect4D() : collect649();
+  } catch (error) {
+    showNotice(error.message, 'error');
+    return;
+  }
+
+  const button = game === '4d' ? $('save4d') : $('save649');
+  const oldText = button.textContent;
+  button.disabled = true;
+  button.textContent = 'Saving…';
+
+  try {
+    const base = game === '4d'
+      ? '/admin/singapore/results/4d'
+      : '/admin/singapore/results/649';
+
+    const path = editingId ? base + '/' + encodeURIComponent(editingId) : base;
+    const response = await api(path, {
+      method: editingId ? 'PUT' : 'POST',
+      body: JSON.stringify(payload)
+    });
+
+    showNotice(response.message || 'Draft saved successfully.', 'success');
+    if (game === '4d') reset4D(); else reset649();
+    await loadResults();
+  } catch (error) {
+    showNotice('Save failed: ' + error.message, 'error');
+  } finally {
+    button.disabled = false;
+    button.textContent = editingId ? oldText : (game === '4d' ? 'Save 4D Draft' : 'Save 6/49 Draft');
+  }
+}
+
+async function recordAction(action, id) {
+  const row = records.find(item => String(item.id) === String(id));
+  if (!row) return;
+
+  const base = activeTab === '4d'
+    ? '/admin/singapore/results/4d/'
+    : '/admin/singapore/results/649/';
+
+  if (action === 'edit') {
+    if (row.published) return showNotice('Published results cannot be edited.', 'error');
+    if (activeTab === '4d') fill4D(row); else fill649(row);
+    showNotice('Draft loaded. Edit the fields and save your changes.', 'info');
+    return;
+  }
+
+  if (row.published) {
+    return showNotice('Published results are permanently locked.', 'error');
+  }
+
+  if (action === 'delete') {
+    if (!confirm('Delete this draft permanently?')) return;
+    try {
+      const response = await api(base + encodeURIComponent(id), {method:'DELETE'});
+      showNotice(response.message || 'Draft deleted.', 'success');
+      await loadResults();
+    } catch (error) {
+      showNotice('Delete failed: ' + error.message, 'error');
+    }
+  }
+
+  if (action === 'publish') {
+    if (!confirm('Publish this result? Published results cannot be edited or deleted. Please verify all numbers first.')) return;
+    try {
+      const response = await api(base + encodeURIComponent(id) + '/publish', {
+        method:'POST',
+        body:JSON.stringify({})
+      });
+      showNotice(response.message || 'Result published and locked.', 'success');
+      await loadResults();
+    } catch (error) {
+      showNotice('Publish failed: ' + error.message, 'error');
+    }
+  }
+}
+
+document.querySelectorAll('.tab').forEach(button => {
+  button.addEventListener('click', () => setTab(button.dataset.tab));
+});
+
+$('save4d').addEventListener('click', () => saveResult('4d'));
+$('save649').addEventListener('click', () => saveResult('649'));
+$('clear4d').addEventListener('click', () => {reset4D();showNotice('4D form cleared.','info');});
+$('clear649').addEventListener('click', () => {reset649();showNotice('6/49 form cleared.','info');});
+
+['firstPrize','secondPrize','thirdPrize','starterNumbers','consolationNumbers'].forEach(id => {
+  $(id).addEventListener('input', updatePreview);
+});
+
+$('results').addEventListener('click', event => {
+  const button = event.target.closest('button[data-action]');
+  if (!button) return;
+  recordAction(button.dataset.action, button.dataset.id);
+});
+
+$('logoutBtn').addEventListener('click', async () => {
+  try {
+    await api('/auth/logout', {method:'POST',body:JSON.stringify({})});
+  } catch (_) {}
+  sessionStorage.removeItem(TOKEN_KEY);
+  location.href = '../login.html';
+});
+
+buildPrizeGroups();
+
+(async () => {
+  const allowed = await verifyAdmin();
+  if (allowed) await loadResults();
+})();
+})();
+</script>
+</body>
+</html>
