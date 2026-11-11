@@ -1,3 +1,4 @@
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -421,8 +422,8 @@ footer{
 
     <div class="lock-info">
       <strong>Automatic Betting Lock</strong><br>
-      Betting should automatically close 45 minutes before the scheduled draw.
-      The backend must enforce this rule even if this page remains open.
+      Betting automatically closes 45 minutes before the scheduled draw.
+      The backend enforces this rule.
       <div style="margin-top:7px">
         Current status: <strong id="lockStatus">Checking...</strong>
       </div>
@@ -480,7 +481,7 @@ footer{
 "use strict";
 
 /* =========================================
-   GLO 365 MALAYSIA ADMIN CONFIGURATION
+   CONFIGURATION
 ========================================= */
 
 const API_BASE_URL = "https://glo365.onrender.com/api";
@@ -524,10 +525,13 @@ function checkAuthentication(){
       "Admin login token was not found. Please log in to your GLO 365 admin account first.",
       "error"
     );
+
     document.getElementById("connectionText").textContent =
       "Authentication required";
+
     return false;
   }
+
   return true;
 }
 
@@ -536,6 +540,7 @@ function checkAuthentication(){
 ========================================= */
 
 async function apiRequest(path, options = {}){
+
   const response = await fetch(API_BASE_URL + path, {
     ...options,
     headers:{
@@ -548,7 +553,7 @@ async function apiRequest(path, options = {}){
 
   try{
     data = await response.json();
-  }catch(e){
+  }catch(error){
     data = {};
   }
 
@@ -568,7 +573,9 @@ async function apiRequest(path, options = {}){
 ========================================= */
 
 function showMessage(message, type = "info"){
+
   const box = document.getElementById("message");
+
   box.className = "message " + type;
   box.textContent = message;
   box.style.display = "block";
@@ -585,6 +592,7 @@ function showMessage(message, type = "info"){
 ========================================= */
 
 function selectGame(game){
+
   if(!GAMES.includes(game)) return;
 
   currentGame = game;
@@ -600,10 +608,10 @@ function selectGame(game){
     "Malaysia " + game;
 
   renderSettings();
-  loadSettings();
 }
 
 function selectBetGame(game){
+
   if(!GAMES.includes(game)) return;
 
   currentBetGame = game;
@@ -623,6 +631,7 @@ function selectBetGame(game){
 ========================================= */
 
 function toLocalInputValue(value){
+
   if(!value) return "";
 
   const date = new Date(value);
@@ -637,6 +646,7 @@ function toLocalInputValue(value){
 }
 
 function fromLocalInputValue(value){
+
   if(!value) return null;
 
   const date = new Date(value);
@@ -647,113 +657,167 @@ function fromLocalInputValue(value){
 }
 
 /* =========================================
-   SETTINGS
+   SETTINGS LOAD
+   Backend returns all 3 games together.
 ========================================= */
 
 async function loadSettings(){
+
   if(!checkAuthentication()) return;
 
   const status = document.getElementById("gameStatus");
+
   status.textContent = "Loading...";
   status.className = "game-status status-off";
 
   try{
+
     const data = await apiRequest(
-      "/admin/malaysia/settings?game=" +
-      encodeURIComponent(currentGame)
+      "/admin/malaysia/settings"
     );
 
-    const settings = data.settings || data.data || data;
+    const settingsList = data.settings || [];
 
-    if(settings && typeof settings === "object"){
-      settingsCache[currentGame] = settings;
-      fillSettings(settings);
+    if(!Array.isArray(settingsList)){
+      throw new Error("Invalid settings response from server.");
     }
+
+    settingsCache = {};
+
+    settingsList.forEach(settings=>{
+      if(settings && GAMES.includes(settings.game)){
+        settingsCache[settings.game] = settings;
+      }
+    });
+
+    renderSettings();
+    updateDashboardActiveGames();
 
     document.getElementById("connectionText").textContent =
       "Connected to GLO 365 API";
 
-    updateLockStatus();
+    return settingsList;
 
   }catch(error){
+
     status.textContent = "Unavailable";
+
+    document.getElementById("connectionText").textContent =
+      "API connection error";
+
     showMessage(
-      "Could not load " + currentGame + " settings: " + error.message,
+      "Could not load Malaysia settings: " + error.message,
       "error"
     );
+
+    throw error;
   }
 }
 
+/* =========================================
+   FILL CURRENT GAME SETTINGS
+========================================= */
+
 function fillSettings(settings){
+
+  settings = settings || {};
+
   document.getElementById("drawNumber").value =
-    settings.draw_number ?? settings.drawNumber ?? "";
+    settings.draw_number ?? "";
 
   document.getElementById("prizeRate").value =
-    settings.prize_rate ?? settings.prizeRate ?? "";
+    settings.prize_rate ?? "";
 
   document.getElementById("drawAt").value =
-    toLocalInputValue(
-      settings.draw_at ?? settings.drawAt ?? ""
-    );
+    toLocalInputValue(settings.draw_at);
 
   document.getElementById("bettingEnabled").checked =
-    Boolean(
-      settings.betting_enabled ??
-      settings.bettingEnabled ??
-      false
-    );
+    Boolean(settings.betting_enabled);
 
   renderSettings();
 }
 
+/* =========================================
+   RENDER SETTINGS
+========================================= */
+
 function renderSettings(){
+
   const settings = settingsCache[currentGame] || {};
 
-  const enabled = Boolean(
-    settings.betting_enabled ??
-    settings.bettingEnabled ??
-    false
-  );
+  fillSettingsWithoutRender(settings);
 
-  const drawAt = settings.draw_at || settings.drawAt;
-
-  const locked = isDrawLocked(drawAt);
+  const enabled = Boolean(settings.betting_enabled);
+  const locked = isDrawLocked(settings.draw_at);
 
   const status = document.getElementById("gameStatus");
 
   if(locked){
+
     status.textContent = "45-Minute Lock";
     status.className = "game-status status-locked";
+
   }else if(enabled){
+
     status.textContent = "Betting Enabled";
     status.className = "game-status status-on";
+
   }else{
+
     status.textContent = "Betting Disabled";
     status.className = "game-status status-off";
+
   }
 
   updateLockStatus();
 }
 
+function fillSettingsWithoutRender(settings){
+
+  document.getElementById("drawNumber").value =
+    settings.draw_number ?? "";
+
+  document.getElementById("prizeRate").value =
+    settings.prize_rate ?? "";
+
+  document.getElementById("drawAt").value =
+    toLocalInputValue(settings.draw_at);
+
+  document.getElementById("bettingEnabled").checked =
+    Boolean(settings.betting_enabled);
+}
+
+/* =========================================
+   BETTING LOCK
+========================================= */
+
 function isDrawLocked(drawAt){
+
   if(!drawAt) return false;
 
   const drawTime = new Date(drawAt).getTime();
 
-  if(Number.isNaN(drawTime)) return false;
+  if(!Number.isFinite(drawTime)) return false;
 
-  const lockTime = drawTime - LOCK_MINUTES * 60 * 1000;
+  const lockTime =
+    drawTime - LOCK_MINUTES * 60 * 1000;
 
   return Date.now() >= lockTime;
 }
 
 function updateLockStatus(){
+
   const settings = settingsCache[currentGame] || {};
 
+  const inputValue =
+    document.getElementById("drawAt").value;
+
   const drawAt =
-    document.getElementById("drawAt").value ||
-    settings.draw_at ||
-    settings.drawAt;
+    inputValue
+      ? new Date(inputValue)
+      : settings.draw_at
+        ? new Date(settings.draw_at)
+        : null;
 
   const label = document.getElementById("lockStatus");
 
@@ -762,26 +826,38 @@ function updateLockStatus(){
     return;
   }
 
-  const date = document.getElementById("drawAt").value
-    ? new Date(document.getElementById("drawAt").value)
-    : new Date(drawAt);
-
-  if(Number.isNaN(date.getTime())){
+  if(Number.isNaN(drawAt.getTime())){
     label.textContent = "Invalid draw time";
     return;
   }
 
-  const lockTime = date.getTime() - LOCK_MINUTES * 60000;
+  const lockTime =
+    drawAt.getTime() - LOCK_MINUTES * 60000;
+
   const remaining = lockTime - Date.now();
 
   if(remaining <= 0){
+
     label.textContent = "LOCK TIME REACHED";
+
   }else{
+
     const hours = Math.floor(remaining / 3600000);
-    const minutes = Math.floor((remaining % 3600000) / 60000);
+
+    const minutes = Math.floor(
+      (remaining % 3600000) / 60000
+    );
+
+    const seconds = Math.floor(
+      (remaining % 60000) / 1000
+    );
 
     label.textContent =
-      "Lock begins in " + hours + "h " + minutes + "m";
+      "Lock begins in " +
+      hours + "h " +
+      minutes + "m " +
+      seconds + "s";
+
   }
 }
 
@@ -792,9 +868,11 @@ document.getElementById("drawAt").addEventListener(
 
 /* =========================================
    SAVE SETTINGS
+   Backend route: PUT /settings/:game
 ========================================= */
 
 async function saveSettings(){
+
   if(!checkAuthentication()) return;
 
   const drawNumber =
@@ -826,14 +904,19 @@ async function saveSettings(){
     return;
   }
 
+  if(new Date(drawAt).getTime() <= Date.now()){
+    showMessage("Draw date and time must be in the future.", "error");
+    return;
+  }
+
   const button = document.getElementById("saveButton");
 
   button.disabled = true;
   button.textContent = "Saving...";
 
   try{
+
     const payload = {
-      game: currentGame,
       draw_number: drawNumber,
       draw_at: drawAt,
       prize_rate: prizeRate,
@@ -841,41 +924,52 @@ async function saveSettings(){
     };
 
     const result = await apiRequest(
-      "/admin/malaysia/settings",
+      "/admin/malaysia/settings/" +
+      encodeURIComponent(currentGame),
       {
         method:"PUT",
         body:JSON.stringify(payload)
       }
     );
 
-    settingsCache[currentGame] = {
-      ...payload,
-      ...(result.settings || result.data || {})
+    const savedSettings = result.settings || {
+      game: currentGame,
+      ...payload
     };
 
+    settingsCache[currentGame] = savedSettings;
+
     renderSettings();
+    updateDashboardActiveGames();
 
     showMessage(
-      result.message || currentGame + " settings saved successfully.",
+      result.message ||
+      currentGame + " settings saved successfully.",
       "success"
     );
 
   }catch(error){
+
     showMessage(
       "Could not save settings: " + error.message,
       "error"
     );
+
   }finally{
+
     button.disabled = false;
     button.textContent = "Save Settings";
+
   }
 }
 
 /* =========================================
    BETTING RECORDS
+   Backend returns selections[] and amount.
 ========================================= */
 
 async function loadBets(){
+
   if(!checkAuthentication()) return;
 
   const tbody = document.getElementById("betsTable");
@@ -884,51 +978,70 @@ async function loadBets(){
     '<tr><td colspan="6" class="empty">Loading records...</td></tr>';
 
   try{
+
     const data = await apiRequest(
       "/admin/malaysia/bets?game=" +
       encodeURIComponent(currentBetGame)
     );
 
-    const bets =
-      data.bets ||
-      data.data ||
-      data.records ||
-      [];
+    const bets = data.bets || [];
 
     if(!Array.isArray(bets) || bets.length === 0){
+
       tbody.innerHTML =
         '<tr><td colspan="6" class="empty">No betting records found.</td></tr>';
+
       return;
     }
 
     tbody.innerHTML = "";
 
     bets.forEach(bet=>{
+
       const tr = document.createElement("tr");
 
+      const selections = Array.isArray(bet.selections)
+        ? bet.selections.join(", ")
+        : String(bet.selections ?? "—");
+
       const values = [
-        bet.id ?? bet.bet_id ?? "—",
-        bet.username ?? bet.user_name ?? bet.user_id ?? "—",
-        bet.selection ?? bet.number ?? bet.bet_number ?? "—",
-        bet.points ?? bet.amount ?? "—",
+        bet.id ?? "—",
+        bet.username ?? bet.user_id ?? "—",
+        selections,
+        formatPoints(bet.amount),
         bet.status ?? "Pending",
-        formatDate(bet.created_at ?? bet.createdAt)
+        formatDate(bet.created_at)
       ];
 
       values.forEach(value=>{
+
         const td = document.createElement("td");
+
         td.textContent = String(value);
+
         tr.appendChild(td);
+
       });
 
       tbody.appendChild(tr);
+
     });
 
   }catch(error){
-    tbody.innerHTML =
-      '<tr><td colspan="6" class="empty">Could not load records: ' +
-      escapeHtml(error.message) +
-      '</td></tr>';
+
+    tbody.innerHTML = "";
+
+    const tr = document.createElement("tr");
+    const td = document.createElement("td");
+
+    td.colSpan = 6;
+    td.className = "empty";
+    td.textContent =
+      "Could not load records: " + error.message;
+
+    tr.appendChild(td);
+    tbody.appendChild(tr);
+
   }
 }
 
@@ -937,40 +1050,90 @@ async function loadBets(){
 ========================================= */
 
 async function loadSummary(){
+
   if(!checkAuthentication()) return;
 
   try{
+
     const data = await apiRequest(
       "/admin/malaysia/summary"
     );
 
-    const summary = data.summary || data.data || data;
+    const summary = data.summary || {};
 
     document.getElementById("totalBets").textContent =
-      summary.total_bets ?? summary.totalBets ?? "0";
+      formatNumber(summary.total_bets ?? 0);
 
     document.getElementById("totalPoints").textContent =
-      summary.total_points ??
-      summary.totalPoints ??
-      "0";
-
-    document.getElementById("activeGames").textContent =
-      summary.active_games ??
-      summary.activeGames ??
-      "—";
+      formatPoints(summary.total_points ?? 0);
 
   }catch(error){
+
     document.getElementById("totalBets").textContent = "—";
     document.getElementById("totalPoints").textContent = "—";
-    document.getElementById("activeGames").textContent = "—";
+
+    showMessage(
+      "Could not load dashboard summary: " + error.message,
+      "error"
+    );
+
   }
+
+}
+
+/* =========================================
+   ACTIVE GAMES
+   Calculated from loaded game settings.
+========================================= */
+
+function updateDashboardActiveGames(){
+
+  let count = 0;
+
+  GAMES.forEach(game=>{
+
+    const settings = settingsCache[game];
+
+    if(
+      settings &&
+      settings.betting_enabled &&
+      !isDrawLocked(settings.draw_at)
+    ){
+      count++;
+    }
+
+  });
+
+  document.getElementById("activeGames").textContent =
+    count + " / 3";
 }
 
 /* =========================================
    UTILITIES
 ========================================= */
 
+function formatNumber(value){
+
+  const number = Number(value);
+
+  if(!Number.isFinite(number)) return "0";
+
+  return number.toLocaleString("en-US");
+}
+
+function formatPoints(value){
+
+  const number = Number(value);
+
+  if(!Number.isFinite(number)) return "0";
+
+  return number.toLocaleString("en-US", {
+    maximumFractionDigits:2
+  });
+}
+
 function formatDate(value){
+
   if(!value) return "—";
 
   const date = new Date(value);
@@ -980,22 +1143,14 @@ function formatDate(value){
   return date.toLocaleString();
 }
 
-function escapeHtml(value){
-  return String(value).replace(/[&<>"']/g, char=>({
-    "&":"&amp;",
-    "<":"&lt;",
-    ">":"&gt;",
-    '"':"&quot;",
-    "'":"&#039;"
-  })[char]);
-}
-
 function goBack(){
+
   if(history.length > 1){
     history.back();
   }else{
     location.href = "admin.html";
   }
+
 }
 
 /* =========================================
@@ -1003,6 +1158,7 @@ function goBack(){
 ========================================= */
 
 async function loadAll(){
+
   if(!checkAuthentication()) return;
 
   await Promise.allSettled([
@@ -1010,22 +1166,29 @@ async function loadAll(){
     loadBets(),
     loadSummary()
   ]);
+
 }
 
 /* =========================================
    START
 ========================================= */
 
-document.addEventListener("DOMContentLoaded",()=>{
+document.addEventListener("DOMContentLoaded", async ()=>{
+
   if(!getToken()){
     checkAuthentication();
     return;
   }
 
-  loadAll();
+  await loadAll();
 
-  window.setInterval(updateLockStatus, 30000);
+  window.setInterval(()=>{
+    updateLockStatus();
+    updateDashboardActiveGames();
+  }, 1000);
+
 });
+
 </script>
 
 </body>
