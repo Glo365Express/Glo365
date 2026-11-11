@@ -4,6 +4,7 @@
     const cors = require("cors");
     const bcrypt = require("bcryptjs");
     const jwt = require("jsonwebtoken");
+    const crypto = require("crypto");
 
     const app = express();
 
@@ -443,6 +444,21 @@
           details JSONB DEFAULT '{}'::jsonb,
           created_at TIMESTAMPTZ DEFAULT NOW()
         );
+
+        CREATE TABLE IF NOT EXISTS user_verifications (
+          id BIGSERIAL PRIMARY KEY,
+          user_id BIGINT NOT NULL UNIQUE REFERENCES users(id) ON DELETE CASCADE,
+          legal_name_enc TEXT NOT NULL,
+          document_type VARCHAR(10) NOT NULL CHECK (document_type IN ('NID','PASSPORT')),
+          document_number_enc TEXT NOT NULL,
+          phone_enc TEXT NOT NULL,
+          email_enc TEXT NOT NULL,
+          status VARCHAR(20) NOT NULL DEFAULT 'verified' CHECK (status IN ('verified','corrected')),
+          created_at TIMESTAMPTZ NOT NULL DEFAULT NOW(),
+          updated_at TIMESTAMPTZ NOT NULL DEFAULT NOW(),
+          updated_by BIGINT REFERENCES users(id) ON DELETE SET NULL
+        );
+
 
         CREATE TABLE IF NOT EXISTS wallet_transactions (
           id BIGSERIAL PRIMARY KEY,
@@ -1240,6 +1256,77 @@
     });
 
     // ==========================================
+    // PRIVATE IDENTITY VERIFICATION HELPERS
+    // ==========================================
+
+    function verificationKey() {
+      const raw = process.env.VERIFICATION_ENCRYPTION_KEY || "";
+      let key;
+      if (/^[a-f0-9]{64}$/i.test(raw)) key = Buffer.from(raw, "hex");
+      else {
+        try { key = Buffer.from(raw, "base64"); } catch { key = null; }
+      }
+      if (!key || key.length !== 32) {
+        throw new Error("VERIFICATION_ENCRYPTION_KEY must be a 32-byte key (64 hex characters or base64).");
+      }
+      return key;
+    }
+
+    function encryptVerificationValue(value) {
+      const iv = crypto.randomBytes(12);
+      const cipher = crypto.createCipheriv("aes-256-gcm", verificationKey(), iv);
+      const encrypted = Buffer.concat([cipher.update(String(value), "utf8"), cipher.final()]);
+      return [iv.toString("base64"), cipher.getAuthTag().toString("base64"), encrypted.toString("base64")].join(".");
+    }
+
+    function decryptVerificationValue(value) {
+      const parts = String(value || "").split(".");
+      if (parts.length !== 3) throw new Error("Invalid encrypted verification value.");
+      const decipher = crypto.createDecipheriv("aes-256-gcm", verificationKey(), Buffer.from(parts[0], "base64"));
+      decipher.setAuthTag(Buffer.from(parts[1], "base64"));
+      return Buffer.concat([decipher.update(Buffer.from(parts[2], "base64")), decipher.final()]).toString("utf8");
+    }
+
+    function maskValue(value, visibleStart = 1, visibleEnd = 2) {
+      const chars = Array.from(String(value || ""));
+      if (chars.length <= visibleStart + visibleEnd) return "*".repeat(Math.max(4, chars.length));
+      return chars.slice(0, visibleStart).join("") + "*".repeat(Math.min(10, chars.length - visibleStart - visibleEnd)) + chars.slice(-visibleEnd).join("");
+    }
+
+    function verificationPublicView(row) {
+      const name = decryptVerificationValue(row.legal_name_enc);
+      const documentNumber = decryptVerificationValue(row.document_number_enc);
+      const phone = decryptVerificationValue(row.phone_enc);
+      const email = decryptVerificationValue(row.email_enc);
+      const words = name.split(/\s+/).filter(Boolean);
+      const maskedName = words.map(w => w.length < 3 ? "*".repeat(w.length) : w[0] + "*".repeat(Math.min(6, w.length - 1))).join(" ");
+      return {
+        status: row.status,
+        legal_name: maskedName,
+        document_type: row.document_type,
+        document_number: maskValue(documentNumber, 1, 2),
+        phone: maskValue(phone, 3, 2),
+        email: maskValue(email, 1, Math.min(10, (email.split("@")[1] || "").length + 1)),
+        created_at: row.created_at,
+        updated_at: row.updated_at
+      };
+    }
+
+    function validateVerificationInput(body) {
+      const legalName = cleanText(body.legal_name, 120);
+      const documentType = cleanText(body.document_type, 10).toUpperCase();
+      const documentNumber = cleanText(body.document_number, 40).replace(/\s+/g, "").toUpperCase();
+      const phone = cleanText(body.phone, 25).replace(/[\s()-]/g, "");
+      const email = cleanText(body.email, 150).toLowerCase();
+      if (legalName.length < 3 || !/^[\p{L}][\p{L} .'-]{1,118}$/u.test(legalName)) return { error: "Enter your full legal name." };
+      if (!["NID", "PASSPORT"].includes(documentType)) return { error: "Select NID or Passport." };
+      if (!/^[A-Z0-9-]{5,40}$/.test(documentNumber)) return { error: "Enter a valid document number format." };
+      if (!/^\+?[0-9]{8,15}$/.test(phone)) return { error: "Enter a valid phone number." };
+      if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) return { error: "Enter a valid email address." };
+      return { legalName, documentType, documentNumber, phone, email };
+    }
+
+    // ==========================================
     // CURRENT USER
     // ==========================================
 
@@ -1267,6 +1354,119 @@
         });
       })
     );
+
+    // ==========================================
+    // USER IDENTITY VERIFICATION (ONE-TIME SUBMISSION)
+    // ==========================================
+
+    app.get("/api/verification/me", authenticateToken, asyncRoute(async (req, res) => {
+      const result = await pool.query("SELECT * FROM user_verifications WHERE user_id = $1", [req.user.id]);
+      if (!result.rows.length) return res.json({ success: true, submitted: false, verification: null });
+      return res.json({ success: true, submitted: true, verification: verificationPublicView(result.rows[0]) });
+    }));
+
+    app.post("/api/verification", authenticateToken, asyncRoute(async (req, res) => {
+      let values;
+      try { values = validateVerificationInput(req.body || {}); }
+      catch (error) { console.error("Verification validation error:", error.message); return sendError(res, 503, "Verification service is not configured securely."); }
+      if (values.error) return sendError(res, 400, values.error);
+      let encrypted;
+      try {
+        encrypted = [encryptVerificationValue(values.legalName), encryptVerificationValue(values.documentNumber), encryptVerificationValue(values.phone), encryptVerificationValue(values.email)];
+      } catch (error) {
+        console.error("Verification encryption configuration error:", error.message);
+        return sendError(res, 503, "Verification service is temporarily unavailable.");
+      }
+      const client = await pool.connect();
+      try {
+        await client.query("BEGIN");
+        const inserted = await client.query(
+          `INSERT INTO user_verifications (user_id, legal_name_enc, document_type, document_number_enc, phone_enc, email_enc, status)
+           VALUES ($1,$2,$3,$4,$5,$6,'verified')
+           ON CONFLICT (user_id) DO NOTHING RETURNING *`,
+          [req.user.id, encrypted[0], values.documentType, encrypted[1], encrypted[2], encrypted[3]]
+        );
+        if (!inserted.rows.length) {
+          await client.query("ROLLBACK");
+          return sendError(res, 409, "Verification details have already been submitted and cannot be changed.");
+        }
+        await client.query(
+          `INSERT INTO audit_logs (actor_id, action, target_user_id, details) VALUES ($1,'verification.submitted',$1,$2::jsonb)`,
+          [req.user.id, JSON.stringify({ document_type: values.documentType, status: "verified" })]
+        );
+        await client.query("COMMIT");
+        return res.status(201).json({ success: true, message: "Your details have been securely submitted.", verification: verificationPublicView(inserted.rows[0]) });
+      } catch (error) {
+        await client.query("ROLLBACK");
+        throw error;
+      } finally { client.release(); }
+    }));
+
+    // Primary Admin verification queue (masked values only; no decryption).
+    app.get("/api/admin/verifications", authenticateToken, requireAdmin, asyncRoute(async (req, res) => {
+      const result = await pool.query(
+        `SELECT v.user_id, u.username, v.document_type, v.status, v.created_at, v.updated_at
+         FROM user_verifications v JOIN users u ON u.id = v.user_id
+         ORDER BY v.created_at DESC LIMIT 500`
+      );
+      return res.json({ success: true, verifications: result.rows });
+    }));
+
+    // Primary Admin only. Full identity data is decrypted only for this endpoint.
+    app.get("/api/admin/verifications/:userId", authenticateToken, requireAdmin, asyncRoute(async (req, res) => {
+      const userId = String(req.params.userId || "");
+      if (!/^\d+$/.test(userId)) return sendError(res, 400, "Invalid user ID.");
+      const result = await pool.query(
+        `SELECT v.*, u.username FROM user_verifications v JOIN users u ON u.id = v.user_id WHERE v.user_id = $1`, [userId]
+      );
+      if (!result.rows.length) return sendError(res, 404, "Verification record not found.");
+      const row = result.rows[0];
+      const full = {
+        user_id: row.user_id, username: row.username,
+        legal_name: decryptVerificationValue(row.legal_name_enc), document_type: row.document_type,
+        document_number: decryptVerificationValue(row.document_number_enc),
+        phone: decryptVerificationValue(row.phone_enc), email: decryptVerificationValue(row.email_enc),
+        status: row.status, created_at: row.created_at, updated_at: row.updated_at
+      };
+      await pool.query(
+        `INSERT INTO audit_logs (actor_id, action, target_user_id, details) VALUES ($1,'verification.admin_viewed',$2,$3::jsonb)`,
+        [req.user.id, userId, JSON.stringify({ fields: ["legal_name", "document_number", "phone", "email"] })]
+      );
+      return res.json({ success: true, verification: full });
+    }));
+
+    app.patch("/api/admin/verifications/:userId", authenticateToken, requireAdmin, asyncRoute(async (req, res) => {
+      const userId = String(req.params.userId || "");
+      if (!/^\d+$/.test(userId)) return sendError(res, 400, "Invalid user ID.");
+      const current = await pool.query("SELECT * FROM user_verifications WHERE user_id = $1", [userId]);
+      if (!current.rows.length) return sendError(res, 404, "Verification record not found.");
+      const old = current.rows[0];
+      const merged = {
+        legal_name: req.body.legal_name === undefined ? decryptVerificationValue(old.legal_name_enc) : req.body.legal_name,
+        document_type: req.body.document_type === undefined ? old.document_type : req.body.document_type,
+        document_number: req.body.document_number === undefined ? decryptVerificationValue(old.document_number_enc) : req.body.document_number,
+        phone: req.body.phone === undefined ? decryptVerificationValue(old.phone_enc) : req.body.phone,
+        email: req.body.email === undefined ? decryptVerificationValue(old.email_enc) : req.body.email
+      };
+      const values = validateVerificationInput({ legal_name: merged.legal_name, document_type: merged.document_type, document_number: merged.document_number, phone: merged.phone, email: merged.email });
+      if (values.error) return sendError(res, 400, values.error);
+      const encrypted = [encryptVerificationValue(values.legalName), encryptVerificationValue(values.documentNumber), encryptVerificationValue(values.phone), encryptVerificationValue(values.email)];
+      const client = await pool.connect();
+      try {
+        await client.query("BEGIN");
+        await client.query(
+          `UPDATE user_verifications SET legal_name_enc=$1, document_type=$2, document_number_enc=$3, phone_enc=$4, email_enc=$5, status='corrected', updated_at=NOW(), updated_by=$6 WHERE user_id=$7`,
+          [encrypted[0], values.documentType, encrypted[1], encrypted[2], encrypted[3], req.user.id, userId]
+        );
+        await client.query(
+          `INSERT INTO audit_logs (actor_id, action, target_user_id, details) VALUES ($1,'verification.admin_corrected',$2,$3::jsonb)`,
+          [req.user.id, userId, JSON.stringify({ fields: Object.keys(req.body || {}).filter(k => ["legal_name","document_type","document_number","phone","email"].includes(k)) })]
+        );
+        await client.query("COMMIT");
+      } catch (error) { await client.query("ROLLBACK"); throw error; }
+      finally { client.release(); }
+      return res.json({ success: true, message: "Verification details corrected by Admin." });
+    }));
 
     // ==========================================
     // PROFILE
