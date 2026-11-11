@@ -1,4 +1,3 @@
-
 <!DOCTYPE html>
 <html lang="bn">
 <head>
@@ -12,7 +11,7 @@
 body{font-family:Arial,sans-serif;background:#f2f3f5;color:#202127}
 .app{max-width:1100px;margin:auto;padding:18px}
 .header{display:flex;justify-content:space-between;align-items:center;gap:12px;flex-wrap:wrap;margin-bottom:20px}
-.brand{font-size:25px;font-weight:900;color:#202127}
+.brand{font-size:25px;font-weight:900}
 .brand span{color:#e6a600}
 .actions{display:flex;gap:8px;flex-wrap:wrap}
 button,a.btn{border:0;border-radius:10px;padding:12px 16px;font-weight:700;cursor:pointer;text-decoration:none;font-size:14px}
@@ -25,27 +24,13 @@ h2{font-size:19px;margin-bottom:16px}
 .stat{background:white;padding:19px;border-radius:17px;box-shadow:0 4px 15px #00000008;min-width:0}
 .stat small{color:#777;font-size:13px;line-height:1.6}
 .stat strong{display:block;font-size:25px;margin-top:8px;overflow-wrap:anywhere}
-
-/* COUNTRY CARDS */
 .country-intro{display:flex;justify-content:space-between;align-items:center;gap:10px;flex-wrap:wrap;margin-bottom:15px}
 .country-intro h2{margin:0}
 .country-intro span{font-size:11px;color:#888}
 .country-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:13px}
-.country-card{
- position:relative;overflow:hidden;isolation:isolate;
- min-height:135px;border:0;border-radius:17px;padding:16px;
- display:flex;align-items:center;gap:12px;text-align:left;
- color:white;box-shadow:0 7px 17px #00000016;
- transition:.2s;cursor:pointer;
-}
-.country-card:before{
- content:"";position:absolute;z-index:-1;width:145px;height:145px;
- border-radius:50%;right:-55px;top:-70px;background:#ffffff20;
-}
-.country-card:after{
- content:"";position:absolute;z-index:-1;width:100px;height:100px;
- border-radius:50%;right:30px;bottom:-75px;background:#ffffff15;
-}
+.country-card{position:relative;overflow:hidden;isolation:isolate;min-height:135px;border:0;border-radius:17px;padding:16px;display:flex;align-items:center;gap:12px;text-align:left;color:white;box-shadow:0 7px 17px #00000016;transition:.2s;cursor:pointer}
+.country-card:before{content:"";position:absolute;z-index:-1;width:145px;height:145px;border-radius:50%;right:-55px;top:-70px;background:#ffffff20}
+.country-card:after{content:"";position:absolute;z-index:-1;width:100px;height:100px;border-radius:50%;right:30px;bottom:-75px;background:#ffffff15}
 .country-card:active{transform:scale(.97)}
 .country-card.selected{outline:3px solid #202127;outline-offset:2px}
 .thai{background:linear-gradient(130deg,#a81432,#ef405c)}
@@ -53,36 +38,17 @@ h2{font-size:19px;margin-bottom:16px}
 .singapore{background:linear-gradient(130deg,#08766b,#23b99b)}
 .taiwan{background:linear-gradient(130deg,#4930a7,#9273ff)}
 .laos{background:linear-gradient(130deg,#a9470b,#f39a25)}
-.country-flag{
- width:54px;height:54px;flex-shrink:0;
- display:flex;align-items:center;justify-content:center;
- border-radius:15px;background:#ffffff25;
- border:1px solid #ffffff55;font-size:32px;
-}
+.country-flag{width:54px;height:54px;flex-shrink:0;display:flex;align-items:center;justify-content:center;border-radius:15px;background:#ffffff25;border:1px solid #ffffff55;font-size:32px}
 .country-info{min-width:0;flex:1}
 .country-info small{display:block;font-size:9px;letter-spacing:1px;font-weight:900;margin-bottom:7px;color:#ffffffcf}
 .country-info strong{display:block;font-size:14px;line-height:1.35}
 .country-info em{display:block;font-style:normal;font-size:10px;margin-top:7px;color:#ffffffd9}
-.country-arrow{
- width:26px;height:26px;border-radius:50%;
- display:flex;align-items:center;justify-content:center;
- background:#ffffff30;font-size:19px;flex-shrink:0;
-}
-.selected-note{
- display:none;margin-top:15px;padding:12px 14px;
- background:#eaf5ff;border:1px solid #d4eaff;
- color:#1768a9;border-radius:11px;font-size:13px;
-}
+.country-arrow{width:26px;height:26px;border-radius:50%;display:flex;align-items:center;justify-content:center;background:#ffffff30;font-size:19px;flex-shrink:0}
+.selected-note{display:none;margin-top:15px;padding:12px 14px;background:#eaf5ff;border:1px solid #d4eaff;color:#1768a9;border-radius:11px;font-size:13px}
 .selected-note.show{display:block}
-
-/* FORM */
 #publishSection{display:none}
 .selected-heading{display:flex;align-items:center;gap:12px;margin-bottom:16px}
-.selected-flag{
- width:48px;height:48px;border-radius:13px;
- display:flex;align-items:center;justify-content:center;
- font-size:29px;background:#f0f5fb;
-}
+.selected-flag{width:48px;height:48px;border-radius:13px;display:flex;align-items:center;justify-content:center;font-size:29px;background:#f0f5fb}
 .selected-heading h2{margin:0;font-size:18px}
 .selected-heading small{display:block;color:#888;font-size:11px;margin-top:5px}
 .notice{padding:15px;border-radius:12px;background:#fff7dc;color:#765600;font-size:13px;line-height:1.8;margin-bottom:16px}
@@ -90,12 +56,8 @@ h2{font-size:19px;margin-bottom:16px}
 label{display:block;font-size:13px;font-weight:700;margin:13px 0 7px}
 input{width:100%;padding:13px;border:1px solid #ddd;border-radius:10px;font-size:15px;outline:none;background:white}
 input:focus{border-color:#e6a600;box-shadow:0 0 0 3px #ffb90020}
-.grid{display:grid;grid-template-columns:repeat(2,1fr);gap:12px}
-.back3-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:12px}
-#thaiBack3Field{
- display:none;margin-top:14px;padding:14px;
- border:1px solid #f1d5dc;background:#fff8fa;border-radius:13px;
-}
+.grid,.back3-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:12px}
+#thaiBack3Field{display:none;margin-top:14px;padding:14px;border:1px solid #f1d5dc;background:#fff8fa;border-radius:13px}
 .back3-title{font-size:14px;font-weight:800;color:#b32643;margin-bottom:5px}
 .back3-help{font-size:11px;color:#98717a;line-height:1.5}
 .help{font-size:11px;color:#888;margin-top:6px;line-height:1.5}
@@ -104,8 +66,6 @@ input:focus{border-color:#e6a600;box-shadow:0 0 0 3px #ffb90020}
 .message{display:none;margin-top:13px;padding:13px;border-radius:10px;font-size:13px;line-height:1.6}
 .success{background:#e7f8ec;color:#176b32}
 .error{background:#ffe8e8;color:#a51f1f}
-
-/* RESULTS */
 .result{border:1px solid #eee;border-radius:13px;padding:15px;margin-top:12px}
 .result-head{display:flex;justify-content:space-between;gap:10px;flex-wrap:wrap;margin-bottom:12px}
 .result-date{font-weight:800;font-size:14px}
@@ -125,13 +85,15 @@ input:focus{border-color:#e6a600;box-shadow:0 0 0 3px #ffb90020}
 .filter-btn.active{background:#202127;color:white}
 button:disabled{opacity:.6;cursor:wait}
 .footer{text-align:center;color:#aaa;font-size:11px;padding:20px}
-
+#malaysiaFields{display:none;margin-top:16px}
+.game-fields{border:1px solid #dcecff;background:#f7fbff;border-radius:13px;padding:14px;margin-bottom:12px}
+.game-fields h3{font-size:15px;color:#0756a0;margin-bottom:5px}
+.game-fields p{font-size:11px;color:#777;margin-bottom:8px}
+.game-fields .grid{gap:10px}
 @media(max-width:600px){
- .app{padding:13px}
- .brand{font-size:23px}
+ .app{padding:13px}.brand{font-size:23px}
  .stats{grid-template-columns:1fr 1fr;gap:10px}
- .stat{padding:16px}
- .stat strong{font-size:21px}
+ .stat{padding:16px}.stat strong{font-size:21px}
  .country-grid{grid-template-columns:1fr}
  .country-card{min-height:112px}
  .grid{grid-template-columns:1fr}
@@ -153,18 +115,9 @@ button:disabled{opacity:.6;cursor:wait}
 </header>
 
 <div class="stats">
- <div class="stat">
-  <small>মোট প্রকাশিত ফলাফল</small>
-  <strong id="totalResults">0</strong>
- </div>
- <div class="stat">
-  <small>সর্বশেষ ফলাফলের তারিখ</small>
-  <strong id="latestDate" style="font-size:16px">—</strong>
- </div>
- <div class="stat">
-  <small>আজকের ফলাফল</small>
-  <strong id="todayResults">0</strong>
- </div>
+ <div class="stat"><small>মোট প্রকাশিত ফলাফল</small><strong id="totalResults">0</strong></div>
+ <div class="stat"><small>সর্বশেষ ফলাফলের তারিখ</small><strong id="latestDate" style="font-size:16px">—</strong></div>
+ <div class="stat"><small>আজকের ফলাফল</small><strong id="todayResults">0</strong></div>
 </div>
 
 <section class="card">
@@ -174,66 +127,41 @@ button:disabled{opacity:.6;cursor:wait}
  </div>
 
  <div class="country-grid">
-
   <button type="button" class="country-card thai" data-country="thai">
    <span class="country-flag">🇹🇭</span>
-   <span class="country-info">
-    <small>THAILAND</small>
-    <strong>Thai Government Lotto</strong>
-    <em>Publish Thai Results</em>
-   </span>
+   <span class="country-info"><small>THAILAND</small><strong>Thai Government Lotto</strong><em>Publish Thai Results</em></span>
    <span class="country-arrow">›</span>
   </button>
 
   <button type="button" class="country-card malaysia" data-country="malaysia">
    <span class="country-flag">🇲🇾</span>
-   <span class="country-info">
-    <small>MALAYSIA</small>
-    <strong>Malaysia Toto</strong>
-    <em>Publish Malaysia Results</em>
-   </span>
+   <span class="country-info"><small>MALAYSIA</small><strong>Malaysia Toto</strong><em>Publish Malaysia 2D / 3D / 4D Results</em></span>
    <span class="country-arrow">›</span>
   </button>
 
   <button type="button" class="country-card singapore" data-country="singapore">
    <span class="country-flag">🇸🇬</span>
-   <span class="country-info">
-    <small>SINGAPORE</small>
-    <strong>Singapore Pools</strong>
-    <em>Publish Singapore Results</em>
-   </span>
+   <span class="country-info"><small>SINGAPORE</small><strong>Singapore Pools</strong><em>Publish Singapore Results</em></span>
    <span class="country-arrow">›</span>
   </button>
 
   <button type="button" class="country-card taiwan" data-country="taiwan">
    <span class="country-flag">🇹🇼</span>
-   <span class="country-info">
-    <small>TAIWAN</small>
-    <strong>Taiwan Lottery</strong>
-    <em>Publish Taiwan Results</em>
-   </span>
+   <span class="country-info"><small>TAIWAN</small><strong>Taiwan Lottery</strong><em>Publish Taiwan Results</em></span>
    <span class="country-arrow">›</span>
   </button>
 
   <button type="button" class="country-card laos" data-country="laos">
    <span class="country-flag">🇱🇦</span>
-   <span class="country-info">
-    <small>LAOS</small>
-    <strong>Laos Government Lotto</strong>
-    <em>Publish Laos Results</em>
-   </span>
+   <span class="country-info"><small>LAOS</small><strong>Laos Government Lotto</strong><em>Publish Laos Results</em></span>
    <span class="country-arrow">›</span>
   </button>
-
  </div>
 
- <div class="selected-note" id="selectedNote">
-  ✓ Country selected. নিচে ফলাফলের তথ্য পূরণ করুন।
- </div>
+ <div class="selected-note" id="selectedNote">✓ Country selected. নিচে ফলাফলের তথ্য পূরণ করুন।</div>
 </section>
 
 <section class="card" id="publishSection">
-
  <div class="selected-heading">
   <div class="selected-flag" id="selectedFlag">🇹🇭</div>
   <div>
@@ -242,61 +170,118 @@ button:disabled{opacity:.6;cursor:wait}
   </div>
  </div>
 
- <div class="notice">
-  ফলাফল Publish করলে একই দেশের একই Draw Date-এর Running Bet সার্ভারে যাচাই হবে এবং Bet-এর Status WIN অথবা LOSS হবে।
+ <div class="notice" id="genericNotice">
+  ফলাফল Publish করলে সার্ভারে থাকা সংশ্লিষ্ট Bet যাচাই হবে।
   <br><br>
   <strong>Single:</strong> First Prize-এর শেষ ১ ডিজিট<br>
   <strong>2D:</strong> Last Two<br>
   <strong>3UP:</strong> Front Three-এর যেকোনো একটি<br>
   <strong>6UP:</strong> সম্পূর্ণ First Prize
   <br><br>
-  <strong>৭২ ঘণ্টার নিয়ম:</strong> Winning Number Publish হওয়ার ৭২ ঘণ্টা পর Publish-এর আগের Submission Number Reports থেকে সার্ভার স্বয়ংক্রিয়ভাবে লুকাবে।
+  <strong>৭২ ঘণ্টার নিয়ম:</strong> Winning Number Publish হওয়ার ৭২ ঘণ্টা পর পুরোনো Submission Number Reports সার্ভার থেকে লুকানোর নিয়ম কার্যকর থাকবে।
+ </div>
+
+ <div class="notice" id="malaysiaNotice" style="display:none">
+  🇲🇾 **Malaysia Toto Results**
+  <br>
+  নিচে 2D, 3D ও 4D-এর Draw Number এবং Winning Number লিখুন। যে গেমের ফলাফল প্রকাশ করতে চান, শুধু সেই গেমের Winning Number পূরণ করুন।
+  <br><br>
+  <strong>2D:</strong> ঠিক ২ ডিজিট<br>
+  <strong>3D:</strong> ঠিক ৩ ডিজিট<br>
+  <strong>4D:</strong> ঠিক ৪ ডিজিট
+  <br><br>
+  Draw Number ফাঁকা রাখলে সার্ভারের সেটিংসে থাকা Draw Number ব্যবহার হবে।
  </div>
 
  <form id="resultForm">
-  <label for="drawDate">Draw Date</label>
-  <input type="date" id="drawDate" required>
+  <div id="genericFields">
+   <label for="drawDate">Draw Date</label>
+   <input type="date" id="drawDate" required>
 
-  <div class="grid">
-   <div>
-    <label for="firstPrize">First Prize</label>
-    <input id="firstPrize" type="text" inputmode="numeric" maxlength="6" placeholder="যেমন: 012345" required>
-    <div class="help">১–৬ ডিজিট লিখুন। সংরক্ষণের সময় ৬ ডিজিট করা হবে।</div>
+   <div class="grid">
+    <div>
+     <label for="firstPrize">First Prize</label>
+     <input id="firstPrize" type="text" inputmode="numeric" maxlength="6" placeholder="যেমন: 012345" required>
+     <div class="help">১–৬ ডিজিট লিখুন। সংরক্ষণের সময় ৬ ডিজিট করা হবে।</div>
+    </div>
+    <div>
+     <label for="lastTwo">Last Two</label>
+     <input id="lastTwo" type="text" inputmode="numeric" maxlength="2" placeholder="যেমন: 07" required>
+     <div class="help">১–২ ডিজিট লিখুন। সংরক্ষণের সময় ২ ডিজিট করা হবে।</div>
+    </div>
    </div>
-   <div>
-    <label for="lastTwo">Last Two</label>
-    <input id="lastTwo" type="text" inputmode="numeric" maxlength="2" placeholder="যেমন: 07" required>
-    <div class="help">১–২ ডিজিট লিখুন। সংরক্ষণের সময় ২ ডিজিট করা হবে।</div>
+
+   <label for="frontThree">Front Three</label>
+   <input id="frontThree" type="text" placeholder="যেমন: 123, 456, 789">
+   <div class="help">কমা দিয়ে আলাদা করে ৩ ডিজিটের নম্বর লিখুন।</div>
+
+   <div id="thaiBack3Field">
+    <div class="back3-title">🇹🇭 Thai Back 3 Numbers</div>
+    <div class="back3-help">Thai Government Lotto-এর দুটি Back 3 নম্বর লিখুন।</div>
+    <div class="back3-grid">
+     <div>
+      <label for="backThreeOne">Back 3 - Number 1</label>
+      <input id="backThreeOne" type="text" inputmode="numeric" maxlength="3" placeholder="যেমন: 123">
+     </div>
+     <div>
+      <label for="backThreeTwo">Back 3 - Number 2</label>
+      <input id="backThreeTwo" type="text" inputmode="numeric" maxlength="3" placeholder="যেমন: 456">
+     </div>
+    </div>
    </div>
   </div>
 
-  <label for="frontThree">Front Three</label>
-  <input id="frontThree" type="text" placeholder="যেমন: 123, 456, 789">
-  <div class="help">কমা দিয়ে আলাদা করে ৩ ডিজিটের নম্বর লিখুন।</div>
-
-  <!-- THAI ONLY BACK 3 -->
-  <div id="thaiBack3Field">
-   <div class="back3-title">🇹🇭 Thai Back 3 Numbers</div>
-   <div class="back3-help">Thai Government Lotto-এর দুটি Back 3 নম্বর লিখুন।</div>
-
-   <div class="back3-grid">
-    <div>
-     <label for="backThreeOne">Back 3 - Number 1</label>
-     <input id="backThreeOne" type="text" inputmode="numeric" maxlength="3" placeholder="যেমন: 123">
-    </div>
-    <div>
-     <label for="backThreeTwo">Back 3 - Number 2</label>
-     <input id="backThreeTwo" type="text" inputmode="numeric" maxlength="3" placeholder="যেমন: 456">
+  <!-- MALAYSIA 2D / 3D / 4D -->
+  <div id="malaysiaFields">
+   <div class="game-fields">
+    <h3>🇲🇾 Malaysia 2D Result</h3>
+    <p>Winning Number অবশ্যই ২ ডিজিট হতে হবে।</p>
+    <div class="grid">
+     <div>
+      <label for="my2dDraw">2D Draw Number</label>
+      <input id="my2dDraw" type="text" placeholder="যেমন: MY-100">
+     </div>
+     <div>
+      <label for="my2dWin">2D Winning Number</label>
+      <input id="my2dWin" type="text" inputmode="numeric" maxlength="2" placeholder="যেমন: 45">
+     </div>
     </div>
    </div>
+
+   <div class="game-fields">
+    <h3>🇲🇾 Malaysia 3D Result</h3>
+    <p>Winning Number অবশ্যই ৩ ডিজিট হতে হবে।</p>
+    <div class="grid">
+     <div>
+      <label for="my3dDraw">3D Draw Number</label>
+      <input id="my3dDraw" type="text" placeholder="যেমন: MY-100">
+     </div>
+     <div>
+      <label for="my3dWin">3D Winning Number</label>
+      <input id="my3dWin" type="text" inputmode="numeric" maxlength="3" placeholder="যেমন: 678">
+     </div>
+    </div>
+   </div>
+
+   <div class="game-fields">
+    <h3>🇲🇾 Malaysia 4D Result</h3>
+    <p>Winning Number অবশ্যই ৪ ডিজিট হতে হবে।</p>
+    <div class="grid">
+     <div>
+      <label for="my4dDraw">4D Draw Number</label>
+      <input id="my4dDraw" type="text" placeholder="যেমন: MY-100">
+     </div>
+     <div>
+      <label for="my4dWin">4D Winning Number</label>
+      <input id="my4dWin" type="text" inputmode="numeric" maxlength="4" placeholder="যেমন: 1234">
+     </div>
+    </div>
+   </div>
+   <div class="help">কমপক্ষে একটি গেমের Winning Number দিতে হবে। একই Draw Number ব্যবহার করলে তিনটি Draw Number ঘরেই একই নম্বর লিখুন।</div>
   </div>
 
-  <button class="primary publish-btn" id="publishBtn" type="submit">
-   ✓ Publish Result
-  </button>
-  <button class="cancel-btn" id="cancelBtn" type="button">
-   Cancel / Change Country
-  </button>
+  <button class="primary publish-btn" id="publishBtn" type="submit">✓ Publish Result</button>
+  <button class="cancel-btn" id="cancelBtn" type="button">Cancel / Change Country</button>
  </form>
 
  <div id="message" class="message"></div>
@@ -312,9 +297,7 @@ button:disabled{opacity:.6;cursor:wait}
   <button class="filter-btn" data-filter="taiwan">🇹🇼 Taiwan</button>
   <button class="filter-btn" data-filter="laos">🇱🇦 Laos</button>
  </div>
- <div id="resultList">
-  <div class="empty">Loading results...</div>
- </div>
+ <div id="resultList"><div class="empty">Loading results...</div></div>
 </section>
 
 <footer class="footer">© 2026 GLO 365. All Rights Reserved.</footer>
@@ -402,11 +385,10 @@ function countryKey(item){
  ).toLowerCase().trim();
 
  if(raw.includes('thai'))return 'thai';
- if(raw.includes('malaysia')||raw.includes('toto'))return 'malaysia';
+ if(raw.includes('malaysia')||raw.includes('toto')||['2d','3d','4d'].includes(raw))return 'malaysia';
  if(raw.includes('singapore')||raw.includes('pools'))return 'singapore';
  if(raw.includes('taiwan'))return 'taiwan';
  if(raw.includes('laos'))return 'laos';
-
  return '';
 }
 
@@ -424,9 +406,14 @@ function showMessage(text,type='success'){
  box.style.display='block';
 }
 
+function setGenericRequired(required){
+ document.getElementById('drawDate').required=required;
+ document.getElementById('firstPrize').required=required;
+ document.getElementById('lastTwo').required=required;
+}
+
 function selectCountry(key){
  if(!countries[key])return;
-
  selectedCountry=key;
 
  document.querySelectorAll('.country-card').forEach(card=>{
@@ -437,25 +424,31 @@ function selectCountry(key){
  document.getElementById('selectedCountryName').textContent=countries[key].name;
  document.getElementById('selectedNote').classList.add('show');
 
- // Back 3 is only available for Thai Government Lotto.
- const back3Field=document.getElementById('thaiBack3Field');
+ const isMalaysia=key==='malaysia';
  const isThai=key==='thai';
 
- back3Field.style.display=isThai?'block':'none';
+ document.getElementById('genericFields').style.display=isMalaysia?'none':'block';
+ document.getElementById('malaysiaFields').style.display=isMalaysia?'block':'none';
+ document.getElementById('genericNotice').style.display=isMalaysia?'none':'block';
+ document.getElementById('malaysiaNotice').style.display=isMalaysia?'block':'none';
+
+ setGenericRequired(!isMalaysia);
+
+ document.getElementById('thaiBack3Field').style.display=isThai?'block':'none';
  document.getElementById('backThreeOne').required=isThai;
  document.getElementById('backThreeTwo').required=isThai;
+
+ document.getElementById('publishBtn').textContent=
+  isMalaysia?'✓ Publish Malaysia Results':'✓ Publish Result';
 
  const section=document.getElementById('publishSection');
  section.style.display='block';
  document.getElementById('message').style.display='none';
-
  section.scrollIntoView({behavior:'smooth',block:'start'});
 }
 
 document.querySelectorAll('.country-card').forEach(card=>{
- card.addEventListener('click',()=>{
-  selectCountry(card.dataset.country);
- });
+ card.addEventListener('click',()=>selectCountry(card.dataset.country));
 });
 
 document.getElementById('cancelBtn').addEventListener('click',()=>{
@@ -470,9 +463,14 @@ document.getElementById('cancelBtn').addEventListener('click',()=>{
  document.getElementById('resultForm').reset();
  document.getElementById('drawDate').value=getToday();
  document.getElementById('thaiBack3Field').style.display='none';
+ document.getElementById('malaysiaFields').style.display='none';
+ document.getElementById('genericFields').style.display='block';
+ document.getElementById('genericNotice').style.display='block';
+ document.getElementById('malaysiaNotice').style.display='none';
  document.getElementById('backThreeOne').required=false;
  document.getElementById('backThreeTwo').required=false;
-
+ setGenericRequired(true);
+ document.getElementById('publishBtn').textContent='✓ Publish Result';
  document.getElementById('publishSection').scrollIntoView({behavior:'smooth'});
 });
 
@@ -480,16 +478,21 @@ function render(){
  const list=document.getElementById('resultList');
  list.replaceChildren();
 
- document.getElementById('totalResults').textContent=results.length;
- document.getElementById('todayResults').textContent=
-  results.filter(x=>dateOnly(x.date||x.draw_date)===getToday()).length;
+ const sorted=[...results].sort((a,b)=>publishedTime(b)-publishedTime(a));
+ document.getElementById('totalResults').textContent=sorted.length;
 
- document.getElementById('latestDate').textContent=
-  results.length?(dateOnly(results[0].date||results[0].draw_date)||'—'):'—';
+ const todayItems=sorted.filter(x=>
+  dateOnly(x.date||x.draw_date||x.published_at)===getToday()
+ );
+ document.getElementById('todayResults').textContent=todayItems.length;
+
+ const latest=sorted[0];
+ document.getElementById('latestDate').textContent=latest
+  ?(dateOnly(latest.date||latest.draw_date||latest.published_at)||'—'):'—';
 
  const visible=activeFilter==='all'
-  ?results
-  :results.filter(x=>countryKey(x)===activeFilter);
+  ?sorted
+  :sorted.filter(x=>countryKey(x)===activeFilter);
 
  if(!visible.length){
   list.append(el('div','empty','এই ক্যাটাগরিতে কোনো ফলাফল পাওয়া যায়নি।'));
@@ -500,12 +503,39 @@ function render(){
   const card=el('div','result');
   const head=el('div','result-head');
   const headLeft=el('div','');
+  const key=countryKey(item);
+
+  if(key==='malaysia'){
+   const game=String(item.game||'').toUpperCase();
+   const draw=item.draw_number||item.drawNumber||'—';
+   const winning=item.winning_number||item.winningNumber||'—';
+   const published=item.published_at||item.publishedAt||'';
+
+   headLeft.append(
+    el('div','result-date','Draw Number: '+draw),
+    el('div','result-country','🇲🇾 Malaysia Toto')
+   );
+
+   head.append(headLeft,el('span','published','Published'));
+
+   const numbers=el('div','numbers');
+   const gameBox=el('div','number-box');
+   gameBox.append(el('small','','Game'),el('strong','',game||'—'));
+   const winBox=el('div','number-box');
+   winBox.append(el('small','','Winning Number'),el('strong','',String(winning)));
+   const dateBox=el('div','number-box');
+   dateBox.append(el('small','','Published Date'),el('strong','',dateOnly(published)||'—'));
+   numbers.append(gameBox,winBox,dateBox);
+
+   card.append(head,numbers);
+   list.append(card);
+   return;
+  }
 
   headLeft.append(
    el('div','result-date','Draw Date: '+(dateOnly(item.date||item.draw_date)||'—'))
   );
 
-  const key=countryKey(item);
   if(key){
    headLeft.append(el('div','result-country',countries[key].flag+' '+countries[key].name));
   }else{
@@ -515,7 +545,6 @@ function render(){
   head.append(headLeft,el('span','published','Published'));
 
   const numbers=el('div','numbers');
-
   const front=Array.isArray(item.frontThree)
    ?item.frontThree
    :(Array.isArray(item.front_three)?item.front_three:[]);
@@ -530,14 +559,10 @@ function render(){
    numbers.append(box);
   });
 
-  // Display two Back 3 numbers on Thai results only.
   if(key==='thai'){
    const back=Array.isArray(item.backThree)
     ?item.backThree
-    :Array.isArray(item.back_three)
-     ?item.back_three
-     :[];
-
+    :Array.isArray(item.back_three)?item.back_three:[];
    const backBox=el('div','number-box back3-box');
    backBox.append(
     el('small','','Back 3 (Two Numbers)'),
@@ -562,8 +587,24 @@ function render(){
 }
 
 async function loadResults(){
+ // Load the existing country results.
  const data=await api('/admin/results');
- results=Array.isArray(data.results)?data.results:[];
+ const generic=Array.isArray(data.results)?data.results:[];
+
+ // Load Malaysia results separately. Failure here must not hide other results.
+ let malaysia=[];
+ try{
+  const myData=await api('/admin/malaysia/results?limit=100');
+  malaysia=(Array.isArray(myData.results)?myData.results:[]).map(item=>({
+   ...item,
+   country:'malaysia',
+   publishedAt:item.published_at||item.publishedAt||''
+  }));
+ }catch(error){
+  console.warn('Malaysia results could not be loaded:',error.message);
+ }
+
+ results=[...generic,...malaysia].sort((a,b)=>publishedTime(b)-publishedTime(a));
  render();
 }
 
@@ -589,6 +630,58 @@ async function checkAdmin(){
  }
 }
 
+async function publishMalaysiaResults(){
+ const games=[
+  {game:'2D',draw:document.getElementById('my2dDraw').value.trim(),win:document.getElementById('my2dWin').value.trim(),length:2},
+  {game:'3D',draw:document.getElementById('my3dDraw').value.trim(),win:document.getElementById('my3dWin').value.trim(),length:3},
+  {game:'4D',draw:document.getElementById('my4dDraw').value.trim(),win:document.getElementById('my4dWin').value.trim(),length:4}
+ ];
+
+ const entered=games.filter(x=>x.win!=='');
+
+ if(!entered.length){
+  throw new Error('কমপক্ষে একটি গেমের Winning Number লিখুন।');
+ }
+
+ for(const item of entered){
+  if(!new RegExp('^[0-9]{'+item.length+'}$').test(item.win)){
+   throw new Error(item.game+' Winning Number অবশ্যই ঠিক '+item.length+' ডিজিট হতে হবে।');
+  }
+ }
+
+ const payload={
+  results:entered.map(item=>({
+   game:item.game,
+   draw_number:item.draw,
+   winning_number:item.win
+  }))
+ };
+
+ const data=await api('/admin/malaysia/results',{
+  method:'POST',
+  body:JSON.stringify(payload)
+ });
+
+ const saved=Array.isArray(data.results)?data.results:[];
+ const summary=saved.map(x=>{
+  const game=x.game||'';
+  const settlement=x.settlement||{};
+  return `${game}: WIN ${settlement.won||0}, LOSS ${settlement.lost||0}`;
+ }).join(' | ');
+
+ showMessage(
+  'Malaysia ফলাফল সফলভাবে Publish হয়েছে। '+(summary||'ফলাফল সংরক্ষিত হয়েছে।'),
+  'success'
+ );
+
+ // Reset only Malaysia input fields.
+ ['my2dDraw','my2dWin','my3dDraw','my3dWin','my4dDraw','my4dWin'].forEach(id=>{
+  document.getElementById(id).value='';
+ });
+
+ await loadResults();
+}
+
 document.getElementById('resultForm').addEventListener('submit',async function(event){
  event.preventDefault();
 
@@ -597,53 +690,42 @@ document.getElementById('resultForm').addEventListener('submit',async function(e
   return;
  }
 
- const date=document.getElementById('drawDate').value;
- const first=document.getElementById('firstPrize').value.trim();
- const last=document.getElementById('lastTwo').value.trim();
- const frontRaw=document.getElementById('frontThree').value.trim();
-
- if(!date){
-  showMessage('Draw Date নির্বাচন করুন।','error');
-  return;
- }
-
- if(!/^\d{1,6}$/.test(first)){
-  showMessage('First Prize-এ ১ থেকে ৬ ডিজিটের সংখ্যা লিখুন।','error');
-  return;
- }
-
- if(!/^\d{1,2}$/.test(last)){
-  showMessage('Last Two-তে ১ বা ২ ডিজিটের সংখ্যা লিখুন।','error');
-  return;
- }
-
- const fronts=frontRaw?frontRaw.split(',').map(x=>x.trim()):[];
-
- if(fronts.some(x=>!/^\d{3}$/.test(x))){
-  showMessage('Front Three-এর প্রতিটি নম্বর অবশ্যই ৩ ডিজিটের হতে হবে।','error');
-  return;
- }
-
- // Validate two Thai Back 3 numbers.
- let backThree=[];
-
- if(selectedCountry==='thai'){
-  const backOne=document.getElementById('backThreeOne').value.trim();
-  const backTwo=document.getElementById('backThreeTwo').value.trim();
-
-  if(!/^\d{3}$/.test(backOne)||!/^\d{3}$/.test(backTwo)){
-   showMessage('Thai Back 3-এর দুটি ঘরেই ঠিক ৩ ডিজিটের নম্বর লিখুন।','error');
-   return;
-  }
-
-  backThree=[backOne,backTwo];
- }
-
  const btn=document.getElementById('publishBtn');
  btn.disabled=true;
  btn.textContent='Publishing...';
 
  try{
+  // Malaysia has its own results API.
+  if(selectedCountry==='malaysia'){
+   await publishMalaysiaResults();
+   return;
+  }
+
+  const date=document.getElementById('drawDate').value;
+  const first=document.getElementById('firstPrize').value.trim();
+  const last=document.getElementById('lastTwo').value.trim();
+  const frontRaw=document.getElementById('frontThree').value.trim();
+
+  if(!date)throw new Error('Draw Date নির্বাচন করুন।');
+  if(!/^\d{1,6}$/.test(first))throw new Error('First Prize-এ ১ থেকে ৬ ডিজিটের সংখ্যা লিখুন।');
+  if(!/^\d{1,2}$/.test(last))throw new Error('Last Two-তে ১ বা ২ ডিজিটের সংখ্যা লিখুন।');
+
+  const fronts=frontRaw?frontRaw.split(',').map(x=>x.trim()):[];
+  if(fronts.some(x=>!/^\d{3}$/.test(x))){
+   throw new Error('Front Three-এর প্রতিটি নম্বর অবশ্যই ৩ ডিজিটের হতে হবে।');
+  }
+
+  let backThree=[];
+  if(selectedCountry==='thai'){
+   const backOne=document.getElementById('backThreeOne').value.trim();
+   const backTwo=document.getElementById('backThreeTwo').value.trim();
+
+   if(!/^\d{3}$/.test(backOne)||!/^\d{3}$/.test(backTwo)){
+    throw new Error('Thai Back 3-এর দুটি ঘরেই ঠিক ৩ ডিজিটের নম্বর লিখুন।');
+   }
+   backThree=[backOne,backTwo];
+  }
+
   const payload={
    country:selectedCountry,
    countryName:countries[selectedCountry].name,
@@ -653,9 +735,7 @@ document.getElementById('resultForm').addEventListener('submit',async function(e
    frontThree:[...new Set(fronts)]
   };
 
-  if(selectedCountry==='thai'){
-   payload.backThree=backThree;
-  }
+  if(selectedCountry==='thai')payload.backThree=backThree;
 
   const data=await api('/admin/results',{
    method:'POST',
@@ -663,7 +743,6 @@ document.getElementById('resultForm').addEventListener('submit',async function(e
   });
 
   const s=data.settlement||{};
-
   showMessage(
    `ফলাফল সফলভাবে Publish হয়েছে। ${countries[selectedCountry].name} | মোট যাচাই: ${s.checked||0} টি Bet | WIN: ${s.won||0} টি | LOSS: ${s.lost||0} টি।`,
    'success'
@@ -671,8 +750,6 @@ document.getElementById('resultForm').addEventListener('submit',async function(e
 
   this.reset();
   document.getElementById('drawDate').value=getToday();
-
-  // Keep the selected country and its correct fields visible.
   document.getElementById('thaiBack3Field').style.display=
    selectedCountry==='thai'?'block':'none';
 
@@ -682,34 +759,30 @@ document.getElementById('resultForm').addEventListener('submit',async function(e
   showMessage(error.message||'ফলাফল Publish করা যায়নি।','error');
  }finally{
   btn.disabled=false;
-  btn.textContent='✓ Publish Result';
+  btn.textContent=selectedCountry==='malaysia'
+   ?'✓ Publish Malaysia Results'
+   :'✓ Publish Result';
  }
 });
 
 document.querySelectorAll('.filter-btn').forEach(btn=>{
  btn.addEventListener('click',()=>{
   activeFilter=btn.dataset.filter;
-
   document.querySelectorAll('.filter-btn').forEach(b=>{
    b.classList.toggle('active',b===btn);
   });
-
   render();
  });
 });
 
 document.getElementById('logoutBtn').addEventListener('click',async()=>{
- try{
-  await api('/auth/logout',{method:'POST'});
- }catch(e){}
-
+ try{await api('/auth/logout',{method:'POST'});}catch(e){}
  sessionStorage.removeItem(TOKEN_KEY);
  location.href='login.html';
 });
 
 (async()=>{
  document.getElementById('drawDate').value=getToday();
-
  if(await checkAdmin()){
   try{
    await loadResults();
