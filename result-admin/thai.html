@@ -103,7 +103,8 @@ main{width:min(100%,900px);margin:auto;padding:18px 13px 50px}.intro{padding:17p
     const raw=document.getElementById(id).value.trim();
     if(!raw){if(required)throw new Error('Please enter the 1st Prize number.');return [];}
     const values=raw.split(',').map(v=>v.trim()).filter(Boolean);
-    const pattern=new RegExp(`^\\\\d{${digits}}$`);
+    // Use [0-9] rather than an over-escaped \\d pattern.
+    const pattern=new RegExp('^[0-9]{'+digits+'}$');
     if(values.some(v=>!pattern.test(v)))throw new Error(`Every number in ${id} must contain exactly ${digits} digits.`);
     return values;
   }
