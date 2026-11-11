@@ -155,6 +155,11 @@ input:focus{
 
 input::placeholder{color:#8b98a9}
 
+input[readonly]{
+ color:#147fc9;
+ font-weight:bold;
+}
+
 .username-status{
  min-height:18px;
  padding:5px 12px 0;
@@ -269,17 +274,13 @@ input::placeholder{color:#8b98a9}
 <body>
 
 <div class="page">
-
  <div class="login-circle">
-
   <div class="form-content">
 
    <div class="logo">GLO <span>365</span></div>
-
    <div class="subtitle">Welcome Thailand Lottery</div>
 
    <div class="tabs">
-
     <button type="button" class="tab active" id="loginTab">
      SIGN IN
     </button>
@@ -287,108 +288,73 @@ input::placeholder{color:#8b98a9}
     <button type="button" class="tab" id="registerTab">
      SIGN UP
     </button>
-
    </div>
 
    <div class="form-panel active" id="loginPanel">
-
     <h2>SIGN IN</h2>
 
     <form id="loginForm">
-
      <div class="form-group">
-      <input
-       id="loginUsername"
-       type="text"
+      <input id="loginUsername" type="text"
        placeholder="Username or Email"
-       autocomplete="username"
-       required
-      >
+       autocomplete="username" required>
      </div>
 
      <div class="form-group">
-      <input
-       id="loginPassword"
-       type="password"
+      <input id="loginPassword" type="password"
        placeholder="Password"
-       autocomplete="current-password"
-       required
-      >
+       autocomplete="current-password" required>
      </div>
 
      <button class="action-btn" id="loginButton" type="submit">
       Login
      </button>
-
     </form>
-
    </div>
 
    <div class="form-panel" id="registerPanel">
-
     <h2>CREATE ACCOUNT</h2>
 
     <form id="registerForm">
 
      <div class="form-group">
-      <input
-       id="registerUsername"
-       type="text"
+      <input id="registerUsername" type="text"
        placeholder="Choose Username"
-       minlength="3"
-       maxlength="30"
+       minlength="3" maxlength="30"
        autocomplete="username"
-       autocapitalize="none"
-       required
-      >
+       autocapitalize="none" required>
 
-      <div id="usernameStatus" class="username-status" aria-live="polite"></div>
+      <div id="usernameStatus"
+       class="username-status" aria-live="polite"></div>
      </div>
 
      <div class="form-group">
-      <input
-       id="registerEmail"
-       type="email"
+      <input id="registerEmail" type="email"
        placeholder="Email Address"
        maxlength="150"
-       autocomplete="email"
-       required
-      >
+       autocomplete="email" required>
      </div>
 
      <div class="form-group">
-      <input
-       id="registerPassword"
-       type="password"
+      <input id="registerPassword" type="password"
        placeholder="Create Password (6-16 characters)"
-       minlength="6"
-       maxlength="16"
-       autocomplete="new-password"
-       required
-      >
+       minlength="6" maxlength="16"
+       autocomplete="new-password" required>
      </div>
 
      <div class="form-group">
-      <input
-       id="confirmPassword"
-       type="password"
+      <input id="confirmPassword" type="password"
        placeholder="Confirm Password"
-       minlength="6"
-       maxlength="16"
-       autocomplete="new-password"
-       required
-      >
+       minlength="6" maxlength="16"
+       autocomplete="new-password" required>
      </div>
 
      <div class="form-group">
-      <input
-       id="referralCode"
-       type="text"
+      <input id="referralCode" type="text"
        placeholder="Referral Code (Optional)"
        maxlength="30"
        autocomplete="off"
-       autocapitalize="characters"
-      >
+       autocapitalize="characters">
      </div>
 
      <button class="action-btn" id="registerButton" type="submit">
@@ -396,17 +362,13 @@ input::placeholder{color:#8b98a9}
      </button>
 
     </form>
-
    </div>
 
   </div>
-
  </div>
 
  <div class="loader" id="loader"></div>
-
  <div class="message" id="message" role="status" aria-live="polite"></div>
-
 </div>
 
 <script>
@@ -429,6 +391,49 @@ let loginSubmitting=false;
 let registerSubmitting=false;
 
 
+/* REFERRAL LINK HANDLING */
+
+function getReferralFromURL(){
+
+ const params=new URLSearchParams(location.search);
+
+ const code=
+  params.get("ref")||
+  params.get("referral_code")||
+  "";
+
+ return code.trim().toUpperCase();
+}
+
+const referralFromURL=getReferralFromURL();
+
+function applyReferralCode(){
+
+ const input=$("referralCode");
+
+ if(!input)return;
+
+ if(referralFromURL){
+
+  input.value=referralFromURL;
+
+  /* Preserve the affiliate's referral code */
+  input.readOnly=true;
+
+ }else{
+
+  input.readOnly=false;
+
+  if(!input.value){
+   input.placeholder="Referral Code (Optional)";
+  }
+ }
+}
+
+/* Apply immediately and whenever the signup tab opens */
+applyReferralCode();
+
+
 /* ENGLISH ONLY MESSAGE HANDLING */
 
 function isEnglishText(value){
@@ -437,9 +442,9 @@ function isEnglishText(value){
 }
 
 function englishError(error,fallback){
- const message=error && error.message;
+ const message=error&&error.message;
 
- if(isEnglishText(message) && message.trim()){
+ if(isEnglishText(message)&&message.trim()){
   return message;
  }
 
@@ -481,14 +486,22 @@ function showTab(tab){
 
  $("loginPanel").classList.toggle("active",login);
  $("registerPanel").classList.toggle("active",!login);
+
+ if(!login){
+  applyReferralCode();
+ }
 }
 
 $("loginTab").addEventListener("click",()=>{
- if(!loginSubmitting&&!registerSubmitting)showTab("login");
+ if(!loginSubmitting&&!registerSubmitting){
+  showTab("login");
+ }
 });
 
 $("registerTab").addEventListener("click",()=>{
- if(!loginSubmitting&&!registerSubmitting)showTab("register");
+ if(!loginSubmitting&&!registerSubmitting){
+  showTab("register");
+ }
 });
 
 
@@ -497,7 +510,6 @@ $("registerTab").addEventListener("click",()=>{
 async function requestWithTimeout(url,options={},timeout=LOGIN_TIMEOUT){
 
  const controller=new AbortController();
-
  let timedOut=false;
 
  const timer=setTimeout(()=>{
@@ -536,15 +548,11 @@ async function requestWithTimeout(url,options={},timeout=LOGIN_TIMEOUT){
  }catch(error){
 
   if(timedOut){
-   throw new Error(
-    "Connection timed out. Please try again."
-   );
+   throw new Error("Connection timed out. Please try again.");
   }
 
   if(error.name==="AbortError"){
-   throw new Error(
-    "The connection was interrupted. Please try again."
-   );
+   throw new Error("The connection was interrupted. Please try again.");
   }
 
   if(error instanceof TypeError){
@@ -595,9 +603,7 @@ async function getUsernameAvailability(username){
   {
    method:"GET",
    credentials:"include",
-   headers:{
-    "Accept":"application/json"
-   },
+   headers:{"Accept":"application/json"},
    cache:"no-store"
   },
   USERNAME_TIMEOUT
@@ -729,7 +735,6 @@ $("registerUsername").addEventListener("input",function(){
  const username=this.value.trim().toLowerCase();
 
  usernameCheckVersion++;
-
  usernameAvailable=null;
  usernameCheckReady=false;
 
@@ -748,10 +753,7 @@ $("registerUsername").addEventListener("input",function(){
   return;
  }
 
- setUsernameStatus(
-  "Checking Username...",
-  "status-checking"
- );
+ setUsernameStatus("Checking Username...","status-checking");
 
  const version=usernameCheckVersion;
 
@@ -789,10 +791,8 @@ $("loginForm").addEventListener("submit",async function(event){
  }
 
  loginSubmitting=true;
-
  button.disabled=true;
  button.textContent="PLEASE WAIT...";
-
  setLoading(true);
 
  try{
@@ -808,14 +808,7 @@ $("loginForm").addEventListener("submit",async function(event){
 
   saveSession(result.token,result.user);
 
-  /*
-   LOGIN SUCCESS:
-   No success message.
-   Redirect immediately.
-  */
-
   button.textContent="OPENING ACCOUNT...";
-
   redirectByRole(result.user);
 
  }catch(error){
@@ -831,7 +824,6 @@ $("loginForm").addEventListener("submit",async function(event){
   loginSubmitting=false;
   button.disabled=false;
   button.textContent="Login";
-
   setLoading(false);
  }
 });
@@ -858,9 +850,11 @@ $("registerForm").addEventListener("submit",async function(event){
  const password=$("registerPassword").value;
  const confirm=$("confirmPassword").value;
 
+ /* Always read the referral code from the URL first */
+ applyReferralCode();
+
  const referralCode=$("referralCode")
   .value.trim().toUpperCase();
-
 
  if(!/^[a-z0-9_]{3,30}$/.test(username)){
 
@@ -874,11 +868,7 @@ $("registerForm").addEventListener("submit",async function(event){
 
  if(!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)){
 
-  showMessage(
-   "Please enter a valid email address.",
-   "error"
-  );
-
+  showMessage("Please enter a valid email address.","error");
   return;
  }
 
@@ -894,11 +884,7 @@ $("registerForm").addEventListener("submit",async function(event){
 
  if(password!==confirm){
 
-  showMessage(
-   "Passwords do not match.",
-   "error"
-  );
-
+  showMessage("Passwords do not match.","error");
   return;
  }
 
@@ -907,20 +893,13 @@ $("registerForm").addEventListener("submit",async function(event){
   !/^[A-Z0-9_-]{2,30}$/.test(referralCode)
  ){
 
-  showMessage(
-   "Please enter a valid referral code.",
-   "error"
-  );
-
+  showMessage("Please enter a valid referral code.","error");
   return;
  }
 
-
  registerSubmitting=true;
-
  button.disabled=true;
  button.textContent="CHECKING...";
-
  setLoading(true);
 
  try{
@@ -930,10 +909,7 @@ $("registerForm").addEventListener("submit",async function(event){
 
   const check=await getUsernameAvailability(username);
 
-  if(
-   check.valid===false||
-   check.available===false
-  ){
+  if(check.valid===false||check.available===false){
 
    usernameAvailable=false;
    usernameCheckReady=true;
@@ -964,6 +940,7 @@ $("registerForm").addEventListener("submit",async function(event){
    password
   };
 
+  /* Send affiliate referral code to backend */
   if(referralCode){
    payload.referral_code=referralCode;
   }
@@ -984,11 +961,6 @@ $("registerForm").addEventListener("submit",async function(event){
    usernameCheckReady=false;
 
    button.textContent="ACCOUNT CREATED...";
-
-   /*
-   No success message.
-   Redirect directly after registration.
-   */
 
    redirectByRole(result.user);
 
@@ -1019,10 +991,8 @@ $("registerForm").addEventListener("submit",async function(event){
  }finally{
 
   registerSubmitting=false;
-
   button.disabled=false;
   button.textContent="Create Account";
-
   setLoading(false);
  }
 });
