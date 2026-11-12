@@ -5,137 +5,713 @@
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
 <meta name="theme-color" content="#a90012">
 <title>Thai Government Lottery Results - GLO 365</title>
+
 <style>
 *{box-sizing:border-box;margin:0;padding:0}
-:root{--red:#b90018;--dark:#79000e;--gold:#ffd45c;--border:#ead5d5;--text:#263746;--muted:#71869a;--bg:#fff5f5;--navy:#102d49}
-body{font-family:Arial,sans-serif;background:var(--bg);color:var(--text)}
-.app{max-width:520px;min-height:100vh;margin:auto;background:#fff;padding-bottom:25px;overflow:hidden}
-header{padding:15px;background:linear-gradient(120deg,#79000e,#b90018,#ed2638);color:#fff}
-.header-row{display:flex;align-items:center;gap:12px}
-.back{width:38px;height:38px;border:0;border-radius:50%;background:#ffffff25;color:#fff;font-size:23px;cursor:pointer}
-.header-title{flex:1}.header-title h1{font-size:18px;font-weight:900}.header-title p{font-size:11px;color:#ffe5e5;margin-top:5px}.flag{font-size:27px}
-.hero{margin:13px;padding:16px 12px;text-align:center;border-radius:12px;background:linear-gradient(135deg,#fff0d5,#fff9eb);border:1px solid #f0d6a6}
-.hero h2{font-size:17px;color:#8d0012;margin-bottom:5px}.hero p{font-size:11px;color:#92744b;line-height:1.5}
-.date-area{text-align:center;padding:8px 12px 14px}.date-title{font-size:18px;font-weight:900;color:var(--red);margin-bottom:11px}
-.previous-btn{border:1px solid #edcaca;background:#fff2f2;color:var(--red);font-size:12px;font-weight:bold;padding:9px 15px;border-radius:25px;cursor:pointer}
-.previous-btn span{display:inline-grid;place-items:center;width:20px;height:20px;margin-left:5px;background:var(--red);color:#fff;border-radius:50%}
+
+:root{
+ --red:#b90018;
+ --dark:#79000e;
+ --gold:#ffd45c;
+ --border:#ead5d5;
+ --text:#263746;
+ --muted:#71869a;
+ --bg:#fff5f5;
+ --navy:#102d49
+}
+
+body{
+ font-family:Arial,sans-serif;
+ background:var(--bg);
+ color:var(--text)
+}
+
+.app{
+ max-width:520px;
+ min-height:100vh;
+ margin:auto;
+ background:#fff;
+ padding-bottom:25px;
+ overflow:hidden
+}
+
+header{
+ padding:15px;
+ background:linear-gradient(120deg,#79000e,#b90018,#ed2638);
+ color:#fff
+}
+
+.header-row{
+ display:flex;
+ align-items:center;
+ gap:12px
+}
+
+.back{
+ width:38px;
+ height:38px;
+ border:0;
+ border-radius:50%;
+ background:#ffffff25;
+ color:#fff;
+ font-size:23px;
+ cursor:pointer
+}
+
+.header-title{flex:1}
+.header-title h1{font-size:18px;font-weight:900}
+.header-title p{font-size:11px;color:#ffe5e5;margin-top:5px}
+.flag{font-size:27px}
+
+.hero{
+ margin:13px;
+ padding:16px 12px;
+ text-align:center;
+ border-radius:12px;
+ background:linear-gradient(135deg,#fff0d5,#fff9eb);
+ border:1px solid #f0d6a6
+}
+
+.hero h2{
+ font-size:17px;
+ color:#8d0012;
+ margin-bottom:5px
+}
+
+.hero p{
+ font-size:11px;
+ color:#92744b;
+ line-height:1.5
+}
+
+.date-area{
+ text-align:center;
+ padding:8px 12px 14px
+}
+
+.date-title{
+ font-size:18px;
+ font-weight:900;
+ color:var(--red);
+ margin-bottom:11px
+}
+
+.previous-btn{
+ border:1px solid #edcaca;
+ background:#fff2f2;
+ color:var(--red);
+ font-size:12px;
+ font-weight:bold;
+ padding:9px 15px;
+ border-radius:25px;
+ cursor:pointer
+}
+
+.previous-btn span{
+ display:inline-grid;
+ place-items:center;
+ width:20px;
+ height:20px;
+ margin-left:5px;
+ background:var(--red);
+ color:#fff;
+ border-radius:50%
+}
+
 .result-content{padding:0 13px 15px}
-.result-section{text-align:center;margin-top:12px;background:#fff;border:1px solid var(--border);border-radius:11px;padding:14px 9px;box-shadow:0 2px 8px #7b001008}
-.result-label{color:var(--red);font-size:14px;font-weight:900;margin-bottom:12px}
-.first-result{font-size:54px;font-weight:900;letter-spacing:3px;color:var(--navy);padding:3px 0;overflow-wrap:anywhere}
-.two-result{font-size:45px;font-weight:900;color:var(--red);padding:3px 0}
-.number-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:8px;padding:0 5px 3px}
+
+.result-section{
+ text-align:center;
+ margin-top:12px;
+ background:#fff;
+ border:1px solid var(--border);
+ border-radius:11px;
+ padding:14px 9px;
+ box-shadow:0 2px 8px #7b001008
+}
+
+.result-label{
+ color:var(--red);
+ font-size:14px;
+ font-weight:900;
+ margin-bottom:12px
+}
+
+.first-result{
+ font-size:54px;
+ font-weight:900;
+ letter-spacing:3px;
+ color:var(--navy);
+ padding:3px 0;
+ overflow-wrap:anywhere
+}
+
+.two-result{
+ font-size:45px;
+ font-weight:900;
+ color:var(--red);
+ padding:3px 0
+}
+
+.number-grid{
+ display:grid;
+ grid-template-columns:repeat(2,minmax(0,1fr));
+ gap:8px;
+ padding:0 5px 3px
+}
+
 .number-grid.one{grid-template-columns:1fr}
-.number-chip{font-size:25px;font-weight:900;color:var(--red);background:#fff1f1;border:1px solid #f0d0d0;border-radius:9px;padding:10px 4px;overflow-wrap:anywhere}
-.number-chip small{display:block;font-size:9px;font-weight:700;color:#987b7b;margin-bottom:5px;letter-spacing:.4px}
-.result-info{text-align:center;color:var(--muted);font-size:11px;padding:15px 10px 8px;white-space:pre-line;overflow-wrap:anywhere}
-.loading{text-align:center;padding:25px 10px;color:var(--muted);font-size:13px}.error{color:#b52c2c}
-.home-area{padding:10px 13px 17px}.home-button{width:100%;height:48px;border:0;border-radius:10px;background:linear-gradient(110deg,#0876d5,#1687e8,#0755a8);color:#fff;font-size:13px;font-weight:900;cursor:pointer}
-.ad-banner{margin:10px 13px 15px;min-height:75px;border:1px solid var(--border);border-radius:10px;background:#fffafa;display:flex;align-items:center;justify-content:center;padding:10px}
-.ad-label{font-size:9px;color:#8298aa;letter-spacing:1px;font-weight:bold;text-align:center}.ad-frame{margin-top:7px;min-height:50px;display:flex;justify-content:center;align-items:center}
-.modal{display:none;position:fixed;inset:0;background:#071c2dcc;z-index:30;align-items:center;justify-content:center;padding:18px}.modal.show{display:flex}
-.modal-box{background:#fff;width:100%;max-width:450px;max-height:85vh;border-radius:13px;overflow:hidden;display:flex;flex-direction:column}
-.modal-header{background:var(--red);color:#fff;padding:15px;display:flex;align-items:center;justify-content:space-between;font-size:16px;font-weight:bold}
-.close-btn{border:0;background:none;color:#fff;font-size:28px;cursor:pointer}.date-list{overflow-y:auto}
-.date-item{width:100%;padding:15px;display:flex;justify-content:space-between;align-items:center;border:0;border-bottom:1px solid #edf3f8;background:#fff;text-align:left;font-size:12px;color:var(--text);cursor:pointer}
-.date-item.selected{color:var(--red);font-weight:bold;background:#fff4f4}.radio{width:20px;height:20px;border:2px solid var(--red);border-radius:50%;display:grid;place-items:center;flex-shrink:0}
-.date-item.selected .radio:after{content:"";width:9px;height:9px;border-radius:50%;background:var(--red)}
-.empty{text-align:center;padding:25px 10px;color:var(--muted);font-size:12px}footer{text-align:center;color:#a0afbb;font-size:10px;padding:12px}
-@media(max-width:380px){.first-result{font-size:45px}.number-chip{font-size:21px}.date-title{font-size:16px}}
+
+.number-chip{
+ font-size:25px;
+ font-weight:900;
+ color:var(--red);
+ background:#fff1f1;
+ border:1px solid #f0d0d0;
+ border-radius:9px;
+ padding:10px 4px;
+ overflow-wrap:anywhere
+}
+
+.number-chip small{
+ display:block;
+ font-size:9px;
+ font-weight:700;
+ color:#987b7b;
+ margin-bottom:5px;
+ letter-spacing:.4px
+}
+
+.result-info{
+ text-align:center;
+ color:var(--muted);
+ font-size:11px;
+ padding:15px 10px 8px;
+ white-space:pre-line;
+ overflow-wrap:anywhere
+}
+
+.loading{
+ text-align:center;
+ padding:25px 10px;
+ color:var(--muted);
+ font-size:13px
+}
+
+.error{color:#b52c2c}
+
+/* See Results Summary Card */
+.summary-area{
+ padding:5px 13px 0
+}
+
+.summary-card{
+ width:100%;
+ min-height:39px;
+ padding:9px 14px;
+ display:flex;
+ align-items:center;
+ justify-content:center;
+ gap:9px;
+ text-decoration:none;
+ border-radius:9px;
+ color:#8d0012;
+ background:linear-gradient(110deg,#fff0d5,#fff9eb);
+ border:1px solid #e8c77f;
+ box-shadow:0 2px 7px #79000e12;
+ font-size:12px;
+ font-weight:900;
+ letter-spacing:.3px;
+ transition:all .2s ease
+}
+
+.summary-card:active{
+ transform:scale(.98);
+ background:#ffe8bd
+}
+
+.summary-arrow{
+ font-size:15px;
+ color:#b90018;
+ font-weight:900
+}
+
+.home-area{
+ padding:10px 13px 17px
+}
+
+.home-button{
+ width:100%;
+ height:48px;
+ border:0;
+ border-radius:10px;
+ background:linear-gradient(110deg,#0876d5,#1687e8,#0755a8);
+ color:#fff;
+ font-size:13px;
+ font-weight:900;
+ cursor:pointer
+}
+
+.ad-banner{
+ margin:10px 13px 15px;
+ min-height:75px;
+ border:1px solid var(--border);
+ border-radius:10px;
+ background:#fffafa;
+ display:flex;
+ align-items:center;
+ justify-content:center;
+ padding:10px
+}
+
+.ad-label{
+ font-size:9px;
+ color:#8298aa;
+ letter-spacing:1px;
+ font-weight:bold;
+ text-align:center
+}
+
+.ad-frame{
+ margin-top:7px;
+ min-height:50px;
+ display:flex;
+ justify-content:center;
+ align-items:center
+}
+
+.modal{
+ display:none;
+ position:fixed;
+ inset:0;
+ background:#071c2dcc;
+ z-index:30;
+ align-items:center;
+ justify-content:center;
+ padding:18px
+}
+
+.modal.show{display:flex}
+
+.modal-box{
+ background:#fff;
+ width:100%;
+ max-width:450px;
+ max-height:85vh;
+ border-radius:13px;
+ overflow:hidden;
+ display:flex;
+ flex-direction:column
+}
+
+.modal-header{
+ background:var(--red);
+ color:#fff;
+ padding:15px;
+ display:flex;
+ align-items:center;
+ justify-content:space-between;
+ font-size:16px;
+ font-weight:bold
+}
+
+.close-btn{
+ border:0;
+ background:none;
+ color:#fff;
+ font-size:28px;
+ cursor:pointer
+}
+
+.date-list{overflow-y:auto}
+
+.date-item{
+ width:100%;
+ padding:15px;
+ display:flex;
+ justify-content:space-between;
+ align-items:center;
+ border:0;
+ border-bottom:1px solid #edf3f8;
+ background:#fff;
+ text-align:left;
+ font-size:12px;
+ color:var(--text);
+ cursor:pointer
+}
+
+.date-item.selected{
+ color:var(--red);
+ font-weight:bold;
+ background:#fff4f4
+}
+
+.radio{
+ width:20px;
+ height:20px;
+ border:2px solid var(--red);
+ border-radius:50%;
+ display:grid;
+ place-items:center;
+ flex-shrink:0
+}
+
+.date-item.selected .radio:after{
+ content:"";
+ width:9px;
+ height:9px;
+ border-radius:50%;
+ background:var(--red)
+}
+
+.empty{
+ text-align:center;
+ padding:25px 10px;
+ color:var(--muted);
+ font-size:12px
+}
+
+footer{
+ text-align:center;
+ color:#a0afbb;
+ font-size:10px;
+ padding:12px
+}
+
+@media(max-width:380px){
+ .first-result{font-size:45px}
+ .number-chip{font-size:21px}
+ .date-title{font-size:16px}
+}
 </style>
 </head>
+
 <body>
+
 <div class="app">
-<header><div class="header-row">
-<button class="back" id="backButton" aria-label="Go back">‹</button>
-<div class="header-title"><h1>THAI GOVERNMENT LOTTERY</h1><p>Official Draw Results · GLO 365</p></div><div class="flag">🇹🇭</div>
-</div></header>
-<section class="hero"><h2>THAI GOV. LOTTO</h2><p>Thailand Government Lottery Results</p></section>
-<section class="date-area"><div class="date-title" id="drawDate">Draw Date: Loading...</div><button class="previous-btn" id="previousButton">Previous Results <span>⌄</span></button></section>
-<section class="result-content" id="resultContent">
-<div class="loading">Loading results from server...</div>
+
+<header>
+ <div class="header-row">
+  <button class="back" id="backButton" aria-label="Go back">‹</button>
+
+  <div class="header-title">
+   <h1>THAI GOVERNMENT LOTTERY</h1>
+   <p>Official Draw Results · GLO 365</p>
+  </div>
+
+  <div class="flag">🇹🇭</div>
+ </div>
+</header>
+
+<section class="hero">
+ <h2>THAI GOV. LOTTO</h2>
+ <p>Thailand Government Lottery Results</p>
 </section>
-<div class="home-area"><button class="home-button" id="homeButton">← GO TO HOME</button></div>
-<section class="ad-banner"><div><div class="ad-label">ADVERTISEMENT</div><div class="ad-frame">
-<script>var atOptions={'key':'ab837cf0ea9c26ae43b7bc4e05a0b5de','format':'iframe','height':50,'width':320,'params':{}};</script>
-<script src="https://bicea.org/22/ab837cf0ea9c26ae43b7bc4e05a0b5de"></script>
-</div></div></section>
-<div class="modal" id="historyModal"><div class="modal-box">
-<div class="modal-header"><span>Thai Previous Results</span><button class="close-btn" id="closeHistory">×</button></div><div class="date-list" id="dateList"></div>
-</div></div>
-<footer>GLO 365 · Thai Government Lottery</footer>
+
+<section class="date-area">
+ <div class="date-title" id="drawDate">Draw Date: Loading...</div>
+
+ <button class="previous-btn" id="previousButton">
+  Previous Results <span>⌄</span>
+ </button>
+</section>
+
+<section class="result-content" id="resultContent">
+ <div class="loading">Loading results from server...</div>
+</section>
+
+<!-- See Results Summary Card -->
+<div class="summary-area">
+ <a
+  class="summary-card"
+  href="https://www.glo.or.th/home-page"
+  target="_blank"
+  rel="noopener noreferrer"
+ >
+  <span>See Results Summary</span>
+  <span class="summary-arrow">↗</span>
+ </a>
 </div>
+
+<!-- Home Button -->
+<div class="home-area">
+ <button class="home-button" id="homeButton">
+  ← GO TO HOME
+ </button>
+</div>
+
+<section class="ad-banner">
+ <div>
+  <div class="ad-label">ADVERTISEMENT</div>
+
+  <div class="ad-frame">
+   <script>
+    var atOptions={
+     'key':'ab837cf0ea9c26ae43b7bc4e05a0b5de',
+     'format':'iframe',
+     'height':50,
+     'width':320,
+     'params':{}
+    };
+   </script>
+
+   <script src="https://bicea.org/22/ab837cf0ea9c26ae43b7bc4e05a0b5de"></script>
+  </div>
+ </div>
+</section>
+
+<div class="modal" id="historyModal">
+ <div class="modal-box">
+
+  <div class="modal-header">
+   <span>Thai Previous Results</span>
+   <button class="close-btn" id="closeHistory">×</button>
+  </div>
+
+  <div class="date-list" id="dateList"></div>
+
+ </div>
+</div>
+
+<footer>GLO 365 · Thai Government Lottery</footer>
+
+</div>
+
 <script>
 "use strict";
+
 const API_BASE_URL="https://glo365.onrender.com/api";
 const TOKEN_KEY="glo365_token";
+
 let allResults=[],selectedResult=null,loading=false;
+
 const $=id=>document.getElementById(id);
-function getToken(){try{return sessionStorage.getItem(TOKEN_KEY)||"";}catch(e){return "";}}
+
+function getToken(){
+ try{
+  return sessionStorage.getItem(TOKEN_KEY)||"";
+ }catch(e){
+  return "";
+ }
+}
+
 async function apiRequest(path){
- const token=getToken(),headers={"Accept":"application/json"};if(token)headers.Authorization="Bearer "+token;
- const response=await fetch(API_BASE_URL+path,{method:"GET",headers,credentials:"include",cache:"no-store"});
- let data={};try{data=await response.json();}catch(e){throw new Error("Server returned an invalid response.");}
- if(!response.ok)throw new Error(data.message||data.error||"Request failed ("+response.status+")");
+ const token=getToken();
+ const headers={"Accept":"application/json"};
+
+ if(token)headers.Authorization="Bearer "+token;
+
+ const response=await fetch(API_BASE_URL+path,{
+  method:"GET",
+  headers,
+  credentials:"include",
+  cache:"no-store"
+ });
+
+ let data={};
+
+ try{
+  data=await response.json();
+ }catch(e){
+  throw new Error("Server returned an invalid response.");
+ }
+
+ if(!response.ok){
+  throw new Error(data.message||data.error||"Request failed ("+response.status+")");
+ }
+
  return data;
 }
+
 function detectThai(row){
- const value=[row.game,row.game_name,row.gameName,row.lottery,row.lottery_name,row.lotteryName,row.country,row.category,row.result_type,row.resultType,row.type,row.provider]
- .filter(v=>v!==undefined&&v!==null).join(" ").toLowerCase().replace(/[_-]+/g," ");
- return !value.trim()||value.includes("thai")||value.includes("thailand")||value.includes("gov lotto")||value.includes("government lottery");
+ const value=[
+  row.game,
+  row.game_name,
+  row.gameName,
+  row.lottery,
+  row.lottery_name,
+  row.lotteryName,
+  row.country,
+  row.category,
+  row.result_type,
+  row.resultType,
+  row.type,
+  row.provider
+ ]
+ .filter(v=>v!==undefined&&v!==null)
+ .join(" ")
+ .toLowerCase()
+ .replace(/[_-]+/g," ");
+
+ return !value.trim()||
+  value.includes("thai")||
+  value.includes("thailand")||
+  value.includes("gov lotto")||
+  value.includes("government lottery");
 }
+
 function parseArray(value){
- if(Array.isArray(value))return value.map(v=>String(v).trim()).filter(Boolean);
- if(value===undefined||value===null||value==="")return [];
+ if(Array.isArray(value)){
+  return value.map(v=>String(v).trim()).filter(Boolean);
+ }
+
+ if(value===undefined||value===null||value===""){
+  return [];
+ }
+
  if(typeof value==="string"){
   const s=value.trim();
-  if(s.startsWith("[")){try{const parsed=JSON.parse(s);if(Array.isArray(parsed))return parsed.map(v=>String(v).trim()).filter(Boolean);}catch(e){}}
+
+  if(s.startsWith("[")){
+   try{
+    const parsed=JSON.parse(s);
+    if(Array.isArray(parsed)){
+     return parsed.map(v=>String(v).trim()).filter(Boolean);
+    }
+   }catch(e){}
+  }
+
   return s.split(/[,;\s]+/).map(v=>v.trim()).filter(Boolean);
  }
+
  return [String(value)];
 }
+
 function parsePrizes(row){
  let p=row.prizes||row.prize_data||row.prizeData||{};
- if(typeof p==="string"){try{p=JSON.parse(p);}catch(e){p={};}}
+
+ if(typeof p==="string"){
+  try{
+   p=JSON.parse(p);
+  }catch(e){
+   p={};
+  }
+ }
+
  if(!p||typeof p!=="object")p={};
- // Keep compatibility with the previous result API fields.
+
  return {
   first:p.first??p.first_prize??row.firstPrize??row.first_prize??row.first??"",
-  adjacent_first:parseArray(p.adjacent_first??p.adjacentFirst??row.adjacent_first??[]),
-  second:parseArray(p.second??p.second_prize??row.second_prize??[]),
-  third:parseArray(p.third??p.third_prize??row.third_prize??[]),
-  fourth:parseArray(p.fourth??p.fourth_prize??row.fourth_prize??[]),
-  fifth:parseArray(p.fifth??p.fifth_prize??row.fifth_prize??[]),
-  first_three:parseArray(p.first_three??p.front_three??row.frontThree??row.front_three??[]),
-  last_three:parseArray(p.last_three??row.last_three??[]),
+
+  adjacent_first:parseArray(
+   p.adjacent_first??p.adjacentFirst??row.adjacent_first??[]
+  ),
+
+  second:parseArray(
+   p.second??p.second_prize??row.second_prize??[]
+  ),
+
+  third:parseArray(
+   p.third??p.third_prize??row.third_prize??[]
+  ),
+
+  fourth:parseArray(
+   p.fourth??p.fourth_prize??row.fourth_prize??[]
+  ),
+
+  fifth:parseArray(
+   p.fifth??p.fifth_prize??row.fifth_prize??[]
+  ),
+
+  first_three:parseArray(
+   p.first_three??p.front_three??row.frontThree??row.front_three??[]
+  ),
+
+  last_three:parseArray(
+   p.last_three??row.last_three??[]
+  ),
+
   last_two:p.last_two??p.lastTwo??row.lastTwo??row.last_two??""
  };
 }
+
 function normalizeResult(row){
- return {id:row.id,date:row.date||row.drawDate||row.draw_date||"",prizes:parsePrizes(row),publishedAt:row.publishedAt||row.published_at||null};
+ return {
+  id:row.id,
+  date:row.date||row.drawDate||row.draw_date||"",
+  prizes:parsePrizes(row),
+  publishedAt:row.publishedAt||row.published_at||null
+ };
 }
+
 function formatDate(value){
- if(!value)return "Unknown Date";const raw=String(value).slice(0,10),date=new Date(raw+"T00:00:00");
+ if(!value)return "Unknown Date";
+
+ const raw=String(value).slice(0,10);
+ const date=new Date(raw+"T00:00:00");
+
  if(Number.isNaN(date.getTime()))return raw;
- return date.toLocaleDateString("en-GB",{day:"2-digit",month:"long",year:"numeric"});
+
+ return date.toLocaleDateString("en-GB",{
+  day:"2-digit",
+  month:"long",
+  year:"numeric"
+ });
 }
+
 function formatPublishedDate(value){
- if(!value)return "";const date=new Date(value);if(Number.isNaN(date.getTime()))return "";
- return date.toLocaleDateString("en-GB",{day:"2-digit",month:"short",year:"numeric"});
+ if(!value)return "";
+
+ const date=new Date(value);
+
+ if(Number.isNaN(date.getTime()))return "";
+
+ return date.toLocaleDateString("en-GB",{
+  day:"2-digit",
+  month:"short",
+  year:"numeric"
+ });
 }
+
 function escapeHTML(value){
- return String(value??"").replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));
+ return String(value??"").replace(/[&<>"']/g,c=>({
+  "&":"&amp;",
+  "<":"&lt;",
+  ">":"&gt;",
+  '"':"&quot;",
+  "'":"&#39;"
+ }[c]));
 }
+
 function renderGroup(title,values,kind="normal"){
  const arr=Array.isArray(values)?values:parseArray(values);
+
  if(!arr.length)return "";
- const chips=arr.map((number,i)=>`<div class="number-chip">${arr.length>1?`<small>${escapeHTML(title)} ${i+1}</small>`:""}${escapeHTML(number)}</div>`).join("");
- return `<div class="result-section"><div class="result-label">${escapeHTML(title)}</div><div class="number-grid ${arr.length===1?"one":""}">${chips}</div></div>`;
+
+ const chips=arr.map((number,i)=>`
+  <div class="number-chip">
+   ${arr.length>1?`<small>${escapeHTML(title)} ${i+1}</small>`:""}
+   ${escapeHTML(number)}
+  </div>
+ `).join("");
+
+ return `
+  <div class="result-section">
+   <div class="result-label">${escapeHTML(title)}</div>
+   <div class="number-grid ${arr.length===1?"one":""}">
+    ${chips}
+   </div>
+  </div>
+ `;
 }
+
 function renderResult(result){
  const p=result.prizes;
- const first=p.first?`<div class="result-section"><div class="result-label">1st Prize</div><div class="first-result">${escapeHTML(p.first)}</div></div>`:"";
- const lastTwo=p.last_two?`<div class="result-section"><div class="result-label">Last 2 Digits</div><div class="two-result">${escapeHTML(p.last_two)}</div></div>`:"";
+
+ const first=p.first?`
+  <div class="result-section">
+   <div class="result-label">1st Prize</div>
+   <div class="first-result">${escapeHTML(p.first)}</div>
+  </div>
+ `:"";
+
+ const lastTwo=p.last_two?`
+  <div class="result-section">
+   <div class="result-label">Last 2 Digits</div>
+   <div class="two-result">${escapeHTML(p.last_two)}</div>
+  </div>
+ `:"";
+
  const html=[
   first,
   renderGroup("Adjacent 1st Prize",p.adjacent_first),
@@ -147,48 +723,146 @@ function renderResult(result){
   renderGroup("Last 3 Digits",p.last_three),
   lastTwo
  ].filter(Boolean).join("");
- $("resultContent").innerHTML=html||'<div class="empty">No prize numbers are available for this draw.</div>';
+
+ $("resultContent").innerHTML=html||
+  '<div class="empty">No prize numbers are available for this draw.</div>';
+
  $("drawDate").textContent="Draw Date: "+formatDate(result.date);
+
  const published=formatPublishedDate(result.publishedAt);
- const info=document.createElement("div");info.className="result-info";info.textContent=published?"Result Published · "+published:"Result Published";
+
+ const info=document.createElement("div");
+ info.className="result-info";
+ info.textContent=published?"Result Published · "+published:"Result Published";
+
  $("resultContent").appendChild(info);
+
  selectedResult=result;
 }
+
 function showEmpty(message,isError=false){
- selectedResult=null;$("drawDate").textContent=isError?"Server Connection Error":"Draw Date: Not Published";
- $("resultContent").innerHTML=`<div class="result-info ${isError?"error":""}">${escapeHTML(message)}</div>`;
+ selectedResult=null;
+
+ $("drawDate").textContent=isError?
+  "Server Connection Error":
+  "Draw Date: Not Published";
+
+ $("resultContent").innerHTML=`
+  <div class="result-info ${isError?"error":""}">
+   ${escapeHTML(message)}
+  </div>
+ `;
 }
+
 async function loadResults(){
- if(loading)return;loading=true;$("resultContent").innerHTML='<div class="loading">Loading results from server...</div>';
+ if(loading)return;
+
+ loading=true;
+
+ $("resultContent").innerHTML=
+  '<div class="loading">Loading results from server...</div>';
+
  try{
   const data=await apiRequest("/results");
-  const rows=Array.isArray(data)?data:Array.isArray(data.results)?data.results:Array.isArray(data.data)?data.data:Array.isArray(data.rows)?data.rows:[];
-  allResults=rows.filter(detectThai).map(normalizeResult).filter(r=>r.date).sort((a,b)=>String(b.date).localeCompare(String(a.date)));
-  if(allResults.length)renderResult(allResults[0]);else showEmpty("No Thai Government Lottery results published yet.");
- }catch(error){console.error("Thai results error:",error);allResults=[];showEmpty("Unable to load Thai results.\n"+error.message,true);}
- finally{loading=false;}
+
+  const rows=Array.isArray(data)?data:
+   Array.isArray(data.results)?data.results:
+   Array.isArray(data.data)?data.data:
+   Array.isArray(data.rows)?data.rows:[];
+
+  allResults=rows
+   .filter(detectThai)
+   .map(normalizeResult)
+   .filter(r=>r.date)
+   .sort((a,b)=>String(b.date).localeCompare(String(a.date)));
+
+  if(allResults.length){
+   renderResult(allResults[0]);
+  }else{
+   showEmpty("No Thai Government Lottery results published yet.");
+  }
+
+ }catch(error){
+  console.error("Thai results error:",error);
+  allResults=[];
+  showEmpty("Unable to load Thai results.\n"+error.message,true);
+
+ }finally{
+  loading=false;
+ }
 }
+
 function openHistory(){
- const list=$("dateList");list.replaceChildren();
- if(!allResults.length){const empty=document.createElement("div");empty.className="empty";empty.textContent="No previous Thai results available.";list.appendChild(empty);}
- else allResults.forEach(result=>{
-  const button=document.createElement("button");button.className="date-item";
-  if(selectedResult&&String(selectedResult.id)===String(result.id))button.classList.add("selected");
-  const date=document.createElement("span");date.textContent="Draw Date: "+formatDate(result.date);
-  const radio=document.createElement("span");radio.className="radio";button.append(date,radio);
-  button.addEventListener("click",()=>{renderResult(result);closeHistory();});list.appendChild(button);
- });
+ const list=$("dateList");
+ list.replaceChildren();
+
+ if(!allResults.length){
+  const empty=document.createElement("div");
+  empty.className="empty";
+  empty.textContent="No previous Thai results available.";
+  list.appendChild(empty);
+
+ }else{
+  allResults.forEach(result=>{
+   const button=document.createElement("button");
+   button.className="date-item";
+
+   if(selectedResult&&String(selectedResult.id)===String(result.id)){
+    button.classList.add("selected");
+   }
+
+   const date=document.createElement("span");
+   date.textContent="Draw Date: "+formatDate(result.date);
+
+   const radio=document.createElement("span");
+   radio.className="radio";
+
+   button.append(date,radio);
+
+   button.addEventListener("click",()=>{
+    renderResult(result);
+    closeHistory();
+   });
+
+   list.appendChild(button);
+  });
+ }
+
  $("historyModal").classList.add("show");
 }
-function closeHistory(){$("historyModal").classList.remove("show");}
+
+function closeHistory(){
+ $("historyModal").classList.remove("show");
+}
+
 $("previousButton").addEventListener("click",openHistory);
+
 $("closeHistory").addEventListener("click",closeHistory);
-$("historyModal").addEventListener("click",function(event){if(event.target===this)closeHistory();});
-$("backButton").addEventListener("click",()=>{if(history.length>1)history.back();else location.href="../results.html";});
-$("homeButton").addEventListener("click",()=>{location.href="../home.html";});
+
+$("historyModal").addEventListener("click",function(event){
+ if(event.target===this)closeHistory();
+});
+
+$("backButton").addEventListener("click",()=>{
+ if(history.length>1){
+  history.back();
+ }else{
+  location.href="../results.html";
+ }
+});
+
+$("homeButton").addEventListener("click",()=>{
+ location.href="../home.html";
+});
+
 window.addEventListener("pageshow",loadResults);
-document.addEventListener("visibilitychange",()=>{if(!document.hidden)loadResults();});
+
+document.addEventListener("visibilitychange",()=>{
+ if(!document.hidden)loadResults();
+});
+
 loadResults();
 </script>
+
 </body>
 </html>
