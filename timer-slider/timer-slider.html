@@ -111,7 +111,9 @@ html,body{
 <body>
 
 <div id="timerSlider" aria-label="GLO 365 timer slider">
+
   <div class="timer-stage" id="timerStage">
+
     <iframe
       id="timerFrame"
       class="timer-frame"
@@ -120,7 +122,9 @@ html,body{
       loading="eager"
       scrolling="no">
     </iframe>
+
   </div>
+
 </div>
 
 <script>
@@ -132,8 +136,8 @@ const TIMER_CARDS = [
     title:"Thailand timer"
   },
   {
-    file:"Daily-Millionaire.html",
-    title:"Daily Millionaire result"
+    file:"daily-millionaire-timer.html",
+    title:"Daily Millionaire Timer"
   }
 ];
 
@@ -148,9 +152,11 @@ let rotationTimer = null;
 let switching = false;
 
 function showCard(index){
+
   if(!TIMER_CARDS.length || switching) return;
 
   activeIndex = index % TIMER_CARDS.length;
+
   const card = TIMER_CARDS[activeIndex];
 
   switching = true;
@@ -159,22 +165,28 @@ function showCard(index){
   stage.classList.add("flip-out");
 
   setTimeout(()=>{
+
     frame.title = card.title;
     frame.src = card.file;
 
     stage.classList.remove("flip-out");
+
     void stage.offsetWidth;
+
     stage.classList.add("flip-in");
 
     setTimeout(()=>{
+
       stage.classList.remove("flip-in");
       switching = false;
+
     },900);
 
   },FLIP_OUT_DURATION);
 }
 
 function stopSlider(){
+
   if(rotationTimer){
     clearInterval(rotationTimer);
     rotationTimer = null;
@@ -182,25 +194,32 @@ function stopSlider(){
 }
 
 function startSlider(){
+
   stopSlider();
 
   if(document.hidden || TIMER_CARDS.length <= 1) return;
 
   rotationTimer = setInterval(()=>{
+
     if(switching) return;
+
     showCard((activeIndex + 1) % TIMER_CARDS.length);
+
   },CHANGE_INTERVAL);
 }
 
 document.addEventListener("visibilitychange",()=>{
+
   if(document.hidden){
     stopSlider();
   }else{
     startSlider();
   }
+
 });
 
 startSlider();
+
 </script>
 
 </body>
