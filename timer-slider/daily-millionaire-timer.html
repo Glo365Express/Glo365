@@ -1,0 +1,410 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="theme-color" content="#ffffff">
+<title>Daily Millionaire Timer - GLO 365</title>
+
+<style>
+*{
+  box-sizing:border-box;
+}
+
+html,body{
+  margin:0;
+  padding:0;
+  width:100%;
+  height:140px;
+  overflow:hidden;
+  background:transparent;
+  font-family:Arial,Helvetica,sans-serif;
+}
+
+.timer-wrapper{
+  width:100%;
+  height:140px;
+  display:flex;
+  justify-content:center;
+  align-items:center;
+  overflow:hidden;
+}
+
+.banner{
+  position:relative;
+  width:100%;
+  aspect-ratio:1536 / 383;
+  flex-shrink:0;
+  overflow:hidden;
+}
+
+.banner-image{
+  position:absolute;
+  inset:0;
+  width:100%;
+  height:100%;
+  object-fit:fill;
+  display:block;
+}
+
+/* Countdown number covers the sample numbers in the image */
+.time-value{
+  position:absolute;
+  top:28%;
+  transform:translate(-50%,-50%);
+  width:10.5%;
+  height:24%;
+  display:flex;
+  justify-content:center;
+  align-items:center;
+  color:#fff;
+  font-weight:900;
+  font-size:clamp(15px,5.5vw,48px);
+  line-height:1;
+  letter-spacing:-1px;
+  background:linear-gradient(180deg,#071b55,#06123e);
+  text-shadow:0 2px 5px rgba(0,0,0,.55);
+  border-radius:8px;
+  pointer-events:none;
+}
+
+#hours{
+  left:45.1%;
+}
+
+#minutes{
+  left:60.2%;
+}
+
+#seconds{
+  left:72%;
+}
+
+/* Draw number cover */
+.draw-value{
+  position:absolute;
+  left:90.1%;
+  top:59%;
+  transform:translate(-50%,-50%);
+  width:12%;
+  height:22%;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  background:#f5f6fa;
+  color:#101d43;
+  font-weight:900;
+  font-size:clamp(14px,5vw,42px);
+  line-height:1;
+  font-style:italic;
+  pointer-events:none;
+}
+
+/* Loading/error indicator */
+.status{
+  position:absolute;
+  left:50%;
+  bottom:2%;
+  transform:translateX(-50%);
+  padding:2px 7px;
+  border-radius:20px;
+  background:rgba(0,12,48,.75);
+  color:#fff;
+  font-size:8px;
+  white-space:nowrap;
+  display:none;
+}
+
+@media(prefers-reduced-motion:reduce){
+  *{
+    animation:none!important;
+    transition:none!important;
+  }
+}
+</style>
+</head>
+
+<body>
+
+<div class="timer-wrapper">
+
+  <div class="banner">
+
+    <!-- Your original Daily Millionaire timer image -->
+    <img
+      class="banner-image"
+      src="daily-millionaire-timer.jpg"
+      alt="Daily Millionaire Next Draw Timer">
+
+    <!-- Live countdown -->
+    <div class="time-value" id="hours">--</div>
+    <div class="time-value" id="minutes">--</div>
+    <div class="time-value" id="seconds">--</div>
+
+    <!-- Draw number -->
+    <div class="draw-value" id="drawNumber">----</div>
+
+    <div class="status" id="status"></div>
+
+  </div>
+
+</div>
+
+<script>
+"use strict";
+
+/* =====================================
+   GLO 365 API CONFIGURATION
+===================================== */
+
+const API_BASE_URL = "https://glo365.onrender.com/api";
+
+const RESULT_API =
+  API_BASE_URL + "/public/daily-millionaire/result";
+
+/*
+  The Daily Millionaire API should return
+  its own next draw time in one of these fields:
+
+  next_draw_at
+  draw_at
+  nextDrawAt
+  drawAt
+
+  Do not use the general GLO 365 draw time.
+*/
+
+const hoursElement = document.getElementById("hours");
+const minutesElement = document.getElementById("minutes");
+const secondsElement = document.getElementById("seconds");
+const drawNumberElement = document.getElementById("drawNumber");
+const statusElement = document.getElementById("status");
+
+let nextDrawTime = null;
+let apiTimer = null;
+let countdownTimer = null;
+
+
+/* =====================================
+   DATE CONVERSION
+===================================== */
+
+function parseDrawDate(value){
+
+  if(!value) return null;
+
+  let dateString = String(value).trim();
+
+  /*
+    If API sends:
+    2026-11-12 20:00:00
+
+    Interpret it as Bangladesh time.
+  */
+
+  if(
+    /^\d{4}-\d{2}-\d{2} \d{2}:\d{2}(:\d{2})?$/.test(dateString)
+  ){
+    dateString = dateString.replace(" ","T") + "+06:00";
+  }
+
+  /*
+    If API sends an ISO date without timezone,
+    interpret it as Bangladesh local time.
+  */
+
+  if(
+    /^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}(:\d{2})?$/.test(dateString)
+  ){
+    dateString += "+06:00";
+  }
+
+  const parsed = new Date(dateString);
+
+  if(Number.isNaN(parsed.getTime())){
+    return null;
+  }
+
+  return parsed;
+}
+
+
+/* =====================================
+   API DATA HELPERS
+===================================== */
+
+function findValue(objects,keys){
+
+  for(const object of objects){
+
+    if(!object || typeof object !== "object") continue;
+
+    for(const key of keys){
+
+      if(
+        object[key] !== undefined &&
+        object[key] !== null &&
+        object[key] !== ""
+      ){
+        return object[key];
+      }
+    }
+  }
+
+  return null;
+}
+
+
+/* =====================================
+   LOAD DAILY MILLIONAIRE DATA
+===================================== */
+
+async function loadDailyMillionaire(){
+
+  try{
+
+    const response = await fetch(RESULT_API,{
+      method:"GET",
+      cache:"no-store",
+      headers:{
+        "Accept":"application/json"
+      }
+    });
+
+    if(!response.ok){
+      throw new Error("API request failed: " + response.status);
+    }
+
+    const data = await response.json();
+
+    const objects = [
+      data,
+      data.data,
+      data.result,
+      data.settings,
+      data.draw,
+      data.data?.draw,
+      data.data?.settings
+    ];
+
+    /* Draw number */
+
+    const drawNumber = findValue(objects,[
+      "draw_number",
+      "drawNumber",
+      "next_draw_number",
+      "nextDrawNumber"
+    ]);
+
+    if(drawNumber !== null){
+      drawNumberElement.textContent = drawNumber;
+    }
+
+    /* Next draw time */
+
+    const drawAt = findValue(objects,[
+      "next_draw_at",
+      "nextDrawAt",
+      "draw_at",
+      "drawAt"
+    ]);
+
+    if(drawAt !== null){
+
+      const parsedDate = parseDrawDate(drawAt);
+
+      if(parsedDate){
+        nextDrawTime = parsedDate;
+      }
+    }
+
+    statusElement.style.display = "none";
+
+    updateCountdown();
+
+  }catch(error){
+
+    console.error("Daily Millionaire API error:",error);
+
+    statusElement.textContent = "Unable to load draw schedule";
+    statusElement.style.display = "block";
+
+  }
+}
+
+
+/* =====================================
+   LIVE COUNTDOWN
+===================================== */
+
+function updateCountdown(){
+
+  if(!nextDrawTime){
+
+    hoursElement.textContent = "--";
+    minutesElement.textContent = "--";
+    secondsElement.textContent = "--";
+
+    return;
+  }
+
+  const now = Date.now();
+  let remaining = nextDrawTime.getTime() - now;
+
+  if(remaining <= 0){
+
+    hoursElement.textContent = "00";
+    minutesElement.textContent = "00";
+    secondsElement.textContent = "00";
+
+    return;
+  }
+
+  const totalSeconds = Math.floor(remaining / 1000);
+
+  const hours = Math.floor(totalSeconds / 3600);
+  const minutes = Math.floor((totalSeconds % 3600) / 60);
+  const seconds = totalSeconds % 60;
+
+  hoursElement.textContent = String(hours).padStart(2,"0");
+  minutesElement.textContent = String(minutes).padStart(2,"0");
+  secondsElement.textContent = String(seconds).padStart(2,"0");
+}
+
+
+/* =====================================
+   START
+===================================== */
+
+loadDailyMillionaire();
+
+countdownTimer = setInterval(updateCountdown,1000);
+
+apiTimer = setInterval(loadDailyMillionaire,30000);
+
+
+/* Stop unnecessary work when page is hidden */
+
+document.addEventListener("visibilitychange",()=>{
+
+  if(document.hidden){
+
+    clearInterval(countdownTimer);
+    clearInterval(apiTimer);
+
+  }else{
+
+    updateCountdown();
+
+    countdownTimer = setInterval(updateCountdown,1000);
+    apiTimer = setInterval(loadDailyMillionaire,30000);
+
+    loadDailyMillionaire();
+  }
+
+});
+
+</script>
+
+</body>
+</html>
