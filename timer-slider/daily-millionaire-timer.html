@@ -25,48 +25,57 @@ html,body{
   object-fit:fill;pointer-events:none;user-select:none;
 }
 
-/* Replace only the printed timer digits/labels; keep the original neon frames. */
+/* Cover the artwork's printed HR/MIN/SEC text inside the three original panels.
+   Positions are aligned to the actual image (1536 x 387). */
 .time-screen{
-  position:absolute;top:29.4%;height:37.2%;width:10.4%;
-  transform:translate(-50%,-50%);z-index:2;overflow:hidden;
-  border-radius:8px;
+  position:absolute;
+  top:45.5%;
+  width:9.7%;
+  height:31.5%;
+  transform:translate(-50%,-50%);
+  z-index:2;
+  overflow:hidden;
+  border-radius:7px;
   background:
-    radial-gradient(ellipse at 50% 0%,rgba(38,126,255,.34),transparent 65%),
-    linear-gradient(145deg,#071b59 0%,#061448 52%,#08266c 100%);
+    radial-gradient(ellipse at 50% 0%,rgba(34,132,255,.28),transparent 66%),
+    linear-gradient(145deg,#06194f 0%,#061443 54%,#08256a 100%);
   box-shadow:inset 0 1px 5px rgba(72,180,255,.35),
              inset 0 -5px 9px rgba(0,0,0,.3);
 }
-#screenHour{left:44.7%}
-#screenMinute{left:62.0%}
-#screenSecond{left:79.1%}
+#screenHour{left:44.6%}
+#screenMinute{left:56.8%}
+#screenSecond{left:68.9%}
 
 .time-value{
-  position:absolute;left:0;right:0;top:10%;height:61%;
+  position:absolute;left:0;right:0;top:9%;height:62%;
   display:flex;align-items:center;justify-content:center;
-  color:#f7f9ff;font-weight:900;font-size:clamp(22px,8.0vw,55px);
+  color:#f7f9ff;font-weight:900;
+  font-size:clamp(19px,7.0vw,48px);
   line-height:1;text-shadow:0 2px 3px rgba(0,0,0,.5),0 0 8px rgba(130,190,255,.45);
   font-variant-numeric:tabular-nums;
 }
 .time-label{
-  position:absolute;left:0;right:0;bottom:5%;height:24%;
+  position:absolute;left:0;right:0;bottom:5%;height:23%;
   display:flex;align-items:center;justify-content:center;
-  color:#f4f7ff;font-weight:900;font-size:clamp(9px,3.0vw,20px);
+  color:#f4f7ff;font-weight:900;
+  font-size:clamp(8px,2.7vw,18px);
   line-height:1;text-shadow:0 1px 2px rgba(0,0,0,.55);
 }
 
-/* Replace the sample draw number printed on the calendar page. */
+/* Cover only the sample number on the calendar page; retain its red DRAW NO header. */
 .draw-number-cover{
-  position:absolute;left:90.0%;top:60.0%;width:12.6%;height:20.5%;
+  position:absolute;left:91.0%;top:69.5%;width:10.0%;height:15.0%;
   transform:translate(-50%,-50%);z-index:2;
   background:linear-gradient(145deg,#ffffff 0%,#f8faff 70%,#e9efff 100%);
-  border-radius:3px;box-shadow:inset 0 1px 2px rgba(255,255,255,.95);
+  border-radius:3px;
+  box-shadow:inset 0 1px 2px rgba(255,255,255,.95);
 }
 .draw-number{
-  position:absolute;left:90.0%;top:60.0%;width:12.2%;height:19%;
+  position:absolute;left:91.0%;top:69.5%;width:9.7%;height:13.5%;
   transform:translate(-50%,-50%);z-index:3;
   display:flex;align-items:center;justify-content:center;
   color:#071b51;font-weight:900;font-style:italic;
-  font-size:clamp(15px,5.0vw,34px);line-height:1;
+  font-size:clamp(14px,4.7vw,31px);line-height:1;
   white-space:nowrap;text-shadow:0 1px 1px rgba(255,255,255,.7);
   font-variant-numeric:tabular-nums;
 }
