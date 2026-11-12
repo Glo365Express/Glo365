@@ -1,0 +1,177 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="theme-color" content="#ffffff">
+<title>Daily Millionaire Result - GLO 365</title>
+
+<style>
+*{box-sizing:border-box}
+
+html,body{
+  margin:0;
+  padding:0;
+  width:100%;
+  height:140px;
+  overflow:hidden;
+  background:transparent;
+  font-family:Arial,Helvetica,sans-serif;
+}
+
+.result-area{
+  width:100%;
+  height:140px;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  overflow:hidden;
+}
+
+.banner{
+  position:relative;
+  width:100%;
+  aspect-ratio:1536 / 383;
+  flex-shrink:0;
+  overflow:hidden;
+}
+
+.banner img{
+  display:block;
+  width:100%;
+  height:100%;
+  object-fit:contain;
+}
+
+.digit{
+  position:absolute;
+  top:53%;
+  transform:translate(-50%,-50%);
+  width:13.2%;
+  aspect-ratio:1;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  border-radius:50%;
+  color:#071b51;
+  font-weight:900;
+  font-size:clamp(20px,8vw,52px);
+  line-height:1;
+  text-shadow:0 2px 1px rgba(255,255,255,.8);
+  pointer-events:none;
+}
+
+/* Result positions on the three number balls */
+#digit1{left:51.5%}
+#digit2{left:66.1%}
+#digit3{left:81.1%}
+
+.draw-number{
+  position:absolute;
+  top:8%;
+  left:66%;
+  transform:translateX(-50%);
+  width:28%;
+  text-align:center;
+  color:#111;
+  font-weight:900;
+  font-size:clamp(10px,3.2vw,22px);
+  white-space:nowrap;
+  pointer-events:none;
+}
+
+@media(max-width:400px){
+  .result-area{height:140px}
+  .digit{font-size:clamp(20px,8vw,34px)}
+}
+</style>
+</head>
+
+<body>
+
+<div class="result-area">
+  <div class="banner">
+
+    <!-- Save your original banner image beside this HTML file -->
+    <img
+      src="Daily-Millionaire-Banner.jpg"
+      alt="Daily Millionaire Result Banner">
+
+    <div class="draw-number" id="drawNumber">DRAW NO: —</div>
+
+    <div class="digit" id="digit1">—</div>
+    <div class="digit" id="digit2">—</div>
+    <div class="digit" id="digit3">—</div>
+
+  </div>
+</div>
+
+<script>
+"use strict";
+
+/*
+  Add the real Daily Millionaire result API URL here.
+  The actual API URL has not yet been provided.
+*/
+const RESULT_API_URL = "";
+
+async function loadDailyMillionaireResult(){
+
+  if(!RESULT_API_URL){
+    console.warn("Daily Millionaire API URL is not configured.");
+    return;
+  }
+
+  try{
+
+    const response = await fetch(RESULT_API_URL,{
+      method:"GET",
+      cache:"no-store"
+    });
+
+    if(!response.ok){
+      throw new Error("Result API request failed");
+    }
+
+    const data = await response.json();
+
+    const result =
+      data.result ??
+      data.winning_number ??
+      data.number ??
+      data.data?.result ??
+      data.data?.winning_number;
+
+    const drawNumber =
+      data.draw_number ??
+      data.drawNumber ??
+      data.data?.draw_number ??
+      data.data?.drawNumber;
+
+    if(result !== undefined && result !== null){
+
+      const digits = String(result).replace(/\D/g,"").slice(-3);
+
+      if(digits.length === 3){
+        document.getElementById("digit1").textContent = digits[0];
+        document.getElementById("digit2").textContent = digits[1];
+        document.getElementById("digit3").textContent = digits[2];
+      }
+    }
+
+    if(drawNumber !== undefined && drawNumber !== null){
+      document.getElementById("drawNumber").textContent =
+        "DRAW NO: " + drawNumber;
+    }
+
+  }catch(error){
+    console.error("Daily Millionaire result error:",error);
+  }
+}
+
+loadDailyMillionaireResult();
+setInterval(loadDailyMillionaireResult,60000);
+</script>
+
+</body>
+</html>
