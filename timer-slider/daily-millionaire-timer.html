@@ -62,24 +62,37 @@ html,body{
   line-height:1;text-shadow:0 1px 2px rgba(0,0,0,.55);
 }
 
-/* Cover only the sample number on the calendar page; retain its red DRAW NO header. */
-.draw-number-cover{
-  position:absolute;left:91.0%;top:69.5%;width:10.0%;height:15.0%;
-  transform:translate(-50%,-50%);z-index:2;
-  background:linear-gradient(145deg,#ffffff 0%,#f8faff 70%,#e9efff 100%);
-  border-radius:3px;
-  box-shadow:inset 0 1px 2px rgba(255,255,255,.95);
-}
-.draw-number{
-  position:absolute;left:91.0%;top:69.5%;width:9.7%;height:13.5%;
+
+/* Compact live monthly calendar placed over the artwork's calendar page. */
+.month-calendar{
+  position:absolute;left:91.0%;top:65.5%;width:12.8%;height:42%;
   transform:translate(-50%,-50%);z-index:3;
-  display:flex;align-items:center;justify-content:center;
-  color:#071b51;font-weight:900;font-style:italic;
-  font-size:clamp(14px,4.7vw,31px);line-height:1;
-  white-space:nowrap;text-shadow:0 1px 1px rgba(255,255,255,.7);
-  font-variant-numeric:tabular-nums;
+  padding:2px 3px 3px;border-radius:4px;
+  background:linear-gradient(160deg,#fff 0%,#f4f7ff 100%);
+  color:#10234f;box-shadow:0 2px 5px rgba(0,0,0,.24),inset 0 0 0 1px rgba(25,65,130,.18);
+  display:flex;flex-direction:column;justify-content:space-between;
+  overflow:hidden;
 }
-.time-value.pop,.draw-number.pop{animation:valuePop .55s cubic-bezier(.2,.8,.3,1)}
+.calendar-month{
+  font-size:clamp(5px,1.55vw,9px);font-weight:900;line-height:1.1;
+  text-align:center;color:#fff;background:linear-gradient(90deg,#073b91,#0879dc);
+  border-radius:2px;padding:2px 0;white-space:nowrap;
+}
+.calendar-grid{
+  display:grid;grid-template-columns:repeat(7,minmax(0,1fr));
+  gap:1px;text-align:center;align-items:center;flex:1;
+}
+.calendar-grid span{
+  display:flex;align-items:center;justify-content:center;
+  min-width:0;font-size:clamp(4px,1.15vw,7px);line-height:1;
+  font-weight:700;color:#18305c;
+}
+.calendar-grid .weekday{color:#d32645;font-weight:900}
+.calendar-grid .today{
+  background:#0878d8;color:#fff;border-radius:50%;
+  min-width:7px;min-height:7px;
+}
+.time-value.pop{animation:valuePop .55s cubic-bezier(.2,.8,.3,1)}
 .status{
   position:absolute;z-index:5;left:50%;bottom:2px;transform:translateX(-50%);
   display:none;padding:2px 7px;border-radius:20px;
@@ -96,7 +109,7 @@ html,body{
 }
 @media(prefers-reduced-motion:reduce){
   .timer-banner{animation:none}
-  .time-value.pop,.draw-number.pop{animation:none}
+  .time-value.pop{animation:none}
 }
 </style>
 </head>
@@ -118,9 +131,7 @@ html,body{
    <div class="time-value" id="seconds">--</div>
    <div class="time-label">SEC</div>
   </div>
-
-  <div class="draw-number-cover" aria-hidden="true"></div>
-  <div class="draw-number" id="drawNumber">----</div>
+  <div class="month-calendar" id="monthCalendar" aria-label="Current month calendar"></div>
   <div class="status" id="status"></div>
  </div>
 </div>
@@ -134,11 +145,9 @@ const SETTINGS_API=API_BASE_URL+"/public/daily-millionaire-settings";
 const hourEl=document.getElementById("hours");
 const minuteEl=document.getElementById("minutes");
 const secondEl=document.getElementById("seconds");
-const drawEl=document.getElementById("drawNumber");
 const statusEl=document.getElementById("status");
 
 let targetDrawTime=null;
-let lastDrawNumber="";
 let refreshTimer=null;
 let countdownTimer=null;
 let lastDisplayed={hours:"",minutes:"",seconds:""};
@@ -154,13 +163,10 @@ function parseSettings(payload){
   const settings=payload?.drawSettings || payload?.data?.drawSettings || {};
   const drawAt=draw.draw_at || draw.drawAt || settings.drawAt ||
                settings.draw_at || payload?.draw_at || payload?.drawAt;
-  const drawNumber=draw.draw_number || draw.drawNumber ||
-                   settings.drawNumber || settings.draw_number ||
-                   payload?.draw_number || payload?.drawNumber;
   if(!drawAt) return null;
   const timestamp=Date.parse(drawAt);
   if(!Number.isFinite(timestamp)) return null;
-  return {timestamp,drawNumber:drawNumber==null?"":String(drawNumber)};
+  return {timestamp};
 }
 
 async function loadTimerSettings(){
@@ -174,14 +180,9 @@ async function loadTimerSettings(){
     if(!response.ok) throw new Error("Timer API request failed ("+response.status+")");
     const payload=await response.json();
     const parsed=parseSettings(payload);
-    if(!parsed) throw new Error("No valid draw_at/draw_number in settings response");
+    if(!parsed) throw new Error("No valid draw_at in settings response");
 
     targetDrawTime=parsed.timestamp;
-    if(parsed.drawNumber && parsed.drawNumber!==lastDrawNumber){
-      drawEl.textContent=parsed.drawNumber;
-      lastDrawNumber=parsed.drawNumber;
-      animateValue(drawEl);
-    }
     statusEl.style.display="none";
     updateCountdown();
   }catch(error){
@@ -213,6 +214,26 @@ function updateCountdown(){
   setTimeValue(secondEl,"seconds",seconds);
 }
 
+
+function renderMonthlyCalendar(){
+  const host=document.getElementById("monthCalendar");
+  if(!host) return;
+  const now=new Date();
+  const year=now.getFullYear();
+  const month=now.getMonth();
+  const monthName=now.toLocaleDateString("en-US",{month:"short",year:"numeric"});
+  const firstDay=new Date(year,month,1).getDay();
+  const daysInMonth=new Date(year,month+1,0).getDate();
+  const labels=["S","M","T","W","T","F","S"];
+  let cells=labels.map(label=>'<span class="weekday">'+label+'</span>').join("");
+  for(let i=0;i<firstDay;i++) cells+='<span></span>';
+  for(let day=1;day<=daysInMonth;day++){
+    const todayClass=day===now.getDate()?' class="today"':"";
+    cells+='<span'+todayClass+'>'+day+'</span>';
+  }
+  host.innerHTML='<div class="calendar-month">'+monthName+'</div><div class="calendar-grid">'+cells+'</div>';
+}
+
 function stopTimers(){
   if(refreshTimer){clearInterval(refreshTimer);refreshTimer=null}
   if(countdownTimer){clearInterval(countdownTimer);countdownTimer=null}
@@ -228,6 +249,8 @@ document.addEventListener("visibilitychange",()=>{
   if(document.hidden) stopTimers();
   else startTimers();
 });
+renderMonthlyCalendar();
+setInterval(renderMonthlyCalendar,60000);
 startTimers();
 </script>
 </body>
