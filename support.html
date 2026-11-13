@@ -5,547 +5,328 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
 <meta name="theme-color" content="#0755a5">
-<title>GLO 365 - Premium Live Support</title>
+<title>GLO 365 - AI Live Support</title>
 
 <style>
 :root{
- --blue:#1688df;
- --dark:#0755a5;
- --deep:#06345f;
- --light:#eaf5ff;
- --bg:#f0f6fc;
- --text:#19374f;
- --muted:#8295a8;
- --border:#e0ebf5;
- --green:#20c985;
+ --blue:#1688df;--dark:#0755a5;--deep:#06345f;
+ --light:#eaf5ff;--bg:#f0f6fc;--text:#19374f;
+ --muted:#8295a8;--border:#e0ebf5;--green:#20c985;
 }
-
 *{box-sizing:border-box;margin:0;padding:0}
-
 body{
  font-family:Arial,Helvetica,sans-serif;
  background:linear-gradient(145deg,#eaf4fd,#f5f9fd);
- color:var(--text);
- min-height:100vh;
- min-height:100dvh;
+ color:var(--text);min-height:100vh;min-height:100dvh;
 }
-
 button,textarea{font:inherit}
-
 .app{
- width:100%;
- max-width:600px;
- height:100vh;
- height:100dvh;
- min-height:450px;
- margin:auto;
- background:#fff;
- display:flex;
- flex-direction:column;
- position:relative;
- overflow:hidden;
- box-shadow:0 0 45px #123e6410;
+ width:100%;max-width:600px;height:100vh;height:100dvh;
+ min-height:450px;margin:auto;background:#fff;
+ display:flex;flex-direction:column;position:relative;
+ overflow:hidden;box-shadow:0 0 45px #123e6410;
 }
-
-/* PREMIUM HEADER */
-
 header{
- position:relative;
- overflow:hidden;
- flex-shrink:0;
+ position:relative;overflow:hidden;flex-shrink:0;
  background:linear-gradient(125deg,#063b79,#0878c9,#28a6ed);
- color:white;
- padding:17px 17px 22px;
+ color:white;padding:17px 17px 20px;
  box-shadow:0 8px 24px #087acb35;
 }
-
 header:before{
- content:"";
- position:absolute;
- width:180px;
- height:180px;
- border-radius:50%;
- background:#ffffff0c;
- right:-55px;
- top:-105px;
+ content:"";position:absolute;width:180px;height:180px;
+ border-radius:50%;background:#ffffff0c;right:-55px;top:-105px;
 }
-
 header:after{
- content:"";
- position:absolute;
- width:100px;
- height:100px;
- border-radius:50%;
- background:#ffffff0b;
- right:80px;
- bottom:-75px;
+ content:"";position:absolute;width:100px;height:100px;
+ border-radius:50%;background:#ffffff0b;right:80px;bottom:-75px;
 }
-
-.header-top{
- position:relative;
- z-index:2;
- display:flex;
- align-items:center;
- gap:12px;
-}
-
+.header-top{position:relative;z-index:2;display:flex;align-items:center;gap:12px}
 .back{
- width:43px;
- height:43px;
- flex-shrink:0;
- border:1px solid #ffffff35;
- border-radius:15px;
- background:#ffffff19;
- color:white;
- font-size:27px;
- display:grid;
- place-items:center;
- cursor:pointer;
- backdrop-filter:blur(10px);
+ width:43px;height:43px;flex-shrink:0;border:1px solid #ffffff35;
+ border-radius:15px;background:#ffffff19;color:white;
+ font-size:27px;display:grid;place-items:center;cursor:pointer;
 }
-
 .brand-icon{
- width:46px;
- height:46px;
- border-radius:15px;
+ width:46px;height:46px;border-radius:15px;
  background:linear-gradient(145deg,#ffffff35,#ffffff12);
- border:1px solid #ffffff45;
- display:grid;
- place-items:center;
- font-size:24px;
- box-shadow:0 5px 15px #003b751c;
+ border:1px solid #ffffff45;display:grid;place-items:center;
+ font-size:24px;box-shadow:0 5px 15px #003b751c;
 }
-
-.header-info{
- flex:1;
- min-width:0;
-}
-
-.header-info h2{
- font-size:18px;
- font-weight:900;
- letter-spacing:.2px;
- margin-bottom:5px;
-}
-
-.header-info p{
- font-size:11px;
- color:#e1f3ff;
-}
-
+.header-info{flex:1;min-width:0}
+.header-info h2{font-size:18px;font-weight:900;margin-bottom:5px}
+.header-info p{font-size:11px;color:#e1f3ff}
 .online-badge{
- display:flex;
- align-items:center;
- gap:6px;
- border:1px solid #ffffff45;
- background:#ffffff19;
- padding:8px 10px;
- border-radius:25px;
- font-size:10px;
- font-weight:800;
- white-space:nowrap;
+ display:flex;align-items:center;gap:6px;border:1px solid #ffffff45;
+ background:#ffffff19;padding:8px 10px;border-radius:25px;
+ font-size:10px;font-weight:800;white-space:nowrap;
 }
-
 .status-dot{
- width:8px;
- height:8px;
- border-radius:50%;
- background:#48f0a3;
- box-shadow:0 0 9px #48f0a3;
+ width:8px;height:8px;border-radius:50%;background:#48f0a3;
+ box-shadow:0 0 9px #48f0a3;animation:pulse 1.5s infinite;
 }
-
-/* HEADER SUBTITLE */
-
+@keyframes pulse{50%{opacity:.4;transform:scale(.75)}}
 .header-caption{
- position:relative;
- z-index:2;
- margin:16px 0 0 55px;
- font-size:11px;
- line-height:1.6;
- color:#e6f5ff;
+ position:relative;z-index:2;margin:14px 0 0 55px;
+ font-size:11px;line-height:1.6;color:#e6f5ff;
 }
 
-/* SUPPORT INFO */
-
-.support-info{
- flex-shrink:0;
- display:flex;
- align-items:flex-start;
- gap:11px;
- margin:12px 13px 8px;
- padding:12px 13px;
- border:1px solid #d6eafa;
- border-radius:15px;
+/* AI ROBOT */
+.ai-panel{
+ flex-shrink:0;display:flex;align-items:center;gap:12px;
+ margin:11px 13px 8px;padding:10px 12px;
+ border:1px solid #d6eafa;border-radius:16px;
  background:linear-gradient(135deg,#f2f9ff,#e9f5ff);
 }
+.robot{
+ width:59px;height:59px;flex-shrink:0;position:relative;
+ display:grid;place-items:center;perspective:250px;
+}
+.robot-head{
+ width:46px;height:42px;position:relative;
+ border-radius:14px 14px 17px 17px;
+ background:linear-gradient(145deg,#fff,#b9e3ff);
+ border:2px solid #75bff3;
+ box-shadow:0 7px 17px #1688df35,inset 0 -5px 9px #1688df18;
+ display:flex;align-items:center;justify-content:center;gap:8px;
+ animation:robotFloat 2.7s ease-in-out infinite;
+}
+.robot-eye{
+ width:7px;height:9px;border-radius:50%;
+ background:#0875c8;box-shadow:0 0 7px #1688df;
+ animation:blink 4s infinite;
+}
+.robot-mouth{
+ position:absolute;width:13px;height:5px;
+ border-bottom:2px solid #1688df;border-radius:50%;bottom:9px;
+}
+.robot-antenna{
+ position:absolute;top:0;left:28px;width:3px;height:10px;
+ background:#1688df;
+}
+.robot-antenna:after{
+ content:"";position:absolute;top:-4px;left:-3px;
+ width:9px;height:9px;border-radius:50%;
+ background:#40d9a0;box-shadow:0 0 9px #40d9a0;
+}
+.robot-shadow{
+ position:absolute;bottom:0;width:35px;height:6px;
+ border-radius:50%;background:#1688df22;
+ animation:shadow 2.7s infinite;
+}
+@keyframes robotFloat{
+ 0%,100%{transform:translateY(0) rotateY(-7deg)}
+ 50%{transform:translateY(-6px) rotateY(7deg)}
+}
+@keyframes shadow{50%{transform:scale(.7);opacity:.5}}
+@keyframes blink{0%,45%,49%,100%{transform:scaleY(1)}47%{transform:scaleY(.1)}}
+.ai-info{flex:1;min-width:0}
+.ai-info strong{display:block;color:#075da8;font-size:13px;margin-bottom:4px}
+.ai-info p{font-size:10px;line-height:1.55;color:#69849a}
+.ai-status{display:inline-flex;align-items:center;gap:5px;margin-top:5px;color:#159a69;font-size:9px;font-weight:800}
+.ai-status:before{content:"";width:6px;height:6px;border-radius:50%;background:#20c985}
 
+/* QUICK HELP */
+.quick-wrap{flex-shrink:0;padding:3px 13px 9px;border-bottom:1px solid #e9f0f6}
+.quick-title{font-size:10px;font-weight:800;color:#8295a8;margin:0 0 7px 2px}
+.quick-list{display:flex;gap:7px;overflow-x:auto;padding:1px 1px 5px;scrollbar-width:none}
+.quick-list::-webkit-scrollbar{display:none}
+.quick-btn{
+ flex-shrink:0;border:1px solid #cfe5f7;border-radius:20px;
+ background:#f4faff;color:#1769a5;padding:8px 11px;
+ font-size:10px;font-weight:700;cursor:pointer;
+}
+.quick-btn:active{transform:scale(.96);background:#e2f2ff}
+.quick-btn.human{background:#e9f8f1;border-color:#bcebd4;color:#168452}
+
+/* SUPPORT INFO */
+.support-info{
+ flex-shrink:0;display:flex;align-items:flex-start;gap:11px;
+ margin:10px 13px 7px;padding:10px 12px;
+ border:1px solid #d6eafa;border-radius:15px;
+ background:linear-gradient(135deg,#f2f9ff,#e9f5ff);
+}
 .info-icon{
- width:36px;
- height:36px;
- flex-shrink:0;
- display:grid;
- place-items:center;
- background:#d9edff;
- border-radius:12px;
- font-size:19px;
+ width:34px;height:34px;flex-shrink:0;display:grid;
+ place-items:center;background:#d9edff;border-radius:12px;font-size:18px;
 }
+.info-text{font-size:10px;line-height:1.6;color:#64819a}
+.info-text strong{color:#0964aa;font-size:11px;display:block;margin-bottom:2px}
 
-.info-text{
- font-size:11px;
- line-height:1.65;
- color:#64819a;
-}
-
-.info-text strong{
- color:#0964aa;
- font-size:12px;
- display:block;
- margin-bottom:2px;
-}
-
-/* CHAT AREA */
-
+/* CHAT */
 .chat-area{
- flex:1;
- min-height:0;
- padding:16px 14px;
- overflow-y:auto;
- background:
-  radial-gradient(circle at 5% 5%,#eaf5ff65,transparent 35%),
-  #f7faff;
- display:flex;
- flex-direction:column;
- gap:14px;
- scroll-behavior:smooth;
+ flex:1;min-height:0;padding:15px 14px;overflow-y:auto;
+ background:radial-gradient(circle at 5% 5%,#eaf5ff65,transparent 35%),#f7faff;
+ display:flex;flex-direction:column;gap:13px;scroll-behavior:smooth;
 }
-
-.chat-area::-webkit-scrollbar{
- width:4px;
-}
-
-.chat-area::-webkit-scrollbar-thumb{
- background:#c8dceb;
- border-radius:10px;
-}
-
-/* WELCOME */
-
-.welcome{
- text-align:center;
- margin:auto;
- max-width:300px;
- padding:30px 15px;
-}
-
+.chat-area::-webkit-scrollbar{width:4px}
+.chat-area::-webkit-scrollbar-thumb{background:#c8dceb;border-radius:10px}
+.welcome{text-align:center;margin:auto;max-width:300px;padding:20px 15px}
 .welcome-icon{
- width:82px;
- height:82px;
- margin:0 auto 17px;
- border-radius:27px;
- display:grid;
- place-items:center;
- font-size:37px;
+ width:75px;height:75px;margin:0 auto 15px;border-radius:25px;
+ display:grid;place-items:center;font-size:34px;
  background:linear-gradient(145deg,#dff1ff,#bfe2ff);
  box-shadow:0 9px 25px #1688df20;
 }
-
-.welcome h3{
- font-size:19px;
- color:#075da8;
- margin-bottom:9px;
-}
-
-.welcome p{
- font-size:12px;
- color:#8295a8;
- line-height:1.8;
-}
-
-/* MESSAGES */
-
+.welcome h3{font-size:18px;color:#075da8;margin-bottom:8px}
+.welcome p{font-size:11px;color:#8295a8;line-height:1.8}
 .message{
- max-width:86%;
- display:flex;
- flex-direction:column;
- gap:6px;
+ max-width:88%;display:flex;flex-direction:column;gap:5px;
  animation:messageIn .2s ease;
 }
-
-@keyframes messageIn{
- from{opacity:0;transform:translateY(7px)}
- to{opacity:1;transform:translateY(0)}
-}
-
-.message.user{
- align-self:flex-end;
- align-items:flex-end;
-}
-
-.message.admin{
- align-self:flex-start;
- align-items:flex-start;
-}
-
-.sender{
- font-size:10px;
- font-weight:800;
- color:#8196a9;
- padding:0 6px;
-}
-
+@keyframes messageIn{from{opacity:0;transform:translateY(7px)}to{opacity:1;transform:translateY(0)}}
+.message.user{align-self:flex-end;align-items:flex-end}
+.message.admin,.message.ai{align-self:flex-start;align-items:flex-start}
+.sender{font-size:10px;font-weight:800;color:#8196a9;padding:0 6px}
 .bubble{
- padding:12px 15px;
- border-radius:17px;
- font-size:13px;
- line-height:1.65;
- overflow-wrap:anywhere;
- white-space:pre-wrap;
- box-shadow:0 3px 10px #173e5c08;
+ padding:11px 14px;border-radius:17px;font-size:12px;line-height:1.7;
+ overflow-wrap:anywhere;white-space:pre-wrap;box-shadow:0 3px 10px #173e5c08;
 }
-
-.user .bubble{
- background:linear-gradient(135deg,#1688df,#0870c4);
- color:white;
- border-bottom-right-radius:5px;
+.user .bubble{background:linear-gradient(135deg,#1688df,#0870c4);color:white;border-bottom-right-radius:5px}
+.admin .bubble{background:white;color:#304b61;border:1px solid #e0ebf5;border-bottom-left-radius:5px}
+.ai .bubble{background:linear-gradient(140deg,#fff,#f0f8ff);color:#304b61;border:1px solid #cfe7fa;border-bottom-left-radius:5px}
+.ai .sender{color:#0875c8}
+.message-time{font-size:9px;color:#9aabba;padding:0 6px}
+.typing{
+ display:flex;align-items:center;gap:5px;padding:12px 15px;
+ background:white;border:1px solid #dceaf5;border-radius:16px;width:max-content;
 }
-
-.admin .bubble{
- background:white;
- color:#304b61;
- border:1px solid #e0ebf5;
- border-bottom-left-radius:5px;
-}
-
-.message-time{
- font-size:9px;
- color:#9aabba;
- padding:0 6px;
-}
+.typing i{width:6px;height:6px;border-radius:50%;background:#1688df;animation:typing 1s infinite}
+.typing i:nth-child(2){animation-delay:.15s}
+.typing i:nth-child(3){animation-delay:.3s}
+@keyframes typing{0%,60%,100%{transform:translateY(0);opacity:.4}30%{transform:translateY(-5px);opacity:1}}
 
 /* COMPOSER */
-
 .chat-bottom{
- flex-shrink:0;
- background:#fff;
- border-top:1px solid #e3edf6;
- padding:12px 13px calc(12px + env(safe-area-inset-bottom));
+ flex-shrink:0;background:#fff;border-top:1px solid #e3edf6;
+ padding:11px 13px calc(11px + env(safe-area-inset-bottom));
  box-shadow:0 -5px 18px #123c6008;
 }
-
-.first-message-note{
- color:#8a9cac;
- font-size:10px;
- line-height:1.5;
- margin:0 3px 9px;
-}
-
+.first-message-note{color:#8a9cac;font-size:10px;line-height:1.5;margin:0 3px 8px}
 .composer{
- display:flex;
- align-items:flex-end;
- gap:9px;
- padding:6px;
- background:#f5f9fd;
- border:1px solid #dceaf5;
- border-radius:22px;
- transition:.2s;
+ display:flex;align-items:flex-end;gap:9px;padding:6px;
+ background:#f5f9fd;border:1px solid #dceaf5;border-radius:22px;transition:.2s;
 }
-
-.composer:focus-within{
- border-color:#1688df;
- background:#fff;
- box-shadow:0 0 0 3px #1688df12;
-}
-
+.composer:focus-within{border-color:#1688df;background:#fff;box-shadow:0 0 0 3px #1688df12}
 .composer textarea{
- flex:1;
- min-width:0;
- min-height:42px;
- max-height:115px;
- resize:none;
- border:0;
- outline:none;
- background:transparent;
- padding:12px 10px;
- font-size:13px;
- line-height:1.5;
- color:var(--text);
+ flex:1;min-width:0;min-height:42px;max-height:110px;resize:none;
+ border:0;outline:none;background:transparent;padding:12px 10px;
+ font-size:13px;line-height:1.5;color:var(--text);
 }
-
-.composer textarea::placeholder{
- color:#9aabba;
-}
-
+.composer textarea::placeholder{color:#9aabba}
 .send-btn{
- width:44px;
- height:44px;
- flex-shrink:0;
- border:0;
- border-radius:15px;
- background:linear-gradient(135deg,#1688df,#0755a5);
- color:white;
- font-size:20px;
- cursor:pointer;
- box-shadow:0 4px 12px #087acb30;
- transition:.15s;
+ width:44px;height:44px;flex-shrink:0;border:0;border-radius:15px;
+ background:linear-gradient(135deg,#1688df,#0755a5);color:white;
+ font-size:20px;cursor:pointer;box-shadow:0 4px 12px #087acb30;transition:.15s;
 }
-
-.send-btn:active{
- transform:scale(.93);
-}
-
-.send-btn:disabled{
- opacity:.5;
- cursor:not-allowed;
-}
-
-.chat-footer{
- display:flex;
- justify-content:center;
- align-items:center;
- gap:5px;
- text-align:center;
- color:#a1afbc;
- font-size:9px;
- padding-top:10px;
-}
-
-.chat-footer span{
- color:#20b87c;
-}
-
-/* NOTICE */
-
-.notice{
- display:none;
- flex-shrink:0;
- margin:0 13px 9px;
- padding:11px 13px;
- border-radius:12px;
- font-size:11px;
- line-height:1.5;
-}
-
+.send-btn:active{transform:scale(.93)}
+.send-btn:disabled{opacity:.5;cursor:not-allowed}
+.chat-footer{display:flex;justify-content:center;align-items:center;gap:5px;text-align:center;color:#a1afbc;font-size:9px;padding-top:9px}
+.chat-footer span{color:#20b87c}
+.notice{display:none;flex-shrink:0;margin:0 13px 9px;padding:10px 12px;border-radius:12px;font-size:11px;line-height:1.5}
 .notice.show{display:block}
 .notice.error{background:#fff0f0;color:#c33;border:1px solid #ffd9d9}
 .notice.success{background:#eaf8ef;color:#21834b;border:1px solid #d2efdc}
 .notice.info{background:#eaf4ff;color:#1769a5;border:1px solid #d6eafa}
-
-.loading,.empty{
- text-align:center;
- padding:25px 10px;
- color:#8195a5;
- font-size:12px;
-}
+.loading,.empty{text-align:center;padding:25px 10px;color:#8195a5;font-size:12px}
 
 @media(min-width:601px){
  body{padding:20px 0}
- .app{
-  height:calc(100dvh - 40px);
-  min-height:600px;
-  border-radius:23px;
- }
+ .app{height:calc(100dvh - 40px);min-height:600px;border-radius:23px}
  header{border-radius:23px 23px 0 0}
 }
-
 @media(max-width:380px){
- header{padding:14px 12px 18px}
+ header{padding:14px 12px 17px}
  .header-info h2{font-size:16px}
  .header-caption{margin-left:55px}
  .chat-area{padding:12px 10px}
  .chat-bottom{padding-left:10px;padding-right:10px}
  .online-badge{padding:7px 8px;font-size:9px}
- .message{max-width:91%}
+ .message{max-width:92%}
 }
-
 @media(max-height:570px){
  header{padding-top:10px;padding-bottom:12px}
  .header-caption{margin-top:8px}
- .support-info{margin-top:7px;margin-bottom:5px;padding:8px}
- .chat-area{padding-top:9px;padding-bottom:9px}
- .welcome{padding:10px}
- .welcome-icon{width:55px;height:55px;font-size:25px}
+ .ai-panel{margin-top:6px;margin-bottom:5px;padding:6px}
+ .robot{width:45px;height:45px}
+ .robot-head{transform:scale(.85)}
+ .quick-wrap{padding-bottom:5px}
+ .support-info{margin-top:5px;margin-bottom:4px;padding:7px}
+ .chat-area{padding-top:8px;padding-bottom:8px}
+ .welcome{padding:8px}
+ .welcome-icon{width:50px;height:50px;font-size:23px}
 }
 </style>
 </head>
 
 <body>
-
 <div class="app">
 
 <header>
-
  <div class="header-top">
-
   <button class="back" id="backButton" type="button" aria-label="Go back">‹</button>
-
   <div class="brand-icon">🎧</div>
-
   <div class="header-info">
    <h2>GLO 365 Support</h2>
-   <p>Customer Support Center</p>
+   <p>AI Assistant & Customer Care</p>
   </div>
-
-  <div class="online-badge">
-   <span class="status-dot"></span>
-   Online
-  </div>
-
+  <div class="online-badge"><span class="status-dot"></span> Online</div>
  </div>
-
- <div class="header-caption">
-  We're here to help you. Send us a message anytime.
- </div>
-
+ <div class="header-caption">We're here to help you. Ask our AI assistant or contact our support team.</div>
 </header>
 
-<div class="support-info">
-
- <div class="info-icon">🛡️</div>
-
- <div class="info-text">
-  <strong>Welcome to Live Support</strong>
-  Our support team can reply to your messages. Never share your password, transaction PIN or OTP.
+<section class="ai-panel">
+ <div class="robot">
+  <div class="robot-antenna"></div>
+  <div class="robot-head">
+   <span class="robot-eye"></span>
+   <span class="robot-eye"></span>
+   <span class="robot-mouth"></span>
+  </div>
+  <div class="robot-shadow"></div>
  </div>
+ <div class="ai-info">
+  <strong>GLO AI Assistant</strong>
+  <p>Ask about your account, demo points and support.</p>
+  <div class="ai-status">Free FAQ Assistant Active</div>
+ </div>
+</section>
 
+<section class="quick-wrap">
+ <div class="quick-title">⚡ QUICK HELP — TAP A TOPIC</div>
+ <div class="quick-list">
+  <button class="quick-btn" data-topic="login">🔐 Login Problem</button>
+  <button class="quick-btn" data-topic="password">🔑 Password</button>
+  <button class="quick-btn" data-topic="points">💎 Demo Points</button>
+  <button class="quick-btn" data-topic="deposit">📥 Deposit</button>
+  <button class="quick-btn" data-topic="withdraw">📤 Withdrawal</button>
+  <button class="quick-btn" data-topic="kyc">🪪 KYC</button>
+  <button class="quick-btn human" data-topic="human">👨‍💻 Human Support</button>
+ </div>
+</section>
+
+<div class="support-info">
+ <div class="info-icon">🛡️</div>
+ <div class="info-text">
+  <strong>Welcome to GLO 365 Support</strong>
+  AI can answer common questions. For personal account issues, contact our Admin team. Never share your password, PIN or OTP.
+ </div>
 </div>
 
 <div class="chat-area" id="chatArea" aria-live="polite">
-
  <div class="loading">Loading support messages...</div>
-
 </div>
 
 <div class="notice" id="notice" role="status" aria-live="polite"></div>
 
 <div class="chat-bottom">
-
  <div class="first-message-note" id="firstMessageNote">
-  Send your first message to start a support conversation.
+  Ask a question or choose a Quick Help topic.
  </div>
-
  <form class="composer" id="messageForm">
-
-  <textarea
-   id="messageInput"
-   maxlength="5000"
-   rows="1"
-   placeholder="Write your message..."
-   required
-  ></textarea>
-
-  <button
-   class="send-btn"
-   id="sendButton"
-   type="submit"
-   aria-label="Send message"
-  >➤</button>
-
+  <textarea id="messageInput" maxlength="5000" rows="1" placeholder="Ask a question... / প্রশ্ন লিখুন" required></textarea>
+  <button class="send-btn" id="sendButton" type="submit" aria-label="Send message">➤</button>
  </form>
-
- <div class="chat-footer">
-  <span>●</span> Secure Customer Support · Text messages only
- </div>
-
+ <div class="chat-footer"><span>●</span> Free FAQ Assistant · Secure Customer Support</div>
 </div>
 
 </div>
@@ -555,54 +336,40 @@ header:after{
 
 const API_BASE_URL="https://glo365.onrender.com/api";
 const TOKEN_KEY="glo365_token";
-
 const $=id=>document.getElementById(id);
 
 let currentUser=null;
-let messages=[];
+let serverMessages=[];
+let localMessages=[];
 let conversationId=null;
-let hasUserSentMessage=false;
 let sending=false;
 let loading=false;
 let refreshTimer=null;
 let lastMessageSignature="";
+let humanSupportMode=false;
+let typingTimer=null;
 
 function getToken(){
- try{
-  return sessionStorage.getItem(TOKEN_KEY)||"";
- }catch(_){
-  return "";
+ try{return sessionStorage.getItem(TOKEN_KEY)||"";}
+ catch(_){return "";}
 }
 
-}
-
-function showNotice(message,type="error"){
+function showNotice(message,type="info"){
  $("notice").textContent=message;
  $("notice").className="notice show "+type;
 }
-
 function hideNotice(){
  $("notice").textContent="";
  $("notice").className="notice";
 }
 
-function setSending(value){
- sending=value;
- $("sendButton").disabled=value;
- $("messageInput").disabled=value;
- $("sendButton").textContent=value?"…":"➤";
-}
-
 async function apiRequest(path,options={}){
-
  const token=getToken();
-
  const headers={
   "Accept":"application/json",
   ...(options.body?{"Content-Type":"application/json"}:{}),
   ...(token?{"Authorization":"Bearer "+token}:{})
  };
-
  const response=await fetch(API_BASE_URL+path,{
   method:options.method||"GET",
   headers,
@@ -610,442 +377,433 @@ async function apiRequest(path,options={}){
   cache:"no-store",
   body:options.body?JSON.stringify(options.body):undefined
  });
-
  let data={};
-
- try{
-  data=await response.json();
- }catch(_){}
-
+ try{data=await response.json();}catch(_){}
  if(!response.ok||data.success===false){
-  const error=new Error(
-   data.message||data.error||"Request failed ("+response.status+")"
-  );
+  const error=new Error(data.message||data.error||"Request failed ("+response.status+")");
   error.status=response.status;
   throw error;
  }
-
  return data;
 }
 
 async function checkLogin(){
-
  const data=await apiRequest("/auth/me");
-
  if(!data||data.success!==true||!data.user){
   const error=new Error("Please log in to continue.");
   error.status=401;
   throw error;
  }
-
  currentUser=data.user;
-
- if(
-  currentUser.status&&
-  String(currentUser.status).toLowerCase()!=="active"
- ){
+ if(currentUser.status&&String(currentUser.status).toLowerCase()!=="active"){
   throw new Error("Your account is not active.");
  }
-
  if(String(currentUser.role||"user").toLowerCase()==="admin"){
   location.replace("admin.html");
   return null;
  }
-
  return currentUser;
 }
 
 function redirectToLogin(){
-
  try{
   sessionStorage.removeItem(TOKEN_KEY);
   sessionStorage.removeItem("glo365_user");
  }catch(_){}
-
  location.replace("login.html");
 }
 
 function normalizeMessage(item){
-
  return{
   id:item.id??item.message_id??"",
-  sender_role:String(
-   item.sender_role||
-   item.senderRole||
-   item.role||
-   ""
-  ).toLowerCase(),
-  message:String(
-   item.message||
-   item.content||
-   item.text||
-   ""
-  ),
+  sender_role:String(item.sender_role||item.senderRole||item.role||"").toLowerCase(),
+  message:String(item.message||item.content||item.text||""),
   created_at:item.created_at||item.createdAt||null
  };
 }
 
 function isUserMessage(item){
-
- return[
-  "user",
-  "customer",
-  "member"
- ].includes(String(item.sender_role||"").toLowerCase());
-
+ return ["user","customer","member"].includes(String(item.sender_role||"").toLowerCase());
 }
 
 function formatMessageTime(value){
-
  if(!value)return"";
-
  const date=new Date(value);
-
  if(Number.isNaN(date.getTime()))return"";
-
- return date.toLocaleString("en-GB",{
-  day:"2-digit",
-  month:"short",
-  hour:"2-digit",
-  minute:"2-digit"
- });
-
+ return date.toLocaleString("en-GB",{day:"2-digit",month:"short",hour:"2-digit",minute:"2-digit"});
 }
 
-function updateComposerNote(){
+function makeMessage(item){
+ const row=document.createElement("div");
+ const role=item.sender_role;
+ const userMessage=isUserMessage(item);
+ const isAI=role==="ai";
+ row.className="message "+(userMessage?"user":isAI?"ai":"admin");
 
- $("firstMessageNote").textContent=
-  hasUserSentMessage
-   ?"You can send another message. Our support team can reply here."
-   :"Send your first message to start a support conversation.";
+ const sender=document.createElement("div");
+ sender.className="sender";
+ sender.textContent=userMessage?"You":isAI?"🤖 GLO AI Assistant":"GLO 365 Support";
 
+ const bubble=document.createElement("div");
+ bubble.className="bubble";
+ bubble.textContent=item.message;
+
+ const time=document.createElement("div");
+ time.className="message-time";
+ time.textContent=formatMessageTime(item.created_at);
+
+ row.append(sender,bubble,time);
+ return row;
 }
 
 function renderMessages(){
-
  const area=$("chatArea");
-
  area.replaceChildren();
 
- if(!messages.length){
+ const all=[...serverMessages,...localMessages];
 
+ if(!all.length){
   const welcome=document.createElement("div");
   welcome.className="welcome";
-
   const icon=document.createElement("div");
   icon.className="welcome-icon";
-  icon.textContent="💬";
-
+  icon.textContent="🤖";
   const title=document.createElement("h3");
   title.textContent="Welcome to GLO 365 Support";
-
   const paragraph=document.createElement("p");
-  paragraph.textContent=
-   "Tell us how we can help. Send your first message to start your support conversation.";
-
+  paragraph.textContent="Choose a topic above or type your question. বাংলা অথবা English—দুই ভাষাতেই প্রশ্ন করতে পারো।";
   welcome.append(icon,title,paragraph);
   area.appendChild(welcome);
-
-  hasUserSentMessage=false;
-  conversationId=null;
-
-  updateComposerNote();
-
-  return;
+ }else{
+  all.forEach(item=>area.appendChild(makeMessage(item)));
  }
 
- messages.forEach(item=>{
-
-  const row=document.createElement("div");
-
-  const userMessage=isUserMessage(item);
-
-  row.className="message "+(userMessage?"user":"admin");
-
-  const sender=document.createElement("div");
-  sender.className="sender";
-  sender.textContent=userMessage?"You":"GLO 365 Support";
-
-  const bubble=document.createElement("div");
-  bubble.className="bubble";
-  bubble.textContent=item.message;
-
-  const time=document.createElement("div");
-  time.className="message-time";
-  time.textContent=formatMessageTime(item.created_at);
-
-  row.append(sender,bubble,time);
-
-  area.appendChild(row);
-
- });
-
  area.scrollTop=area.scrollHeight;
-
- hasUserSentMessage=messages.some(isUserMessage);
-
  updateComposerNote();
-
 }
 
+function updateComposerNote(){
+ $("firstMessageNote").textContent=humanSupportMode
+  ?"Human Support mode: Your message will be sent to the Admin support conversation."
+  :"Ask a question to GLO AI Assistant. For personal help, choose Human Support.";
+}
+
+function addLocalMessage(role,message){
+ localMessages.push({
+  id:"local-"+Date.now()+"-"+Math.random().toString(16).slice(2),
+  sender_role:role,
+  message,
+  created_at:new Date().toISOString()
+ });
+ renderMessages();
+}
+
+function showTyping(){
+ hideTyping();
+ const row=document.createElement("div");
+ row.className="message ai";
+ row.id="typingIndicator";
+ const sender=document.createElement("div");
+ sender.className="sender";
+ sender.textContent="🤖 GLO AI Assistant";
+ const dots=document.createElement("div");
+ dots.className="typing";
+ for(let i=0;i<3;i++)dots.appendChild(document.createElement("i"));
+ row.append(sender,dots);
+ $("chatArea").appendChild(row);
+ $("chatArea").scrollTop=$("chatArea").scrollHeight;
+}
+function hideTyping(){
+ const item=$("typingIndicator");
+ if(item)item.remove();
+ if(typingTimer){
+  clearTimeout(typingTimer);
+  typingTimer=null;
+ }
+}
+
+/* FAQ KNOWLEDGE BASE */
+const FAQ={
+ login:{
+  en:"If you cannot log in:\n\n1. Check that your username and password are correct.\n2. Make sure your internet connection is working.\n3. Refresh the page and try again.\n4. If the problem continues, contact Human Support.\n\nFor your security, never share your password or OTP.",
+  bn:"লগইন করতে সমস্যা হলে:\n\n১. Username ও Password সঠিক আছে কি না দেখুন।\n২. ইন্টারনেট সংযোগ পরীক্ষা করুন।\n৩. পেজ Refresh করে আবার চেষ্টা করুন।\n৪. সমস্যা থাকলে Human Support-এ যোগাযোগ করুন।\n\nনিরাপত্তার জন্য Password বা OTP কাউকে দেবেন না।"
+ },
+ password:{
+  en:"For password problems, use the official Forgot Password option if available on your login page. If you cannot reset it, contact Human Support for account assistance.\n\nNever share your current password or OTP.",
+  bn:"Password সমস্যা হলে Login পেজে Forgot Password অপশন থাকলে সেটি ব্যবহার করুন। Reset করতে না পারলে Human Support-এ যোগাযোগ করুন।\n\nআপনার Password বা OTP কাউকে দেবেন না।"
+ },
+ points:{
+  en:"GLO 365 uses DEMO Points for entertainment and demonstration. You can check your available points in your account wallet or profile.\n\nIf your balance looks incorrect, contact Human Support and describe the issue. Do not share your password or OTP.",
+  bn:"GLO 365-এ বিনোদন ও Demo ব্যবহারের জন্য DEMO Points রয়েছে। আপনার Wallet বা Profile থেকে ব্যালেন্স দেখতে পারবেন।\n\nব্যালেন্স ভুল মনে হলে সমস্যাটি জানিয়ে Human Support-এ যোগাযোগ করুন। Password বা OTP দেবেন না।"
+ },
+ deposit:{
+  en:"For a deposit-related question:\n\n1. Open the Deposit section and read the available instructions.\n2. Submit the required transaction reference through the official form, if applicable.\n3. Wait for Admin verification.\n4. If you need help, contact Human Support with the relevant request details.\n\nNever share your PIN, OTP, CVV or card details.",
+  bn:"Deposit সংক্রান্ত সমস্যা হলে:\n\n১. Deposit সেকশনের নির্দেশনা দেখুন।\n২. প্রয়োজন হলে অফিসিয়াল ফর্মে Transaction Reference জমা দিন।\n৩. Admin verification-এর জন্য অপেক্ষা করুন।\n৪. সাহায্য প্রয়োজন হলে Request-এর তথ্য দিয়ে Human Support-এ যোগাযোগ করুন।\n\nPIN, OTP, CVV বা Card তথ্য দেবেন না।"
+ },
+ withdraw:{
+  en:"For a withdrawal-related question:\n\n1. Check your request status in the relevant section.\n2. Review the details you submitted.\n3. If the request is pending or has an issue, contact Human Support with the request details.\n\nThe AI cannot approve or process requests. Only the authorized Admin team can review them.",
+  bn:"Withdrawal সমস্যা হলে:\n\n১. সংশ্লিষ্ট সেকশনে Request Status দেখুন।\n২. জমা দেওয়া তথ্য পরীক্ষা করুন।\n৩. Pending বা সমস্যা থাকলে Request-এর তথ্য দিয়ে Human Support-এ যোগাযোগ করুন।\n\nAI কোনো Request Approve বা Process করতে পারে না। অনুমোদিত Admin টিম যাচাই করবে।"
+ },
+ kyc:{
+  en:"For KYC verification:\n\n1. Open the KYC/Profile verification section.\n2. Check that the submitted information is correct.\n3. Wait for Admin review.\n4. If verification is delayed, contact Human Support.\n\nDo not post your full identity document number in chat. Never share OTP or account passwords.",
+  bn:"KYC Verification-এর জন্য:\n\n১. KYC/Profile Verification সেকশনে যান।\n২. জমা দেওয়া তথ্য সঠিক কি না দেখুন।\n৩. Admin Review-এর জন্য অপেক্ষা করুন।\n৪. দেরি হলে Human Support-এ যোগাযোগ করুন।\n\nচ্যাটে সম্পূর্ণ NID/Passport নম্বর দেবেন না। OTP বা Password শেয়ার করবেন না।"
+ },
+ account:{
+  en:"For account or profile issues, open your Profile section and check the information shown there. If you need an account change or your profile information is incorrect, contact Human Support. The AI cannot directly change account information.",
+  bn:"Account বা Profile সমস্যা হলে Profile সেকশনে তথ্য পরীক্ষা করুন। তথ্য পরিবর্তন করতে হলে বা ভুল থাকলে Human Support-এ যোগাযোগ করুন। AI সরাসরি Account তথ্য পরিবর্তন করতে পারে না।"
+ },
+ result:{
+  en:"For result-related questions, open the Results section of GLO 365 and check the published result information. If you see missing or incorrect information, contact Human Support and explain what you found.",
+  bn:"Result দেখতে GLO 365-এর Results সেকশন খুলুন। কোনো তথ্য না থাকলে বা ভুল মনে হলে বিষয়টি জানিয়ে Human Support-এ যোগাযোগ করুন।"
+ },
+ human:{
+  en:"Human Support mode is now selected. Write your message and press Send. Your message will use the existing GLO 365 Live Support system so the Admin team can review it.\n\nPlease do not send passwords, PINs, OTPs or CVV.",
+  bn:"Human Support Mode চালু হয়েছে। এখন আপনার সমস্যা লিখে Send চাপুন। আপনার মেসেজ আগের GLO 365 Live Support সিস্টেমের মাধ্যমে Admin টিমের কাছে যাবে।\n\nPassword, PIN, OTP বা CVV পাঠাবেন না।"
+ },
+ general:{
+  en:"I can help with common questions about Login, Password, DEMO Points, Deposit, Withdrawal, KYC, Account and Results.\n\nChoose a Quick Help topic above. If your question needs personal account checking, select Human Support.",
+  bn:"আমি Login, Password, DEMO Points, Deposit, Withdrawal, KYC, Account ও Results বিষয়ে সাধারণ সাহায্য করতে পারি।\n\nউপরের Quick Help থেকে একটি বিষয় বেছে নিন। ব্যক্তিগত Account যাচাই প্রয়োজন হলে Human Support নির্বাচন করুন।"
+ }
+};
+
+function detectLanguage(text){
+ return /[\u0980-\u09FF]/.test(text)?"bn":"en";
+}
+
+function detectTopic(text){
+ const t=text.toLowerCase();
+
+ if(/human support|admin|agent|support team|মানুষ|অ্যাডমিন|এডমিন|সাপোর্ট টিম|কাস্টমার কেয়ার/.test(t))return"human";
+ if(/login|log in|লগইন|লগ ইন|প্রবেশ করতে/.test(t))return"login";
+ if(/password|পাসওয়ার্ড|পাসওয়ার্ড/.test(t))return"password";
+ if(/point|balance|wallet|পয়েন্ট|পয়েন্ট|ব্যালেন্স|ওয়ালেট|ওয়ালেট/.test(t))return"points";
+ if(/deposit|ডিপোজিট|জমা/.test(t))return"deposit";
+ if(/withdraw|withdrawal|উত্তোলন|উইথড্র|টাকা তুল/.test(t))return"withdraw";
+ if(/kyc|nid|passport|verification|ভেরিফিকেশন|যাচাই|এনআইডি|পাসপোর্ট/.test(t))return"kyc";
+ if(/result|রেজাল্ট|ফলাফল|ড্র ফল/.test(t))return"result";
+ if(/account|profile|অ্যাকাউন্ট|একাউন্ট|প্রোফাইল/.test(t))return"account";
+
+ return"general";
+}
+
+function getFAQAnswer(text,forcedTopic){
+ const topic=forcedTopic||detectTopic(text);
+ const lang=detectLanguage(text);
+ return FAQ[topic][lang];
+}
+
+function addAIAnswer(text,forcedTopic){
+ showTyping();
+ const delay=650+Math.min(text.length*8,800);
+ typingTimer=setTimeout(()=>{
+  hideTyping();
+  const topic=forcedTopic||detectTopic(text);
+  addLocalMessage("ai",getFAQAnswer(text,topic));
+  if(topic==="human"){
+   humanSupportMode=true;
+   updateComposerNote();
+  }
+ },delay);
+}
+
+/* LOAD EXISTING SERVER MESSAGES */
 async function loadMessages(options={}){
-
  if(loading)return;
-
  loading=true;
 
  try{
-
   const data=await apiRequest("/support/messages");
-
-  if(!data||data.success!==true){
-   throw new Error("Unable to load support messages.");
-  }
+  if(!data||data.success!==true)throw new Error("Unable to load support messages.");
 
   const incoming=Array.isArray(data.messages)?data.messages:[];
-
   const normalized=incoming.map(normalizeMessage);
 
   const signature=normalized.map(item=>
-   String(item.id)+"|"+
-   item.sender_role+"|"+
-   item.message+"|"+
-   item.created_at
+   String(item.id)+"|"+item.sender_role+"|"+item.message+"|"+item.created_at
   ).join("||");
 
   conversationId=data.conversation?.id||null;
 
   if(signature!==lastMessageSignature){
-
-   messages=normalized;
+   serverMessages=normalized;
    lastMessageSignature=signature;
-
    renderMessages();
-
-  }else if(!normalized.length&&messages.length){
-
-   messages=[];
-   renderMessages();
-
   }
 
  }catch(error){
-
   console.error("Support message loading failed:",error);
-
   if(options.initial){
-
-   const area=$("chatArea");
-   area.replaceChildren();
-
+   $("chatArea").replaceChildren();
    const item=document.createElement("div");
    item.className="empty";
    item.textContent=error.message||"Unable to load support chat.";
-
-   area.appendChild(item);
-
+   $("chatArea").appendChild(item);
   }
-
-  if(error.status===401){
-   redirectToLogin();
-  }
-
+  if(error.status===401)redirectToLogin();
  }finally{
-
   loading=false;
-
  }
+}
 
+/* SEND TO EXISTING ADMIN SUPPORT API */
+async function sendHumanMessage(message){
+ return apiRequest("/support/messages",{
+  method:"POST",
+  body:{message}
+ });
 }
 
 async function sendMessage(event){
-
  event.preventDefault();
-
  if(sending)return;
 
  const input=$("messageInput");
  const message=input.value.trim();
 
  if(!message){
-  showNotice("Please write a message first.");
+  showNotice("Please write a message first.","error");
   return;
  }
-
  if(message.length>5000){
-  showNotice("Message cannot exceed 5000 characters.");
+  showNotice("Message cannot exceed 5000 characters.","error");
   return;
  }
 
  hideNotice();
- setSending(true);
+
+ /* FAQ ANSWER: NO API CALL, NO API COST */
+ if(!humanSupportMode){
+  input.value="";
+  input.style.height="42px";
+  addLocalMessage("user",message);
+  addAIAnswer(message);
+  return;
+ }
+
+ /* HUMAN SUPPORT: EXISTING SERVER API */
+ sending=true;
+ $("sendButton").disabled=true;
+ input.disabled=true;
+ $("sendButton").textContent="…";
 
  try{
-
-  const data=await apiRequest("/support/messages",{
-   method:"POST",
-   body:{message}
-  });
+  const data=await sendHumanMessage(message);
 
   if(!data||data.success!==true){
-   throw new Error(
-    data.message||"Message could not be sent."
-   );
+   throw new Error(data.message||"Message could not be sent.");
   }
 
   input.value="";
   input.style.height="42px";
 
   if(data.message){
-
-   messages.push(normalizeMessage(data.message));
+   serverMessages.push(normalizeMessage(data.message));
    lastMessageSignature="";
    renderMessages();
-
   }
 
   await loadMessages();
-
-  showNotice(
-   "Your message has been sent successfully.",
-   "success"
-  );
+  showNotice("Your message has been sent to GLO 365 Support.","success");
 
  }catch(error){
-
   console.error("Sending support message failed:",error);
-
   if(error.status===401){
    redirectToLogin();
    return;
   }
-
-  showNotice(
-   error.message||"Unable to send your message."
-  );
-
+  showNotice(error.message||"Unable to send your message.","error");
  }finally{
-
-  setSending(false);
-
+  sending=false;
+  $("sendButton").disabled=false;
+  input.disabled=false;
+  $("sendButton").textContent="➤";
  }
-
 }
 
-function startAutoRefresh(){
+/* QUICK HELP */
+document.querySelectorAll(".quick-btn").forEach(button=>{
+ button.addEventListener("click",()=>{
+  const topic=button.dataset.topic;
+  const label=button.textContent.replace(/^[^\w\u0980-\u09FF]+/,"").trim();
 
- if(refreshTimer){
-  clearInterval(refreshTimer);
- }
-
- refreshTimer=setInterval(()=>{
-
-  if(!document.hidden&&!sending){
-   loadMessages();
+  if(topic==="human"){
+   humanSupportMode=true;
+   addLocalMessage("user",label);
+   addAIAnswer(label,"human");
+   showNotice("Human Support mode selected. Your next message will be sent to Admin.","info");
+   return;
   }
 
- },5000);
-
-}
-
-/* BACK BUTTON */
-
-$("backButton").addEventListener("click",()=>{
-
- if(history.length>1){
-  history.back();
- }else{
-  location.href="profile.html";
- }
-
+  humanSupportMode=false;
+  addLocalMessage("user",label);
+  addAIAnswer(label,topic);
+ });
 });
 
-/* MESSAGE FORM */
+/* BACK BUTTON */
+$("backButton").addEventListener("click",()=>{
+ if(history.length>1)history.back();
+ else location.href="profile.html";
+});
 
+/* FORM */
 $("messageForm").addEventListener("submit",sendMessage);
 
 /* ENTER TO SEND */
-
 $("messageInput").addEventListener("keydown",event=>{
-
  if(event.key==="Enter"&&!event.shiftKey){
-
   event.preventDefault();
-
   $("messageForm").requestSubmit();
-
  }
-
 });
 
-/* AUTO TEXTAREA HEIGHT */
-
+/* TEXTAREA HEIGHT */
 $("messageInput").addEventListener("input",function(){
-
  this.style.height="42px";
-
- this.style.height=
-  Math.min(this.scrollHeight,115)+"px";
-
+ this.style.height=Math.min(this.scrollHeight,110)+"px";
 });
 
-/* REFRESH WHEN APP RETURNS */
+/* AUTO REFRESH */
+function startAutoRefresh(){
+ if(refreshTimer)clearInterval(refreshTimer);
+ refreshTimer=setInterval(()=>{
+  if(!document.hidden&&!sending)loadMessages();
+ },5000);
+}
 
 document.addEventListener("visibilitychange",()=>{
-
- if(!document.hidden){
-  loadMessages();
- }
-
+ if(!document.hidden)loadMessages();
 });
 
 /* INITIALIZE */
-
 async function initializeSupport(){
-
  try{
-
   const user=await checkLogin();
-
   if(!user)return;
 
   await loadMessages({initial:true});
-
   startAutoRefresh();
 
  }catch(error){
-
   console.error("Support initialization failed:",error);
-
   if(error.status===401){
    redirectToLogin();
    return;
   }
-
-  const area=$("chatArea");
-  area.replaceChildren();
-
+  $("chatArea").replaceChildren();
   const item=document.createElement("div");
   item.className="empty";
-  item.textContent=
-   error.message||"Unable to open support.";
-
-  area.appendChild(item);
-
+  item.textContent=error.message||"Unable to open support.";
+  $("chatArea").appendChild(item);
  }
-
 }
 
 initializeSupport();
 
 window.addEventListener("beforeunload",()=>{
-
- if(refreshTimer){
-  clearInterval(refreshTimer);
- }
-
+ if(refreshTimer)clearInterval(refreshTimer);
+ if(typingTimer)clearTimeout(typingTimer);
 });
-
 </script>
 
 </body>
