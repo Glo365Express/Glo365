@@ -69,7 +69,7 @@ module.exports = function registerSubAdminRoutes(deps) {
   // ---------------- MAIN ADMIN: SUB-ADMIN MANAGEMENT ----------------
   app.get("/api/admin/subadmins", authenticateToken, requireAdmin, asyncRoute(async (req, res) => {
     const result = await pool.query(`
-      SELECT s.id,s.username,s.email,s.status,s.subadmin_invite_code AS invite_code,
+      SELECT s.id,s.username,s.status,s.subadmin_invite_code AS invite_code,
              s.balance,s.created_at,
              (SELECT COUNT(*)::int FROM users c WHERE c.subadmin_owner_id=s.id AND c.role='user') AS customer_count,
              COALESCE((SELECT SUM(t.amount) FROM subadmin_point_transfers t WHERE t.subadmin_id=s.id),0) AS total_allocated
@@ -80,15 +80,15 @@ module.exports = function registerSubAdminRoutes(deps) {
 
   app.post("/api/admin/subadmins", authenticateToken, requireAdmin, asyncRoute(async (req, res) => {
     const username = cleanText(req.body.username, 30).toLowerCase();
-    const emailInput = cleanText(req.body.email, 150).toLowerCase();
-    // The Main Admin form may omit email. Store NULL, not an empty string,
-    // because users.email may have a UNIQUE constraint.
-    const email = emailInput || null;
+    // Sub-Admin creation intentionally requires ONLY username and password.
+    // The users table has email NOT NULL, so create a unique reserved .invalid
+    // placeholder internally. It is not a real mailbox and is never requested
+    // from or shown to the Main Admin.
+    const email = "subadmin-" + crypto.randomUUID() + "@no-email.glo365.invalid";
     const password = req.body.password;
     if (!validUsername(username) || username === PRIMARY_ADMIN_USERNAME ||
-        (email && !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) ||
         typeof password !== "string" || password.length < 10 || password.length > 128) {
-      return sendError(res, 400, "Invalid Sub-Admin details. Password must be 10-128 characters.");
+      return sendError(res, 400, "Enter a valid username and a password of 10-128 characters.");
     }
     const passwordHash = await bcrypt.hash(password, 12);
     const client = await pool.connect();
@@ -98,7 +98,7 @@ module.exports = function registerSubAdminRoutes(deps) {
       const created = await client.query(
         `INSERT INTO users(username,email,password_hash,role,status,balance,subadmin_invite_code)
          VALUES($1,$2,$3,'subadmin','active',0,$4)
-         RETURNING id,username,email,role,status,balance,subadmin_invite_code AS invite_code,created_at`,
+         RETURNING id,username,role,status,balance,subadmin_invite_code AS invite_code,created_at`,
         [username,email,passwordHash,inviteCode]
       );
       await client.query("INSERT INTO profiles(user_id) VALUES($1) ON CONFLICT(user_id) DO NOTHING", [created.rows[0].id]);
@@ -107,7 +107,7 @@ module.exports = function registerSubAdminRoutes(deps) {
       res.status(201).json({ success:true, subadmin:created.rows[0] });
     } catch (error) {
       await client.query("ROLLBACK");
-      if (error.code === "23505") return sendError(res, 409, "Username, email or invite code already exists.");
+      if (error.code === "23505") return sendError(res, 409, "Username already exists. Please choose another username.");
       throw error;
     } finally { client.release(); }
   }));
@@ -172,7 +172,7 @@ module.exports = function registerSubAdminRoutes(deps) {
   app.get("/api/subadmin/dashboard", authenticateToken, requireSubAdmin, asyncRoute(async (req,res) => {
     const inviteCode = await ensureInviteCode(req.user.id);
     const result = await pool.query(`
-      SELECT s.id,s.username,s.email,s.balance,s.status,s.subadmin_invite_code,s.created_at,
+      SELECT s.id,s.username,s.balance,s.status,s.subadmin_invite_code,s.created_at,
         (SELECT COUNT(*)::int FROM users c WHERE c.subadmin_owner_id=s.id AND c.role='user') AS customer_count,
         COALESCE((SELECT SUM(t.amount) FROM subadmin_point_transfers t WHERE t.subadmin_id=s.id),0) AS total_allocated
       FROM users s WHERE s.id=$1 AND s.role='subadmin'
