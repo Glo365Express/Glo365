@@ -1,3 +1,4 @@
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -5,147 +6,568 @@
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
 <meta name="theme-color" content="#071a35">
 <title>Sub-Admin Dashboard - GLO 365</title>
+
 <style>
 *{box-sizing:border-box;margin:0;padding:0}
-:root{--navy:#071a35;--navy2:#102c50;--blue:#2196e8;--blue2:#147fc9;--bg:#eef3f9;--text:#1d2c40;--muted:#718096;--white:#fff;--green:#168a50;--red:#d33b3b;--line:#e4ebf3;--shadow:0 8px 25px rgba(18,45,78,.08)}
+:root{
+--navy:#071a35;--navy2:#102c50;--blue:#2196e8;
+--blue2:#147fc9;--bg:#eef3f9;--text:#1d2c40;
+--muted:#718096;--white:#fff;--green:#168a50;
+--red:#d33b3b;--line:#e4ebf3;
+--shadow:0 8px 25px rgba(18,45,78,.08)
+}
 body{font-family:Arial,Helvetica,sans-serif;background:var(--bg);color:var(--text);min-height:100vh}
 .topbar{background:linear-gradient(120deg,var(--navy),var(--navy2));color:#fff;padding:18px 16px;box-shadow:0 4px 16px #071a3522}
 .top-inner{max-width:1100px;margin:auto;display:flex;align-items:center;justify-content:space-between;gap:12px}
-.brand{font-size:21px;font-weight:900;letter-spacing:1px}.brand span{color:#53b7ff}.sub-label{font-size:11px;color:#c4d5e9;margin-top:4px;letter-spacing:1px}
+.brand{font-size:21px;font-weight:900;letter-spacing:1px}
+.brand span{color:#53b7ff}
+.sub-label{font-size:11px;color:#c4d5e9;margin-top:4px;letter-spacing:1px}
 .logout{border:1px solid #ffffff55;background:#ffffff12;color:#fff;padding:10px 14px;border-radius:12px;font-weight:bold;cursor:pointer}
 .container{max-width:1100px;margin:22px auto;padding:0 14px 35px}
-.welcome{margin-bottom:18px}.welcome h1{font-size:23px;margin-bottom:5px}.welcome p{font-size:13px;color:var(--muted)}
+.welcome{margin-bottom:18px}
+.welcome h1{font-size:23px;margin-bottom:5px}
+.welcome p{font-size:13px;color:var(--muted)}
 .grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:13px;margin-bottom:18px}
 .stat{background:var(--white);border:1px solid var(--line);border-radius:17px;padding:18px;box-shadow:var(--shadow);min-width:0}
-.stat-label{font-size:12px;color:var(--muted);font-weight:bold}.stat-value{font-size:27px;font-weight:900;margin-top:9px;overflow-wrap:anywhere}.stat-note{font-size:11px;color:var(--muted);margin-top:5px}
+.stat-label{font-size:12px;color:var(--muted);font-weight:bold}
+.stat-value{font-size:27px;font-weight:900;margin-top:9px;overflow-wrap:anywhere}
+.stat-note{font-size:11px;color:var(--muted);margin-top:5px}
 .panel{background:#fff;border:1px solid var(--line);border-radius:17px;padding:18px;box-shadow:var(--shadow);margin-bottom:16px;min-width:0}
-.panel-head{display:flex;align-items:center;justify-content:space-between;gap:10px;margin-bottom:14px}.panel h2{font-size:17px}.muted{color:var(--muted);font-size:12px;line-height:1.5}
-.invite-row{display:flex;gap:8px;margin-top:12px}.invite-url{flex:1;min-width:0;height:43px;border:1px solid var(--line);border-radius:10px;padding:0 11px;background:#f7f9fc;color:#33445a;font-size:12px}
-.btn{border:0;border-radius:10px;background:var(--blue);color:#fff;font-weight:bold;padding:12px 15px;cursor:pointer}.btn:hover{background:var(--blue2)}.btn:disabled{opacity:.55;cursor:not-allowed}.btn.secondary{background:#e8f3fc;color:#126da9}.btn.small{padding:9px 12px;font-size:12px}
-.form-grid{display:grid;grid-template-columns:1fr 1fr auto;gap:10px;align-items:end}.field label{display:block;font-size:12px;font-weight:bold;color:#526176;margin:0 0 7px}.field input{width:100%;height:44px;border:1px solid #dce5ef;border-radius:10px;padding:0 12px;font-size:14px;outline:none;background:#fff;color:var(--text)}.field input:focus{border-color:var(--blue);box-shadow:0 0 0 3px #2196e81c}
-.table-wrap{width:100%;overflow-x:auto}table{border-collapse:collapse;width:100%;min-width:620px}th,td{text-align:left;padding:12px 10px;border-bottom:1px solid var(--line);font-size:12px;white-space:nowrap}th{color:#64748b;background:#f7f9fc;font-size:11px;text-transform:uppercase;letter-spacing:.4px}td strong{font-size:13px}.pill{display:inline-block;padding:5px 9px;border-radius:30px;font-size:10px;font-weight:bold;background:#e4f7ec;color:#187844}.pill.suspended{background:#ffeded;color:#bb3030}
-.notice{display:none;padding:11px 13px;border-radius:11px;font-size:12px;line-height:1.5;margin:0 0 14px;overflow-wrap:anywhere}.notice.show{display:block}.notice.error{background:#ffebeb;color:#b32626}.notice.success{background:#e7f8ed;color:#176d3a}.notice.info{background:#e8f3ff;color:#145f96}
-.empty{text-align:center;padding:24px 10px;color:var(--muted);font-size:13px}.refresh{font-size:12px;color:var(--blue);font-weight:bold;background:none;border:0;cursor:pointer}
-.loading{padding:30px;text-align:center;color:var(--muted);font-size:13px}.footer{text-align:center;color:#8794a6;font-size:11px;padding:10px}
-@media(max-width:700px){.grid{grid-template-columns:1fr 1fr}.form-grid{grid-template-columns:1fr 1fr}.form-grid .btn{grid-column:1/-1;width:100%}.container{margin-top:17px}.panel{padding:15px}.welcome h1{font-size:20px}}
-@media(max-width:420px){.grid{grid-template-columns:1fr 1fr;gap:9px}.stat{padding:14px}.stat-value{font-size:23px}.invite-row{flex-direction:column}.invite-url{width:100%}.topbar{padding:15px 13px}.brand{font-size:19px}}
+.panel-head{display:flex;align-items:center;justify-content:space-between;gap:10px;margin-bottom:14px}
+.panel h2{font-size:17px}
+.muted{color:var(--muted);font-size:12px;line-height:1.5}
+.invite-row{display:flex;gap:8px;margin-top:12px}
+.invite-url{flex:1;min-width:0;height:43px;border:1px solid var(--line);border-radius:10px;padding:0 11px;background:#f7f9fc;color:#33445a;font-size:12px}
+.btn{border:0;border-radius:10px;background:var(--blue);color:#fff;font-weight:bold;padding:12px 15px;cursor:pointer}
+.btn:hover{background:var(--blue2)}
+.btn:disabled{opacity:.55;cursor:not-allowed}
+.form-grid{display:grid;grid-template-columns:1fr 1fr auto;gap:10px;align-items:end}
+.field label{display:block;font-size:12px;font-weight:bold;color:#526176;margin:0 0 7px}
+.field input{width:100%;height:44px;border:1px solid #dce5ef;border-radius:10px;padding:0 12px;font-size:14px;outline:none;background:#fff;color:var(--text)}
+.field input:focus{border-color:var(--blue);box-shadow:0 0 0 3px #2196e81c}
+.table-wrap{width:100%;overflow-x:auto}
+table{border-collapse:collapse;width:100%;min-width:620px}
+th,td{text-align:left;padding:12px 10px;border-bottom:1px solid var(--line);font-size:12px;white-space:nowrap}
+th{color:#64748b;background:#f7f9fc;font-size:11px;text-transform:uppercase;letter-spacing:.4px}
+td strong{font-size:13px}
+.pill{display:inline-block;padding:5px 9px;border-radius:30px;font-size:10px;font-weight:bold;background:#e4f7ec;color:#187844}
+.pill.suspended{background:#ffeded;color:#bb3030}
+.notice{display:none;padding:11px 13px;border-radius:11px;font-size:12px;line-height:1.5;margin:0 0 14px;overflow-wrap:anywhere}
+.notice.show{display:block}
+.notice.error{background:#ffebeb;color:#b32626}
+.notice.success{background:#e7f8ed;color:#176d3a}
+.notice.info{background:#e8f3ff;color:#145f96}
+.empty{text-align:center;padding:24px 10px;color:var(--muted);font-size:13px}
+.refresh{font-size:12px;color:var(--blue);font-weight:bold;background:none;border:0;cursor:pointer}
+.loading{padding:30px;text-align:center;color:var(--muted);font-size:13px}
+.footer{text-align:center;color:#8794a6;font-size:11px;padding:10px}
+@media(max-width:700px){
+.grid{grid-template-columns:1fr 1fr}
+.form-grid{grid-template-columns:1fr 1fr}
+.form-grid .btn{grid-column:1/-1;width:100%}
+.container{margin-top:17px}
+.panel{padding:15px}
+.welcome h1{font-size:20px}
+}
+@media(max-width:420px){
+.grid{grid-template-columns:1fr 1fr;gap:9px}
+.stat{padding:14px}
+.stat-value{font-size:23px}
+.invite-row{flex-direction:column}
+.invite-url{width:100%}
+.topbar{padding:15px 13px}
+.brand{font-size:19px}
+}
 </style>
 </head>
+
 <body>
-<header class="topbar"><div class="top-inner"><div><div class="brand">GLO <span>365</span></div><div class="sub-label">SUB-ADMIN CONTROL PANEL</div></div><button class="logout" id="logoutButton" type="button">Log out</button></div></header>
+
+<header class="topbar">
+<div class="top-inner">
+<div>
+<div class="brand">GLO <span>365</span></div>
+<div class="sub-label">SUB-ADMIN CONTROL PANEL</div>
+</div>
+<button class="logout" id="logoutButton" type="button">Log out</button>
+</div>
+</header>
+
 <main class="container">
- <section class="welcome"><h1>Welcome, <span id="adminName">Sub-Admin</span></h1><p>Manage your invited customers and distribute only the points allocated to your account.</p></section>
- <div id="notice" class="notice" role="status" aria-live="polite"></div>
- <section class="grid">
-  <article class="stat"><div class="stat-label">AVAILABLE POINTS</div><div class="stat-value" id="balanceValue">—</div><div class="stat-note">Your current point balance</div></article>
-  <article class="stat"><div class="stat-label">YOUR CUSTOMERS</div><div class="stat-value" id="customerCount">—</div><div class="stat-note">Registered through your invite link</div></article>
-  <article class="stat"><div class="stat-label">TOTAL ALLOCATED</div><div class="stat-value" id="allocatedValue">—</div><div class="stat-note">Points received from Main Admin</div></article>
- </section>
- <section class="panel">
-  <div class="panel-head"><h2>Your Registration Link</h2><button class="refresh" id="refreshButton" type="button">↻ Refresh</button></div>
-  <p class="muted">Share this unique link. New accounts created through it will be connected to your Sub-Admin account.</p>
-  <div class="invite-row"><input class="invite-url" id="inviteLink" readonly value="Loading invite link..."><button class="btn" id="copyInviteButton" type="button">Copy Link</button></div>
- </section>
- <section class="panel">
-  <div class="panel-head"><h2>Distribute Points</h2></div>
-  <p class="muted" style="margin-bottom:14px">Choose one of your customers by their Customer ID. The points will be deducted from your available balance.</p>
-  <form id="transferForm" class="form-grid">
-   <div class="field"><label for="customerId">Customer ID</label><input id="customerId" type="number" min="1" step="1" placeholder="Enter customer ID" required></div>
-   <div class="field"><label for="transferAmount">Points Amount</label><input id="transferAmount" type="number" min="0.01" max="10000000" step="0.01" placeholder="Enter points" required></div>
-   <button class="btn" id="transferButton" type="submit">Send Points</button>
-  </form>
- </section>
- <section class="panel">
-  <div class="panel-head"><h2>Your Customers</h2><button class="refresh" id="customersRefresh" type="button">↻ Reload</button></div>
-  <div class="table-wrap"><table><thead><tr><th>Customer ID</th><th>Username</th><th>Email</th><th>Balance</th><th>Status</th><th>Joined</th></tr></thead><tbody id="customersBody"><tr><td colspan="6" class="loading">Loading customers...</td></tr></tbody></table></div>
- </section>
- <section class="panel">
-  <div class="panel-head"><h2>Point Distribution History</h2><button class="refresh" id="historyRefresh" type="button">↻ Reload</button></div>
-  <div class="table-wrap"><table><thead><tr><th>Date</th><th>Customer ID</th><th>Points Sent</th><th>Reference</th></tr></thead><tbody id="historyBody"><tr><td colspan="4" class="loading">Loading history...</td></tr></tbody></table></div>
- </section>
- <div class="footer">GLO 365 · Sub-Admin Panel</div>
+
+<section class="welcome">
+<h1>Welcome, <span id="adminName">Sub-Admin</span></h1>
+<p>Manage your invited customers and distribute only the points allocated to your account.</p>
+</section>
+
+<div id="notice" class="notice" role="status" aria-live="polite"></div>
+
+<section class="grid">
+<article class="stat">
+<div class="stat-label">AVAILABLE POINTS</div>
+<div class="stat-value" id="balanceValue">—</div>
+<div class="stat-note">Your current point balance</div>
+</article>
+
+<article class="stat">
+<div class="stat-label">YOUR CUSTOMERS</div>
+<div class="stat-value" id="customerCount">—</div>
+<div class="stat-note">Registered through your invite link</div>
+</article>
+
+<article class="stat">
+<div class="stat-label">TOTAL ALLOCATED</div>
+<div class="stat-value" id="allocatedValue">—</div>
+<div class="stat-note">Points received from Main Admin</div>
+</article>
+</section>
+
+<section class="panel">
+<div class="panel-head">
+<h2>Your Registration Link</h2>
+<button class="refresh" id="refreshButton" type="button">↻ Refresh</button>
+</div>
+
+<p class="muted">
+Share this unique link. New accounts created through it will be connected to your Sub-Admin account.
+</p>
+
+<div class="invite-row">
+<input class="invite-url" id="inviteLink" readonly value="Loading invite link...">
+<button class="btn" id="copyInviteButton" type="button">Copy Link</button>
+</div>
+</section>
+
+<section class="panel">
+<div class="panel-head">
+<h2>Distribute Points</h2>
+</div>
+
+<p class="muted" style="margin-bottom:14px">
+Choose one of your customers by their Customer ID.
+The points will be deducted from your available balance.
+</p>
+
+<form id="transferForm" class="form-grid">
+
+<div class="field">
+<label for="customerId">Customer ID</label>
+<input id="customerId" type="number" min="1" step="1" placeholder="Enter customer ID" required>
+</div>
+
+<div class="field">
+<label for="transferAmount">Points Amount</label>
+<input id="transferAmount" type="number" min="0.01" max="10000000" step="0.01" placeholder="Enter points" required>
+</div>
+
+<button class="btn" id="transferButton" type="submit">Send Points</button>
+</form>
+</section>
+
+<section class="panel">
+<div class="panel-head">
+<h2>Your Customers</h2>
+<button class="refresh" id="customersRefresh" type="button">↻ Reload</button>
+</div>
+
+<div class="table-wrap">
+<table>
+<thead>
+<tr>
+<th>Customer ID</th>
+<th>Username</th>
+<th>Email</th>
+<th>Balance</th>
+<th>Status</th>
+<th>Joined</th>
+</tr>
+</thead>
+<tbody id="customersBody">
+<tr><td colspan="6" class="loading">Loading customers...</td></tr>
+</tbody>
+</table>
+</div>
+</section>
+
+<section class="panel">
+<div class="panel-head">
+<h2>Point Distribution History</h2>
+<button class="refresh" id="historyRefresh" type="button">↻ Reload</button>
+</div>
+
+<div class="table-wrap">
+<table>
+<thead>
+<tr>
+<th>Date</th>
+<th>Customer ID</th>
+<th>Points Sent</th>
+<th>Reference</th>
+</tr>
+</thead>
+<tbody id="historyBody">
+<tr><td colspan="4" class="loading">Loading history...</td></tr>
+</tbody>
+</table>
+</div>
+</section>
+
+<div class="footer">GLO 365 · Sub-Admin Panel</div>
+
 </main>
+
 <script>
 "use strict";
+
 const API_BASE_URL="https://glo365.onrender.com/api";
 const TOKEN_KEY="glo365_token";
 const LOGIN_PAGE="login.html";
+
 const $=id=>document.getElementById(id);
+
 let currentAccount=null;
 let busy=false;
 
-function getToken(){try{return sessionStorage.getItem(TOKEN_KEY)||""}catch(_){return ""}}
+function getToken(){
+try{
+return sessionStorage.getItem(TOKEN_KEY)||"";
+}catch(_){
+return "";
+}
+
+}
+
 function showNotice(message,type="info"){
- const box=$("notice");box.textContent=message;box.className="notice show "+type;
+const box=$("notice");
+box.textContent=message;
+box.className="notice show "+type;
 }
-function clearNotice(){const box=$("notice");box.textContent="";box.className="notice"}
-function numberText(value){const n=Number(value||0);return Number.isFinite(n)?n.toLocaleString("en-US",{maximumFractionDigits:2}):"0"}
-function dateText(value){if(!value)return "—";const d=new Date(value);return Number.isNaN(d.getTime())?"—":d.toLocaleString()}
-function safe(value){return String(value??"").replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;","\"":"&quot;","'":"&#39;"}[c]))}
-async function api(path,options={}){
- const token=getToken();
- if(!token){location.replace(LOGIN_PAGE);throw new Error("Please sign in to continue.")}
- const response=await fetch(API_BASE_URL+path,{...options,credentials:"include",headers:{"Accept":"application/json","Content-Type":"application/json","Authorization":"Bearer "+token,...(options.headers||{})}});
- let data;try{data=await response.json()}catch(_){throw new Error("Invalid server response.")}
- if(!response.ok||data.success===false){throw new Error(data.message||data.error||"Request failed.")}
- return data;
+
+function clearNotice(){
+const box=$("notice");
+box.textContent="";
+box.className="notice";
 }
-/* Registration is handled by login.html, which automatically opens Sign Up when it sees ?subadmin=. */
+
+function numberText(value){
+const n=Number(value||0);
+return Number.isFinite(n)?n.toLocaleString("en-US",{maximumFractionDigits:2}):"0";
+}
+
+function dateText(value){
+if(!value)return "—";
+const d=new Date(value);
+return Number.isNaN(d.getTime())?"—":d.toLocaleString();
+}
+
+function safe(value){
+return String(value??"").replace(/[&<>"']/g,c=>({
+"&":"&amp;",
+"<":"&lt;",
+">":"&gt;",
+"\"":"&quot;",
+"'":"&#39;"
+}[c]));
+}
+
+/*
+  সব Login Redirect এখন login.html
+  Invite Code format: SA + 24 hexadecimal characters
+*/
+
 function makeInviteLink(code){
- if(!code)throw new Error("Your Sub-Admin invite code is missing. Please refresh the dashboard.");
- const url=new URL(LOGIN_PAGE,window.location.href);
- url.searchParams.set("subadmin",String(code).trim());
- return url.href;
+
+const inviteCode=String(code||"").trim().toUpperCase();
+
+if(!/^SA[a-f0-9]{24}$/i.test(inviteCode)){
+throw new Error("Your Sub-Admin invitation code is invalid. Please contact Main Admin.");
 }
+
+return new URL(
+"login.html?subadmin="+encodeURIComponent(inviteCode),
+"https://glo365.online/"
+).href;
+
+}
+
+async function api(path,options={}){
+
+const token=getToken();
+
+if(!token){
+location.replace(LOGIN_PAGE);
+throw new Error("Please sign in to continue.");
+}
+
+const response=await fetch(API_BASE_URL+path,{
+...options,
+credentials:"include",
+headers:{
+"Accept":"application/json",
+"Content-Type":"application/json",
+"Authorization":"Bearer "+token,
+...(options.headers||{})
+}
+});
+
+let data;
+
+try{
+data=await response.json();
+}catch(_){
+throw new Error("Invalid server response.");
+}
+
+if(!response.ok||data.success===false){
+throw new Error(data.message||data.error||"Request failed.");
+}
+
+return data;
+
+}
+
 async function loadDashboard(){
- try{
-  const data=await api("/subadmin/dashboard");
-  currentAccount=data.account;
-  $("adminName").textContent=data.account.username||"Sub-Admin";
-  $("balanceValue").textContent=numberText(data.account.balance);
-  $("customerCount").textContent=numberText(data.customer_count);
-  $("allocatedValue").textContent=numberText(data.total_allocated);
-  $("inviteLink").value=makeInviteLink(data.account.subadmin_invite_code);
-  await Promise.all([loadCustomers(),loadHistory()]);
- }catch(error){showNotice(error.message||"Unable to load dashboard.","error");if(/Sub-Admin access|required|sign in|token/i.test(error.message||"")){setTimeout(()=>location.replace(LOGIN_PAGE),1300)}}
+
+try{
+
+const data=await api("/subadmin/dashboard");
+
+currentAccount=data.account;
+
+$("adminName").textContent=data.account.username||"Sub-Admin";
+$("balanceValue").textContent=numberText(data.account.balance);
+$("customerCount").textContent=numberText(data.customer_count);
+$("allocatedValue").textContent=numberText(data.total_allocated);
+
+/* Correct login.html invitation link */
+$("inviteLink").value=makeInviteLink(data.account.subadmin_invite_code);
+
+await Promise.all([
+loadCustomers(),
+loadHistory()
+]);
+
+}catch(error){
+
+showNotice(error.message||"Unable to load dashboard.","error");
+
+if(/Sub-Admin access|required|sign in|token/i.test(error.message||"")){
+setTimeout(()=>location.replace(LOGIN_PAGE),1300);
 }
+
+}
+
+}
+
 async function loadCustomers(){
- const body=$("customersBody");body.innerHTML='<tr><td colspan="6" class="loading">Loading customers...</td></tr>';
- try{
-  const data=await api("/subadmin/users");const rows=Array.isArray(data.users)?data.users:[];
-  if(!rows.length){body.innerHTML='<tr><td colspan="6" class="empty">No customers have registered through your link yet.</td></tr>';return}
-  body.innerHTML=rows.map(user=>'<tr><td><strong>'+safe(user.id)+'</strong></td><td>'+safe(user.username)+'</td><td>'+safe(user.email)+'</td><td>'+numberText(user.balance)+'</td><td><span class="pill '+(user.status==="active"?"":"suspended")+'">'+safe(user.status)+'</span></td><td>'+dateText(user.created_at)+'</td></tr>').join("");
- }catch(error){body.innerHTML='<tr><td colspan="6" class="empty">'+safe(error.message)+'</td></tr>'}
+
+const body=$("customersBody");
+
+body.innerHTML='<tr><td colspan="6" class="loading">Loading customers...</td></tr>';
+
+try{
+
+const data=await api("/subadmin/users");
+const rows=Array.isArray(data.users)?data.users:[];
+
+if(!rows.length){
+body.innerHTML='<tr><td colspan="6" class="empty">No customers have registered through your link yet.</td></tr>';
+return;
 }
+
+body.innerHTML=rows.map(user=>
+'<tr>'+
+'<td><strong>'+safe(user.id)+'</strong></td>'+
+'<td>'+safe(user.username)+'</td>'+
+'<td>'+safe(user.email)+'</td>'+
+'<td>'+numberText(user.balance)+'</td>'+
+'<td><span class="pill '+(user.status==="active"?"":"suspended")+'">'+safe(user.status)+'</span></td>'+
+'<td>'+dateText(user.created_at)+'</td>'+
+'</tr>'
+).join("");
+
+}catch(error){
+
+body.innerHTML='<tr><td colspan="6" class="empty">'+safe(error.message)+'</td></tr>';
+
+}
+
+}
+
 async function loadHistory(){
- const body=$("historyBody");body.innerHTML='<tr><td colspan="4" class="loading">Loading history...</td></tr>';
- try{
-  const data=await api("/subadmin/point-history");const rows=Array.isArray(data.transfers)?data.transfers:[];
-  if(!rows.length){body.innerHTML='<tr><td colspan="4" class="empty">No point distributions yet.</td></tr>';return}
-  body.innerHTML=rows.map(item=>'<tr><td>'+dateText(item.created_at)+'</td><td>'+safe(item.customer_id)+'</td><td><strong>'+numberText(item.amount)+'</strong></td><td>'+safe(item.reference)+'</td></tr>').join("");
- }catch(error){body.innerHTML='<tr><td colspan="4" class="empty">'+safe(error.message)+'</td></tr>'}
+
+const body=$("historyBody");
+
+body.innerHTML='<tr><td colspan="4" class="loading">Loading history...</td></tr>';
+
+try{
+
+const data=await api("/subadmin/point-history");
+const rows=Array.isArray(data.transfers)?data.transfers:[];
+
+if(!rows.length){
+body.innerHTML='<tr><td colspan="4" class="empty">No point distributions yet.</td></tr>';
+return;
 }
-async function refreshAll(){clearNotice();await loadDashboard()}
+
+body.innerHTML=rows.map(item=>
+'<tr>'+
+'<td>'+dateText(item.created_at)+'</td>'+
+'<td>'+safe(item.customer_id)+'</td>'+
+'<td><strong>'+numberText(item.amount)+'</strong></td>'+
+'<td>'+safe(item.reference)+'</td>'+
+'</tr>'
+).join("");
+
+}catch(error){
+
+body.innerHTML='<tr><td colspan="4" class="empty">'+safe(error.message)+'</td></tr>';
+
+}
+
+}
+
+async function refreshAll(){
+clearNotice();
+await loadDashboard();
+}
+
+/* Copy Invite Link */
+
 $("copyInviteButton").addEventListener("click",async()=>{
- const value=$("inviteLink").value;if(!value||value==="Loading invite link..."){showNotice("Invite link is not ready yet.","error");return}
- try{if(navigator.clipboard&&window.isSecureContext){await navigator.clipboard.writeText(value)}else{$("inviteLink").select();document.execCommand("copy")}showNotice("Invite link copied successfully.","success")}catch(_){showNotice("Could not copy automatically. Select and copy the link manually.","error")}
+
+const value=$("inviteLink").value;
+
+if(!value||value==="Loading invite link..."){
+showNotice("Invite link is not ready yet.","error");
+return;
+}
+
+try{
+
+if(navigator.clipboard&&window.isSecureContext){
+
+await navigator.clipboard.writeText(value);
+
+}else{
+
+$("inviteLink").select();
+$("inviteLink").setSelectionRange(0,99999);
+
+const copied=document.execCommand("copy");
+
+if(!copied)throw new Error("Copy failed.");
+
+}
+
+showNotice("Invite link copied successfully.","success");
+
+}catch(_){
+
+showNotice("Could not copy automatically. Select and copy the link manually.","error");
+
+}
+
 });
+
+/* Distribute Points */
+
 $("transferForm").addEventListener("submit",async event=>{
- event.preventDefault();if(busy)return;clearNotice();
- const customerId=Number($("customerId").value),amount=Number($("transferAmount").value);
- if(!Number.isSafeInteger(customerId)||customerId<1||!Number.isFinite(amount)||amount<=0||Math.round(amount*100)!==amount*100){showNotice("Enter a valid Customer ID and points amount.","error");return}
- busy=true;const button=$("transferButton");button.disabled=true;button.textContent="SENDING...";
- try{
-  const result=await api("/subadmin/users/"+customerId+"/points",{method:"POST",body:JSON.stringify({amount})});
-  showNotice(result.message||"Points transferred successfully.","success");$("transferForm").reset();await Promise.all([loadDashboard(),loadCustomers(),loadHistory()]);
- }catch(error){showNotice(error.message||"Unable to transfer points.","error")}
- finally{busy=false;button.disabled=false;button.textContent="Send Points"}
+
+event.preventDefault();
+
+if(busy)return;
+
+clearNotice();
+
+const customerId=Number($("customerId").value);
+const amount=Number($("transferAmount").value);
+
+if(
+!Number.isSafeInteger(customerId)||
+customerId<1||
+!Number.isFinite(amount)||
+amount<=0||
+Math.round(amount*100)!==amount*100
+){
+
+showNotice("Enter a valid Customer ID and points amount.","error");
+return;
+
+}
+
+busy=true;
+
+const button=$("transferButton");
+
+button.disabled=true;
+button.textContent="SENDING...";
+
+try{
+
+const result=await api(
+"/subadmin/users/"+customerId+"/points",
+{
+method:"POST",
+body:JSON.stringify({amount})
+}
+);
+
+showNotice(result.message||"Points transferred successfully.","success");
+
+$("transferForm").reset();
+
+await Promise.all([
+loadDashboard(),
+loadCustomers(),
+loadHistory()
+]);
+
+}catch(error){
+
+showNotice(error.message||"Unable to transfer points.","error");
+
+}finally{
+
+busy=false;
+button.disabled=false;
+button.textContent="Send Points";
+
+}
+
 });
+
+/* Refresh Buttons */
+
 $("refreshButton").addEventListener("click",refreshAll);
 $("customersRefresh").addEventListener("click",loadCustomers);
 $("historyRefresh").addEventListener("click",loadHistory);
-$("logoutButton").addEventListener("click",()=>{try{sessionStorage.removeItem(TOKEN_KEY);sessionStorage.removeItem("glo365_user")}catch(_){}location.replace(LOGIN_PAGE)});
-if(!getToken()){location.replace(LOGIN_PAGE)}else{loadDashboard()}
+
+/* Logout */
+
+$("logoutButton").addEventListener("click",()=>{
+
+try{
+sessionStorage.removeItem(TOKEN_KEY);
+sessionStorage.removeItem("glo365_user");
+}catch(_){}
+
+location.replace(LOGIN_PAGE);
+
+});
+
+/* Start Dashboard */
+
+if(!getToken()){
+
+location.replace(LOGIN_PAGE);
+
+}else{
+
+loadDashboard();
+
+}
+
 </script>
 </body>
 </html>
