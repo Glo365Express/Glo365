@@ -80,7 +80,10 @@ module.exports = function registerSubAdminRoutes(deps) {
 
   app.post("/api/admin/subadmins", authenticateToken, requireAdmin, asyncRoute(async (req, res) => {
     const username = cleanText(req.body.username, 30).toLowerCase();
-    const email = cleanText(req.body.email, 150).toLowerCase();
+    const emailInput = cleanText(req.body.email, 150).toLowerCase();
+    // The Main Admin form may omit email. Store NULL, not an empty string,
+    // because users.email may have a UNIQUE constraint.
+    const email = emailInput || null;
     const password = req.body.password;
     if (!validUsername(username) || username === PRIMARY_ADMIN_USERNAME ||
         (email && !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) ||
