@@ -1,3 +1,4 @@
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -5,42 +6,111 @@
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
 <meta name="theme-color" content="#071a35">
 <title>Sub-Admin Dashboard - GLO 365</title>
+
 <style>
 *{box-sizing:border-box;margin:0;padding:0}
-:root{--navy:#071a35;--navy2:#102c50;--blue:#2196e8;--blue2:#147fc9;--bg:#eef3f9;--text:#1d2c40;--muted:#718096;--white:#fff;--green:#168a50;--red:#d33b3b;--line:#e4ebf3;--shadow:0 8px 25px rgba(18,45,78,.08)}
+:root{
+ --navy:#071a35;--navy2:#102c50;--blue:#2196e8;--blue2:#147fc9;
+ --bg:#f1f5fa;--white:#fff;--text:#1d2c40;--muted:#718096;
+ --line:#e5ebf2;--green:#168a50;--red:#d33b3b;
+ --orange:#d98212;--shadow:0 5px 22px rgba(18,45,78,.07)
+}
 body{font-family:Arial,Helvetica,sans-serif;background:var(--bg);color:var(--text);min-height:100vh}
-.topbar{background:linear-gradient(120deg,var(--navy),var(--navy2));color:#fff;padding:18px 16px;box-shadow:0 4px 16px #071a3522}
-.top-inner{max-width:1100px;margin:auto;display:flex;align-items:center;justify-content:space-between;gap:12px}
-.brand{font-size:21px;font-weight:900;letter-spacing:1px}.brand span{color:#53b7ff}.sub-label{font-size:11px;color:#c4d5e9;margin-top:4px;letter-spacing:1px}
-.logout{border:1px solid #ffffff55;background:#ffffff12;color:#fff;padding:10px 14px;border-radius:12px;font-weight:bold;cursor:pointer}
-.container{max-width:1100px;margin:22px auto;padding:0 14px 35px}
-.welcome{margin-bottom:18px}.welcome h1{font-size:23px;margin-bottom:5px}.welcome p{font-size:13px;color:var(--muted)}
-.grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:13px;margin-bottom:18px}
-.stat{background:var(--white);border:1px solid var(--line);border-radius:17px;padding:18px;box-shadow:var(--shadow);min-width:0}
-.stat-label{font-size:12px;color:var(--muted);font-weight:bold}.stat-value{font-size:27px;font-weight:900;margin-top:9px;overflow-wrap:anywhere}.stat-note{font-size:11px;color:var(--muted);margin-top:5px}
-.panel{background:#fff;border:1px solid var(--line);border-radius:17px;padding:18px;box-shadow:var(--shadow);margin-bottom:16px;min-width:0}
-.panel-head{display:flex;align-items:center;justify-content:space-between;gap:10px;margin-bottom:14px}.panel h2{font-size:17px}.muted{color:var(--muted);font-size:12px;line-height:1.5}
-.invite-row{display:flex;gap:8px;margin-top:12px}.invite-url{flex:1;min-width:0;height:43px;border:1px solid var(--line);border-radius:10px;padding:0 11px;background:#f7f9fc;color:#33445a;font-size:12px}
-.btn{border:0;border-radius:10px;background:var(--blue);color:#fff;font-weight:bold;padding:12px 15px;cursor:pointer}.btn:hover{background:var(--blue2)}.btn:disabled{opacity:.55;cursor:not-allowed}.btn.secondary{background:#e8f3fc;color:#126da9}.btn.small{padding:9px 12px;font-size:12px}
-.form-grid{display:grid;grid-template-columns:1fr 1fr auto;gap:10px;align-items:end}.field label{display:block;font-size:12px;font-weight:bold;color:#526176;margin:0 0 7px}.field input{width:100%;height:44px;border:1px solid #dce5ef;border-radius:10px;padding:0 12px;font-size:14px;outline:none;background:#fff;color:var(--text)}.field input:focus{border-color:var(--blue);box-shadow:0 0 0 3px #2196e81c}
-.table-wrap{width:100%;overflow-x:auto}table{border-collapse:collapse;width:100%;min-width:620px}th,td{text-align:left;padding:12px 10px;border-bottom:1px solid var(--line);font-size:12px;white-space:nowrap}th{color:#64748b;background:#f7f9fc;font-size:11px;text-transform:uppercase;letter-spacing:.4px}td strong{font-size:13px}.pill{display:inline-block;padding:5px 9px;border-radius:30px;font-size:10px;font-weight:bold;background:#e4f7ec;color:#187844}.pill.suspended{background:#ffeded;color:#bb3030}
-.notice{display:none;padding:11px 13px;border-radius:11px;font-size:12px;line-height:1.5;margin:0 0 14px;overflow-wrap:anywhere}.notice.show{display:block}.notice.error{background:#ffebeb;color:#b32626}.notice.success{background:#e7f8ed;color:#176d3a}.notice.info{background:#e8f3ff;color:#145f96}
-.empty{text-align:center;padding:24px 10px;color:var(--muted);font-size:13px}.refresh{font-size:12px;color:var(--blue);font-weight:bold;background:none;border:0;cursor:pointer}
-.loading{padding:30px;text-align:center;color:var(--muted);font-size:13px}.footer{text-align:center;color:#8794a6;font-size:11px;padding:10px}
-@media(max-width:700px){.grid{grid-template-columns:1fr 1fr}.form-grid{grid-template-columns:1fr 1fr}.form-grid .btn{grid-column:1/-1;width:100%}.container{margin-top:17px}.panel{padding:15px}.welcome h1{font-size:20px}}
-@media(max-width:420px){.grid{grid-template-columns:1fr 1fr;gap:9px}.stat{padding:14px}.stat-value{font-size:23px}.invite-row{flex-direction:column}.invite-url{width:100%}.topbar{padding:15px 13px}.brand{font-size:19px}}
-.payment-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:11px;margin-top:14px}
-.payment-grid .field.full{grid-column:1/-1}
-.payment-grid select,.payment-grid textarea{width:100%;border:1px solid #dce5ef;border-radius:10px;padding:11px 12px;font:14px Arial;background:#fff;color:var(--text);outline:none}
-.payment-grid textarea{min-height:75px;resize:vertical}
+button,input,select,textarea{font:inherit}
+button{cursor:pointer}
+.topbar{background:linear-gradient(120deg,var(--navy),var(--navy2));color:white;padding:17px 15px;box-shadow:0 4px 18px #071a3522}
+.top-inner{max-width:1150px;margin:auto;display:flex;align-items:center;justify-content:space-between;gap:12px}
+.brand{font-size:22px;font-weight:900;letter-spacing:1px}
+.brand span{color:#53b7ff}
+.sub-label{font-size:10px;color:#c4d5e9;margin-top:4px;letter-spacing:1.5px}
+.top-actions{display:flex;align-items:center;gap:9px}
+.icon-btn,.logout{border:1px solid #ffffff44;background:#ffffff12;color:white;padding:10px 13px;border-radius:11px;font-size:12px;font-weight:bold}
+.container{max-width:1150px;margin:23px auto;padding:0 14px 35px}
+.welcome{display:flex;justify-content:space-between;align-items:center;gap:12px;margin-bottom:18px}
+.welcome h1{font-size:23px;margin-bottom:5px}
+.welcome p{font-size:12px;color:var(--muted);line-height:1.5}
+.grid{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:12px;margin-bottom:17px}
+.stat,.panel{background:white;border:1px solid var(--line);border-radius:16px;box-shadow:var(--shadow)}
+.stat{padding:17px;min-width:0}
+.stat-label{font-size:10px;color:var(--muted);font-weight:bold;letter-spacing:.6px}
+.stat-value{font-size:26px;font-weight:900;margin-top:9px;overflow-wrap:anywhere}
+.stat-note{font-size:10px;color:var(--muted);margin-top:5px}
+.panel{padding:18px;margin-bottom:15px;min-width:0}
+.panel-head{display:flex;align-items:center;justify-content:space-between;gap:10px;margin-bottom:13px}
+.panel h2{font-size:16px}
+.panel-desc{font-size:12px;color:var(--muted);line-height:1.6;margin-bottom:13px}
+.refresh{font-size:11px;color:var(--blue);font-weight:bold;background:none;border:0;padding:7px}
+.btn{border:0;border-radius:10px;background:var(--blue);color:white;font-weight:bold;padding:11px 15px;font-size:12px}
+.btn:hover{background:var(--blue2)}
+.btn:disabled{opacity:.55;cursor:not-allowed}
+.btn.secondary{background:#e8f3fc;color:#126da9}
+.btn.green{background:#e4f7ec;color:#187844}
+.btn.danger{background:#ffeded;color:#b32626}
+.btn.small{padding:8px 11px;font-size:11px}
+.notice{display:none;padding:12px 14px;border-radius:11px;font-size:12px;line-height:1.5;margin-bottom:14px;overflow-wrap:anywhere}
+.notice.show{display:block}
+.notice.error{background:#ffebeb;color:#b32626}
+.notice.success{background:#e7f8ed;color:#176d3a}
+.notice.info{background:#e8f3ff;color:#145f96}
+.notice.warning{background:#fff4df;color:#925900}
+.pill{display:inline-block;padding:5px 9px;border-radius:30px;font-size:10px;font-weight:bold;background:#e4f7ec;color:#187844}
+.pill.pending{background:#fff1d8;color:#a66a00}
+.pill.rejected{background:#ffeded;color:#bb3030}
+.pill.suspended{background:#ffeded;color:#bb3030}
+.table-wrap{width:100%;overflow-x:auto}
+table{border-collapse:collapse;width:100%;min-width:620px}
+th,td{text-align:left;padding:12px 10px;border-bottom:1px solid var(--line);font-size:11px;white-space:nowrap}
+th{color:#64748b;background:#f7f9fc;font-size:10px;text-transform:uppercase;letter-spacing:.4px}
+td strong{font-size:12px}
+.empty,.loading{text-align:center;padding:25px 10px;color:var(--muted);font-size:12px}
+.invite-row{display:flex;gap:8px}
+.invite-url{flex:1;min-width:0;height:43px;border:1px solid var(--line);border-radius:10px;padding:0 11px;background:#f7f9fc;color:#33445a;font-size:12px}
+.form-grid{display:grid;grid-template-columns:1fr 1fr auto;gap:10px;align-items:end}
+.field label{display:block;font-size:11px;font-weight:bold;color:#526176;margin:0 0 7px}
+.field input,.field select,.field textarea{width:100%;border:1px solid #dce5ef;border-radius:10px;padding:11px 12px;font-size:13px;outline:none;background:white;color:var(--text)}
+.field input,.field select{height:43px}
+.field textarea{min-height:75px;resize:vertical}
+.field input:focus,.field select:focus,.field textarea:focus{border-color:var(--blue);box-shadow:0 0 0 3px #2196e81c}
+.payment-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:11px}
+.payment-grid .full{grid-column:1/-1}
 .payment-actions{display:flex;gap:7px;flex-wrap:wrap}
-.btn.danger{background:#ffeded;color:#b32626}.btn.green{background:#e4f7ec;color:#187844}
-.payment-card{border:1px solid var(--line);border-radius:13px;padding:13px;margin-top:10px;background:#fbfdff}
-.payment-card-top{display:flex;justify-content:space-between;gap:10px;align-items:center;flex-wrap:wrap}
-.payment-card p{font-size:12px;color:var(--muted);margin-top:6px;overflow-wrap:anywhere}
-@media(max-width:520px){.payment-grid{grid-template-columns:1fr}.payment-grid .field.full{grid-column:auto}}
+.payment-card,.deposit-card{border:1px solid var(--line);border-radius:13px;padding:14px;margin-top:10px;background:#fbfdff}
+.payment-card-top,.deposit-top{display:flex;justify-content:space-between;gap:10px;align-items:center;flex-wrap:wrap}
+.payment-card p,.deposit-card p{font-size:11px;color:var(--muted);margin-top:7px;overflow-wrap:anywhere;line-height:1.5}
+.deposit-card{border-left:4px solid #e4a22a}
+.deposit-card.approved{border-left-color:var(--green)}
+.deposit-card.rejected{border-left-color:var(--red)}
+.deposit-amount{font-size:22px;font-weight:900;color:var(--navy);margin-top:10px}
+.deposit-actions{display:flex;gap:8px;flex-wrap:wrap;margin-top:13px}
+.deposit-actions .btn{min-width:95px}
+.deposit-meta{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:8px;margin-top:12px}
+.meta-item{background:#f3f6fa;padding:9px;border-radius:9px;min-width:0}
+.meta-item small{display:block;font-size:9px;color:var(--muted);margin-bottom:4px}
+.meta-item strong{font-size:11px;overflow-wrap:anywhere}
+.section-count{background:#fff1d8;color:#a66a00;padding:5px 9px;border-radius:20px;font-size:10px;font-weight:bold}
+.footer{text-align:center;color:#8794a6;font-size:10px;padding:12px}
+@media(max-width:800px){.grid{grid-template-columns:repeat(2,minmax(0,1fr))}}
+@media(max-width:520px){
+ .container{margin-top:16px;padding:0 10px 25px}
+ .panel{padding:14px}
+ .welcome h1{font-size:20px}
+ .welcome p{font-size:11px}
+ .stat{padding:13px}
+ .stat-value{font-size:22px}
+ .payment-grid,.deposit-meta{grid-template-columns:1fr}
+ .payment-grid .full{grid-column:auto}
+ .form-grid{grid-template-columns:1fr 1fr}
+ .form-grid .btn{grid-column:1/-1;width:100%}
+ .invite-row{flex-direction:column}
+ .invite-url{width:100%}
+ .topbar{padding:14px 12px}
+ .brand{font-size:19px}
+ .logout{padding:9px 10px}
+ .icon-btn{padding:9px 10px}
+}
 </style>
 </head>
+
 <body>
 
 <header class="topbar">
@@ -49,14 +119,20 @@ body{font-family:Arial,Helvetica,sans-serif;background:var(--bg);color:var(--tex
    <div class="brand">GLO <span>365</span></div>
    <div class="sub-label">SUB-ADMIN CONTROL PANEL</div>
   </div>
-  <button class="logout" id="logoutButton" type="button">Log out</button>
+  <div class="top-actions">
+   <button class="icon-btn" id="notificationButton" type="button">Enable Alerts</button>
+   <button class="logout" id="logoutButton" type="button">Log out</button>
+  </div>
  </div>
 </header>
 
 <main class="container">
+
  <section class="welcome">
-  <h1>Welcome, <span id="adminName">Sub-Admin</span></h1>
-  <p>Manage your invited customers and distribute only the points allocated to your account.</p>
+  <div>
+   <h1>Welcome, <span id="adminName">Sub-Admin</span></h1>
+   <p>Manage your customers, deposits and point distribution.</p>
+  </div>
  </section>
 
  <div id="notice" class="notice" role="status" aria-live="polite"></div>
@@ -64,18 +140,23 @@ body{font-family:Arial,Helvetica,sans-serif;background:var(--bg);color:var(--tex
  <section class="grid">
   <article class="stat">
    <div class="stat-label">AVAILABLE POINTS</div>
-   <div class="stat-value" id="balanceValue">Loading...</div>
+   <div class="stat-value" id="balanceValue">—</div>
    <div class="stat-note">Your current point balance</div>
   </article>
   <article class="stat">
    <div class="stat-label">YOUR CUSTOMERS</div>
-   <div class="stat-value" id="customerCount">Loading...</div>
-   <div class="stat-note">Registered through your invite link</div>
+   <div class="stat-value" id="customerCount">—</div>
+   <div class="stat-note">Registered customers</div>
   </article>
   <article class="stat">
    <div class="stat-label">TOTAL ALLOCATED</div>
-   <div class="stat-value" id="allocatedValue">Loading...</div>
+   <div class="stat-value" id="allocatedValue">—</div>
    <div class="stat-note">Points received from Main Admin</div>
+  </article>
+  <article class="stat">
+   <div class="stat-label">PENDING DEPOSITS</div>
+   <div class="stat-value" id="pendingCount">—</div>
+   <div class="stat-note">Waiting for your approval</div>
   </article>
  </section>
 
@@ -84,19 +165,38 @@ body{font-family:Arial,Helvetica,sans-serif;background:var(--bg);color:var(--tex
    <h2>Your Registration Link</h2>
    <button class="refresh" id="refreshButton" type="button">↻ Refresh</button>
   </div>
-  <p class="muted">Share this unique link. New accounts created through it will be connected to your Sub-Admin account.</p>
+  <p class="panel-desc">Share this unique link. New accounts created through it will be connected to your Sub-Admin account.</p>
   <div class="invite-row">
    <input class="invite-url" id="inviteLink" readonly value="Loading invite link...">
    <button class="btn" id="copyInviteButton" type="button">Copy Link</button>
   </div>
  </section>
 
+ <!-- DEPOSIT APPROVAL -->
+ <section class="panel" id="depositPanel">
+  <div class="panel-head">
+   <div>
+    <h2>Customer Deposit Requests</h2>
+    <p class="muted" style="margin-top:5px">Review and approve customer deposits.</p>
+   </div>
+   <div style="display:flex;align-items:center;gap:8px">
+    <span class="section-count" id="pendingBadge">0 Pending</span>
+    <button class="refresh" id="depositRefresh" type="button">↻ Reload</button>
+   </div>
+  </div>
+
+  <div id="depositList">
+   <div class="loading">Loading deposit requests...</div>
+  </div>
+ </section>
+
+ <!-- PAYMENT CHANNELS -->
  <section class="panel" id="paymentPanel">
   <div class="panel-head">
    <h2>Deposit Channels</h2>
    <button class="refresh" id="paymentRefresh" type="button">↻ Reload</button>
   </div>
-  <p class="muted">Add your own payment accounts. Only active channels created by your Sub-Admin account will be shown to your customers.</p>
+  <p class="panel-desc">Add your payment accounts. Active channels will be visible to your customers.</p>
 
   <form id="paymentForm" class="payment-grid">
    <input type="hidden" id="paymentId">
@@ -121,12 +221,12 @@ body{font-family:Arial,Helvetica,sans-serif;background:var(--bg);color:var(--tex
 
    <div class="field">
     <label for="paymentLabel">Account Type / Label</label>
-    <input id="paymentLabel" maxlength="60" placeholder="e.g. Personal / Agent">
+    <input id="paymentLabel" maxlength="60" placeholder="Personal / Agent">
    </div>
 
    <div class="field">
     <label for="paymentAccount">Payment Number / Account</label>
-    <input id="paymentAccount" maxlength="150" placeholder="Enter your payment number" required>
+    <input id="paymentAccount" maxlength="150" placeholder="Payment number" required>
    </div>
 
    <div class="field">
@@ -135,11 +235,11 @@ body{font-family:Arial,Helvetica,sans-serif;background:var(--bg);color:var(--tex
    </div>
 
    <div class="field full">
-    <label for="paymentInstructions">Customer Instructions (Optional)</label>
-    <textarea id="paymentInstructions" maxlength="1000" placeholder="Tell customers what to enter when making a deposit"></textarea>
+    <label for="paymentInstructions">Customer Instructions</label>
+    <textarea id="paymentInstructions" maxlength="1000" placeholder="Instructions for customers"></textarea>
    </div>
 
-   <div class="payment-actions field full">
+   <div class="payment-actions full">
     <button class="btn" id="paymentSaveButton" type="submit">Add Deposit Channel</button>
     <button class="btn secondary" id="paymentCancelButton" type="button" style="display:none">Cancel Edit</button>
    </div>
@@ -150,23 +250,24 @@ body{font-family:Arial,Helvetica,sans-serif;background:var(--bg);color:var(--tex
   </div>
  </section>
 
+ <!-- POINT DISTRIBUTION -->
  <section class="panel">
   <div class="panel-head"><h2>Distribute Points</h2></div>
-  <p class="muted" style="margin-bottom:14px">Choose one of your customers by their Customer ID. The points will be deducted from your available balance.</p>
-
+  <p class="panel-desc">Points will be deducted from your Sub-Admin balance and credited to the selected customer.</p>
   <form id="transferForm" class="form-grid">
    <div class="field">
     <label for="customerId">Customer ID</label>
-    <input id="customerId" type="number" min="1" step="1" placeholder="Enter customer ID" required>
+    <input id="customerId" type="number" min="1" step="1" placeholder="Customer ID" required>
    </div>
    <div class="field">
     <label for="transferAmount">Points Amount</label>
-    <input id="transferAmount" type="number" min="0.01" max="10000000" step="0.01" placeholder="Enter points" required>
+    <input id="transferAmount" type="number" min="0.01" step="0.01" placeholder="Points" required>
    </div>
    <button class="btn" id="transferButton" type="submit">Send Points</button>
   </form>
  </section>
 
+ <!-- CUSTOMER LIST -->
  <section class="panel">
   <div class="panel-head">
    <h2>Your Customers</h2>
@@ -174,12 +275,17 @@ body{font-family:Arial,Helvetica,sans-serif;background:var(--bg);color:var(--tex
   </div>
   <div class="table-wrap">
    <table>
-    <thead><tr><th>Customer ID</th><th>Username</th><th>Email</th><th>Balance</th><th>Status</th><th>Joined</th></tr></thead>
-    <tbody id="customersBody"><tr><td colspan="6" class="loading">Loading customers...</td></tr></tbody>
+    <thead>
+     <tr><th>Customer ID</th><th>Username</th><th>Email</th><th>Balance</th><th>Status</th><th>Joined</th></tr>
+    </thead>
+    <tbody id="customersBody">
+     <tr><td colspan="6" class="loading">Loading customers...</td></tr>
+    </tbody>
    </table>
   </div>
  </section>
 
+ <!-- HISTORY -->
  <section class="panel">
   <div class="panel-head">
    <h2>Point Distribution History</h2>
@@ -187,41 +293,42 @@ body{font-family:Arial,Helvetica,sans-serif;background:var(--bg);color:var(--tex
   </div>
   <div class="table-wrap">
    <table>
-    <thead><tr><th>Date</th><th>Customer ID</th><th>Points Sent</th><th>Reference</th></tr></thead>
-    <tbody id="historyBody"><tr><td colspan="4" class="loading">Loading history...</td></tr></tbody>
+    <thead>
+     <tr><th>Date</th><th>Customer ID</th><th>Points Sent</th><th>Reference</th></tr>
+    </thead>
+    <tbody id="historyBody">
+     <tr><td colspan="4" class="loading">Loading history...</td></tr>
+    </tbody>
    </table>
   </div>
  </section>
 
- <div class="footer">GLO 365 · Sub-Admin Panel</div>
+ <div class="footer">GLO 365 · Sub-Admin Control Panel</div>
 </main>
 
 <script>
 "use strict";
 
-/* GLO 365 SUB-ADMIN DASHBOARD */
-const API_BASE_URL = "https://glo365.onrender.com/api";
-const TOKEN_KEY = "glo365_token";
-const LOGIN_PAGE = "login.html";
+const API_BASE_URL="https://glo365.onrender.com/api";
+const TOKEN_KEY="glo365_token";
+const LOGIN_PAGE="login.html";
+const $=id=>document.getElementById(id);
 
-const $ = id => document.getElementById(id);
-
-let currentAccount = null;
-let busy = false;
-let paymentMethods = [];
-let redirecting = false;
-
-/* AUTHENTICATION */
+let currentAccount=null;
+let busy=false;
+let paymentMethods=[];
+let redirecting=false;
+let knownPendingIds=new Set();
+let firstDepositLoad=true;
+let depositRequestBusy=false;
+let pollingTimer=null;
 
 function getToken(){
  try{
-  return sessionStorage.getItem(TOKEN_KEY) ||
-         sessionStorage.getItem("token") ||
-         sessionStorage.getItem("authToken") ||
-         "";
- }catch(error){
-  return "";
- }
+  return sessionStorage.getItem(TOKEN_KEY)||
+   sessionStorage.getItem("token")||
+   sessionStorage.getItem("authToken")||"";
+ }catch(e){return ""}
 }
 
 function clearToken(){
@@ -230,309 +337,395 @@ function clearToken(){
   sessionStorage.removeItem("token");
   sessionStorage.removeItem("authToken");
   sessionStorage.removeItem("glo365_user");
- }catch(error){}
+ }catch(e){}
 }
 
 function goToLogin(){
  if(redirecting)return;
- redirecting = true;
+ redirecting=true;
  clearToken();
  location.replace(LOGIN_PAGE);
 }
 
-/* NOTICE */
-
 function showNotice(message,type="info"){
- const box = $("notice");
- box.textContent = message;
- box.className = "notice show " + type;
+ const box=$("notice");
+ box.textContent=message;
+ box.className="notice show "+type;
 }
 
 function clearNotice(){
- const box = $("notice");
- box.textContent = "";
- box.className = "notice";
+ $("notice").textContent="";
+ $("notice").className="notice";
 }
 
-/* HELPERS */
-
 function numberText(value){
- const n = Number(value ?? 0);
- return Number.isFinite(n)
-  ? n.toLocaleString("en-US",{maximumFractionDigits:2})
-  : "0";
+ const n=Number(value??0);
+ return Number.isFinite(n)?n.toLocaleString("en-US",{maximumFractionDigits:2}):"0";
 }
 
 function dateText(value){
  if(!value)return "—";
- const d = new Date(value);
- return Number.isNaN(d.getTime()) ? "—" : d.toLocaleString();
+ const d=new Date(value);
+ return Number.isNaN(d.getTime())?"—":d.toLocaleString();
 }
 
 function safe(value){
- return String(value ?? "").replace(/[&<>"']/g,c=>({
-  "&":"&amp;",
-  "<":"&lt;",
-  ">":"&gt;",
-  '"':"&quot;",
-  "'":"&#39;"
+ return String(value??"").replace(/[&<>"']/g,c=>({
+  "&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"
  }[c]));
 }
 
 function unwrap(data){
- if(!data || typeof data !== "object")return {};
- if(data.data && typeof data.data === "object")return data.data;
+ if(!data||typeof data!=="object")return {};
+ if(data.data&&typeof data.data==="object")return data.data;
  return data;
 }
 
-/* API REQUEST */
-
 async function api(path,options={}){
- const token = getToken();
-
- const headers = {
+ const token=getToken();
+ const headers={
   "Accept":"application/json",
-  ...(options.body ? {"Content-Type":"application/json"} : {}),
-  ...(token ? {"Authorization":"Bearer "+token} : {}),
-  ...(options.headers || {})
+  ...(options.body?{"Content-Type":"application/json"}:{}),
+  ...(token?{"Authorization":"Bearer "+token}:{}),
+  ...(options.headers||{})
  };
 
  let response;
-
  try{
-  response = await fetch(API_BASE_URL + path,{
-   method:options.method || "GET",
+  response=await fetch(API_BASE_URL+path,{
+   method:options.method||"GET",
    headers,
    credentials:"include",
    cache:"no-store",
-   body:options.body || undefined
+   body:options.body||undefined
   });
- }catch(error){
+ }catch(e){
   throw new Error("Cannot connect to GLO 365 server. Check your internet connection.");
  }
 
- const raw = await response.text();
- let data = {};
+ const raw=await response.text();
+ let data={};
+ try{data=raw?JSON.parse(raw):{}}
+ catch(e){throw new Error("The server returned an invalid response.")}
 
- try{
-  data = raw ? JSON.parse(raw) : {};
- }catch(error){
-  throw new Error("The server returned an invalid response.");
- }
-
- if(response.status === 401){
+ if(response.status===401){
   goToLogin();
-  throw new Error("Your login session has expired. Please log in again.");
+  throw new Error("Your login session has expired.");
  }
 
- if(response.status === 403){
-  throw new Error(data.message || data.error || "Sub-Admin access required.");
+ if(response.status===403){
+  throw new Error(data.message||data.error||"Sub-Admin access required.");
  }
 
- if(!response.ok || data.success === false){
-  throw new Error(
-   data.message ||
-   data.error ||
-   "Server request failed (" + response.status + ")."
-  );
+ if(!response.ok||data.success===false){
+  throw new Error(data.message||data.error||"Server request failed ("+response.status+").");
  }
 
  return unwrap(data);
 }
 
-/* INVITE LINK */
-
 function makeInviteLink(code){
- if(!code){
-  throw new Error("Your Sub-Admin invite code is missing. Please refresh the dashboard.");
- }
-
- const url = new URL(LOGIN_PAGE,window.location.href);
+ if(!code)throw new Error("Your Sub-Admin invite code is missing.");
+ const url=new URL(LOGIN_PAGE,window.location.href);
  url.searchParams.set("subadmin",String(code).trim());
-
  return url.href;
 }
 
 /* DASHBOARD */
 
 async function loadDashboard(){
- $("balanceValue").textContent = "Loading...";
- $("customerCount").textContent = "Loading...";
- $("allocatedValue").textContent = "Loading...";
- $("inviteLink").value = "Loading invite link...";
-
  try{
-  const data = await api("/subadmin/dashboard");
+  const data=await api("/subadmin/dashboard");
+  const account=data.account||data.dashboard||{};
 
-  const account = data.account || data.dashboard || {};
+  if(!account.id)throw new Error("Dashboard account was not found.");
 
-  if(!account || !account.id){
-   throw new Error("Dashboard data was not found in the server response.");
-  }
+  currentAccount=account;
+  $("adminName").textContent=account.username||"Sub-Admin";
+  $("balanceValue").textContent=numberText(account.balance);
+  $("customerCount").textContent=numberText(data.customer_count??account.customer_count);
+  $("allocatedValue").textContent=numberText(data.total_allocated??account.total_allocated);
+  $("inviteLink").value=makeInviteLink(account.subadmin_invite_code);
 
-  currentAccount = account;
-
-  $("adminName").textContent = account.username || "Sub-Admin";
-  $("balanceValue").textContent = numberText(account.balance);
-  $("customerCount").textContent = numberText(
-   data.customer_count ?? account.customer_count
-  );
-  $("allocatedValue").textContent = numberText(
-   data.total_allocated ?? account.total_allocated
-  );
-
-  $("inviteLink").value = makeInviteLink(account.subadmin_invite_code);
-
-  clearNotice();
-
-  await Promise.allSettled([
-   loadCustomers(),
-   loadHistory(),
-   loadPaymentMethods()
-  ]);
-
- }catch(error){
-  $("balanceValue").textContent = "—";
-  $("customerCount").textContent = "—";
-  $("allocatedValue").textContent = "—";
-  $("inviteLink").value = "Unable to load registration link";
-
-  showNotice(error.message || "Unable to load dashboard.","error");
+ }catch(e){
+  $("balanceValue").textContent="—";
+  $("customerCount").textContent="—";
+  $("allocatedValue").textContent="—";
+  $("inviteLink").value="Unable to load registration link";
+  showNotice(e.message,"error");
  }
 }
 
 /* CUSTOMERS */
 
 async function loadCustomers(){
- const body = $("customersBody");
-
- body.innerHTML =
-  '<tr><td colspan="6" class="loading">Loading customers...</td></tr>';
+ const body=$("customersBody");
+ body.innerHTML='<tr><td colspan="6" class="loading">Loading customers...</td></tr>';
 
  try{
-  const data = await api("/subadmin/users");
-  const rows = Array.isArray(data.users) ? data.users : [];
+  const data=await api("/subadmin/users");
+  const rows=Array.isArray(data.users)?data.users:[];
 
   if(!rows.length){
-   body.innerHTML =
-    '<tr><td colspan="6" class="empty">No customers have registered through your link yet.</td></tr>';
+   body.innerHTML='<tr><td colspan="6" class="empty">No customers registered yet.</td></tr>';
    return;
   }
 
-  body.innerHTML = rows.map(user=>{
-   const status = String(user.status || "unknown").toLowerCase();
-
-   return '<tr>' +
-    '<td><strong>'+safe(user.id)+'</strong></td>' +
-    '<td>'+safe(user.username)+'</td>' +
-    '<td>'+safe(user.email)+'</td>' +
-    '<td>'+numberText(user.balance)+'</td>' +
-    '<td><span class="pill '+(status==="active"?"":"suspended")+'">'+safe(status)+'</span></td>' +
-    '<td>'+dateText(user.created_at)+'</td>' +
+  body.innerHTML=rows.map(user=>{
+   const status=String(user.status||"unknown").toLowerCase();
+   return '<tr>'+
+    '<td><strong>'+safe(user.id)+'</strong></td>'+
+    '<td>'+safe(user.username)+'</td>'+
+    '<td>'+safe(user.email)+'</td>'+
+    '<td>'+numberText(user.balance)+'</td>'+
+    '<td><span class="pill '+(status==="active"?"":"suspended")+'">'+safe(status)+'</span></td>'+
+    '<td>'+dateText(user.created_at)+'</td>'+
    '</tr>';
   }).join("");
-
- }catch(error){
-  body.innerHTML =
-   '<tr><td colspan="6" class="empty">'+safe(error.message)+'</td></tr>';
+ }catch(e){
+  body.innerHTML='<tr><td colspan="6" class="empty">'+safe(e.message)+'</td></tr>';
  }
 }
 
 /* POINT HISTORY */
 
 async function loadHistory(){
- const body = $("historyBody");
-
- body.innerHTML =
-  '<tr><td colspan="4" class="loading">Loading history...</td></tr>';
+ const body=$("historyBody");
+ body.innerHTML='<tr><td colspan="4" class="loading">Loading history...</td></tr>';
 
  try{
-  const data = await api("/subadmin/point-history");
-  const rows = Array.isArray(data.transfers) ? data.transfers : [];
+  const data=await api("/subadmin/point-history");
+  const rows=Array.isArray(data.transfers)?data.transfers:[];
 
   if(!rows.length){
-   body.innerHTML =
-    '<tr><td colspan="4" class="empty">No point distributions yet.</td></tr>';
+   body.innerHTML='<tr><td colspan="4" class="empty">No point distributions yet.</td></tr>';
    return;
   }
 
-  body.innerHTML = rows.map(item=>
-   '<tr>' +
-    '<td>'+dateText(item.created_at)+'</td>' +
-    '<td>'+safe(item.customer_id)+'</td>' +
-    '<td><strong>'+numberText(item.amount)+'</strong></td>' +
-    '<td>'+safe(item.reference)+'</td>' +
+  body.innerHTML=rows.map(item=>
+   '<tr>'+
+    '<td>'+dateText(item.created_at)+'</td>'+
+    '<td>'+safe(item.customer_id)+'</td>'+
+    '<td><strong>'+numberText(item.amount)+'</strong></td>'+
+    '<td>'+safe(item.reference)+'</td>'+
    '</tr>'
   ).join("");
-
- }catch(error){
-  body.innerHTML =
-   '<tr><td colspan="4" class="empty">'+safe(error.message)+'</td></tr>';
+ }catch(e){
+  body.innerHTML='<tr><td colspan="4" class="empty">'+safe(e.message)+'</td></tr>';
  }
 }
 
-/* PAYMENT METHODS */
+/* DEPOSIT APPROVAL AND ALERTS */
 
-function resetPaymentForm(){
- $("paymentForm").reset();
- $("paymentId").value = "";
- $("paymentCurrency").value = "BDT";
- $("paymentSaveButton").textContent = "Add Deposit Channel";
- $("paymentCancelButton").style.display = "none";
+function notifyNewDeposit(deposit){
+ const username=deposit.username||("Customer #"+deposit.user_id);
+ const amount=numberText(deposit.amount);
+
+ showNotice("New deposit request received from "+username+" — "+amount+" points.","warning");
+
+ if("Notification" in window&&Notification.permission==="granted"){
+  try{
+   const notification=new Notification("GLO 365 — New Deposit",{
+    body:username+" submitted a deposit request for "+amount+".",
+    tag:"glo365-deposit-"+deposit.id
+   });
+   notification.onclick=()=>{
+    window.focus();
+    $("depositPanel").scrollIntoView({behavior:"smooth"});
+    notification.close();
+   };
+  }catch(e){}
+ }
 }
 
-async function loadPaymentMethods(){
- const box = $("paymentMethodsList");
+async function loadDeposits(options={}){
+ if(depositRequestBusy)return;
+ depositRequestBusy=true;
 
- box.innerHTML =
-  '<div class="loading">Loading deposit channels...</div>';
+ const box=$("depositList");
+ if(options.showLoading){
+  box.innerHTML='<div class="loading">Loading deposit requests...</div>';
+ }
 
  try{
-  const data = await api("/subadmin/payment-methods");
+  const data=await api("/subadmin/deposits");
+  const rows=Array.isArray(data.deposits)?data.deposits:[];
 
-  paymentMethods = Array.isArray(data.methods) ? data.methods : [];
+  const pending=rows.filter(d=>String(d.status||"").toLowerCase()==="pending");
+  $("pendingCount").textContent=numberText(pending.length);
+  $("pendingBadge").textContent=pending.length+" Pending";
 
-  if(!paymentMethods.length){
-   box.innerHTML =
-    '<div class="empty">No deposit channels added yet. Use the form above to add your first channel.</div>';
+  const currentIds=new Set(pending.map(d=>String(d.id)));
+
+  if(!firstDepositLoad){
+   for(const deposit of pending){
+    const id=String(deposit.id);
+    if(!knownPendingIds.has(id))notifyNewDeposit(deposit);
+   }
+  }
+
+  knownPendingIds=currentIds;
+  firstDepositLoad=false;
+
+  if(!rows.length){
+   box.innerHTML='<div class="empty">No deposit requests have been submitted yet.</div>';
    return;
   }
 
-  box.innerHTML = paymentMethods.map(method=>{
-   const active = method.active === true;
+  // Pending requests first, followed by recently reviewed requests.
+  rows.sort((a,b)=>{
+   const ap=String(a.status).toLowerCase()==="pending"?1:0;
+   const bp=String(b.status).toLowerCase()==="pending"?1:0;
+   if(ap!==bp)return bp-ap;
+   return new Date(b.created_at||0)-new Date(a.created_at||0);
+  });
 
-   return '<article class="payment-card" data-payment-id="'+safe(method.id)+'">' +
-    '<div class="payment-card-top">' +
-     '<strong>'+safe(method.name)+'</strong>' +
-     '<span class="pill '+(active?"":"suspended")+'">'+(active?"ACTIVE":"INACTIVE")+'</span>' +
-    '</div>' +
-    '<p><b>Channel:</b> '+safe(method.preset || "Custom")+' · <b>Account:</b> '+safe(method.account)+'</p>' +
-    '<p><b>Label:</b> '+safe(method.label || "—")+' · <b>Currency:</b> '+safe(method.currency || "BDT")+'</p>' +
-    (method.instructions ? '<p><b>Instructions:</b> '+safe(method.instructions)+'</p>' : '') +
-    '<div class="payment-actions" style="margin-top:10px">' +
-     '<button class="btn secondary small" type="button" data-action="edit" data-id="'+safe(method.id)+'">Edit</button>' +
-     '<button class="btn small '+(active?"danger":"green")+'" type="button" data-action="toggle" data-id="'+safe(method.id)+'" data-active="'+(active?"true":"false")+'">'+(active?"Deactivate":"Activate")+'</button>' +
-    '</div>' +
+  box.innerHTML=rows.map(deposit=>{
+   const status=String(deposit.status||"pending").toLowerCase();
+   const isPending=status==="pending";
+   const username=deposit.username||("Customer #"+deposit.user_id);
+
+   return '<article class="deposit-card '+safe(status)+'">'+
+    '<div class="deposit-top">'+
+     '<div><strong>'+safe(username)+'</strong>'+
+     '<p>Customer ID: '+safe(deposit.user_id)+'</p></div>'+
+     '<span class="pill '+(isPending?"pending":status==="approved"?"":"rejected")+'">'+safe(status.toUpperCase())+'</span>'+
+    '</div>'+
+    '<div class="deposit-amount">'+numberText(deposit.amount)+' <span style="font-size:11px;font-weight:600"> '+safe(deposit.currency||"DEMO")+'</span></div>'+
+    '<div class="deposit-meta">'+
+     '<div class="meta-item"><small>PAYMENT METHOD</small><strong>'+safe(deposit.method||"—")+'</strong></div>'+
+     '<div class="meta-item"><small>PAYMENT ACCOUNT</small><strong>'+safe(deposit.payment_account||"—")+'</strong></div>'+
+     '<div class="meta-item"><small>SENDER ACCOUNT</small><strong>'+safe(deposit.sender_account||"—")+'</strong></div>'+
+     '<div class="meta-item"><small>TRANSACTION ID</small><strong>'+safe(deposit.transaction_id||"—")+'</strong></div>'+
+     '<div class="meta-item"><small>REQUEST DATE</small><strong>'+dateText(deposit.created_at)+'</strong></div>'+
+     '<div class="meta-item"><small>REQUEST ID</small><strong>#'+safe(deposit.id)+'</strong></div>'+
+    '</div>'+
+    (deposit.rejection_reason?'<p><b>Review note:</b> '+safe(deposit.rejection_reason)+'</p>':'')+
+    (isPending?
+     '<div class="deposit-actions">'+
+      '<button class="btn green" type="button" data-deposit-action="approved" data-id="'+safe(deposit.id)+'">✓ Approve</button>'+
+      '<button class="btn danger" type="button" data-deposit-action="rejected" data-id="'+safe(deposit.id)+'">✕ Reject</button>'+
+     '</div>':
+     '<p style="margin-top:12px">Reviewed: '+dateText(deposit.reviewed_at)+'</p>')+
    '</article>';
   }).join("");
 
- }catch(error){
-  box.innerHTML =
-   '<div class="empty">'+safe(error.message || "Unable to load payment channels.")+'</div>';
+ }catch(e){
+  $("pendingCount").textContent="—";
+  $("pendingBadge").textContent="Unavailable";
+  box.innerHTML='<div class="empty">'+safe(e.message||"Unable to load deposits.")+'</div>';
+ }finally{
+  depositRequestBusy=false;
  }
 }
 
-/* SAVE PAYMENT METHOD */
+/* APPROVE / REJECT */
+
+$("depositList").addEventListener("click",async event=>{
+ const button=event.target.closest("button[data-deposit-action]");
+ if(!button||button.disabled)return;
+
+ const id=button.dataset.id;
+ const status=button.dataset.depositAction;
+
+ if(!id||!["approved","rejected"].includes(status))return;
+
+ const isApprove=status==="approved";
+ const confirmed=confirm(
+  isApprove
+   ?"Approve this deposit? The customer's points will be credited."
+   :"Reject this deposit request?"
+ );
+
+ if(!confirmed)return;
+
+ button.disabled=true;
+ button.textContent=isApprove?"Approving...":"Rejecting...";
+
+ const card=button.closest(".deposit-card");
+ if(card)card.querySelectorAll("button").forEach(b=>b.disabled=true);
+
+ try{
+  const result=await api("/subadmin/deposits/"+encodeURIComponent(id)+"/review",{
+   method:"POST",
+   body:JSON.stringify({
+    status,
+    admin_note:isApprove?"Approved by Sub-Admin":"Rejected by Sub-Admin"
+   })
+  });
+
+  showNotice(
+   isApprove
+    ?"Deposit approved successfully. Customer points have been credited."
+    :"Deposit rejected successfully.",
+   "success"
+  );
+
+  await Promise.all([
+   loadDeposits(),
+   loadDashboard(),
+   loadCustomers()
+  ]);
+
+ }catch(e){
+  showNotice(e.message||"Unable to review deposit.","error");
+  await loadDeposits();
+ }
+});
+
+/* PAYMENT CHANNELS */
+
+function resetPaymentForm(){
+ $("paymentForm").reset();
+ $("paymentId").value="";
+ $("paymentCurrency").value="BDT";
+ $("paymentSaveButton").textContent="Add Deposit Channel";
+ $("paymentCancelButton").style.display="none";
+}
+
+async function loadPaymentMethods(){
+ const box=$("paymentMethodsList");
+ box.innerHTML='<div class="loading">Loading deposit channels...</div>';
+
+ try{
+  const data=await api("/subadmin/payment-methods");
+  paymentMethods=Array.isArray(data.methods)?data.methods:[];
+
+  if(!paymentMethods.length){
+   box.innerHTML='<div class="empty">No deposit channels added yet.</div>';
+   return;
+  }
+
+  box.innerHTML=paymentMethods.map(method=>{
+   const active=method.active===true;
+
+   return '<article class="payment-card">'+
+    '<div class="payment-card-top">'+
+     '<strong>'+safe(method.name)+'</strong>'+
+     '<span class="pill '+(active?"":"suspended")+'">'+(active?"ACTIVE":"INACTIVE")+'</span>'+
+    '</div>'+
+    '<p><b>Channel:</b> '+safe(method.preset||"Custom")+' · <b>Account:</b> '+safe(method.account)+'</p>'+
+    '<p><b>Label:</b> '+safe(method.label||"—")+' · <b>Currency:</b> '+safe(method.currency||"BDT")+'</p>'+
+    (method.instructions?'<p><b>Instructions:</b> '+safe(method.instructions)+'</p>':'')+
+    '<div class="payment-actions" style="margin-top:10px">'+
+     '<button class="btn secondary small" type="button" data-action="edit" data-id="'+safe(method.id)+'">Edit</button>'+
+     '<button class="btn small '+(active?"danger":"green")+'" type="button" data-action="toggle" data-id="'+safe(method.id)+'" data-active="'+(active?"true":"false")+'">'+(active?"Deactivate":"Activate")+'</button>'+
+    '</div>'+
+   '</article>';
+  }).join("");
+ }catch(e){
+  box.innerHTML='<div class="empty">'+safe(e.message)+'</div>';
+ }
+}
 
 $("paymentForm").addEventListener("submit",async event=>{
  event.preventDefault();
 
- const button = $("paymentSaveButton");
+ const button=$("paymentSaveButton");
  if(button.disabled)return;
 
- const id = $("paymentId").value;
-
- const payload = {
+ const id=$("paymentId").value;
+ const payload={
   preset:$("paymentPreset").value,
   name:$("paymentName").value.trim(),
   label:$("paymentLabel").value.trim(),
@@ -541,105 +734,73 @@ $("paymentForm").addEventListener("submit",async event=>{
   instructions:$("paymentInstructions").value.trim()
  };
 
- if(
-  !payload.name ||
-  !payload.account ||
-  !/^[A-Z0-9]{2,10}$/.test(payload.currency)
- ){
-  showNotice("Enter a channel name, account number and valid currency code.","error");
+ if(!payload.name||!payload.account||!/^[A-Z0-9]{2,10}$/.test(payload.currency)){
+  showNotice("Enter a channel name, account and valid currency.","error");
   return;
  }
 
- button.disabled = true;
- button.textContent = id ? "SAVING..." : "ADDING...";
+ button.disabled=true;
+ button.textContent="SAVING...";
 
  try{
-  const result = await api(
-   id
-    ? "/subadmin/payment-methods/"+encodeURIComponent(id)
-    : "/subadmin/payment-methods",
+  await api(
+   id?"/subadmin/payment-methods/"+encodeURIComponent(id):"/subadmin/payment-methods",
    {
-    method:id ? "PATCH" : "POST",
+    method:id?"PATCH":"POST",
     body:JSON.stringify(payload)
    }
   );
 
-  showNotice(
-   id ? "Deposit channel updated successfully." : "Deposit channel added successfully.",
-   "success"
-  );
-
+  showNotice(id?"Deposit channel updated.":"Deposit channel added.","success");
   resetPaymentForm();
   await loadPaymentMethods();
-
- }catch(error){
-  showNotice(error.message || "Unable to save deposit channel.","error");
+ }catch(e){
+  showNotice(e.message,"error");
  }finally{
-  button.disabled = false;
-  button.textContent = $("paymentId").value ? "Save Changes" : "Add Deposit Channel";
+  button.disabled=false;
+  button.textContent=$("paymentId").value?"Save Changes":"Add Deposit Channel";
  }
 });
 
-/* EDIT / ACTIVATE / DEACTIVATE */
-
 $("paymentMethodsList").addEventListener("click",async event=>{
- const button = event.target.closest("button[data-action]");
+ const button=event.target.closest("button[data-action]");
  if(!button)return;
 
- const id = String(button.dataset.id || "");
- const method = paymentMethods.find(item=>String(item.id)===id);
-
+ const id=String(button.dataset.id||"");
+ const method=paymentMethods.find(item=>String(item.id)===id);
  if(!method)return;
 
- if(button.dataset.action === "edit"){
-  $("paymentId").value = method.id;
-  $("paymentPreset").value = method.preset || "Other";
-
-  if(![...$("paymentPreset").options].some(option=>option.value===$("paymentPreset").value)){
-   $("paymentPreset").value = "Other";
+ if(button.dataset.action==="edit"){
+  $("paymentId").value=method.id;
+  $("paymentPreset").value=method.preset||"Other";
+  if(![...$("paymentPreset").options].some(o=>o.value===$("paymentPreset").value)){
+   $("paymentPreset").value="Other";
   }
-
-  $("paymentName").value = method.name || "";
-  $("paymentLabel").value = method.label || "";
-  $("paymentAccount").value = method.account || "";
-  $("paymentCurrency").value = method.currency || "BDT";
-  $("paymentInstructions").value = method.instructions || "";
-
-  $("paymentSaveButton").textContent = "Save Changes";
-  $("paymentCancelButton").style.display = "inline-block";
-
-  $("paymentPanel").scrollIntoView({
-   behavior:"smooth",
-   block:"start"
-  });
-
+  $("paymentName").value=method.name||"";
+  $("paymentLabel").value=method.label||"";
+  $("paymentAccount").value=method.account||"";
+  $("paymentCurrency").value=method.currency||"BDT";
+  $("paymentInstructions").value=method.instructions||"";
+  $("paymentSaveButton").textContent="Save Changes";
+  $("paymentCancelButton").style.display="inline-block";
+  $("paymentPanel").scrollIntoView({behavior:"smooth"});
   return;
  }
 
- if(button.dataset.action === "toggle"){
-  const nextActive = button.dataset.active !== "true";
-
-  button.disabled = true;
+ if(button.dataset.action==="toggle"){
+  const nextActive=button.dataset.active!=="true";
+  button.disabled=true;
 
   try{
-   await api(
-    "/subadmin/payment-methods/"+encodeURIComponent(id),
-    {
-     method:"PATCH",
-     body:JSON.stringify({active:nextActive})
-    }
-   );
-
-   showNotice(
-    nextActive ? "Deposit channel activated." : "Deposit channel deactivated.",
-    "success"
-   );
-
+   await api("/subadmin/payment-methods/"+encodeURIComponent(id),{
+    method:"PATCH",
+    body:JSON.stringify({active:nextActive})
+   });
+   showNotice(nextActive?"Deposit channel activated.":"Deposit channel deactivated.","success");
    await loadPaymentMethods();
-
-  }catch(error){
-   showNotice(error.message || "Unable to update channel status.","error");
-   button.disabled = false;
+  }catch(e){
+   showNotice(e.message,"error");
+   button.disabled=false;
   }
  }
 });
@@ -647,123 +808,153 @@ $("paymentMethodsList").addEventListener("click",async event=>{
 $("paymentCancelButton").addEventListener("click",resetPaymentForm);
 $("paymentRefresh").addEventListener("click",loadPaymentMethods);
 
-/* COPY INVITE LINK */
+/* INVITE LINK */
 
 $("copyInviteButton").addEventListener("click",async()=>{
- const value = $("inviteLink").value;
+ const value=$("inviteLink").value;
 
- if(
-  !value ||
-  value === "Loading invite link..." ||
-  value === "Unable to load registration link"
- ){
-  showNotice("Invite link is not ready yet. Refresh the dashboard.","error");
+ if(!value||value.includes("Loading")||value.includes("Unable")){
+  showNotice("Invite link is not ready yet.","error");
   return;
  }
 
  try{
-  if(navigator.clipboard && window.isSecureContext){
+  if(navigator.clipboard&&window.isSecureContext){
    await navigator.clipboard.writeText(value);
   }else{
    $("inviteLink").select();
    document.execCommand("copy");
   }
-
   showNotice("Invite link copied successfully.","success");
-
- }catch(error){
-  showNotice("Could not copy automatically. Select and copy the link manually.","error");
+ }catch(e){
+  showNotice("Select and copy the link manually.","error");
  }
 });
 
-/* SEND POINTS */
+/* POINT DISTRIBUTION */
 
 $("transferForm").addEventListener("submit",async event=>{
  event.preventDefault();
-
  if(busy)return;
 
- clearNotice();
+ const customerId=Number($("customerId").value);
+ const amount=Number($("transferAmount").value);
 
- const customerId = Number($("customerId").value);
- const amount = Number($("transferAmount").value);
-
- if(
-  !Number.isSafeInteger(customerId) ||
-  customerId < 1 ||
-  !Number.isFinite(amount) ||
-  amount <= 0 ||
-  Math.round(amount*100) !== amount*100
- ){
+ if(!Number.isSafeInteger(customerId)||customerId<1||
+    !Number.isFinite(amount)||amount<=0||
+    Math.round(amount*100)!==amount*100){
   showNotice("Enter a valid Customer ID and points amount.","error");
   return;
  }
 
- busy = true;
-
- const button = $("transferButton");
- button.disabled = true;
- button.textContent = "SENDING...";
+ busy=true;
+ const button=$("transferButton");
+ button.disabled=true;
+ button.textContent="SENDING...";
 
  try{
-  const result = await api(
-   "/subadmin/users/"+customerId+"/points",
-   {
-    method:"POST",
-    body:JSON.stringify({amount})
-   }
-  );
+  const result=await api("/subadmin/users/"+customerId+"/points",{
+   method:"POST",
+   body:JSON.stringify({amount})
+  });
 
-  showNotice(
-   result.message || "Points transferred successfully.",
-   "success"
-  );
-
+  showNotice(result.message||"Points transferred successfully.","success");
   $("transferForm").reset();
 
-  await Promise.all([
-   loadDashboard(),
-   loadCustomers(),
-   loadHistory()
-  ]);
-
- }catch(error){
-  showNotice(error.message || "Unable to transfer points.","error");
+  await Promise.all([loadDashboard(),loadCustomers(),loadHistory()]);
+ }catch(e){
+  showNotice(e.message,"error");
  }finally{
-  busy = false;
-  button.disabled = false;
-  button.textContent = "Send Points";
+  busy=false;
+  button.disabled=false;
+  button.textContent="Send Points";
  }
 });
 
-/* REFRESH */
+/* BROWSER NOTIFICATION PERMISSION */
+
+$("notificationButton").addEventListener("click",async()=>{
+ if(!("Notification" in window)){
+  showNotice("This browser does not support desktop notifications. Dashboard alerts will still work.","info");
+  return;
+ }
+
+ try{
+  const permission=await Notification.requestPermission();
+
+  if(permission==="granted"){
+   showNotice("Browser notifications enabled. Keep the dashboard open to receive deposit alerts.","success");
+   $("notificationButton").textContent="Alerts Enabled";
+  }else{
+   showNotice("Notification permission was not granted. In-dashboard alerts will still work.","warning");
+  }
+ }catch(e){
+  showNotice("Could not enable browser notifications.","error");
+ }
+});
+
+/* REFRESH AND AUTO POLLING */
 
 async function refreshAll(){
  clearNotice();
- await loadDashboard();
+ await Promise.all([
+  loadDashboard(),
+  loadCustomers(),
+  loadHistory(),
+  loadDeposits({showLoading:true}),
+  loadPaymentMethods()
+ ]);
 }
 
 $("refreshButton").addEventListener("click",refreshAll);
 $("customersRefresh").addEventListener("click",loadCustomers);
 $("historyRefresh").addEventListener("click",loadHistory);
+$("depositRefresh").addEventListener("click",()=>loadDeposits({showLoading:true}));
+
+function startDepositPolling(){
+ if(pollingTimer)clearInterval(pollingTimer);
+
+ // Checks for new deposit requests every 20 seconds while dashboard is open.
+ pollingTimer=setInterval(()=>{
+  if(document.visibilityState==="visible"){
+   loadDeposits();
+  }
+ },20000);
+}
+
+document.addEventListener("visibilitychange",()=>{
+ if(document.visibilityState==="visible"){
+  loadDeposits();
+ }
+});
 
 /* LOGOUT */
 
 $("logoutButton").addEventListener("click",()=>{
+ if(pollingTimer)clearInterval(pollingTimer);
  clearToken();
  location.replace(LOGIN_PAGE);
 });
 
 /* START */
 
-document.addEventListener("DOMContentLoaded",()=>{
+document.addEventListener("DOMContentLoaded",async()=>{
  if(!getToken()){
   goToLogin();
   return;
  }
 
- loadDashboard();
+ await Promise.all([
+  loadDashboard(),
+  loadCustomers(),
+  loadHistory(),
+  loadDeposits({showLoading:true}),
+  loadPaymentMethods()
+ ]);
+
+ startDepositPolling();
 });
 </script>
+
 </body>
 </html>
