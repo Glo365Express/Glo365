@@ -41,10 +41,22 @@ body{font-family:Arial,Helvetica,sans-serif;background:var(--bg);color:var(--tex
 .btn{border:0;border-radius:10px;background:var(--blue);color:#fff;font-weight:bold;padding:12px 15px;cursor:pointer}
 .btn:hover{background:var(--blue2)}
 .btn:disabled{opacity:.55;cursor:not-allowed}
+.btn-secondary{background:#e8f3ff;color:#1769a5}
+.btn-secondary:hover{background:#d8eaff}
+.btn-danger{background:#fff0f0;color:#bd3030}
+.btn-danger:hover{background:#ffe0e0}
 .form-grid{display:grid;grid-template-columns:1fr 1fr auto;gap:10px;align-items:end}
 .field label{display:block;font-size:12px;font-weight:bold;color:#526176;margin:0 0 7px}
-.field input{width:100%;height:44px;border:1px solid #dce5ef;border-radius:10px;padding:0 12px;font-size:14px;outline:none;background:#fff;color:var(--text)}
-.field input:focus{border-color:var(--blue);box-shadow:0 0 0 3px #2196e81c}
+.field input,.field select,.field textarea{
+width:100%;min-height:44px;border:1px solid #dce5ef;border-radius:10px;
+padding:10px 12px;font-size:14px;outline:none;background:#fff;color:var(--text);
+font-family:inherit
+}
+.field textarea{min-height:85px;resize:vertical}
+.field input:focus,.field select:focus,.field textarea:focus{border-color:var(--blue);box-shadow:0 0 0 3px #2196e81c}
+.payment-form{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+.payment-form .full{grid-column:1/-1}
+.payment-actions{display:flex;gap:9px;flex-wrap:wrap}
 .table-wrap{width:100%;overflow-x:auto}
 table{border-collapse:collapse;width:100%;min-width:620px}
 th,td{text-align:left;padding:12px 10px;border-bottom:1px solid var(--line);font-size:12px;white-space:nowrap}
@@ -52,6 +64,7 @@ th{color:#64748b;background:#f7f9fc;font-size:11px;text-transform:uppercase;lett
 td strong{font-size:13px}
 .pill{display:inline-block;padding:5px 9px;border-radius:30px;font-size:10px;font-weight:bold;background:#e4f7ec;color:#187844}
 .pill.suspended{background:#ffeded;color:#bb3030}
+.pill.inactive{background:#fff0df;color:#a85b0a}
 .notice{display:none;padding:11px 13px;border-radius:11px;font-size:12px;line-height:1.5;margin:0 0 14px;overflow-wrap:anywhere}
 .notice.show{display:block}
 .notice.error{background:#ffebeb;color:#b32626}
@@ -61,6 +74,13 @@ td strong{font-size:13px}
 .refresh{font-size:12px;color:var(--blue);font-weight:bold;background:none;border:0;cursor:pointer}
 .loading{padding:30px;text-align:center;color:var(--muted);font-size:13px}
 .footer{text-align:center;color:#8794a6;font-size:11px;padding:10px}
+.form-hint{font-size:11px;color:var(--muted);margin-top:6px;line-height:1.5}
+.channel-card{border:1px solid var(--line);border-radius:13px;padding:14px;margin-top:10px;background:#fbfdff}
+.channel-top{display:flex;justify-content:space-between;align-items:center;gap:10px;margin-bottom:8px}
+.channel-name{font-size:14px;font-weight:bold}
+.channel-info{font-size:12px;color:#526176;line-height:1.8;overflow-wrap:anywhere}
+.channel-buttons{display:flex;gap:7px;flex-wrap:wrap;margin-top:10px}
+.channel-buttons button{padding:8px 11px;font-size:11px}
 @media(max-width:700px){
 .grid{grid-template-columns:1fr 1fr}
 .form-grid{grid-template-columns:1fr 1fr}
@@ -77,6 +97,8 @@ td strong{font-size:13px}
 .invite-url{width:100%}
 .topbar{padding:15px 13px}
 .brand{font-size:19px}
+.payment-form{grid-template-columns:1fr}
+.payment-form .full{grid-column:auto}
 }
 </style>
 </head>
@@ -97,7 +119,7 @@ td strong{font-size:13px}
 
 <section class="welcome">
 <h1>Welcome, <span id="adminName">Sub-Admin</span></h1>
-<p>Manage your invited customers and distribute only the points allocated to your account.</p>
+<p>Manage your invited customers, payment channels and allocated points.</p>
 </section>
 
 <div id="notice" class="notice" role="status" aria-live="polite"></div>
@@ -127,14 +149,79 @@ td strong{font-size:13px}
 <h2>Your Registration Link</h2>
 <button class="refresh" id="refreshButton" type="button">↻ Refresh</button>
 </div>
-
 <p class="muted">
 Share this unique link. New accounts created through it will be connected to your Sub-Admin account.
 </p>
-
 <div class="invite-row">
 <input class="invite-url" id="inviteLink" readonly value="Loading invite link...">
 <button class="btn" id="copyInviteButton" type="button">Copy Link</button>
+</div>
+</section>
+
+<!-- DEPOSIT CHANNEL MANAGEMENT -->
+<section class="panel" id="paymentPanel">
+<div class="panel-head">
+<h2 id="paymentFormTitle">Add Deposit Channel</h2>
+<button class="refresh" id="paymentRefresh" type="button">↻ Reload</button>
+</div>
+
+<p class="muted" style="margin-bottom:14px">
+Add your own deposit payment details. Customers registered under your Sub-Admin account will see your active channels.
+</p>
+
+<form id="paymentForm" class="payment-form">
+
+<input type="hidden" id="paymentMethodId">
+
+<div class="field">
+<label for="paymentName">Payment Method Name *</label>
+<input id="paymentName" type="text" maxlength="60" placeholder="Example: bKash, Nagad, Binance" required>
+</div>
+
+<div class="field">
+<label for="paymentLabel">Display Label</label>
+<input id="paymentLabel" type="text" maxlength="60" placeholder="Example: Personal Account">
+</div>
+
+<div class="field">
+<label for="paymentAccount">Account Number / Wallet Address *</label>
+<input id="paymentAccount" type="text" maxlength="150" placeholder="Enter your payment number" required>
+</div>
+
+<div class="field">
+<label for="paymentCurrency">Currency *</label>
+<select id="paymentCurrency" required>
+<option value="BDT">BDT - Bangladeshi Taka</option>
+<option value="INR">INR - Indian Rupee</option>
+<option value="USD">USD - US Dollar</option>
+<option value="USDT">USDT</option>
+<option value="THB">THB - Thai Baht</option>
+</select>
+</div>
+
+<div class="field full">
+<label for="paymentInstructions">Payment Instructions</label>
+<textarea id="paymentInstructions" maxlength="1000" placeholder="Write payment instructions for your customers..."></textarea>
+</div>
+
+<div class="payment-actions full">
+<button class="btn" id="savePaymentButton" type="submit">Add Deposit Channel</button>
+<button class="btn btn-secondary" id="cancelPaymentEdit" type="button" style="display:none">Cancel Edit</button>
+</div>
+
+</form>
+
+<p class="form-hint">
+Only add payment accounts that you are authorized to use. Never ask customers for PIN, OTP, CVV or card passwords.
+</p>
+
+<div style="margin-top:22px">
+<div class="panel-head">
+<h2>Your Deposit Channels</h2>
+</div>
+<div id="paymentMethodsList">
+<div class="loading">Loading payment channels...</div>
+</div>
 </div>
 </section>
 
@@ -142,24 +229,18 @@ Share this unique link. New accounts created through it will be connected to you
 <div class="panel-head">
 <h2>Distribute Points</h2>
 </div>
-
 <p class="muted" style="margin-bottom:14px">
-Choose one of your customers by their Customer ID.
-The points will be deducted from your available balance.
+Choose one of your customers by their Customer ID. The points will be deducted from your available balance.
 </p>
-
 <form id="transferForm" class="form-grid">
-
 <div class="field">
 <label for="customerId">Customer ID</label>
 <input id="customerId" type="number" min="1" step="1" placeholder="Enter customer ID" required>
 </div>
-
 <div class="field">
 <label for="transferAmount">Points Amount</label>
 <input id="transferAmount" type="number" min="0.01" max="10000000" step="0.01" placeholder="Enter points" required>
 </div>
-
 <button class="btn" id="transferButton" type="submit">Send Points</button>
 </form>
 </section>
@@ -169,17 +250,12 @@ The points will be deducted from your available balance.
 <h2>Your Customers</h2>
 <button class="refresh" id="customersRefresh" type="button">↻ Reload</button>
 </div>
-
 <div class="table-wrap">
 <table>
 <thead>
 <tr>
-<th>Customer ID</th>
-<th>Username</th>
-<th>Email</th>
-<th>Balance</th>
-<th>Status</th>
-<th>Joined</th>
+<th>Customer ID</th><th>Username</th><th>Email</th>
+<th>Balance</th><th>Status</th><th>Joined</th>
 </tr>
 </thead>
 <tbody id="customersBody">
@@ -194,16 +270,10 @@ The points will be deducted from your available balance.
 <h2>Point Distribution History</h2>
 <button class="refresh" id="historyRefresh" type="button">↻ Reload</button>
 </div>
-
 <div class="table-wrap">
 <table>
 <thead>
-<tr>
-<th>Date</th>
-<th>Customer ID</th>
-<th>Points Sent</th>
-<th>Reference</th>
-</tr>
+<tr><th>Date</th><th>Customer ID</th><th>Points Sent</th><th>Reference</th></tr>
 </thead>
 <tbody id="historyBody">
 <tr><td colspan="4" class="loading">Loading history...</td></tr>
@@ -213,7 +283,6 @@ The points will be deducted from your available balance.
 </section>
 
 <div class="footer">GLO 365 · Sub-Admin Panel</div>
-
 </main>
 
 <script>
@@ -227,20 +296,18 @@ const $=id=>document.getElementById(id);
 
 let currentAccount=null;
 let busy=false;
+let paymentBusy=false;
 
 function getToken(){
-try{
-return sessionStorage.getItem(TOKEN_KEY)||"";
-}catch(_){
-return "";
-}
-
+try{return sessionStorage.getItem(TOKEN_KEY)||""}
+catch(_){return ""}
 }
 
 function showNotice(message,type="info"){
 const box=$("notice");
 box.textContent=message;
 box.className="notice show "+type;
+window.scrollTo({top:0,behavior:"smooth"});
 }
 
 function clearNotice(){
@@ -262,36 +329,23 @@ return Number.isNaN(d.getTime())?"—":d.toLocaleString();
 
 function safe(value){
 return String(value??"").replace(/[&<>"']/g,c=>({
-"&":"&amp;",
-"<":"&lt;",
-">":"&gt;",
-"\"":"&quot;",
-"'":"&#39;"
+"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;',"'" :"&#39;"
 }[c]));
 }
 
-/*
-  সব Login Redirect এখন login.html
-  Invite Code format: SA + 24 hexadecimal characters
-*/
-
 function makeInviteLink(code){
-
 const inviteCode=String(code||"").trim().toUpperCase();
 
-if(!/^SA[a-f0-9]{24}$/i.test(inviteCode)){
+if(!/^SA[A-F0-9]{24}$/i.test(inviteCode)){
 throw new Error("Your Sub-Admin invitation code is invalid. Please contact Main Admin.");
 }
 
-return new URL(
-"login.html?subadmin="+encodeURIComponent(inviteCode),
-"https://glo365.online/"
-).href;
-
+const loginUrl=new URL("login.html",window.location.href);
+loginUrl.searchParams.set("subadmin",inviteCode);
+return loginUrl.href;
 }
 
 async function api(path,options={}){
-
 const token=getToken();
 
 if(!token){
@@ -311,62 +365,51 @@ headers:{
 });
 
 let data;
+try{data=await response.json()}
+catch(_){throw new Error("Invalid server response.")}
 
-try{
-data=await response.json();
-}catch(_){
-throw new Error("Invalid server response.");
+if(response.status===401||response.status===403){
+throw new Error(data.message||data.error||"Your session is invalid or access is denied.");
 }
 
 if(!response.ok||data.success===false){
 throw new Error(data.message||data.error||"Request failed.");
 }
-
 return data;
-
 }
 
+/* DASHBOARD */
+
 async function loadDashboard(){
-
 try{
-
 const data=await api("/subadmin/dashboard");
-
 currentAccount=data.account;
 
 $("adminName").textContent=data.account.username||"Sub-Admin";
 $("balanceValue").textContent=numberText(data.account.balance);
 $("customerCount").textContent=numberText(data.customer_count);
 $("allocatedValue").textContent=numberText(data.total_allocated);
-
-/* Correct login.html invitation link */
 $("inviteLink").value=makeInviteLink(data.account.subadmin_invite_code);
 
 await Promise.all([
 loadCustomers(),
-loadHistory()
+loadHistory(),
+loadPaymentMethods()
 ]);
 
 }catch(error){
-
 showNotice(error.message||"Unable to load dashboard.","error");
-
-if(/Sub-Admin access|required|sign in|token/i.test(error.message||"")){
+if(/access|required|sign in|token|session/i.test(error.message||"")){
 setTimeout(()=>location.replace(LOGIN_PAGE),1300);
 }
-
 }
-
 }
 
 async function loadCustomers(){
-
 const body=$("customersBody");
-
 body.innerHTML='<tr><td colspan="6" class="loading">Loading customers...</td></tr>';
 
 try{
-
 const data=await api("/subadmin/users");
 const rows=Array.isArray(data.users)?data.users:[];
 
@@ -387,21 +430,15 @@ body.innerHTML=rows.map(user=>
 ).join("");
 
 }catch(error){
-
 body.innerHTML='<tr><td colspan="6" class="empty">'+safe(error.message)+'</td></tr>';
-
 }
-
 }
 
 async function loadHistory(){
-
 const body=$("historyBody");
-
 body.innerHTML='<tr><td colspan="4" class="loading">Loading history...</td></tr>';
 
 try{
-
 const data=await api("/subadmin/point-history");
 const rows=Array.isArray(data.transfers)?data.transfers:[];
 
@@ -420,22 +457,199 @@ body.innerHTML=rows.map(item=>
 ).join("");
 
 }catch(error){
-
 body.innerHTML='<tr><td colspan="4" class="empty">'+safe(error.message)+'</td></tr>';
-
+}
 }
 
+/* PAYMENT CHANNELS */
+
+function resetPaymentForm(){
+$("paymentForm").reset();
+$("paymentMethodId").value="";
+$("paymentFormTitle").textContent="Add Deposit Channel";
+$("savePaymentButton").textContent="Add Deposit Channel";
+$("cancelPaymentEdit").style.display="none";
+$("paymentCurrency").value="BDT";
 }
 
-async function refreshAll(){
-clearNotice();
-await loadDashboard();
+async function loadPaymentMethods(){
+const container=$("paymentMethodsList");
+container.innerHTML='<div class="loading">Loading payment channels...</div>';
+
+try{
+const data=await api("/subadmin/payment-methods");
+const methods=Array.isArray(data.methods)?data.methods:[];
+
+if(!methods.length){
+container.innerHTML='<div class="empty">You have not added any deposit channels yet.</div>';
+return;
 }
 
-/* Copy Invite Link */
+container.innerHTML=methods.map(method=>{
+const active=method.active===true;
+
+return '<article class="channel-card">'+
+'<div class="channel-top">'+
+'<div class="channel-name">'+safe(method.name)+'</div>'+
+'<span class="pill '+(active?"":"inactive")+'">'+(active?"ACTIVE":"INACTIVE")+'</span>'+
+'</div>'+
+'<div class="channel-info">'+
+'<div><strong>Label:</strong> '+safe(method.label||"—")+'</div>'+
+'<div><strong>Account:</strong> '+safe(method.account)+'</div>'+
+'<div><strong>Currency:</strong> '+safe(method.currency)+'</div>'+
+'<div><strong>Instructions:</strong> '+safe(method.instructions||"—")+'</div>'+
+'</div>'+
+'<div class="channel-buttons">'+
+'<button class="btn btn-secondary" type="button" data-edit-payment="'+safe(method.id)+'">Edit</button>'+
+'<button class="btn '+(active?"btn-danger":"")+'" type="button" data-toggle-payment="'+safe(method.id)+'" data-active="'+active+'">'+(active?"Deactivate":"Activate")+'</button>'+
+'</div>'+
+'</article>';
+}).join("");
+
+}catch(error){
+container.innerHTML='<div class="empty">'+safe(error.message)+'</div>';
+}
+}
+
+async function savePaymentMethod(event){
+event.preventDefault();
+if(paymentBusy)return;
+
+const id=$("paymentMethodId").value.trim();
+
+const payload={
+name:$("paymentName").value.trim(),
+label:$("paymentLabel").value.trim(),
+account:$("paymentAccount").value.trim(),
+currency:$("paymentCurrency").value.trim().toUpperCase(),
+instructions:$("paymentInstructions").value.trim()
+};
+
+if(!payload.name||!payload.account){
+showNotice("Payment method name and account number are required.","error");
+return;
+}
+
+if(!/^[A-Z0-9]{2,10}$/.test(payload.currency)){
+showNotice("Enter a valid currency code.","error");
+return;
+}
+
+paymentBusy=true;
+const button=$("savePaymentButton");
+button.disabled=true;
+button.textContent=id?"UPDATING...":"ADDING...";
+
+try{
+if(id){
+await api("/subadmin/payment-methods/"+encodeURIComponent(id),{
+method:"PATCH",
+body:JSON.stringify(payload)
+});
+showNotice("Deposit channel updated successfully.","success");
+}else{
+await api("/subadmin/payment-methods",{
+method:"POST",
+body:JSON.stringify({
+preset:"Custom",
+...payload
+})
+});
+showNotice("Deposit channel added successfully.","success");
+}
+
+resetPaymentForm();
+await loadPaymentMethods();
+
+}catch(error){
+showNotice(error.message||"Unable to save payment channel.","error");
+}finally{
+paymentBusy=false;
+button.disabled=false;
+button.textContent=$("paymentMethodId").value?"Update Deposit Channel":"Add Deposit Channel";
+}
+}
+
+async function editPaymentMethod(id){
+try{
+const data=await api("/subadmin/payment-methods");
+const methods=Array.isArray(data.methods)?data.methods:[];
+const method=methods.find(item=>String(item.id)===String(id));
+
+if(!method){
+showNotice("Payment channel not found.","error");
+return;
+}
+
+$("paymentMethodId").value=method.id;
+$("paymentName").value=method.name||"";
+$("paymentLabel").value=method.label||"";
+$("paymentAccount").value=method.account||"";
+$("paymentCurrency").value=method.currency||"BDT";
+$("paymentInstructions").value=method.instructions||"";
+
+$("paymentFormTitle").textContent="Edit Deposit Channel";
+$("savePaymentButton").textContent="Update Deposit Channel";
+$("cancelPaymentEdit").style.display="inline-block";
+
+$("paymentPanel").scrollIntoView({behavior:"smooth"});
+}catch(error){
+showNotice(error.message,"error");
+}
+}
+
+async function togglePaymentMethod(id,currentlyActive){
+if(paymentBusy)return;
+
+const action=currentlyActive?"deactivate":"activate";
+if(!confirm("Are you sure you want to "+action+" this deposit channel?"))return;
+
+paymentBusy=true;
+
+try{
+await api("/subadmin/payment-methods/"+encodeURIComponent(id),{
+method:"PATCH",
+body:JSON.stringify({active:!currentlyActive})
+});
+
+showNotice("Deposit channel status updated.","success");
+await loadPaymentMethods();
+
+}catch(error){
+showNotice(error.message||"Unable to update channel status.","error");
+}finally{
+paymentBusy=false;
+}
+}
+
+$("paymentForm").addEventListener("submit",savePaymentMethod);
+
+$("cancelPaymentEdit").addEventListener("click",()=>{
+resetPaymentForm();
+});
+
+$("paymentRefresh").addEventListener("click",loadPaymentMethods);
+
+$("paymentMethodsList").addEventListener("click",event=>{
+const editButton=event.target.closest("[data-edit-payment]");
+const toggleButton=event.target.closest("[data-toggle-payment]");
+
+if(editButton){
+editPaymentMethod(editButton.dataset.editPayment);
+return;
+}
+
+if(toggleButton){
+togglePaymentMethod(
+toggleButton.dataset.togglePayment,
+toggleButton.dataset.active==="true"
+);
+}
+});
+
+/* COPY INVITE LINK */
 
 $("copyInviteButton").addEventListener("click",async()=>{
-
 const value=$("inviteLink").value;
 
 if(!value||value==="Loading invite link..."){
@@ -444,38 +658,24 @@ return;
 }
 
 try{
-
 if(navigator.clipboard&&window.isSecureContext){
-
 await navigator.clipboard.writeText(value);
-
 }else{
-
 $("inviteLink").select();
 $("inviteLink").setSelectionRange(0,99999);
-
 const copied=document.execCommand("copy");
-
 if(!copied)throw new Error("Copy failed.");
-
 }
-
 showNotice("Invite link copied successfully.","success");
-
 }catch(_){
-
 showNotice("Could not copy automatically. Select and copy the link manually.","error");
-
 }
-
 });
 
-/* Distribute Points */
+/* DISTRIBUTE POINTS */
 
 $("transferForm").addEventListener("submit",async event=>{
-
 event.preventDefault();
-
 if(busy)return;
 
 clearNotice();
@@ -490,21 +690,16 @@ customerId<1||
 amount<=0||
 Math.round(amount*100)!==amount*100
 ){
-
 showNotice("Enter a valid Customer ID and points amount.","error");
 return;
-
 }
 
 busy=true;
-
 const button=$("transferButton");
-
 button.disabled=true;
 button.textContent="SENDING...";
 
 try{
-
 const result=await api(
 "/subadmin/users/"+customerId+"/points",
 {
@@ -514,7 +709,6 @@ body:JSON.stringify({amount})
 );
 
 showNotice(result.message||"Points transferred successfully.","success");
-
 $("transferForm").reset();
 
 await Promise.all([
@@ -524,50 +718,43 @@ loadHistory()
 ]);
 
 }catch(error){
-
 showNotice(error.message||"Unable to transfer points.","error");
-
 }finally{
-
 busy=false;
 button.disabled=false;
 button.textContent="Send Points";
-
 }
-
 });
 
-/* Refresh Buttons */
+/* REFRESH */
+
+async function refreshAll(){
+clearNotice();
+await loadDashboard();
+}
 
 $("refreshButton").addEventListener("click",refreshAll);
 $("customersRefresh").addEventListener("click",loadCustomers);
 $("historyRefresh").addEventListener("click",loadHistory);
 
-/* Logout */
+/* LOGOUT */
 
 $("logoutButton").addEventListener("click",()=>{
-
 try{
 sessionStorage.removeItem(TOKEN_KEY);
 sessionStorage.removeItem("glo365_user");
 }catch(_){}
-
 location.replace(LOGIN_PAGE);
-
 });
 
-/* Start Dashboard */
+/* START */
 
 if(!getToken()){
-
 location.replace(LOGIN_PAGE);
-
 }else{
-
 loadDashboard();
-
 }
-
 </script>
+
 </body>
 </html>
