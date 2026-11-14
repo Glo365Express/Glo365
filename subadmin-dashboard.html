@@ -69,6 +69,7 @@ body{font-family:Arial,Helvetica,sans-serif;background:var(--bg);color:var(--tex
 "use strict";
 const API_BASE_URL="https://glo365.onrender.com/api";
 const TOKEN_KEY="glo365_token";
+const LOGIN_PAGE="login.html";
 const $=id=>document.getElementById(id);
 let currentAccount=null;
 let busy=false;
@@ -83,13 +84,19 @@ function dateText(value){if(!value)return "—";const d=new Date(value);return N
 function safe(value){return String(value??"").replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;","\"":"&quot;","'":"&#39;"}[c]))}
 async function api(path,options={}){
  const token=getToken();
- if(!token){location.replace("register.html");throw new Error("Please sign in to continue.")}
+ if(!token){location.replace(LOGIN_PAGE);throw new Error("Please sign in to continue.")}
  const response=await fetch(API_BASE_URL+path,{...options,credentials:"include",headers:{"Accept":"application/json","Content-Type":"application/json","Authorization":"Bearer "+token,...(options.headers||{})}});
  let data;try{data=await response.json()}catch(_){throw new Error("Invalid server response.")}
  if(!response.ok||data.success===false){throw new Error(data.message||data.error||"Request failed.")}
  return data;
 }
-function makeInviteLink(code){return new URL("register.html?subadmin="+encodeURIComponent(code),window.location.href).href}
+/* Registration is handled by login.html, which automatically opens Sign Up when it sees ?subadmin=. */
+function makeInviteLink(code){
+ if(!code)throw new Error("Your Sub-Admin invite code is missing. Please refresh the dashboard.");
+ const url=new URL(LOGIN_PAGE,window.location.href);
+ url.searchParams.set("subadmin",String(code).trim());
+ return url.href;
+}
 async function loadDashboard(){
  try{
   const data=await api("/subadmin/dashboard");
@@ -100,7 +107,7 @@ async function loadDashboard(){
   $("allocatedValue").textContent=numberText(data.total_allocated);
   $("inviteLink").value=makeInviteLink(data.account.subadmin_invite_code);
   await Promise.all([loadCustomers(),loadHistory()]);
- }catch(error){showNotice(error.message||"Unable to load dashboard.","error");if(/Sub-Admin access|required|sign in|token/i.test(error.message||"")){setTimeout(()=>location.replace("register.html"),1300)}}
+ }catch(error){showNotice(error.message||"Unable to load dashboard.","error");if(/Sub-Admin access|required|sign in|token/i.test(error.message||"")){setTimeout(()=>location.replace(LOGIN_PAGE),1300)}}
 }
 async function loadCustomers(){
  const body=$("customersBody");body.innerHTML='<tr><td colspan="6" class="loading">Loading customers...</td></tr>';
@@ -137,8 +144,8 @@ $("transferForm").addEventListener("submit",async event=>{
 $("refreshButton").addEventListener("click",refreshAll);
 $("customersRefresh").addEventListener("click",loadCustomers);
 $("historyRefresh").addEventListener("click",loadHistory);
-$("logoutButton").addEventListener("click",()=>{try{sessionStorage.removeItem(TOKEN_KEY);sessionStorage.removeItem("glo365_user")}catch(_){}location.replace("register.html")});
-if(!getToken()){location.replace("register.html")}else{loadDashboard()}
+$("logoutButton").addEventListener("click",()=>{try{sessionStorage.removeItem(TOKEN_KEY);sessionStorage.removeItem("glo365_user")}catch(_){}location.replace(LOGIN_PAGE)});
+if(!getToken()){location.replace(LOGIN_PAGE)}else{loadDashboard()}
 </script>
 </body>
 </html>
