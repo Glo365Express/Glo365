@@ -438,6 +438,31 @@
         CREATE INDEX IF NOT EXISTS idx_affiliate_loss_user
           ON affiliate_loss_commissions(referred_user_id, created_at DESC);
 
+        -- Sub-Admin system: additive only; all existing users and balances are preserved.
+        ALTER TABLE users ADD COLUMN IF NOT EXISTS subadmin_owner_id BIGINT REFERENCES users(id) ON DELETE SET NULL;
+        ALTER TABLE users ADD COLUMN IF NOT EXISTS subadmin_invite_code VARCHAR(40);
+        CREATE UNIQUE INDEX IF NOT EXISTS idx_users_subadmin_invite_code
+          ON users(subadmin_invite_code) WHERE subadmin_invite_code IS NOT NULL;
+        CREATE INDEX IF NOT EXISTS idx_users_subadmin_owner
+          ON users(subadmin_owner_id);
+
+        CREATE TABLE IF NOT EXISTS subadmin_point_transfers (
+          id BIGSERIAL PRIMARY KEY,
+          main_admin_id BIGINT NOT NULL REFERENCES users(id),
+          subadmin_id BIGINT NOT NULL REFERENCES users(id),
+          amount NUMERIC(12,2) NOT NULL CHECK (amount > 0),
+          reference VARCHAR(100) NOT NULL UNIQUE,
+          created_at TIMESTAMPTZ NOT NULL DEFAULT NOW()
+        );
+        CREATE TABLE IF NOT EXISTS subadmin_customer_point_transfers (
+          id BIGSERIAL PRIMARY KEY,
+          subadmin_id BIGINT NOT NULL REFERENCES users(id),
+          customer_id BIGINT NOT NULL REFERENCES users(id),
+          amount NUMERIC(12,2) NOT NULL CHECK (amount > 0),
+          reference VARCHAR(100) NOT NULL UNIQUE,
+          created_at TIMESTAMPTZ NOT NULL DEFAULT NOW()
+        );
+
         CREATE TABLE IF NOT EXISTS audit_logs (
           id BIGSERIAL PRIMARY KEY,
           actor_id BIGINT REFERENCES users(id) ON DELETE SET NULL,
@@ -3052,6 +3077,7 @@
     // MODULAR ROUTE REGISTRATION
     // ==========================================
 
+    const registerSubAdminRoutes = require("./src/routes/subadmin");
     const registerDepositRoutes = require("./src/routes/deposit");
     const registerWithdrawalRoutes = require("./src/routes/withdrawal");
     const { registerWalletRoutes } = require("./src/routes/wallet");
@@ -3073,9 +3099,12 @@
       audit,
       getCurrentDraw,
       isDrawBettingLocked,
-      DRAW_LOCK_MINUTES
+      DRAW_LOCK_MINUTES,
+      createToken,
+      setAuthCookie
     };
 
+    registerSubAdminRoutes({ app, ...routeDependencies, bcrypt, crypto, validUsername, validPassword, PRIMARY_ADMIN_USERNAME });
     registerDepositRoutes({ app, ...routeDependencies });
     registerWithdrawalRoutes(app, routeDependencies);
     registerWalletRoutes(app, routeDependencies);
