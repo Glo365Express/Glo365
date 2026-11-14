@@ -11,6 +11,8 @@
     const PORT = process.env.PORT || 10000;
     const JWT_SECRET = process.env.JWT_SECRET;
     const DATABASE_URL = process.env.DATABASE_URL;
+    const SUBADMIN_SERVICE_URL = (process.env.SUBADMIN_SERVICE_URL || "").replace(/\/+$/, "");
+    const MAIN_SERVER_API_KEY = process.env.MAIN_SERVER_API_KEY || "";
     const AUTH_COOKIE = "glo365_token";
     const COOKIE_MAX_AGE = 7 * 24 * 60 * 60 * 1000;
     const DRAW_LOCK_MINUTES = 45;
@@ -718,6 +720,33 @@
           ON support_messages(conversation_id, created_at, id);
         CREATE INDEX IF NOT EXISTS idx_support_conversations_updated
           ON support_conversations(updated_at DESC);
+      `);
+
+      // Sub-Admin bridge tables. Additive only: no existing user or wallet rows are changed.
+      await pool.query(`
+        CREATE TABLE IF NOT EXISTS subadmin_accounts (
+          id BIGSERIAL PRIMARY KEY,
+          main_server_id VARCHAR(120) UNIQUE NOT NULL,
+          username VARCHAR(30) UNIQUE NOT NULL,
+          email VARCHAR(150),
+          status VARCHAR(20) NOT NULL DEFAULT 'active' CHECK (status IN ('active','suspended')),
+          invite_code VARCHAR(40),
+          created_at TIMESTAMPTZ NOT NULL DEFAULT NOW(),
+          updated_at TIMESTAMPTZ NOT NULL DEFAULT NOW()
+        );
+        CREATE TABLE IF NOT EXISTS subadmin_point_outbox (
+          id BIGSERIAL PRIMARY KEY,
+          transfer_id VARCHAR(150) UNIQUE NOT NULL,
+          subadmin_id BIGINT NOT NULL REFERENCES subadmin_accounts(id),
+          amount NUMERIC(14,2) NOT NULL CHECK (amount > 0),
+          status VARCHAR(20) NOT NULL DEFAULT 'pending' CHECK (status IN ('pending','processing','sent')),
+          attempts INTEGER NOT NULL DEFAULT 0,
+          last_error TEXT,
+          created_at TIMESTAMPTZ NOT NULL DEFAULT NOW(),
+          sent_at TIMESTAMPTZ
+        );
+        CREATE INDEX IF NOT EXISTS idx_subadmin_outbox_pending
+          ON subadmin_point_outbox(status, created_at) WHERE status <> 'sent';
       `);
 
       console.log("GLO 365 database initialized.");
@@ -1678,6 +1707,169 @@
     // ==========================================
     // ADMIN: DASHBOARD
     // ==========================================
+
+    // ==========================================
+    // SUB-ADMIN MANAGEMENT + SAFE POINT OUTBOX
+    // ==========================================
+
+    function subadminBridgeReady() {
+      return Boolean(SUBADMIN_SERVICE_URL && MAIN_SERVER_API_KEY.length >= 32);
+    }
+
+    async function deliverSubadminOutboxBatch() {
+      if (!subadminBridgeReady()) return;
+      const claimed = await pool.query(`
+        UPDATE subadmin_point_outbox
+        SET status='processing', attempts=attempts+1
+        WHERE id IN (
+          SELECT id FROM subadmin_point_outbox
+          WHERE status='pending' OR (status='processing' AND created_at < NOW() - INTERVAL '2 minutes')
+          ORDER BY id ASC LIMIT 10 FOR UPDATE SKIP LOCKED
+        )
+        RETURNING id,transfer_id,subadmin_id,amount
+      `);
+      for (const item of claimed.rows) {
+        try {
+          const owner = await pool.query(
+            "SELECT main_server_id FROM subadmin_accounts WHERE id=$1", [item.subadmin_id]
+          );
+          if (!owner.rows.length) throw new Error("Sub-Admin mapping not found.");
+          const response = await fetch(SUBADMIN_SERVICE_URL + "/internal/points/credit", {
+            method: "POST",
+            headers: { "Content-Type": "application/json", "X-Main-Server-Key": MAIN_SERVER_API_KEY },
+            body: JSON.stringify({
+              transfer_id: item.transfer_id,
+              main_server_id: owner.rows[0].main_server_id,
+              amount: Number(item.amount)
+            }),
+            signal: AbortSignal.timeout(15000)
+          });
+          const payload = await response.json().catch(() => ({}));
+          if (!response.ok || payload.success !== true) {
+            throw new Error(payload.message || ("Sub-Admin service HTTP " + response.status));
+          }
+          await pool.query(
+            "UPDATE subadmin_point_outbox SET status='sent',sent_at=NOW(),last_error=NULL WHERE id=$1",
+            [item.id]
+          );
+        } catch (error) {
+          await pool.query(
+            "UPDATE subadmin_point_outbox SET status='pending',last_error=$2 WHERE id=$1",
+            [item.id, String(error.message || error).slice(0, 1000)]
+          );
+        }
+      }
+    }
+
+    app.get("/api/admin/subadmins", authenticateToken, requireAdmin, asyncRoute(async (req, res) => {
+      const result = await pool.query(`
+        SELECT s.id,s.main_server_id,s.username,s.email,s.status,s.invite_code,s.created_at,
+          COALESCE((SELECT SUM(o.amount) FROM subadmin_point_outbox o
+                    WHERE o.subadmin_id=s.id AND o.status='sent'),0) AS total_allocated,
+          (SELECT COUNT(*)::int FROM subadmin_point_outbox o WHERE o.subadmin_id=s.id AND o.status='pending') AS pending_transfers
+        FROM subadmin_accounts s ORDER BY s.id DESC
+      `);
+      res.json({ success: true, subadmins: result.rows, bridge_ready: subadminBridgeReady() });
+    }));
+
+    app.post("/api/admin/subadmins", authenticateToken, requireAdmin, asyncRoute(async (req, res) => {
+      if (!subadminBridgeReady()) return sendError(res, 503, "Sub-Admin service is not configured. Set SUBADMIN_SERVICE_URL and MAIN_SERVER_API_KEY.");
+      const username = cleanText(req.body.username, 30).toLowerCase();
+      const email = cleanText(req.body.email, 150).toLowerCase();
+      const password = req.body.password;
+      if (!validUsername(username) || (email && !validEmail(email)) || typeof password !== "string" || password.length < 10 || password.length > 200) {
+        return sendError(res, 400, "Invalid Sub-Admin details. Password must be 10–200 characters.");
+      }
+      const mainId = "GLOSA-" + crypto.randomUUID();
+      const remote = await fetch(SUBADMIN_SERVICE_URL + "/internal/subadmins", {
+        method: "POST",
+        headers: { "Content-Type": "application/json", "X-Main-Server-Key": MAIN_SERVER_API_KEY },
+        body: JSON.stringify({ main_server_id: mainId, username, email, password }),
+        signal: AbortSignal.timeout(20000)
+      });
+      const payload = await remote.json().catch(() => ({}));
+      if (!remote.ok || payload.success !== true || !payload.subadmin) {
+        return sendError(res, remote.status >= 400 && remote.status < 500 ? remote.status : 502, payload.message || "Could not create Sub-Admin on Sub-Admin service.");
+      }
+      const a = payload.subadmin;
+      const saved = await pool.query(`
+        INSERT INTO subadmin_accounts(main_server_id,username,email,status,invite_code)
+        VALUES($1,$2,$3,$4,$5) RETURNING id,main_server_id,username,email,status,invite_code,created_at
+      `, [mainId, username, email || null, a.status || "active", a.invite_code || null]);
+      await audit(req.user.id, "subadmin_created", null, { subadmin_id: mainId, username });
+      res.status(201).json({ success: true, subadmin: saved.rows[0] });
+    }));
+
+    app.patch("/api/admin/subadmins/:id/status", authenticateToken, requireAdmin, asyncRoute(async (req, res) => {
+      if (!subadminBridgeReady()) return sendError(res, 503, "Sub-Admin service is not configured.");
+      const id = validId(req.params.id);
+      const status = req.body.status;
+      if (!id || !["active","suspended"].includes(status)) return sendError(res, 400, "Invalid Sub-Admin or status.");
+      const owner = await pool.query("SELECT main_server_id FROM subadmin_accounts WHERE id=$1", [id]);
+      if (!owner.rows.length) return sendError(res, 404, "Sub-Admin not found.");
+      const remote = await fetch(SUBADMIN_SERVICE_URL + "/internal/subadmins/" + encodeURIComponent(owner.rows[0].main_server_id) + "/status", {
+        method: "PATCH", headers: { "Content-Type": "application/json", "X-Main-Server-Key": MAIN_SERVER_API_KEY },
+        body: JSON.stringify({ status }), signal: AbortSignal.timeout(15000)
+      });
+      const payload = await remote.json().catch(() => ({}));
+      if (!remote.ok || payload.success !== true) return sendError(res, 502, payload.message || "Sub-Admin service status update failed.");
+      const updated = await pool.query("UPDATE subadmin_accounts SET status=$1,updated_at=NOW() WHERE id=$2 RETURNING id,username,status", [status,id]);
+      await audit(req.user.id, "subadmin_status_changed", null, { subadmin_id: owner.rows[0].main_server_id, status });
+      res.json({ success: true, subadmin: updated.rows[0] });
+    }));
+
+    app.post("/api/admin/subadmins/:id/allocate", authenticateToken, requireAdmin, asyncRoute(async (req, res) => {
+      const id = validId(req.params.id);
+      const raw = req.body.amount;
+      const cents = amountToCents(raw);
+      if (!id || cents === null || cents <= 0) return sendError(res, 400, "Invalid allocation amount.");
+      if (!subadminBridgeReady()) return sendError(res, 503, "Sub-Admin service is not configured.");
+      const amount = (cents / 100).toFixed(2);
+      const client = await pool.connect();
+      let transferId;
+      try {
+        await client.query("BEGIN");
+        const sub = await client.query("SELECT id,status FROM subadmin_accounts WHERE id=$1 FOR UPDATE", [id]);
+        if (!sub.rows.length || sub.rows[0].status !== "active") {
+          await client.query("ROLLBACK");
+          return sendError(res, 404, "Active Sub-Admin not found.");
+        }
+        const admin = await client.query("SELECT id,balance FROM users WHERE id=$1 AND username=$2 AND role='admin' AND status='active' FOR UPDATE", [req.user.id, PRIMARY_ADMIN_USERNAME]);
+        if (!admin.rows.length) { await client.query("ROLLBACK"); return sendError(res, 403, "Primary Admin access required."); }
+        const debited = await client.query(
+          "UPDATE users SET balance=balance-$1,updated_at=NOW() WHERE id=$2 AND balance >= $1 RETURNING balance",
+          [amount, req.user.id]
+        );
+        if (!debited.rows.length) { await client.query("ROLLBACK"); return sendError(res, 400, "Insufficient Main Admin balance."); }
+        transferId = "GLO-ALLOC-" + crypto.randomUUID();
+        await client.query(
+          "INSERT INTO wallet_transactions(user_id,type,amount,currency,description,reference) VALUES($1,'subadmin_allocation',$2,'DEMO',$3,$4)",
+          [req.user.id, (-Number(amount)).toFixed(2), "Points allocated to Sub-Admin #" + id, transferId]
+        );
+        await client.query(
+          "INSERT INTO subadmin_point_outbox(transfer_id,subadmin_id,amount) VALUES($1,$2,$3)",
+          [transferId,id,amount]
+        );
+        await client.query("COMMIT");
+      } catch (error) {
+        await client.query("ROLLBACK");
+        throw error;
+      } finally { client.release(); }
+      // Attempt immediate delivery; the durable outbox retries if the remote service is unavailable.
+      await deliverSubadminOutboxBatch();
+      const state = await pool.query("SELECT status,last_error FROM subadmin_point_outbox WHERE transfer_id=$1", [transferId]);
+      await audit(req.user.id, "subadmin_points_allocated", null, { subadmin_id: id, amount, transfer_id: transferId, delivery_status: state.rows[0]?.status });
+      res.status(202).json({ success: true, transfer_id: transferId, amount, delivery_status: state.rows[0]?.status || "pending", message: state.rows[0]?.status === "sent" ? "Points allocated successfully." : "Allocation recorded securely and will be retried until delivered." });
+    }));
+
+    app.get("/api/admin/subadmin-transfers", authenticateToken, requireAdmin, asyncRoute(async (req, res) => {
+      const result = await pool.query(`
+        SELECT o.id,o.transfer_id,o.subadmin_id,s.username,o.amount,o.status,o.attempts,o.last_error,o.created_at,o.sent_at
+        FROM subadmin_point_outbox o JOIN subadmin_accounts s ON s.id=o.subadmin_id
+        ORDER BY o.id DESC LIMIT 200
+      `);
+      res.json({ success: true, transfers: result.rows });
+    }));
 
     app.get(
       "/api/admin/dashboard",
@@ -3087,6 +3279,14 @@
         await bootstrapAdmin();
 
         await installPrimaryAdminProtection();
+
+        // Retry pending cross-database point deliveries. The outbox is durable and idempotent.
+        if (subadminBridgeReady()) {
+          deliverSubadminOutboxBatch().catch(error => console.error("Sub-Admin outbox error:", error.message));
+          setInterval(() => {
+            deliverSubadminOutboxBatch().catch(error => console.error("Sub-Admin outbox error:", error.message));
+          }, 30000).unref();
+        }
 
         app.listen(PORT, "0.0.0.0", () => {
           console.log(
