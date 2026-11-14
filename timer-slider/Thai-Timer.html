@@ -44,6 +44,10 @@ body{overflow:hidden}
  color:#fff;
  text-align:center;
  border:1px solid #c6e3f8;
+ cursor:default;
+ transform-style:preserve-3d;
+ animation:panel3D 5s ease-in-out infinite;
+ box-shadow:0 5px 12px rgba(0,55,110,.22);
 }
 
 .official-art{
@@ -76,7 +80,7 @@ body{overflow:hidden}
  min-width:0;
  height:132px;
  border-radius:15px;
- background:#1688df;
+ background:linear-gradient(145deg,#2199ef,#0872c4);
  color:#fff;
  display:flex;
  flex-direction:column;
@@ -84,16 +88,23 @@ body{overflow:hidden}
  align-items:center;
  text-align:center;
  padding:3px 1px;
+ transform-style:preserve-3d;
+ animation:panel3D 5s ease-in-out infinite;
+ animation-delay:.35s;
+ box-shadow:0 5px 12px rgba(0,55,110,.22);
 }
 
 .days-number{
  font-size:clamp(25px,6vw,35px);
- font-weight:400;
+ font-weight:900;
  line-height:1;
+ text-shadow:0 2px 3px rgba(0,35,80,.35);
 }
 
 .days-label{
  font-size:clamp(10px,2.7vw,15px);
+ font-weight:900;
+ text-shadow:0 1px 2px rgba(0,35,80,.35);
  white-space:nowrap;
  margin-top:3px;
 }
@@ -104,6 +115,9 @@ body{overflow:hidden}
  display:flex;
  flex-direction:column;
  gap:4px;
+ transform-style:preserve-3d;
+ animation:panel3D 5s ease-in-out infinite;
+ animation-delay:.7s;
 }
 
 .draw-number{
@@ -152,6 +166,8 @@ body{overflow:hidden}
  place-items:center;
  padding:1px;
  font-size:clamp(7px,1.9vw,10px);
+ font-weight:900;
+ text-shadow:0 1px 2px rgba(0,35,80,.35);
 }
 
 .draw-status{
@@ -164,6 +180,15 @@ body{overflow:hidden}
  line-height:1.05;
 }
 
+@keyframes panel3D{
+ 0%,100%{transform:perspective(700px) rotateY(0deg) rotateX(0deg) translateY(0)}
+ 25%{transform:perspective(700px) rotateY(2deg) rotateX(1deg) translateY(-1px)}
+ 50%{transform:perspective(700px) rotateY(0deg) rotateX(-1deg) translateY(0)}
+ 75%{transform:perspective(700px) rotateY(-2deg) rotateX(1deg) translateY(-1px)}
+}
+@media(prefers-reduced-motion:reduce){
+ .official-box,.days-box,.draw-info{animation:none}
+}
 @media(max-width:380px){
  .draw-board{
   width:calc(100% - 10px);
@@ -174,10 +199,10 @@ body{overflow:hidden}
 
  .official-label{font-size:9px}
  .days-number{font-size:25px}
- .days-label{font-size:10px}
+ .days-label{font-size:10px;font-weight:900}
  .draw-number{font-size:8px}
  .time-value{font-size:14px}
- .time-label{font-size:7px}
+ .time-label{font-size:7px;font-weight:900}
  .draw-status{font-size:7px}
 }
 </style>
@@ -187,7 +212,7 @@ body{overflow:hidden}
 
 <section class="draw-board">
 
- <a class="official-box" href="../index.html" aria-label="THAI Gov. Lott">
+ <div class="official-box" aria-label="THAI Gov. Lott">
   <div class="official-art">
 
    <svg class="official-logo" viewBox="0 0 200 200"
@@ -260,7 +285,7 @@ body{overflow:hidden}
   </div>
 
   <div class="official-label">THAI Gov. Lott</div>
- </a>
+ </div>
 
  <div class="days-box">
   <div class="days-number" id="countDays">--</div>
