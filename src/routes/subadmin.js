@@ -1,3 +1,4 @@
+
 "use strict";
 
 /*
@@ -220,7 +221,6 @@ module.exports = function registerSubAdminRoutes(deps) {
     try {
       await client.query("BEGIN");
 
-      // Verify the Main Admin identity, without reading or requiring a point balance.
       const admin = await client.query(
         `SELECT id FROM users
          WHERE id=$1 AND role='admin' AND username=$2 AND status='active'
@@ -233,7 +233,6 @@ module.exports = function registerSubAdminRoutes(deps) {
         return sendError(res, 403, "Primary Admin access required.");
       }
 
-      // Lock and verify the target Sub-Admin.
       const sub = await client.query(
         `SELECT id,status FROM users
          WHERE id=$1 AND role='subadmin'
@@ -246,7 +245,6 @@ module.exports = function registerSubAdminRoutes(deps) {
         return sendError(res, 404, "Active Sub-Admin not found.");
       }
 
-      // Credit Sub-Admin directly. No Main Admin debit.
       const credited = await client.query(
         `UPDATE users
          SET balance=balance+$1,updated_at=NOW()
@@ -262,7 +260,6 @@ module.exports = function registerSubAdminRoutes(deps) {
 
       const ref = reference("SAALLOC");
 
-      // Record the Sub-Admin's incoming points in wallet history.
       await client.query(
         `INSERT INTO wallet_transactions
          (user_id,type,amount,currency,description,reference)
@@ -275,7 +272,6 @@ module.exports = function registerSubAdminRoutes(deps) {
         ]
       );
 
-      // Keep the transfer audit record. Main Admin ID identifies who authorized it.
       await client.query(
         `INSERT INTO subadmin_point_transfers
          (main_admin_id,subadmin_id,amount,reference)
@@ -793,6 +789,13 @@ module.exports = function registerSubAdminRoutes(deps) {
     });
   }));
 
+  // ---------------- SUB-ADMIN DEPOSIT REVIEW ----------------
+  // APPROVE:
+  // 1. Deduct points from Sub-Admin.
+  // 2. Credit the same points to the linked Customer.
+  // 3. Record both wallet transactions.
+  // All actions happen in one PostgreSQL transaction.
+
   app.post("/api/subadmin/deposits/:id/review", authenticateToken, requireSubAdmin, asyncRoute(async (req, res) => {
     const id = validId(req.params.id);
     const decision = req.body.status;
@@ -807,11 +810,14 @@ module.exports = function registerSubAdminRoutes(deps) {
     try {
       await client.query("BEGIN");
 
+      // Lock the deposit request to prevent duplicate approval.
       const found = await client.query(`
-        SELECT d.*
+        SELECT d.*,u.username AS customer_username
         FROM deposit_requests d
         JOIN users u ON u.id=d.user_id
-        WHERE d.id=$1 AND u.subadmin_owner_id=$2 AND u.role='user'
+        WHERE d.id=$1
+          AND u.subadmin_owner_id=$2
+          AND u.role='user'
         FOR UPDATE OF d
       `, [id, req.user.id]);
 
@@ -828,31 +834,100 @@ module.exports = function registerSubAdminRoutes(deps) {
       }
 
       if (decision === "approved") {
-        const credited = Number(d.amount);
+        const amount = Number(d.amount);
 
-        await client.query(
-          `UPDATE users SET balance=balance+$1,updated_at=NOW()
-           WHERE id=$2 AND subadmin_owner_id=$3`,
-          [credited.toFixed(2), d.user_id, req.user.id]
-        );
+        if (!validAmount(amount)) {
+          await client.query("ROLLBACK");
+          return sendError(res, 400, "Invalid deposit amount.");
+        }
 
-        await client.query(
-          `INSERT INTO wallet_transactions
-           (user_id,type,amount,currency,description,reference)
-           VALUES($1,'deposit_credit',$2,'DEMO',$3,$4)`,
-          [
-            d.user_id,
-            credited.toFixed(2),
-            "Deposit approved by Sub-Admin",
-            "SA-DEP-" + id
-          ]
-        );
+        // Lock Sub-Admin wallet and verify account.
+        const subAdmin = await client.query(`
+          SELECT id,balance,status
+          FROM users
+          WHERE id=$1 AND role='subadmin'
+          FOR UPDATE
+        `, [req.user.id]);
+
+        if (!subAdmin.rows.length || subAdmin.rows[0].status !== "active") {
+          await client.query("ROLLBACK");
+          return sendError(res, 403, "Sub-Admin account is inactive.");
+        }
+
+        // Check Sub-Admin has enough points.
+        if (Number(subAdmin.rows[0].balance) < amount) {
+          await client.query("ROLLBACK");
+          return sendError(
+            res,
+            400,
+            "Insufficient Sub-Admin points. Deposit cannot be approved."
+          );
+        }
+
+        // Deduct points from Sub-Admin.
+        const debit = await client.query(`
+          UPDATE users
+          SET balance=balance-$1,updated_at=NOW()
+          WHERE id=$2
+            AND role='subadmin'
+            AND balance >= $1
+          RETURNING balance
+        `, [amount.toFixed(2), req.user.id]);
+
+        if (!debit.rows.length) {
+          await client.query("ROLLBACK");
+          return sendError(res, 400, "Insufficient Sub-Admin points.");
+        }
+
+        // Credit points to the correct Customer.
+        const customerCredit = await client.query(`
+          UPDATE users
+          SET balance=balance+$1,updated_at=NOW()
+          WHERE id=$2
+            AND role='user'
+            AND subadmin_owner_id=$3
+          RETURNING balance
+        `, [amount.toFixed(2), d.user_id, req.user.id]);
+
+        if (!customerCredit.rows.length) {
+          throw new Error("Customer credit failed. Deposit transaction cancelled.");
+        }
+
+        const depositRef = "SA-DEP-" + id;
+
+        // Record Sub-Admin debit.
+        await client.query(`
+          INSERT INTO wallet_transactions
+          (user_id,type,amount,currency,description,reference)
+          VALUES($1,'deposit_debit',$2,'DEMO',$3,$4)
+        `, [
+          req.user.id,
+          (-amount).toFixed(2),
+          "Points deducted for customer deposit #" + id,
+          depositRef
+        ]);
+
+        // Record Customer credit.
+        await client.query(`
+          INSERT INTO wallet_transactions
+          (user_id,type,amount,currency,description,reference)
+          VALUES($1,'deposit_credit',$2,'DEMO',$3,$4)
+        `, [
+          d.user_id,
+          amount.toFixed(2),
+          "Deposit approved by Sub-Admin",
+          depositRef
+        ]);
       }
 
+      // Update deposit status only after successful point transfer.
       const updated = await client.query(`
         UPDATE deposit_requests
-        SET status=$1,rejection_reason=$2,credited_points=$3,
-            reviewed_by=$4,reviewed_at=NOW()
+        SET status=$1,
+            rejection_reason=$2,
+            credited_points=$3,
+            reviewed_by=$4,
+            reviewed_at=NOW()
         WHERE id=$5 AND status='pending'
         RETURNING id,status,rejection_reason,credited_points,reviewed_at
       `, [
@@ -863,12 +938,21 @@ module.exports = function registerSubAdminRoutes(deps) {
         id
       ]);
 
+      if (!updated.rows.length) {
+        throw new Error("Could not update deposit request.");
+      }
+
+      // Commit all changes together.
       await client.query("COMMIT");
 
       res.json({
         success: true,
-        deposit: updated.rows[0]
+        deposit: updated.rows[0],
+        message: decision === "approved"
+          ? "Deposit approved. Sub-Admin points deducted and Customer points credited."
+          : "Deposit rejected."
       });
+
     } catch (error) {
       await client.query("ROLLBACK");
       throw error;
@@ -876,6 +960,8 @@ module.exports = function registerSubAdminRoutes(deps) {
       client.release();
     }
   }));
+
+  // ---------------- CUSTOMER WITHDRAWAL REQUESTS ----------------
 
   app.post("/api/subadmin/customer/withdrawals", authenticateToken, requireCustomer, asyncRoute(async (req, res) => {
     const ownerId = await getCustomerOwner(req.user.id);
