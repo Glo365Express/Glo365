@@ -235,7 +235,7 @@ function renderMethods(){
  if(!box.children.length){
   const empty=document.createElement("div");
   empty.style.cssText="grid-column:1/-1;text-align:center;padding:20px;color:#888";
-  empty.textContent="No active payment channels available for your Sub-Admin account.";
+  empty.textContent="No active payment channels available for your account.";
   box.append(empty);
  }
 }
@@ -298,9 +298,11 @@ document.getElementById("continueBtn").addEventListener("click",()=>{
  },1200);
 });
 
-/* IMPORTANT:
-   Load only the logged-in customer's own Sub-Admin payment methods.
-   Do not use /public/payment-methods here.
+/*
+  Account-aware payment method loading:
+  - Main Admin and users without a Sub-Admin owner use primary Admin methods.
+  - Customers linked to a Sub-Admin use that Sub-Admin's methods.
+  The account identity is always read from the authenticated /auth/me API.
 */
 
 async function initialize(){
@@ -310,7 +312,28 @@ async function initialize(){
    return;
   }
 
-  const methodData=await api("/subadmin/customer/payment-methods");
+  // Read the authenticated account from the server, never from client-supplied role data.
+  const meData=await api("/auth/me");
+  const user=meData&&meData.user;
+
+  if(!user||!user.id){
+   throw new Error("Could not identify your account. Please login again.");
+  }
+
+  // Main Admin (role=admin) and Main Admin customers (owner_id=null)
+  // must load primary Admin payment methods.
+  // Only customers with a real Sub-Admin owner use the Sub-Admin endpoint.
+  const isSubadminCustomer=
+   user.role!=="admin" &&
+   user.subadmin_owner_id!==null &&
+   user.subadmin_owner_id!==undefined &&
+   String(user.subadmin_owner_id).trim()!=="";
+
+  const methodEndpoint=isSubadminCustomer
+   ?"/subadmin/customer/payment-methods"
+   :"/public/payment-methods";
+
+  const methodData=await api(methodEndpoint);
 
   methods=Array.isArray(methodData.methods)
    ?methodData.methods.filter(m=>m&&m.active!==false)
