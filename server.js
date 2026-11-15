@@ -1412,6 +1412,7 @@
       asyncRoute(async (req, res) => {
         const result = await pool.query(
           `SELECT u.id, u.username, u.email, u.role, u.status,
+                  u.subadmin_owner_id,
                   u.balance, u.referral_code, u.created_at,
                   p.full_name, p.avatar, p.bio
            FROM users u
