@@ -219,6 +219,8 @@ const HOME_PAGE="home.html";
 
 let pending=null;
 let paymentMethod=null;
+let authenticatedUser=null;
+let depositSubmitEndpoint="/deposits";
 let finalData=null;
 let toastTimer=null;
 let timerInterval=null;
@@ -291,10 +293,31 @@ function getMethodLogo(){
  return pending.logo_url||"";
 }
 
-/* LOAD ONLY THIS CUSTOMER'S SUB-ADMIN METHODS */
+/* LOAD PAYMENT METHOD ACCORDING TO SERVER-AUTHENTICATED ACCOUNT */
 
 async function loadMethod(){
- const data=await api("/subadmin/customer/payment-methods");
+ const meData=await api("/auth/me");
+ authenticatedUser=meData&&meData.user;
+
+ if(!authenticatedUser||!authenticatedUser.id){
+  throw new Error("Could not identify your account. Please login again.");
+ }
+
+ const isSubadminCustomer=
+  authenticatedUser.role!=="admin" &&
+  authenticatedUser.subadmin_owner_id!==null &&
+  authenticatedUser.subadmin_owner_id!==undefined &&
+  String(authenticatedUser.subadmin_owner_id).trim()!=="";
+
+ const methodEndpoint=isSubadminCustomer
+  ?"/subadmin/customer/payment-methods"
+  :"/public/payment-methods";
+
+ depositSubmitEndpoint=isSubadminCustomer
+  ?"/subadmin/customer/deposits"
+  :"/deposits";
+
+ const data=await api(methodEndpoint);
 
  const methods=Array.isArray(data.methods)?data.methods:[];
 
@@ -447,7 +470,7 @@ document.getElementById("cancelBtn").addEventListener("click",()=>{
  document.getElementById("confirmModal").classList.add("hidden");
 });
 
-/* SUBMIT TO SUB-ADMIN CUSTOMER DEPOSIT API */
+/* SUBMIT TO THE AUTHENTICATED ACCOUNT'S DEPOSIT API */
 
 document.getElementById("submitBtn").addEventListener("click",async()=>{
  if(!finalData||submitting)return;
@@ -465,7 +488,7 @@ document.getElementById("submitBtn").addEventListener("click",async()=>{
  try{
   await new Promise(resolve=>setTimeout(resolve,1000));
 
-  const result=await api("/subadmin/customer/deposits",{
+  const result=await api(depositSubmitEndpoint,{
    method:"POST",
    body:JSON.stringify({
     payment_method_id:finalData.payment_method_id,
